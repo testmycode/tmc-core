@@ -1,5 +1,4 @@
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/testhelpers/Wiremocker.java
-/home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/TextFeedbackHandlerTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/domain/ReviewTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/spyware/DiffSenderTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/zipping/ZipperTest.java
@@ -8,15 +7,12 @@
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/MailCheckerTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/configuration/ConfigHandlerTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/zipping/UnzipperTest.java
-/home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/ServerMock.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/testhelpers/ExampleJson.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/backend/CacheTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/ListCoursesTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/backend/MailboxTest.java
-/home/pihla/tmc-core/src/test/java/hy/tmc/cli/testhelpers/FrontendStub.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/backend/communication/URLCommunicatorTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/ListExercisesTest.java
-/home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/CommandLineProgressObserverTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/backend/communication/StatusPollerTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/DownloadExercisesTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/domain/ExerciseTest.java
@@ -37,7 +33,6 @@
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/zipping/DefaultMoveDeciderTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/synchronization/PollSchedulerTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/AuthenticateTest.java
-/home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/RangeFeedbackHandlerTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/testhelpers/FeedbackBuilder.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/backend/communication/HttpResultTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/LogoutTest.java

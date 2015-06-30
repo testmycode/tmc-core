@@ -3,15 +3,12 @@ hy/tmc/cli/zipping/ProjectRootFinderTest.class
 hy/tmc/cli/zipping/ZipperTest.class
 hy/tmc/cli/backend/BadCommandStub.class
 hy/tmc/cli/backend/communication/ExerciseListerTest.class
-hy/tmc/cli/frontend/communication/commands/ServerMock.class
 hy/tmc/cli/backend/communication/SubmissionInterpreterTest.class
 hy/tmc/cli/frontend/communication/commands/SendFeedbackTest.class
 hy/tmc/cli/configuration/ClientDataTest.class
 hy/tmc/cli/backend/communication/HttpResultTest.class
 hy/tmc/cli/spyware/DiffSenderTest.class
 hy/tmc/cli/testhelpers/MailExample.class
-hy/tmc/cli/frontend/CommandLineProgressObserverTest.class
-hy/tmc/cli/testhelpers/FrontendStub.class
 hy/tmc/cli/testhelpers/FeedbackBuilder.class
 hy/tmc/cli/frontend/communication/commands/PasteTest.class
 hy/tmc/cli/frontend/communication/commands/HelpTest.class
@@ -46,11 +43,9 @@ hy/tmc/cli/frontend/communication/commands/ChooseServerTest.class
 hy/tmc/cli/frontend/communication/commands/LogoutTest.class
 hy/tmc/cli/backend/communication/CourseSubmitterTest.class
 hy/tmc/cli/testhelpers/testresults/RunResultBuilder.class
-hy/tmc/cli/frontend/RangeFeedbackHandlerTest.class
 hy/tmc/cli/backend/communication/ExerciseDownloaderTest.class
 hy/tmc/cli/frontend/communication/commands/ListExercisesTest.class
 hy/tmc/cli/backend/communication/JSONParserTest.class
-hy/tmc/cli/frontend/TextFeedbackHandlerTest.class
 hy/tmc/cli/backend/CacheTest.class
 hy/tmc/cli/testhelpers/testresults/TestResultFactory.class
 hy/tmc/cli/backend/communication/StatusPollerTest.class

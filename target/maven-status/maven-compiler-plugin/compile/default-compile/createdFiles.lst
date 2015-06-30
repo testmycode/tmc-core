@@ -19,7 +19,6 @@ hy/tmc/cli/domain/Review.class
 hy/tmc/cli/zipping/Unzipper.class
 hy/tmc/cli/zipping/UnzipDecider.class
 hy/tmc/cli/domain/Exercise.class
-hy/tmc/cli/frontend/FeedbackHandlerAbstract.class
 hy/tmc/cli/zipping/RootFinder.class
 hy/tmc/cli/frontend/communication/commands/ChooseServer.class
 hy/tmc/cli/domain/submission/SubmissionResult.class
@@ -33,19 +32,15 @@ hy/tmc/cli/synchronization/PollScheduler.class
 hy/tmc/core/exceptions/ExpiredException.class
 hy/tmc/cli/frontend/communication/commands/ListExercises.class
 hy/tmc/cli/spyware/DiffSender.class
-hy/tmc/cli/frontend/FrontendListener.class
-hy/tmc/cli/frontend/TextFeedbackHandler.class
 hy/tmc/cli/frontend/communication/commands/Command.class
 hy/tmc/cli/domain/submission/TestCase.class
 hy/tmc/cli/frontend/communication/commands/DownloadExercises.class
 hy/tmc/cli/backend/communication/authorization/Authorization.class
 hy/tmc/cli/frontend/communication/commands/CommandFactory.class
-hy/tmc/cli/frontend/RangeFeedbackHandler.class
 hy/tmc/cli/zipping/ProjectRootFinder.class
 hy/tmc/cli/domain/submission/StackTrace.class
 hy/tmc/cli/zipping/DefaultRootDetector.class
 hy/tmc/cli/backend/TmcCore.class
-hy/tmc/cli/frontend/CommandLineProgressObserver.class
 hy/tmc/cli/backend/communication/TmcServerException.class
 hy/tmc/cli/backend/communication/SubmissionPoller.class
 hy/tmc/cli/frontend/communication/commands/ReplyToPing.class
@@ -57,7 +52,6 @@ hy/tmc/cli/frontend/communication/commands/RunTests.class
 hy/tmc/cli/domain/submission/FeedbackQuestion.class
 hy/tmc/cli/zipping/Zipper.class
 hy/tmc/cli/frontend/communication/commands/MailChecker.class
-hy/tmc/cli/frontend/CommandLineColor.class
 hy/tmc/cli/backend/communication/TmcJsonParser.class
 hy/tmc/cli/frontend/communication/commands/Authenticate.class
 hy/tmc/cli/domain/submission/TestException.class

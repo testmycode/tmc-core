@@ -12,8 +12,6 @@
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/configuration/ConfigHandler.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/zipping/UnzipDecider.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/zipping/ProjectRootDetector.java
-/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/FeedbackHandlerAbstract.java
-/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/RangeFeedbackHandler.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/ProgressObserver.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/CommandFactory.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/communication/ExerciseDownloader.java
@@ -21,14 +19,12 @@
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/Authenticate.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/ReplyToPing.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/DownloadExercises.java
-/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/CommandLineProgressObserver.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/Logout.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/synchronization/TmcServiceScheduler.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/synchronization/PollScheduler.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/Feedback.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/Command.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/ChooseServer.java
-/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/CommandLineColor.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/zipping/ProjectRootFinder.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/core/exceptions/ExpiredException.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/domain/Review.java
@@ -38,7 +34,6 @@
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/StopProcess.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/communication/TmcJsonParser.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/MailChecker.java
-/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/FrontendListener.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/ListExercises.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/ListCourses.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/domain/Exercise.java
@@ -57,7 +52,6 @@
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/Mailbox.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/MailFormatter.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/communication/HttpResult.java
-/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/TextFeedbackHandler.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/domain/submission/TestCase.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/domain/submission/FeedbackQuestion.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/Submit.java

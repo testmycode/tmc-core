@@ -7,7 +7,6 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 
 import hy.tmc.core.exceptions.ProtocolException;
-import hy.tmc.core.synchronization.TmcServiceScheduler;
 import java.io.IOException;
 
 import java.util.List;
@@ -16,7 +15,6 @@ public class ListExercises extends Command<List<Exercise>> {
 
     private ExerciseLister lister;
     private Course current;
-    private MailChecker mail;
 
     public ListExercises() {
         this(new ExerciseLister());
@@ -28,7 +26,6 @@ public class ListExercises extends Command<List<Exercise>> {
      * @param lister mocked lister object.
      */
     public ListExercises(ExerciseLister lister) {
-        mail = new MailChecker();
         this.lister = lister;
     }
 
@@ -61,7 +58,6 @@ public class ListExercises extends Command<List<Exercise>> {
     @Override
     public List<Exercise> call() throws ProtocolException, IOException {
         checkData();
-        TmcServiceScheduler.startIfNotRunning(this.current);
         List<Exercise> exercises = lister.listExercises(data.get("path"));
         return exercises;
     }

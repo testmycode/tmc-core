@@ -1,19 +1,12 @@
 package hy.tmc.core.commands;
 
-import hy.tmc.core.commands.RunTests;
-import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 import hy.tmc.core.configuration.ClientData;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import hy.tmc.core.exceptions.ProtocolException;
-import hy.tmc.core.synchronization.TmcServiceScheduler;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import org.junit.After;
 
 public class RunTestsTest {
@@ -25,7 +18,6 @@ public class RunTestsTest {
      */
     @Before
     public void setup() {
-        TmcServiceScheduler.disablePolling();
         ClientData.setUserData("test", "1234");
         runTests = new RunTests();
     }
@@ -51,7 +43,6 @@ public class RunTestsTest {
     
     @After
     public void clear() {
-        TmcServiceScheduler.enablePolling();
         ClientData.clearUserData();
     }
 }

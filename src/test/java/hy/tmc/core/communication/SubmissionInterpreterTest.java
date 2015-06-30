@@ -1,8 +1,5 @@
 package hy.tmc.core.communication;
 
-import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.communication.HttpResult;
-import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.core.testhelpers.ExampleJson;

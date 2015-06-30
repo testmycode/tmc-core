@@ -1,18 +1,14 @@
 package hy.tmc.core.commands;
 
-import hy.tmc.core.commands.ListExercises;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 import com.google.common.base.Optional;
 
-import hy.tmc.core.Mailbox;
 import hy.tmc.core.communication.ExerciseLister;
 
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ProtocolException;
-import hy.tmc.core.synchronization.TmcServiceScheduler;
 
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -26,16 +22,13 @@ import java.util.List;
 import java.util.Random;
 import static org.junit.Assert.assertEquals;
 
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.mockito.Matchers.eq;
 
 import org.mockito.Mockito;
 
-import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ClientData.class)
@@ -62,8 +55,6 @@ public class ListExercisesTest {
 
     @Before
     public void setup() throws ProtocolException, IOException {
-        Mailbox.create();
-        TmcServiceScheduler.disablePolling();
         buildExample();
         ClientData.setUserData("Chang", "Jamo");
         mock();
@@ -118,7 +109,6 @@ public class ListExercisesTest {
     
     @Test
     public void listWithAuthSuccess() throws Exception {
-        Mailbox.create();
         list.setParameter("path", "any");
         List<Exercise> exercises = list.call();
         assertEquals("1 tehtävä", exercises.get(1).getName());

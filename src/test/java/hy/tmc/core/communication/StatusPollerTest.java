@@ -1,14 +1,9 @@
 package hy.tmc.core.communication;
 
-import hy.tmc.core.communication.StatusPoller;
-import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.Mailbox;
 import hy.tmc.core.domain.Course;
-import hy.tmc.core.synchronization.PollScheduler;
 import hy.tmc.core.testhelpers.MailExample;
 import org.junit.Test;
 import org.junit.Before;
-import org.junit.After;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -27,7 +22,6 @@ public class StatusPollerTest {
 
     @Before
     public void before() throws Exception {
-        Mailbox.create();
         statusPoller = new StatusPoller(new Course(), new PollScheduler(0, TimeUnit.SECONDS));
         PowerMockito.mockStatic(TmcJsonParser.class);
         PowerMockito.when(TmcJsonParser.getReviews(any(String.class)))

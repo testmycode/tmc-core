@@ -6,13 +6,11 @@ import static org.mockito.Mockito.when;
 
 import com.google.common.base.Optional;
 
-import hy.tmc.core.Mailbox;
 import hy.tmc.core.communication.CourseSubmitter;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.ProtocolException;
-import hy.tmc.core.synchronization.TmcServiceScheduler;
 import hy.tmc.core.testhelpers.ProjectRootFinderStub;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -41,11 +39,9 @@ public class PasteTest {
      */
     @Before
     public void setup() throws Exception {
-        Mailbox.create();
         mock();
         ClientData.setUserData("Bossman", "Samu");
         ClientData.setProjectRootFinder(new ProjectRootFinderStub());
-        TmcServiceScheduler.disablePolling();
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
         paste = new Paste(submitterMock);

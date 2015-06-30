@@ -1,7 +1,6 @@
 
 package hy.tmc.core.commands;
 
-import hy.tmc.core.Mailbox;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.ClientData;
@@ -71,7 +70,6 @@ public class ListCoursesTest {
     
     @Test
     public void testWithAuthSuccess() throws Exception {
-        Mailbox.create();
         List<Course> courses = list.call();
         assertEquals("2013_ohpeJaOhja", courses.get(0).getName());
     }

@@ -2,13 +2,15 @@ package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.AbstractScheduledService;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
-import hy.tmc.core.Mailbox;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Review;
-import hy.tmc.core.exceptions.ProtocolException;
-import hy.tmc.core.synchronization.PollScheduler;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,29 +18,27 @@ import java.util.List;
 public class StatusPoller extends AbstractScheduledService {
 
     private Course currentCourse;
-    private PollScheduler pollScheduler;
+    private Scheduler pollScheduler;
+    private File database;
 
     /**
      * StatusPoller which polls code reviews. Has fixed time interval
      * which can be directly modified even if the polling is running.
      * @param currentCourse course which code reviews are being checked
      * @param schedule object that contains the time interval
+     * @param database a file to which the polled information is saved.
      */
-    public StatusPoller(Course currentCourse, PollScheduler schedule) {
+    public StatusPoller(Course currentCourse, Scheduler schedule, File database) {
         this.currentCourse = currentCourse;
         this.pollScheduler = schedule;
+        this.database = database;
     }
 
     @Override
     protected void runOneIteration() throws IOException {
-        if (!Mailbox.hasMailboxInitialized()) {
-            throw new IllegalStateException("No mailbox initialized.");
-        }
-
         Optional<List<Review>> reviews = checkReviews();
         if (reviews.isPresent()) {
-            Mailbox.emptyMailbox(); // TODO poll only new mails without clearing all
-            Mailbox.getMailbox().get().fill(reviews.get());
+            saveReviews(reviews.get());
         }
     }
 
@@ -73,5 +73,12 @@ public class StatusPoller extends AbstractScheduledService {
 
     @Override
     protected void shutDown() throws Exception {
+    }
+
+    private void saveReviews(List<Review> reviews) throws FileNotFoundException {
+        String reviewsAsJson = new Gson().toJson(reviews);
+        try (PrintWriter writer = new PrintWriter(this.database)) {
+            writer.write(reviewsAsJson);
+        }
     }
 }

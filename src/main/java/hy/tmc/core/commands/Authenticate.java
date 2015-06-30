@@ -1,6 +1,5 @@
 package hy.tmc.core.commands;
 
-import hy.tmc.core.Mailbox;
 import com.google.common.base.Optional;
 
 import static hy.tmc.core.communication.UrlCommunicator.makeGetRequest;
@@ -57,7 +56,6 @@ public class Authenticate extends Command<Boolean> {
         checkData();
         if (isOk(makeRequest())) {
             ClientData.setUserData(data.get("username"), data.get("password"));
-            Mailbox.create();
             return true;
         }
         return false;

@@ -1,19 +1,14 @@
 package hy.tmc.core.commands;
 
-import hy.tmc.core.commands.Submit;
-import static org.junit.Assert.assertTrue;
 
 import com.google.common.base.Optional;
 
-import hy.tmc.core.Mailbox;
 import hy.tmc.core.communication.CourseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
-import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.ProtocolException;
-import hy.tmc.core.synchronization.TmcServiceScheduler;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -62,8 +57,6 @@ public class SubmitTest {
     @Before
     public void setup() throws
             IOException, InterruptedException, IOException, ParseException, ExpiredException, Exception {
-        Mailbox.create();
-        TmcServiceScheduler.disablePolling();
         mock();
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);

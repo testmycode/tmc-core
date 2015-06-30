@@ -1,7 +1,5 @@
 package hy.tmc.core.communication;
 
-import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.communication.HttpResult;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;

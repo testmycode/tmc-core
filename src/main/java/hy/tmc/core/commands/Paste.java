@@ -7,7 +7,6 @@ import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.ProtocolException;
-import hy.tmc.core.synchronization.TmcServiceScheduler;
 import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import hy.tmc.core.zipping.Zipper;
@@ -21,7 +20,6 @@ public class Paste extends Command<URI> {
 
     private CourseSubmitter submitter;
     private Course course;
-    private MailChecker mail;
 
     public Paste() {
         this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()), new Zipper()));
@@ -34,7 +32,6 @@ public class Paste extends Command<URI> {
      */
     public Paste(CourseSubmitter submitter) {
         this.submitter = submitter;
-        this.mail = new MailChecker();
     }
 
     public Paste(String path) {
@@ -77,7 +74,6 @@ public class Paste extends Command<URI> {
      */
     @Override
     public URI call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
-        TmcServiceScheduler.startIfNotRunning(course);
         checkData();
         URI uri = URI.create(submitter.submitPaste(data.get("path")));
         return uri;

@@ -1,15 +1,17 @@
 
 package hy.tmc.core.commands;
 
-import hy.tmc.core.commands.ListCourses;
 import hy.tmc.core.Mailbox;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.core.testhelpers.ExampleJson;
 
 import java.io.IOException;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +23,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.junit.Assert.assertTrue;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
@@ -66,5 +67,12 @@ public class ListCoursesTest {
     @Test
     public void checkDataTest() throws ProtocolException {
         list.checkData();
+    }
+    
+    @Test
+    public void testWithAuthSuccess() throws Exception {
+        Mailbox.create();
+        List<Course> courses = list.call();
+        assertEquals("2013_ohpeJaOhja", courses.get(0).getName());
     }
 }

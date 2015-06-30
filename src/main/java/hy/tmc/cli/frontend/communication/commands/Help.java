@@ -14,11 +14,6 @@ public class Help extends Command<String> {
     }
 
     @Override
-    public Optional<String> parseData(Object data) {
-        return Optional.of((String) data);
-    }
-
-    @Override
     public String call() {
         return helpMessage();
     }

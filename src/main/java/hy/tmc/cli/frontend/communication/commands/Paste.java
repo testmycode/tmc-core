@@ -5,8 +5,8 @@ import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.configuration.ClientData;
 
 import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.frontend.communication.server.ExpiredException;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ExpiredException;
+import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
@@ -64,13 +64,6 @@ public class Paste extends Command<URI> {
         }
     }
 
-    @Override
-    public Optional<String> parseData(Object data) throws IOException {
-        String mail = checkMail();
-        URI returnURI = (URI) data;
-        return Optional.of(mail + "\n"+"Paste submitted. Here it is: \n  " + returnURI);
-    }
-
     /**
      * Takes a pwd command's output in "path" and prints out the URL for the
      * paste.
@@ -78,9 +71,9 @@ public class Paste extends Command<URI> {
      * @return
      * @throws java.io.IOException
      * @throws java.text.ParseException
-     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
+     * @throws hy.tmc.core.exceptions.ExpiredException
      * @throws net.lingala.zip4j.exception.ZipException
-     * @throws hy.tmc.cli.frontend.communication.server.ProtocolException
+     * @throws hy.tmc.core.exceptions.ProtocolException
      */
     @Override
     public URI call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {

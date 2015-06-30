@@ -12,7 +12,7 @@ import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.Review;
 import hy.tmc.cli.domain.submission.SubmissionResult;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import java.io.IOException;
 import java.util.ArrayList;
 

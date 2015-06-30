@@ -3,17 +3,14 @@ package hy.tmc.cli.frontend.communication.commands;
 import com.google.common.base.Optional;
 import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
-import hy.tmc.cli.backend.communication.SubmissionInterpreter;
+import hy.tmc.cli.backend.communication.SubmissionPoller;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.frontend.communication.server.ExpiredException;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ExpiredException;
+import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 
 import hy.tmc.cli.domain.submission.SubmissionResult;
-
-import hy.tmc.cli.frontend.formatters.CommandLineSubmissionResultFormatter;
-import hy.tmc.cli.frontend.formatters.VimSubmissionResultFormatter;
 
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
@@ -30,7 +27,7 @@ import net.lingala.zip4j.exception.ZipException;
 public class Submit extends Command<SubmissionResult> {
 
     private CourseSubmitter submitter;
-    private SubmissionInterpreter interpreter;
+    private SubmissionPoller interpreter;
     private Course course;
     private MailChecker mail;
 
@@ -64,21 +61,10 @@ public class Submit extends Command<SubmissionResult> {
      * @param submitter   can inject submitter mock.
      * @param interpreter can inject interpreter mock.
      */
-    public Submit(CourseSubmitter submitter, SubmissionInterpreter interpreter) {
+    public Submit(CourseSubmitter submitter, SubmissionPoller interpreter) {
         this.interpreter = interpreter;
         this.submitter = submitter;
         mail = new MailChecker();
-    }
-
-    private SubmissionInterpreter getInterpreter() {
-        if (interpreter != null) {
-            return interpreter;
-        }
-        if (data.containsKey("--vim")) {
-            return new SubmissionInterpreter(new VimSubmissionResultFormatter());
-        } else {
-            return new SubmissionInterpreter(new CommandLineSubmissionResultFormatter());
-        }
     }
 
     /**
@@ -107,21 +93,11 @@ public class Submit extends Command<SubmissionResult> {
     public SubmissionResult call() throws ProtocolException, IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, InterruptedException {
         TmcServiceScheduler.startIfNotRunning(course);
         checkData();
-        interpreter = getInterpreter();
         String returnUrl = submitter.submit(data.get("path"));
         SubmissionResult result = interpreter.getSubmissionResult(returnUrl);
         return result;
     }
-
-    @Override
-    public Optional<String> parseData(Object data) throws IOException {
-        String mail = checkMail();
-        try {
-            return Optional.of(mail + "\n" + interpreter.resultSummary(true));
-        } catch (InterruptedException ex) {
-            return Optional.of("Error while parsing submissionResult.");
-        }
-    }
+    
 
     /**
      ** HUOM EXTRAKTOI TÄMÄ OMAAN LUOKKAAN

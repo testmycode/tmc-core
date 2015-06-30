@@ -3,7 +3,7 @@ package hy.tmc.cli.backend.communication;
 import static org.junit.Assert.assertTrue;
 
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import java.io.IOException;

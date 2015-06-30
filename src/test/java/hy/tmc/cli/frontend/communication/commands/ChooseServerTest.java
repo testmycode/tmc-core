@@ -1,7 +1,7 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.configuration.ConfigHandler;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 
 import org.apache.commons.io.FileUtils;
 

@@ -10,7 +10,7 @@ import hy.tmc.cli.backend.communication.ExerciseLister;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 
 import org.junit.runner.RunWith;
@@ -98,25 +98,6 @@ public class ListExercisesTest {
         }
     }
 
-    @Test
-    public void getsExerciseName() throws Exception {
-        list.setParameter("path", "any");
-        when(lister.buildExercisesInfo(eq(exampleExercises))).thenCallRealMethod();
-        String result = list.parseData(list.call()).get();
-        assertTrue(result.contains("1 tehtävä"));
-        assertTrue(result.contains("3 tehtävä"));
-    }
-
-    @Test
-    public void returnsFailIfBadPath() throws ProtocolException, Exception {
-        String found = "No course found";
-        Mockito.when(lister.buildExercisesInfo(eq(exampleExercises))).thenReturn(found);
-        list.setParameter("path", "any");
-        String result = list.parseData(list.call()).get();
-        assertTrue(result.contains(found));
-
-    }
-
     @Test(expected = ProtocolException.class)
     public void throwsErrorIfNoUser() throws ProtocolException, IOException {
         PowerMockito.mockStatic(ClientData.class);
@@ -131,14 +112,5 @@ public class ListExercisesTest {
         ClientData.clearUserData();
         list.checkData();
         list.call();
-    }
-
-    @Test
-    public void doesntContainWeirdName() throws ProtocolException, IOException {
-        list.setParameter("path", "any");
-        when(lister.buildExercisesInfo(eq(exampleExercises))).thenCallRealMethod();
-
-        String result = list.parseData(list.call()).get();
-        assertFalse(result.contains("Ilari"));
     }
 }

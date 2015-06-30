@@ -3,7 +3,7 @@ package hy.tmc.cli.frontend.communication.commands;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.backend.communication.authorization.Authorization;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import java.io.IOException;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;

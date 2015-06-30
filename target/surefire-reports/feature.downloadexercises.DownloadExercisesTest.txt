@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: feature.downloadexercises.DownloadExercisesTest
--------------------------------------------------------------------------------
-Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 23.277 sec

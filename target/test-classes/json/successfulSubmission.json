@@ -1,0 +1,48 @@
+{
+    "api_version": 7,
+    "all_tests_passed": true,
+    "user_id": 52,
+    "course": "2014-mooc-no-deadline",
+    "exercise_name": "viikko1-Viikko1_020.Kayttajatunnukset",
+    "status": "ok",
+    "points":
+            [
+                "20"
+
+            ],
+    "processing_time": 11,
+    "message_for_paste": "",
+    "missing_review_points": [],
+    "test_cases":
+            [
+                {
+                    "name": "KayttajatunnuksetTest sopivatKayvat",
+                    "successful": true,
+                    "message": null,
+                    "exception": null,
+                    "detailed_message": null
+
+                },
+                {
+                    "name": "KayttajatunnuksetTest sopimattomatEivatKay",
+                    "successful": true,
+                    "message": null,
+                    "exception": null,
+                    "detailed_message": null
+                }
+
+            ],
+    "feedback_questions": [],
+    "feedback_answer_url": "https://tmc.mooc.fi/staging/submissions/1763/feedback_answers.json",
+    "solution_url": "https://tmc.mooc.fi/staging/exercises/1247/solution",
+    "validations":
+            {
+                "strategy": "DISABLED",
+                "validationErrors": {}
+            },
+    "valgrind": "",
+    "reviewed": false,
+    "requests_review": false,
+    "submitted_at": "2015-05-27T13:13:02.204+03:00"
+
+}

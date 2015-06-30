@@ -18,9 +18,4 @@ public class ReplyToPing extends Command<String> {
         return answer;
     }
 
-    @Override
-    public Optional<String> parseData(Object data) {
-        String response = (String) data;
-        return Optional.of(response);
-    }
 }

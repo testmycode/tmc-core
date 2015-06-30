@@ -3,10 +3,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>hy</groupId>
-    <artifactId>tmc-cli</artifactId>
+    <artifactId>tmc-core</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>tmc-cli</name>
+    <name>tmc-core</name>
     <url>http://testmycode.net</url>
 
     <repositories>

@@ -1,7 +1,7 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 
 public class Feedback extends Command<String> {
 
@@ -16,10 +16,6 @@ public class Feedback extends Command<String> {
         }
     }
 
-    @Override
-    public Optional<String> parseData(Object data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public String call() throws Exception {

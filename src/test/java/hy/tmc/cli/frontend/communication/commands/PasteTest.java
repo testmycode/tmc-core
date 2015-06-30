@@ -1,7 +1,6 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 import com.google.common.base.Optional;
@@ -10,11 +9,10 @@ import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.CourseSubmitter;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.frontend.communication.server.ExpiredException;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ExpiredException;
+import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
-import net.lingala.zip4j.exception.ZipException;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -65,14 +63,6 @@ public class PasteTest {
     @After
     public void clean() {
         ClientData.clearUserData();
-    }
-
-    @Test
-    public void submitReturnsBadOutputWhenCodeIsBad() throws Exception {
-        PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
-        paste.setParameter("path", "/hieno/path");
-        String result = paste.parseData(paste.call()).get();
-        assertTrue(result.contains(pasteUrl));
     }
 
     /**

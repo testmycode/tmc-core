@@ -3,7 +3,7 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.cli.testhelpers.MailExample;
 import hy.tmc.cli.testhelpers.ProjectRootFinderStub;
 import java.io.IOException;

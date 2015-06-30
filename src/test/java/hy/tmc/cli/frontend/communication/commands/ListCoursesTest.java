@@ -5,7 +5,7 @@ import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.cli.testhelpers.ExampleJson;
 
 import java.io.IOException;
@@ -21,7 +21,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
@@ -61,19 +60,6 @@ public class ListCoursesTest {
         ClientData.setUserData("", "");
         list.checkData();
         list.call();
-    }
-
-    @Test
-    public void testWithAuthPrintsCourses() throws Exception {
-        Mailbox.create();
-        String testResult = list.parseData(list.call()).get();
-        assertTrue(testResult.contains("WEPAMOOC-STAGE"));
-    }
-
-    @Test
-    public void testWithAuthPrintsSeveralCourses() throws Exception {
-        String testResult = list.parseData(list.call()).get();
-        assertTrue(testResult.contains("WEPATEST"));
     }
 
     @Test

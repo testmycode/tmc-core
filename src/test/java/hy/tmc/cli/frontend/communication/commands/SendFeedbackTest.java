@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.cli.testhelpers.ExampleJson;
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,22 +50,6 @@ public class SendFeedbackTest {
         JsonObject expectedJson = (JsonObject) parser.parse(ExampleJson.sentFeedbackExample);
         PowerMockito.verifyStatic();
         UrlCommunicator.makePostWithJson(expectedJson, url);
-    }
-    
-    @Test
-    public void testParseDataWithSuccess() throws IOException {
-        String expected = "Feedback answers sent succesfully";
-        Optional<String> result = command.parseData(new HttpResult("{status:ok}", 200, true));
-        assertTrue(result.isPresent());
-        assertEquals(expected, result.get());
-    }    
-    
-    @Test
-    public void testParseDataWithFail() throws IOException {
-        String expected = "Sending feedbackanswers failed";
-        Optional<String> result = command.parseData(new HttpResult("{status:fail}", 200, true));
-        assertTrue(result.isPresent());
-        assertEquals(expected, result.get());
     }
     
     @Test (expected = ProtocolException.class)

@@ -19,7 +19,7 @@ import hy.tmc.cli.frontend.communication.commands.Paste;
 import hy.tmc.cli.frontend.communication.commands.ReplyToPing;
 import hy.tmc.cli.frontend.communication.commands.RunTests;
 import hy.tmc.cli.frontend.communication.commands.Submit;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.runner.RunWith;

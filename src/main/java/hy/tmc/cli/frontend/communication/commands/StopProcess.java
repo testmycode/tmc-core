@@ -1,8 +1,7 @@
 package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.cli.frontend.FrontendListener;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 
 
 public class StopProcess extends Command<String> {
@@ -21,11 +20,6 @@ public class StopProcess extends Command<String> {
      */
     @Override
     public void checkData() throws ProtocolException {
-    }
-
-    @Override
-    public Optional<String> parseData(Object data) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override

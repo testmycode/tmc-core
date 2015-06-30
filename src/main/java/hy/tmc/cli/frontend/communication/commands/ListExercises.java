@@ -6,7 +6,7 @@ import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.cli.synchronization.TmcServiceScheduler;
 import java.io.IOException;
 
@@ -56,14 +56,6 @@ public class ListExercises extends Command<List<Exercise>> {
         } else {
             throw new ProtocolException("No course resolved from the path.");
         }
-    }
-
-    @Override
-    public Optional<String> parseData(Object data) throws IOException {
-        String mail = checkMail();
-        @SuppressWarnings("unchecked")
-        List<Exercise> result = (List<Exercise>) data;
-        return Optional.of(mail + "\n" + lister.buildExercisesInfo(result));
     }
 
     @Override

@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
@@ -27,18 +27,6 @@ public class SendFeedback extends Command<HttpResult> {
         if (answers == null || url == null) {
             throw new ProtocolException("must give answers and feedback url");
         }
-    }
-
-    @Override
-    public Optional<String> parseData(Object data) throws IOException {
-        if (data.getClass() != HttpResult.class) {
-            return Optional.absent();
-        }
-        HttpResult result = (HttpResult) data;
-        if (result.getData() != null && result.getData().contains("{status:ok}")) {
-            return Optional.of("Feedback answers sent succesfully");
-        }
-        return Optional.of("Sending feedbackanswers failed");
     }
 
     @Override

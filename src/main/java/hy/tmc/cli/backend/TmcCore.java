@@ -4,10 +4,8 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import com.google.gson.JsonObject;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import hy.tmc.cli.backend.communication.HttpResult;
-import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
@@ -23,20 +21,17 @@ import hy.tmc.cli.frontend.communication.commands.Paste;
 import hy.tmc.cli.frontend.communication.commands.RunTests;
 import hy.tmc.cli.frontend.communication.commands.SendFeedback;
 import hy.tmc.cli.frontend.communication.commands.Submit;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
-import hy.tmc.cli.frontend.communication.server.ProtocolParser;
+import hy.tmc.core.exceptions.ProtocolException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 
 public class TmcCore {
 
     private ListeningExecutorService threadPool;
-    private ProtocolParser parser = new ProtocolParser();
 
     /**
      * The TmcCore that can be used as a standalone businesslogic for any tmc
@@ -234,24 +229,6 @@ public class TmcCore {
         return stringListenableFuture;
     }
 
-    /**
-     * Parses the input String for command syntax and submits the corresponding
-     * Command object into the thread pool.
-     *
-     * @param inputLine String with command name and params
-     * @return A future object of any type
-     * @throws ProtocolException if command not called properly
-     */
-    public ListenableFuture<?> runCommand(String inputLine) throws ProtocolException {
-        checkParameters(inputLine);
-        @SuppressWarnings("unchecked")
-        ListenableFuture result = threadPool.submit(parser.getCommand(inputLine));
-        return result;
-    }
-
-    public Command getCommand(String inputLine) throws ProtocolException {
-        return parser.getCommand(inputLine);
-    }
 
     public ListenableFuture<?> submitTask(Callable<?> callable) {
         return threadPool.submit(callable);

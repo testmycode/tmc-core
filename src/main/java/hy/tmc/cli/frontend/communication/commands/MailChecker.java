@@ -8,7 +8,7 @@ import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.TmcJsonParser;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import java.io.IOException;
 
 public class MailChecker extends Command<String> {
@@ -45,11 +45,6 @@ public class MailChecker extends Command<String> {
             String errorMsg = "Unable to determine the course. Are you sure this is a tmc course subdirectory?";
             throw new ProtocolException(errorMsg);
         }
-    }
-
-    @Override
-    public Optional<String> parseData(Object data) {
-        return Optional.of((String) data);
     }
 
     @Override

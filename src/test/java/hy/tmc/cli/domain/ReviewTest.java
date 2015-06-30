@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import java.io.IOException;
 import java.util.ArrayList;
 import static org.hamcrest.CoreMatchers.not;

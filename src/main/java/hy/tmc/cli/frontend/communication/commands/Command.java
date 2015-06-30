@@ -2,7 +2,7 @@ package hy.tmc.cli.frontend.communication.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.frontend.ProgressObserver;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,16 +47,6 @@ public abstract class Command<E> implements Callable<E> {
      * @throws ProtocolException if the command lacks some necessary data
      */
     public abstract void checkData() throws ProtocolException, IOException;
-
-    /**
-     * Command should define, how to format data when result is ready. This is
-     * ONLY for TMC-cli-client. Other (G)UI's like TMC-Netbeans define
-     * themselves, how to parse ready commandResult.
-     *
-     * @param data SubmissionResult or String for example
-     * @return String to be printed to user
-     */
-    public abstract Optional<String> parseData(Object data) throws IOException;
 
     public void cleanData() {
         data.clear();

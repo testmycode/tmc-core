@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -96,56 +96,5 @@ public class ExerciseListerTest {
 
         assertEquals(correct, lister.listExercises("any"));
     }
-
-    @Test
-    public void withCorrectCourseAndExercisesOutputContainsNames() throws ProtocolException, IOException {
-        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Nimi"));
-        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Kuusi"));
-
-    }
-
-    @Test
-    public void withOneDoneExerciseOutputContainsX() throws ProtocolException, IOException {
-        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("x"));
-    }
-
-    @Test
-    public void withNoDoneExercisesOutputContainsNoX() throws ProtocolException, IOException {
-        List<Exercise> exercises = new ArrayList<>();
-
-        exercises.add(new Exercise());
-        exercises.add(new Exercise());
-        mockExercisesWith(exercises);
-
-        assertFalse(lister.buildExercisesInfo(lister.listExercises("any")).contains("x"));
-    }
-
-    @Test
-    public void withOneAttemptedExerciseOutputContainsNoX() throws ProtocolException, IOException {
-        List<Exercise> exercises = new ArrayList<>();
-
-        exercises.add(new Exercise());
-        Exercise ex = new Exercise();
-        ex.setAttempted(true);
-        exercises.add(ex);
-
-        mockExercisesWith(exercises);
-        assertFalse(lister.buildExercisesInfo(lister.listExercises("any")).contains("x"));
-
-    }
-    
-    @Test
-    public void outputContainsPercentage() throws ProtocolException, IOException {
-        List<Exercise> exercises = new ArrayList<>();
-
-        exercises.add(new Exercise());
-        Exercise ex = new Exercise();
-        ex.setAttempted(true);
-        exercises.add(ex);
-
-        mockExercisesWith(exercises);
-        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("%"));
-        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Attempted"));
-        assertTrue(lister.buildExercisesInfo(lister.listExercises("any")).contains("Total"));
-    }
+   
 }

@@ -2,7 +2,7 @@ package hy.tmc.cli.zipping;
 
 import com.google.common.base.Optional;
 import hy.tmc.cli.domain.Course;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 import java.io.IOException;
 import java.nio.file.Path;
 

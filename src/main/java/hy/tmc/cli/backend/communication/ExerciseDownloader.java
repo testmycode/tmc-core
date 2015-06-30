@@ -5,8 +5,6 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import hy.tmc.cli.configuration.ClientData;
 import hy.tmc.cli.domain.Exercise;
-import static hy.tmc.cli.frontend.ColorFormatter.coloredString;
-import static hy.tmc.cli.frontend.CommandLineColor.YELLOW;
 
 import hy.tmc.cli.zipping.DefaultUnzipDecider;
 import hy.tmc.cli.zipping.UnzipDecider;
@@ -112,7 +110,7 @@ public class ExerciseDownloader {
      */
     public String handleSingleExercise(Exercise exercise, int exCount, int totalCount, String path) {
         if (exercise.isLocked()) {
-            return coloredString("Skipping locked exercise: ", YELLOW) + exercise.getName();
+            return "Skipping locked exercise: " + exercise.getName();
         }
         String exerciseInfo = tellStateForUser(exercise, exCount, totalCount);
         String filePath = path + exercise.getName() + ".zip";

@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 
 import hy.tmc.cli.domain.Course;
 import hy.tmc.cli.domain.Exercise;
-import hy.tmc.cli.frontend.communication.server.ExpiredException;
+import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.cli.zipping.DefaultRootDetector;
 import hy.tmc.cli.zipping.ProjectRootFinder;
 import hy.tmc.cli.zipping.RootFinder;
@@ -70,7 +70,7 @@ public class CourseSubmitter {
      * @return String with url from which to get results or null if exercise was not found.
      * @throws IOException if failed to create zip.
      * @throws java.text.ParseException
-     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
+     * @throws hy.tmc.core.exceptions.ExpiredException
      */
     public String submit(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
         Exercise currentExercise = initExercise(currentPath);
@@ -84,7 +84,7 @@ public class CourseSubmitter {
      * @return String with url from which to get paste URL or null if exercise was not found.
      * @throws IOException if failed to create zip.
      * @throws java.text.ParseException
-     * @throws hy.tmc.cli.frontend.communication.server.ExpiredException
+     * @throws hy.tmc.core.exceptions.ExpiredException
      */
     public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
         Exercise currentExercise = initExercise(currentPath);

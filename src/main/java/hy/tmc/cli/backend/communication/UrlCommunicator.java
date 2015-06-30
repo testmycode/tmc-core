@@ -7,7 +7,7 @@ import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
 
 import hy.tmc.cli.configuration.ClientData;
-import hy.tmc.cli.frontend.communication.server.ProtocolException;
+import hy.tmc.core.exceptions.ProtocolException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.Review;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,8 +23,9 @@ public class StatusPoller extends AbstractScheduledService {
     private File database;
 
     /**
-     * StatusPoller which polls code reviews. Has fixed time interval
-     * which can be directly modified even if the polling is running.
+     * StatusPoller which polls code reviews. Has fixed time interval which can
+     * be directly modified even if the polling is running.
+     *
      * @param currentCourse course which code reviews are being checked
      * @param schedule object that contains the time interval
      * @param database a file to which the polled information is saved.
@@ -40,6 +42,7 @@ public class StatusPoller extends AbstractScheduledService {
         if (reviews.isPresent()) {
             saveReviews(reviews.get());
         }
+        Optional<List<Exercise>> updates = checkUpdates(currentCourse);
     }
 
     @Override
@@ -49,7 +52,7 @@ public class StatusPoller extends AbstractScheduledService {
 
     private Optional<List<Review>> checkReviews() throws IOException {
         List<Review> currentReviews = TmcJsonParser.getReviews(this.currentCourse.getReviewsUrl());
-        currentReviews = filter(currentReviews);
+        currentReviews = filterReviews(currentReviews);
 
         if (currentReviews.isEmpty()) {
             return Optional.absent();
@@ -57,7 +60,16 @@ public class StatusPoller extends AbstractScheduledService {
         return Optional.of(currentReviews);
     }
 
-    private List<Review> filter(List<Review> currentReviews) {
+    private Optional<List<Exercise>> checkUpdates(Course currentCourse) throws IOException {
+        List<Exercise> exercises = TmcJsonParser.getExercises(currentCourse);
+        exercises = getUpdated(exercises);
+        if (exercises.isEmpty()) {
+            return Optional.absent();
+        }
+        return Optional.of(exercises);
+    }
+
+    private List<Review> filterReviews(List<Review> currentReviews) {
         List<Review> filtered = new ArrayList<>();
         for (Review review : currentReviews) {
             if (!review.isMarkedAsRead()) {
@@ -81,4 +93,26 @@ public class StatusPoller extends AbstractScheduledService {
             writer.write(reviewsAsJson);
         }
     }
+
+    private void saveUpdates(List<Exercise> exercises) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private List<Exercise> getUpdated(List<Exercise> exercises) {
+        List<Exercise> updates = new ArrayList<>();
+        if (exercises == null) {
+            return updates;
+        }
+        for (Exercise exercise : exercises) {
+            if (isUpdated(exercise)) {
+                updates.add(exercise);
+            }
+        }
+        return updates;
+    }
+
+    private boolean isUpdated(Exercise exercise) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

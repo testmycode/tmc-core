@@ -20,24 +20,6 @@ public class StatusPollerTest {
 
     private StatusPoller statusPoller;
 
-    @Before
-    public void before() throws Exception {
-        statusPoller = new StatusPoller(new Course(), new PollScheduler(0, TimeUnit.SECONDS));
-        PowerMockito.mockStatic(TmcJsonParser.class);
-        PowerMockito.when(TmcJsonParser.getReviews(any(String.class)))
-                .thenReturn(MailExample.reviewExample());
-    }
-
-    @Test
-    public void afterOneIterationThereShouldBeMessagesPolled() throws Exception {
-        statusPoller.runOneIteration();
-        assertTrue(Mailbox.getMailbox().get().reviewsWaiting());
-    }
-
-    @Test(expected = IllegalStateException.class)
-    public void failsIfNoMailBoxCreated() throws Exception {
-        Mailbox.destroy();
-        statusPoller.runOneIteration();
-    }
+    // TODO reimplement
 
 } 

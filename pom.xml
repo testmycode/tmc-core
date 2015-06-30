@@ -145,10 +145,12 @@
                         <ignores>
                             <ignore>hy.tmc.core.domain.Exercise*</ignore>
                             <ignore>hy.tmc.core.domain.submission</ignore>
+                            <ignore>hy.tmc.core.exceptions</ignore>
                         </ignores>
                         <excludes>
                             <exclude>hy/tmc/core/domain/Exercise*.class</exclude>
                             <exclude>hy/tmc/core/domain/submission/*</exclude>
+                            <exclude>hy/tmc/core/exceptions/*</exclude>
                         </excludes>
                     </instrumentation>
                     <!-- <instrumentation></instrumentation>  include here if no classes being tested-->

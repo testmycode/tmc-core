@@ -1,0 +1,3 @@
+extra_student_files:
+    - test/StudentTest.java
+    - important.txt

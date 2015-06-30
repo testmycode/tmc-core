@@ -1,0 +1,35 @@
+{
+    "api_version": 7,
+    "all_tests_passed": true,
+    "user_id": 52,
+    "course": "tmc-testcourse",
+    "exercise_name": "trivial",
+    "status": "ok",
+    "points": ["trivial"],
+    "processing_time": 14,
+    "message_for_paste": "",
+    "missing_review_points": [],
+    "test_cases": [
+        {
+            "name": "TrivialTest testF",
+            "successful": true,
+            "message": null,
+            "exception": null,
+            "detailed_message": null
+        }
+    ],
+    "feedback_questions": [
+
+    ],
+    "feedback_answer_url": "https://tmc.mooc.fi/staging/submissions/1933/feedback_answers.json",
+    "solution_url": "https://tmc.mooc.fi/staging/exercises/1653/solution",
+    "validations":
+            {
+                "strategy": "DISABLED",
+                "validationErrors": {}
+            },
+    "valgrind": "",
+    "reviewed": false,
+    "requests_review": false,
+    "submitted_at": "2015-06-04T15:03:34.591+03:00"
+}

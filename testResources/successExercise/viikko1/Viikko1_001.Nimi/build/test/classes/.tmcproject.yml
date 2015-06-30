@@ -1,0 +1,4 @@
+
+extra_student_files:
+    - test/StudentTest.java
+    - duck/duck.py

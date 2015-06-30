@@ -112,7 +112,6 @@ public class PasteTest {
         paste.checkData();
     }
     
-
     @Test(expected = ProtocolException.class)
     public void throwsErrorIfCourseCantBeRetrieved() throws Exception {
         PowerMockito.when(ClientData.userDataExists()).thenReturn(true);

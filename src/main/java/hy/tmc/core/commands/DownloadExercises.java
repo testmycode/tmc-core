@@ -9,6 +9,7 @@ import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.ProtocolException;
 
 import java.io.IOException;
+import java.util.List;
 
 public class DownloadExercises extends Command<String> {
 
@@ -82,11 +83,15 @@ public class DownloadExercises extends Command<String> {
     }
 
     private Optional<String> downloadExercises(Course course) {
+        return downloadExercisesFromList(course.getExercises(), course.getName());
+    }
+    
+    public Optional<String> downloadExercisesFromList(List<Exercise> exercises, String courseName){
         int exCount = 0;
-        int totalCount = course.getExercises().size();
+        int totalCount = exercises.size();
         int downloaded = 0;
-        String path = exerciseDownloader.createCourseFolder(data.get("path"), course.getName());
-        for (Exercise exercise : course.getExercises()) {
+        String path = exerciseDownloader.createCourseFolder(data.get("path"), courseName);
+        for (Exercise exercise : exercises) {
             String message = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
             exCount++;
             if (!message.contains("Skip")) {

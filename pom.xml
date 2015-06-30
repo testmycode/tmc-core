@@ -143,17 +143,12 @@
                     <aggregate>true</aggregate>
                     <instrumentation>
                         <ignores>
-                            <ignore>hy.tmc.cli.frontend.Result*</ignore>
-                            <ignore>hy.tmc.cli.domain.Exercise*</ignore>
-                            <ignore>hy.tmc.cli.Main*</ignore>
-                            <ignore>hy.tmc.cli.domain.submission</ignore>
+                            <ignore>hy.tmc.core.domain.Exercise*</ignore>
+                            <ignore>hy.tmc.core.domain.submission</ignore>
                         </ignores>
                         <excludes>
-                            <exclude>hy/tmc/cli/frontend_communication/Result*.enum</exclude>
-                            <exclude>hy/tmc/cli/frontend_communication/Result*.class</exclude>
-                            <exclude>hy/tmc/cli/domain/Exercise*.class</exclude>
-                            <exclude>hy/tmc/cli/Main*.class</exclude>
-                            <exclude>hy/tmc/cli/domain/submission/*</exclude>
+                            <exclude>hy/tmc/core/domain/Exercise*.class</exclude>
+                            <exclude>hy/tmc/core/domain/submission/*</exclude>
                         </excludes>
                     </instrumentation>
                     <!-- <instrumentation></instrumentation>  include here if no classes being tested-->

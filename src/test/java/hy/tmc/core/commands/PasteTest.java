@@ -24,7 +24,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.net.URI;
 import java.text.ParseException;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ClientData.class)
@@ -47,9 +49,8 @@ public class PasteTest {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
         paste = new Paste(submitterMock);
-
     }
-
+    
     private void mock() throws ParseException, ExpiredException, IOException, ProtocolException {
         ClientData.setUserData("Massbon", "Samu");
         PowerMockito.mockStatic(ClientData.class);
@@ -75,6 +76,14 @@ public class PasteTest {
         paste.setParameter("path", "/home/tmccli/uolevipuistossa");
         paste.checkData();
     }
+    
+    @Test
+    public void pasteSuccess() throws Exception {
+        PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
+        paste.data.put("path", "asdsad");
+        URI uri = paste.call();
+        assertEquals(uri.toString(), "http://legit.paste.url.fi");
+    }
 
     /**
      * Check that if user didn't give correct data, data checking fails.
@@ -96,6 +105,13 @@ public class PasteTest {
         ClientData.clearUserData();
         paste.checkData();
     }
+    
+    @Test(expected = ProtocolException.class)
+    public void throwsErrorIfNoPath() throws Exception {
+        PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
+        paste.checkData();
+    }
+    
 
     @Test(expected = ProtocolException.class)
     public void throwsErrorIfCourseCantBeRetrieved() throws Exception {

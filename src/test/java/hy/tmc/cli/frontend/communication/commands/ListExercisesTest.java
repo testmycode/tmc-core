@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import static org.junit.Assert.assertEquals;
 
 import static org.junit.Assert.assertTrue;
 
@@ -113,4 +114,13 @@ public class ListExercisesTest {
         list.checkData();
         list.call();
     }
+    
+    @Test
+    public void listWithAuthSuccess() throws Exception {
+        Mailbox.create();
+        list.setParameter("path", "any");
+        List<Exercise> exercises = list.call();
+        assertEquals("1 tehtävä", exercises.get(1).getName());
+    }
+    
 }

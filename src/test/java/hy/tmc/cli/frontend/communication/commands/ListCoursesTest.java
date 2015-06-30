@@ -5,10 +5,13 @@ import hy.tmc.cli.backend.Mailbox;
 import hy.tmc.cli.backend.communication.HttpResult;
 import hy.tmc.cli.backend.communication.UrlCommunicator;
 import hy.tmc.cli.configuration.ClientData;
+import hy.tmc.cli.domain.Course;
 import hy.tmc.core.exceptions.ProtocolException;
 import hy.tmc.cli.testhelpers.ExampleJson;
 
 import java.io.IOException;
+import java.util.List;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -65,5 +68,12 @@ public class ListCoursesTest {
     @Test
     public void checkDataTest() throws ProtocolException {
         list.checkData();
+    }
+    
+    @Test
+    public void testWithAuthSuccess() throws Exception {
+        Mailbox.create();
+        List<Course> courses = list.call();
+        assertEquals("2013_ohpeJaOhja", courses.get(0).getName());
     }
 }

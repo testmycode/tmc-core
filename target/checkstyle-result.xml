@@ -7,12 +7,6 @@
 <file name="/home/pihla/tmc-core/src/main/java/hy/tmc/cli/synchronization/PollScheduler.java">
 <error line="4" severity="warning" message="&apos;java.util.concurrent.TimeUnit&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 </file>
-<file name="/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/StopProcess.java">
-<error line="4" severity="warning" message="&apos;hy.tmc.core.exceptions.ProtocolException&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="9" severity="warning" message="First sentence should be present." source="com.puppycrawl.tools.checkstyle.checks.javadoc.SummaryJavadocCheck"/>
-<error line="19" severity="warning" message="At-clause should have a non-empty description." source="com.puppycrawl.tools.checkstyle.checks.javadoc.NonEmptyAtclauseDescriptionCheck"/>
-<error line="27" severity="warning" message="Line is longer than 100 characters (found 135)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-</file>
 <file name="/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/ChooseServer.java">
 <error line="4" severity="warning" message="&apos;hy.tmc.cli.configuration.ConfigHandler&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="6" severity="warning" message="&apos;java.io.IOException&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
@@ -21,9 +15,6 @@
 <error line="4" severity="warning" message="&apos;fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="8" severity="warning" message="Wrong lexicographical order for &apos;hy.tmc.cli.zipping.DefaultRootDetector&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="10" severity="warning" message="&apos;java.nio.file.Path&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-</file>
-<file name="/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/CommandFactory.java">
-<error line="45" severity="warning" message="First sentence should be present." source="com.puppycrawl.tools.checkstyle.checks.javadoc.SummaryJavadocCheck"/>
 </file>
 <file name="/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/MailChecker.java">
 <error line="12" severity="warning" message="&apos;java.io.IOException&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
@@ -65,8 +56,6 @@
 <error line="13" severity="warning" message="Wrong lexicographical order for &apos;hy.tmc.cli.domain.submission.SubmissionResult&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="22" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="93" severity="warning" message="Line is longer than 100 characters (found 170)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-</file>
-<file name="/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/Help.java">
 </file>
 <file name="/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/Authenticate.java">
 <error line="4" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;SPECIAL_IMPORTS&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
@@ -282,26 +271,26 @@
 <file name="/home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/TmcCore.java">
 <error line="4" severity="warning" message="&apos;com.google.common.util.concurrent.ListenableFuture&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="7" severity="warning" message="&apos;fi.helsinki.cs.tmc.langs.RunResult&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="25" severity="warning" message="&apos;java.io.IOException&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="67" severity="warning" message="Line is longer than 100 characters (found 103)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="71" severity="warning" message="Line is longer than 100 characters (found 112)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="80" severity="warning" message="Line continuation have incorrect indentation level, expected level should be 4." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck"/>
-<error line="86" severity="warning" message="Line is longer than 100 characters (found 104)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="102" severity="warning" message="Line is longer than 100 characters (found 120)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="116" severity="warning" message="Line is longer than 100 characters (found 110)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="120" severity="warning" message="Line is longer than 100 characters (found 120)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="148" severity="warning" message="Line is longer than 100 characters (found 117)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="159" severity="warning" message="Line continuation have incorrect indentation level, expected level should be 4." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck"/>
-<error line="165" severity="warning" message="Line is longer than 100 characters (found 123)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="176" severity="warning" message="Line continuation have incorrect indentation level, expected level should be 4." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck"/>
-<error line="178" severity="warning" message="Line continuation have incorrect indentation level, expected level should be 4." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck"/>
-<error line="184" severity="warning" message="Line is longer than 100 characters (found 141)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="196" severity="warning" message="Line continuation have incorrect indentation level, expected level should be 4." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck"/>
-<error line="202" severity="warning" message="Line is longer than 100 characters (found 125)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="206" severity="warning" message="Line is longer than 100 characters (found 133)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="206" column="5" severity="warning" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
-<error line="222" severity="warning" message="Line continuation have incorrect indentation level, expected level should be 4." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck"/>
-<error line="228" severity="warning" message="Line is longer than 100 characters (found 104)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="23" severity="warning" message="&apos;java.io.IOException&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
+<error line="65" severity="warning" message="Line is longer than 100 characters (found 103)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="69" severity="warning" message="Line is longer than 100 characters (found 112)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="78" severity="warning" message="Line continuation have incorrect indentation level, expected level should be 4." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck"/>
+<error line="84" severity="warning" message="Line is longer than 100 characters (found 104)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="100" severity="warning" message="Line is longer than 100 characters (found 120)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="114" severity="warning" message="Line is longer than 100 characters (found 110)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="118" severity="warning" message="Line is longer than 100 characters (found 120)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="132" severity="warning" message="Line is longer than 100 characters (found 117)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="143" severity="warning" message="Line continuation have incorrect indentation level, expected level should be 4." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck"/>
+<error line="149" severity="warning" message="Line is longer than 100 characters (found 123)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="160" severity="warning" message="Line continuation have incorrect indentation level, expected level should be 4." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck"/>
+<error line="162" severity="warning" message="Line continuation have incorrect indentation level, expected level should be 4." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck"/>
+<error line="168" severity="warning" message="Line is longer than 100 characters (found 141)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="180" severity="warning" message="Line continuation have incorrect indentation level, expected level should be 4." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck"/>
+<error line="186" severity="warning" message="Line is longer than 100 characters (found 125)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="190" severity="warning" message="Line is longer than 100 characters (found 133)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="190" column="5" severity="warning" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="206" severity="warning" message="Line continuation have incorrect indentation level, expected level should be 4." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocTagContinuationIndentationCheck"/>
+<error line="212" severity="warning" message="Line is longer than 100 characters (found 104)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
 </file>
 <file name="/home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/MailFormatter.java">
 <error line="4" severity="warning" message="&apos;hy.tmc.cli.domain.Review&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
@@ -431,8 +420,6 @@
 <error line="20" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="21" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="23" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;STATIC&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-</file>
-<file name="/home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/HelpTest.java">
 </file>
 <file name="/home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/RunTestsTest.java">
 <error line="5" severity="warning" message="&apos;import&apos; should be separated from previous statement." source="com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyLineSeparatorCheck"/>
@@ -740,38 +727,37 @@
 </file>
 <file name="/home/pihla/tmc-core/src/test/java/hy/tmc/cli/backend/TmcCoreTest.java">
 <error line="6" severity="warning" message="&apos;fi.helsinki.cs.tmc.langs.RunResult&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="23" severity="warning" message="&apos;java.util.ArrayList&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
+<error line="21" severity="warning" message="&apos;java.util.ArrayList&apos;should be separated from previous import group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
+<error line="22" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
+<error line="23" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="24" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="25" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="26" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="27" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="28" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="30" severity="warning" message="Wrong lexicographical order for &apos;java.util.HashMap&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
+<error line="28" severity="warning" message="Wrong lexicographical order for &apos;java.util.HashMap&apos; import." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
+<error line="32" severity="warning" message="&apos;import&apos; should be separated from previous statement." source="com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyLineSeparatorCheck"/>
+<error line="32" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;STATIC&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
+<error line="33" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="34" severity="warning" message="&apos;import&apos; should be separated from previous statement." source="com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyLineSeparatorCheck"/>
 <error line="34" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;STATIC&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="35" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="36" severity="warning" message="&apos;import&apos; should be separated from previous statement." source="com.puppycrawl.tools.checkstyle.checks.whitespace.EmptyLineSeparatorCheck"/>
+<error line="35" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;STATIC&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="36" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;STATIC&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="37" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;STATIC&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
 <error line="38" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;STATIC&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="39" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;STATIC&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="40" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;STATIC&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="41" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
-<error line="51" column="5" severity="warning" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
-<error line="59" severity="warning" message="Line is longer than 100 characters (found 103)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="65" severity="warning" message="Line is longer than 100 characters (found 121)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="70" severity="warning" message="Line is longer than 100 characters (found 104)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="76" severity="warning" message="Line is longer than 100 characters (found 110)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="83" severity="warning" message="Line is longer than 100 characters (found 115)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="89" severity="warning" message="Line is longer than 100 characters (found 102)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="95" severity="warning" message="Line is longer than 100 characters (found 109)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="101" severity="warning" message="Line is longer than 100 characters (found 111)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="107" severity="warning" message="Line is longer than 100 characters (found 102)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
-<error line="118" column="19" severity="warning" message="WhitespaceAround: &apos;=&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="118" column="20" severity="warning" message="WhitespaceAround: &apos;=&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="119" column="76" severity="warning" message="WhitespaceAround: &apos;{&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="123" column="19" severity="warning" message="WhitespaceAround: &apos;=&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="123" column="20" severity="warning" message="WhitespaceAround: &apos;=&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
-<error line="124" column="87" severity="warning" message="WhitespaceAround: &apos;{&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="39" severity="warning" message="Import statement is in the wrong order. Should be in the &apos;THIRD_PARTY_PACKAGE&apos; group." source="com.puppycrawl.tools.checkstyle.checks.imports.CustomImportOrderCheck"/>
+<error line="47" column="5" severity="warning" message="Missing a Javadoc comment." source="com.puppycrawl.tools.checkstyle.checks.javadoc.JavadocMethodCheck"/>
+<error line="55" severity="warning" message="Line is longer than 100 characters (found 103)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="61" severity="warning" message="Line is longer than 100 characters (found 121)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="66" severity="warning" message="Line is longer than 100 characters (found 104)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="72" severity="warning" message="Line is longer than 100 characters (found 110)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="79" severity="warning" message="Line is longer than 100 characters (found 115)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="86" severity="warning" message="Line is longer than 100 characters (found 109)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="92" severity="warning" message="Line is longer than 100 characters (found 111)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="98" severity="warning" message="Line is longer than 100 characters (found 102)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+<error line="109" column="19" severity="warning" message="WhitespaceAround: &apos;=&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="109" column="20" severity="warning" message="WhitespaceAround: &apos;=&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="110" column="76" severity="warning" message="WhitespaceAround: &apos;{&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="114" column="19" severity="warning" message="WhitespaceAround: &apos;=&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="114" column="20" severity="warning" message="WhitespaceAround: &apos;=&apos; is not followed by whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
+<error line="115" column="87" severity="warning" message="WhitespaceAround: &apos;{&apos; is not preceded with whitespace." source="com.puppycrawl.tools.checkstyle.checks.whitespace.WhitespaceAroundCheck"/>
 </file>
 </checkstyle>

@@ -39,7 +39,6 @@
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/ChooseServerTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/testhelpers/FileWriterHelper.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/testhelpers/MailExample.java
-/home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/HelpTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/domain/CourseTest.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/testhelpers/testresults/TestResultBuilder.java
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/SendFeedbackTest.java

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="13" failures="0" name="hy.tmc.cli.domain.ReviewTest" time="0.328" errors="0" skipped="0">
+<testsuite tests="13" failures="0" name="hy.tmc.cli.domain.ReviewTest" time="0.334" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/home/pihla/jdk1.8.0_11/jre/lib/amd64"/>
@@ -60,17 +60,17 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetExerciseName" time="0.126"/>
-  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testIsMarkedAsRead" time="0.002"/>
-  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetReviewerName" time="0.003"/>
-  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetReviewBody" time="0.003"/>
-  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetPointsNotAwarded" time="0.002"/>
-  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetUrl" time="0.003"/>
-  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetCreatedAt" time="0.002"/>
-  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="toStringTest" time="0.002"/>
+  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="toStringTest" time="0.149"/>
   <testcase classname="hy.tmc.cli.domain.ReviewTest" name="markAsReadTest" time="0.004"/>
   <testcase classname="hy.tmc.cli.domain.ReviewTest" name="markAsUnreadTest" time="0.002"/>
-  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetId" time="0.002"/>
   <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetSubmissionId" time="0.002"/>
+  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetExerciseName" time="0.003"/>
+  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetId" time="0.002"/>
+  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testIsMarkedAsRead" time="0.003"/>
+  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetReviewerName" time="0.002"/>
+  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetReviewBody" time="0.002"/>
   <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetPoints" time="0.002"/>
+  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetPointsNotAwarded" time="0.002"/>
+  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetUrl" time="0.001"/>
+  <testcase classname="hy.tmc.cli.domain.ReviewTest" name="testGetCreatedAt" time="0.002"/>
 </testsuite>

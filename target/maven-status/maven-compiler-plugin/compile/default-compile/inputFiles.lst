@@ -5,7 +5,6 @@
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/communication/CourseSubmitter.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/zipping/DefaultUnzipDecider.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/communication/UrlCommunicator.java
-/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/Help.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/zipping/RootFinder.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/zipping/Unzipper.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/RunTests.java
@@ -13,7 +12,6 @@
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/zipping/UnzipDecider.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/zipping/ProjectRootDetector.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/ProgressObserver.java
-/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/CommandFactory.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/communication/ExerciseDownloader.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/core/exceptions/ProtocolException.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/Authenticate.java
@@ -31,7 +29,6 @@
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/communication/SubmissionPoller.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/domain/submission/SubmissionResult.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/communication/ExerciseLister.java
-/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/StopProcess.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/communication/TmcJsonParser.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/MailChecker.java
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/ListExercises.java

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="6" failures="0" name="hy.tmc.cli.zipping.ProjectRootFinderTest" time="0.379" errors="0" skipped="0">
+<testsuite tests="6" failures="0" name="hy.tmc.cli.zipping.ProjectRootFinderTest" time="0.494" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/home/pihla/jdk1.8.0_11/jre/lib/amd64"/>
@@ -60,10 +60,10 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="hy.tmc.cli.zipping.ProjectRootFinderTest" name="testGetRootDirectoryFromSame" time="0.183"/>
-  <testcase classname="hy.tmc.cli.zipping.ProjectRootFinderTest" name="testGetRootDirectoryFromSame2" time="0.003"/>
-  <testcase classname="hy.tmc.cli.zipping.ProjectRootFinderTest" name="findsDeepRoot" time="0.003"/>
+  <testcase classname="hy.tmc.cli.zipping.ProjectRootFinderTest" name="getsCurrentCourse" time="0.311"/>
+  <testcase classname="hy.tmc.cli.zipping.ProjectRootFinderTest" name="testGetRootDirectoryFromSame" time="0.003"/>
+  <testcase classname="hy.tmc.cli.zipping.ProjectRootFinderTest" name="testGetRootDirectoryFromSame2" time="0.002"/>
+  <testcase classname="hy.tmc.cli.zipping.ProjectRootFinderTest" name="findsDeepRoot" time="0.002"/>
   <testcase classname="hy.tmc.cli.zipping.ProjectRootFinderTest" name="doesntFindRootWhenNoPom" time="0.002"/>
-  <testcase classname="hy.tmc.cli.zipping.ProjectRootFinderTest" name="getsCourseNameFromPath" time="0.004"/>
-  <testcase classname="hy.tmc.cli.zipping.ProjectRootFinderTest" name="getsCurrentCourse" time="0.004"/>
+  <testcase classname="hy.tmc.cli.zipping.ProjectRootFinderTest" name="getsCourseNameFromPath" time="0.002"/>
 </testsuite>

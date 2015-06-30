@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="2" failures="0" name="hy.tmc.cli.synchronization.PollSchedulerTest" time="2.068" errors="0" skipped="0">
+<testsuite tests="2" failures="0" name="hy.tmc.cli.synchronization.PollSchedulerTest" time="2.072" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/home/pihla/jdk1.8.0_11/jre/lib/amd64"/>
@@ -60,6 +60,6 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="hy.tmc.cli.synchronization.PollSchedulerTest" name="changeSchedulerShouldChangeSchedulerTime" time="1.04"/>
-  <testcase classname="hy.tmc.cli.synchronization.PollSchedulerTest" name="schedulerShouldStayInTime" time="0.991"/>
+  <testcase classname="hy.tmc.cli.synchronization.PollSchedulerTest" name="changeSchedulerShouldChangeSchedulerTime" time="1.038"/>
+  <testcase classname="hy.tmc.cli.synchronization.PollSchedulerTest" name="schedulerShouldStayInTime" time="0.999"/>
 </testsuite>

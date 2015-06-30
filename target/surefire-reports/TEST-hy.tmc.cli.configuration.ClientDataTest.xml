@@ -72,6 +72,6 @@
   <testcase classname="hy.tmc.cli.configuration.ClientDataTest" name="testSetUserData" time="0"/>
   <testcase classname="hy.tmc.cli.configuration.ClientDataTest" name="testGetUsername" time="0"/>
   <testcase classname="hy.tmc.cli.configuration.ClientDataTest" name="testGetPid" time="0"/>
-  <testcase classname="hy.tmc.cli.configuration.ClientDataTest" name="testSetPid" time="0.001"/>
-  <testcase classname="hy.tmc.cli.configuration.ClientDataTest" name="userDataExistsAfterSet" time="0"/>
+  <testcase classname="hy.tmc.cli.configuration.ClientDataTest" name="testSetPid" time="0"/>
+  <testcase classname="hy.tmc.cli.configuration.ClientDataTest" name="userDataExistsAfterSet" time="0.001"/>
 </testsuite>

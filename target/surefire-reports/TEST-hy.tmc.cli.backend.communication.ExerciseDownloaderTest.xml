@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="7" failures="0" name="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" time="1.05" errors="0" skipped="0">
+<testsuite tests="7" failures="0" name="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" time="1.028" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/home/pihla/jdk1.8.0_11/jre/lib/amd64"/>
@@ -60,11 +60,11 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="downloadedExercisesHasContent" time="0.18"/>
-  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="downloadedExercisesExists" time="0.196"/>
-  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="doesntCallUnzipOnLockedExercise" time="0.147"/>
-  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="downloadingGivesOutput" time="0.141"/>
-  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="requestsHaveAuth" time="0.058"/>
-  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="exerciseListIsEmpty" time="0.164"/>
-  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="downloadExercisesDoesRequests" time="0.148"/>
+  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="downloadedExercisesHasContent" time="0.184"/>
+  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="downloadedExercisesExists" time="0.185"/>
+  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="doesntCallUnzipOnLockedExercise" time="0.156"/>
+  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="downloadingGivesOutput" time="0.05"/>
+  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="requestsHaveAuth" time="0.152"/>
+  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="exerciseListIsEmpty" time="0.141"/>
+  <testcase classname="hy.tmc.cli.backend.communication.ExerciseDownloaderTest" name="downloadExercisesDoesRequests" time="0.138"/>
 </testsuite>

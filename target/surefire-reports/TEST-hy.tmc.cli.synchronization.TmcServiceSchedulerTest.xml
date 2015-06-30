@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="6" failures="0" name="hy.tmc.cli.synchronization.TmcServiceSchedulerTest" time="0" errors="0" skipped="0">
+<testsuite tests="6" failures="0" name="hy.tmc.cli.synchronization.TmcServiceSchedulerTest" time="0.004" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/home/pihla/jdk1.8.0_11/jre/lib/amd64"/>
@@ -62,7 +62,7 @@
   </properties>
   <testcase classname="hy.tmc.cli.synchronization.TmcServiceSchedulerTest" name="enableNegatesDisable" time="0"/>
   <testcase classname="hy.tmc.cli.synchronization.TmcServiceSchedulerTest" name="defaultIsAlwaysDisabled" time="0"/>
-  <testcase classname="hy.tmc.cli.synchronization.TmcServiceSchedulerTest" name="whenDisabledNoNewTasksAreAddedWhenStarting" time="0"/>
+  <testcase classname="hy.tmc.cli.synchronization.TmcServiceSchedulerTest" name="whenDisabledNoNewTasksAreAddedWhenStarting" time="0.002"/>
   <testcase classname="hy.tmc.cli.synchronization.TmcServiceSchedulerTest" name="disableMimicsTheRunningState" time="0"/>
   <testcase classname="hy.tmc.cli.synchronization.TmcServiceSchedulerTest" name="onlyOneInstanceCanBeInitialised" time="0"/>
   <testcase classname="hy.tmc.cli.synchronization.TmcServiceSchedulerTest" name="stopCreatesANewInstance" time="0"/>

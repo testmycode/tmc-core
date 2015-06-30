@@ -9,9 +9,7 @@ import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.commands.Authenticate;
 import hy.tmc.cli.frontend.communication.commands.ChooseServer;
 import hy.tmc.cli.frontend.communication.commands.Command;
-import hy.tmc.cli.frontend.communication.commands.CommandFactory;
 import hy.tmc.cli.frontend.communication.commands.DownloadExercises;
-import hy.tmc.cli.frontend.communication.commands.Help;
 import hy.tmc.cli.frontend.communication.commands.ListCourses;
 import hy.tmc.cli.frontend.communication.commands.ListExercises;
 import hy.tmc.cli.frontend.communication.commands.Logout;
@@ -41,11 +39,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(CommandFactory.class)
 public class TmcCoreTest {
 
     private TmcCore tmcCore;
-    private Map<String, Command> fakeCommandMap;
     private ListeningExecutorService threadPool;
 
     @Before
@@ -85,11 +81,6 @@ public class TmcCoreTest {
         verify(threadPool, times(1)).submit(any(DownloadExercises.class));
     }
 
-    @Test
-    public void help() throws ProtocolException, InterruptedException, ExecutionException, Exception {
-        tmcCore.help();
-        verify(threadPool, times(1)).submit(any(Help.class));
-    }
 
     @Test
     public void listCourses() throws ProtocolException, InterruptedException, ExecutionException, Exception {

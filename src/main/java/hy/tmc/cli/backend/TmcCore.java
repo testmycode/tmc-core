@@ -11,9 +11,7 @@ import hy.tmc.cli.domain.Exercise;
 import hy.tmc.cli.domain.submission.SubmissionResult;
 import hy.tmc.cli.frontend.communication.commands.Authenticate;
 import hy.tmc.cli.frontend.communication.commands.ChooseServer;
-import hy.tmc.cli.frontend.communication.commands.Command;
 import hy.tmc.cli.frontend.communication.commands.DownloadExercises;
-import hy.tmc.cli.frontend.communication.commands.Help;
 import hy.tmc.cli.frontend.communication.commands.ListCourses;
 import hy.tmc.cli.frontend.communication.commands.ListExercises;
 import hy.tmc.cli.frontend.communication.commands.Logout;
@@ -119,20 +117,6 @@ public class TmcCore {
         DownloadExercises downloadCommand = new DownloadExercises(path, courseId);
         ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) threadPool.submit(downloadCommand);
         return stringListenableFuture;
-    }
-
-    /**
-     * Displays a help message containing the names of valid commands on the
-     * server side.
-     *
-     * @return future-object containing a string with the help information.
-     * @throws ProtocolException if something went wrong.
-     */
-    public ListenableFuture<String> help() throws ProtocolException {
-        @SuppressWarnings("unchecked")
-        Help helpCommand = new Help();
-        ListenableFuture<String> help = (ListenableFuture<String>) threadPool.submit(helpCommand);
-        return help;
     }
 
     /**

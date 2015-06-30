@@ -1,7 +1,5 @@
-#Tue Jun 30 13:13:27 EEST 2015
-/home/pihla/tmc-core/src/test/java/hy/tmc/cli/frontend/communication/commands/HelpTest.java=1435653286000
+#Tue Jun 30 13:21:23 EEST 2015
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/configuration/ClientDataTest.java=1435575103000
-/home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/Help.java=1435651876000
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/zipping/ZipperTest.java=1435574219000
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/domain/submission/Validations.java=1435574219000
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/testhelpers/FileWriterHelper.java=1435574219000
@@ -9,8 +7,8 @@
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/frontend/communication/commands/ReplyToPing.java=1435651920000
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/testhelpers/ZipperStub.java=1435574219000
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/domain/ExerciseTest.java=1435574219000
-/home/pihla/tmc-core/src/test/java/hy/tmc/cli/domain/CourseTest.java=1435575103000
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/domain/submission/FeedbackQuestion.java=1435574219000
+/home/pihla/tmc-core/src/test/java/hy/tmc/cli/domain/CourseTest.java=1435575103000
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/communication/authorization/Authorization.java=1435574219000
 /home/pihla/tmc-core/src/test/java/hy/tmc/cli/testhelpers/testresults/RunResultBuilder.java=1435574219000
 /home/pihla/tmc-core/src/main/java/hy/tmc/cli/backend/communication/TmcServerException.java=1435575103000

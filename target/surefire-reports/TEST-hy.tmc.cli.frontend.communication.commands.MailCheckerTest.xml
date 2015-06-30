@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="5" failures="0" name="hy.tmc.cli.frontend.communication.commands.MailCheckerTest" time="0.102" errors="0" skipped="0">
+<testsuite tests="5" failures="0" name="hy.tmc.cli.frontend.communication.commands.MailCheckerTest" time="0.091" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/home/pihla/jdk1.8.0_11/jre/lib/amd64"/>
@@ -60,9 +60,9 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="hy.tmc.cli.frontend.communication.commands.MailCheckerTest" name="notValidIfNoMailbox" time="0.079"/>
-  <testcase classname="hy.tmc.cli.frontend.communication.commands.MailCheckerTest" name="notValidIfNotLoggedIn" time="0.006"/>
-  <testcase classname="hy.tmc.cli.frontend.communication.commands.MailCheckerTest" name="notValidIfNoPathSpecified" time="0.005"/>
+  <testcase classname="hy.tmc.cli.frontend.communication.commands.MailCheckerTest" name="notValidIfNoMailbox" time="0.073"/>
+  <testcase classname="hy.tmc.cli.frontend.communication.commands.MailCheckerTest" name="notValidIfNotLoggedIn" time="0.005"/>
+  <testcase classname="hy.tmc.cli.frontend.communication.commands.MailCheckerTest" name="notValidIfNoPathSpecified" time="0.004"/>
   <testcase classname="hy.tmc.cli.frontend.communication.commands.MailCheckerTest" name="notValidIfPathIsWeird" time="0.004"/>
-  <testcase classname="hy.tmc.cli.frontend.communication.commands.MailCheckerTest" name="ifMailboxHasMessagesItPrintsThemToFrontend" time="0.005"/>
+  <testcase classname="hy.tmc.cli.frontend.communication.commands.MailCheckerTest" name="ifMailboxHasMessagesItPrintsThemToFrontend" time="0.004"/>
 </testsuite>

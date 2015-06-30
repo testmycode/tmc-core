@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="7" failures="0" name="hy.tmc.cli.backend.communication.URLCommunicatorTest" time="0.914" errors="0" skipped="0">
+<testsuite tests="7" failures="0" name="hy.tmc.cli.backend.communication.URLCommunicatorTest" time="1.054" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/home/pihla/jdk1.8.0_11/jre/lib/amd64"/>
@@ -60,11 +60,11 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="notFoundWithoutValidParams" time="0.089"/>
-  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="okWithValidParams" time="0.066"/>
-  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="badGetRequestIsThrown" time="0.076"/>
-  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="badRequestWithoutValidURL" time="0.175"/>
-  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="makePutRequestSendsPut" time="0.167"/>
-  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="makePutRequestHasCorrectHeaders" time="0.147"/>
-  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="httpPostAddsFileToRequest" time="0.172"/>
+  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="notFoundWithoutValidParams" time="0.183"/>
+  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="okWithValidParams" time="0.191"/>
+  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="badGetRequestIsThrown" time="0.07"/>
+  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="badRequestWithoutValidURL" time="0.157"/>
+  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="makePutRequestSendsPut" time="0.163"/>
+  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="makePutRequestHasCorrectHeaders" time="0.183"/>
+  <testcase classname="hy.tmc.cli.backend.communication.URLCommunicatorTest" name="httpPostAddsFileToRequest" time="0.089"/>
 </testsuite>

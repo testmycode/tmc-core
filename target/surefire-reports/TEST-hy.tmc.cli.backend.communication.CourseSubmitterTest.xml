@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="8" failures="0" name="hy.tmc.cli.backend.communication.CourseSubmitterTest" time="0.523" errors="0" skipped="0">
+<testsuite tests="8" failures="0" name="hy.tmc.cli.backend.communication.CourseSubmitterTest" time="0.61" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/home/pihla/jdk1.8.0_11/jre/lib/amd64"/>
@@ -60,12 +60,12 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="testGetExerciseName" time="0.229"/>
+  <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="testGetExerciseName" time="0.163"/>
   <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="testFindCourseByCorrectPath" time="0.019"/>
   <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="testSubmitWithOneParam" time="0.019"/>
-  <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="testSubmitWithExpiredExercise" time="0.034"/>
-  <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="submitWithPasteReturnsPasteUrl" time="0.014"/>
-  <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="submitWithPasteFromBadPathThrowsException" time="0.014"/>
-  <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="testSubmitWithNonexistentExercise" time="0.013"/>
-  <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="submitWithNonExistentCourseThrowsException" time="0.01"/>
+  <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="testSubmitWithExpiredExercise" time="0.014"/>
+  <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="submitWithPasteReturnsPasteUrl" time="0.013"/>
+  <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="submitWithPasteFromBadPathThrowsException" time="0.012"/>
+  <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="testSubmitWithNonexistentExercise" time="0.011"/>
+  <testcase classname="hy.tmc.cli.backend.communication.CourseSubmitterTest" name="submitWithNonExistentCourseThrowsException" time="0.008"/>
 </testsuite>

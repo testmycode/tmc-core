@@ -1,5 +1,4 @@
 hy/tmc/cli/backend/Cache.class
-hy/tmc/cli/frontend/communication/commands/Help.class
 hy/tmc/cli/zipping/ProjectRootDetector.class
 hy/tmc/cli/backend/communication/ExerciseLister.class
 hy/tmc/cli/frontend/communication/commands/SendFeedback.class
@@ -7,7 +6,6 @@ hy/tmc/cli/configuration/ConfigHandler.class
 hy/tmc/cli/frontend/communication/commands/Submit.class
 hy/tmc/cli/frontend/communication/commands/Logout.class
 hy/tmc/cli/domain/submission/Validations.class
-hy/tmc/cli/frontend/communication/commands/StopProcess.class
 hy/tmc/cli/backend/communication/StatusPoller.class
 hy/tmc/cli/frontend/ProgressObserver.class
 hy/tmc/cli/backend/MailFormatter.class
@@ -36,7 +34,6 @@ hy/tmc/cli/frontend/communication/commands/Command.class
 hy/tmc/cli/domain/submission/TestCase.class
 hy/tmc/cli/frontend/communication/commands/DownloadExercises.class
 hy/tmc/cli/backend/communication/authorization/Authorization.class
-hy/tmc/cli/frontend/communication/commands/CommandFactory.class
 hy/tmc/cli/zipping/ProjectRootFinder.class
 hy/tmc/cli/domain/submission/StackTrace.class
 hy/tmc/cli/zipping/DefaultRootDetector.class

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="3" failures="0" name="hy.tmc.cli.frontend.communication.commands.ListExercisesTest" time="0.541" errors="0" skipped="0">
+<testsuite tests="3" failures="0" name="hy.tmc.cli.frontend.communication.commands.ListExercisesTest" time="0.306" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/home/pihla/jdk1.8.0_11/jre/lib/amd64"/>
@@ -60,7 +60,7 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="hy.tmc.cli.frontend.communication.commands.ListExercisesTest" name="testCheckDataSuccess" time="0.264"/>
-  <testcase classname="hy.tmc.cli.frontend.communication.commands.ListExercisesTest" name="throwsErrorIfNoUser" time="0.13"/>
-  <testcase classname="hy.tmc.cli.frontend.communication.commands.ListExercisesTest" name="throwsErrorIfNoCourseSpecified" time="0.029"/>
+  <testcase classname="hy.tmc.cli.frontend.communication.commands.ListExercisesTest" name="testCheckDataSuccess" time="0.161"/>
+  <testcase classname="hy.tmc.cli.frontend.communication.commands.ListExercisesTest" name="throwsErrorIfNoUser" time="0.016"/>
+  <testcase classname="hy.tmc.cli.frontend.communication.commands.ListExercisesTest" name="throwsErrorIfNoCourseSpecified" time="0.017"/>
 </testsuite>

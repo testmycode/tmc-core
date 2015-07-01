@@ -1,4 +1,4 @@
-package hy.tmc.core.communication.caching;
+package hy.tmc.core.communication.updates;
 
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.domain.Course;
@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReviewHandler extends NotificationHandler<Review> {
+public class ReviewHandler extends UpdateHandler<Review> {
 
 
     public ReviewHandler() {

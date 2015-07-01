@@ -1,10 +1,10 @@
-package hy.tmc.core.communication.caching;
+package hy.tmc.core.communication.updates;
 
 import hy.tmc.core.domain.Course;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class NotificationHandler<T> {
+public abstract class UpdateHandler<T> {
 
     protected abstract boolean isNew(T object);
 

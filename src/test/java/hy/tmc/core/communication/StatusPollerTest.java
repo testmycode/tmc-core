@@ -1,5 +1,6 @@
 package hy.tmc.core.communication;
 
+import hy.tmc.core.communication.caching.StatusPoller;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.testhelpers.MailExample;
 import org.junit.Test;

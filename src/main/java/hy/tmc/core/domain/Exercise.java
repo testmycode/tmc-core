@@ -186,7 +186,7 @@ public class Exercise {
     public void setRuntimeParams(String[] runtimeParams) {
         this.runtimeParams = runtimeParams;
     }
-
+    
     public String getValgrindStrategy() {
         return valgrindStrategy;
     }

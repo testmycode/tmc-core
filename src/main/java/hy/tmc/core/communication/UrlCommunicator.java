@@ -114,10 +114,7 @@ public class UrlCommunicator {
      * @param params params of the get request
      * @return true if successful
      */
-    public static boolean downloadFile(
-            String url,
-            File file,
-            String... params) {
+    public static boolean downloadToFile(String url, File file, String... params) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             HttpGet httpget = createGet(url, params);
             HttpResponse response = executeRequest(httpget);

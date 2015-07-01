@@ -13,26 +13,29 @@ import hy.tmc.core.zipping.Unzipper;
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 
 public class ExerciseDownloader {
 
     private UnzipDecider decider;
+    private File cacheFile;
 
     public ExerciseDownloader() {
         decider = new DefaultUnzipDecider();
     }
-    
+
     /**
      * Constructor for dependency injection.
-     * 
+     *
      * @param decider UnzipDecider which decides which files to unzip
      */
     public ExerciseDownloader(UnzipDecider decider) {
         this.decider = decider;
     }
-    
+
     /**
      * Download exercises by course url.
      *
@@ -114,7 +117,7 @@ public class ExerciseDownloader {
         }
         String exerciseInfo = tellStateForUser(exercise, exCount, totalCount);
         String filePath = path + exercise.getName() + ".zip";
-        downloadFile(exercise.getZipUrl(), filePath);
+        downloadExerciseZip(exercise.getZipUrl(), filePath);
         try {
             unzipFile(filePath, path);
             deleteZip(filePath);
@@ -190,9 +193,8 @@ public class ExerciseDownloader {
      * @param zipUrl url which will be downloaded
      * @param path where to download
      */
-    private static void downloadFile(String zipUrl, String path) {
+    private static void downloadExerciseZip(String zipUrl, String path) {
         File file = new File(path);
-        UrlCommunicator.downloadFile(zipUrl, file,
-                ClientData.getFormattedUserData());
+        UrlCommunicator.downloadToFile(zipUrl, file, ClientData.getFormattedUserData());
     }
 }

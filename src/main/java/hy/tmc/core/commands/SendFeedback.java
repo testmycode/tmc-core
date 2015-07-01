@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
@@ -23,9 +23,9 @@ public class SendFeedback extends Command<HttpResult> {
     }
     
     @Override
-    public void checkData() throws ProtocolException, IOException {
+    public void checkData() throws TmcCoreException, IOException {
         if (answers == null || url == null) {
-            throw new ProtocolException("must give answers and feedback url");
+            throw new TmcCoreException("must give answers and feedback url");
         }
     }
 

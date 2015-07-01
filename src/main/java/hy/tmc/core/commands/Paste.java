@@ -6,7 +6,7 @@ import hy.tmc.core.configuration.ClientData;
 
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import hy.tmc.core.zipping.Zipper;
@@ -43,21 +43,21 @@ public class Paste extends Command<URI> {
     /**
      * Requires auth and pwd in "path" parameter.
      *
-     * @throws ProtocolException if no auth or no path supplied.
+     * @throws TmcCoreException if no auth or no path supplied.
      */
     @Override
-    public void checkData() throws ProtocolException, IOException {
+    public void checkData() throws TmcCoreException, IOException {
         if (!ClientData.userDataExists()) {
-            throw new ProtocolException("User must be authorized first");
+            throw new TmcCoreException("User must be authorized first");
         }
         if (!this.data.containsKey("path")) {
-            throw new ProtocolException("path not supplied");
+            throw new TmcCoreException("path not supplied");
         }
         Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
         if (currentCourse.isPresent()) {
             course = currentCourse.get();
         } else {
-            throw new ProtocolException("Unable to determine course");
+            throw new TmcCoreException("Unable to determine course");
         }
     }
 
@@ -70,10 +70,10 @@ public class Paste extends Command<URI> {
      * @throws java.text.ParseException
      * @throws hy.tmc.core.exceptions.ExpiredException
      * @throws net.lingala.zip4j.exception.ZipException
-     * @throws hy.tmc.core.exceptions.ProtocolException
+     * @throws hy.tmc.core.exceptions.TmcCoreException
      */
     @Override
-    public URI call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
+    public URI call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         checkData();
         URI uri = URI.create(submitter.submitPaste(data.get("path")));
         return uri;

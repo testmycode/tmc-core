@@ -4,7 +4,7 @@ import hy.tmc.core.commands.Authenticate;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.communication.authorization.Authorization;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -34,25 +34,25 @@ public class AuthenticateTest {
     }
 
     @Test
-    public void canAuthenticateWithTestCredentials() throws ProtocolException, IOException {
+    public void canAuthenticateWithTestCredentials() throws TmcCoreException, IOException {
         new Authorization(); // for code coverage
         String result = executeWithParams("username", testUsername, "password", testPassword);
         assertTrue(result.contains("Auth successful."));
     }
 
     @Test
-    public void cannotAuthenticateWithUnexistantCredentials() throws ProtocolException, IOException {
+    public void cannotAuthenticateWithUnexistantCredentials() throws TmcCoreException, IOException {
         String result = executeWithParams("username", "samu", "password", "salis");
         assertTrue(result.contains("Auth unsuccessful."));
     }
 
-    @Test(expected = ProtocolException.class)
-    public void failsWithWrongKeys() throws ProtocolException, IOException {
+    @Test(expected = TmcCoreException.class)
+    public void failsWithWrongKeys() throws TmcCoreException, IOException {
         executeWithParams("usernamee", testUsername, "passwordi", testPassword);
     }
 
     private String executeWithParams(String key1, String param1,
-            String key2, String param2) throws ProtocolException, IOException {
+            String key2, String param2) throws TmcCoreException, IOException {
 
         auth.setParameter(key1, param1);
         auth.setParameter(key2, param2);
@@ -64,7 +64,7 @@ public class AuthenticateTest {
 
     }
 
-    private void powerMockWithCredentials(String credentials, int status) throws IOException, ProtocolException {
+    private void powerMockWithCredentials(String credentials, int status) throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult("", status, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(

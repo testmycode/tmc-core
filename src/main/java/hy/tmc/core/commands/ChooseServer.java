@@ -2,7 +2,7 @@ package hy.tmc.core.commands;
 
 import com.google.common.base.Strings;
 import hy.tmc.core.configuration.ConfigHandler;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
@@ -24,12 +24,12 @@ public class ChooseServer extends Command<Boolean> {
     }
 
     @Override
-    public void checkData() throws ProtocolException {
+    public void checkData() throws TmcCoreException {
         if (!this.data.containsKey("tmc-server")) {
-            throw new ProtocolException("must specify new server");
+            throw new TmcCoreException("must specify new server");
         }
         if (!isValidTmcUrl(this.data.get("tmc-server"))) {
-            throw new ProtocolException("given URL is not valid");
+            throw new TmcCoreException("given URL is not valid");
         }
     }
 
@@ -43,7 +43,7 @@ public class ChooseServer extends Command<Boolean> {
     }
 
     @Override
-    public Boolean call() throws ProtocolException {
+    public Boolean call() throws TmcCoreException {
 
         String address = data.get("tmc-server");
         try {

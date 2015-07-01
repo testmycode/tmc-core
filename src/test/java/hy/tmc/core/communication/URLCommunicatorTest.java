@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.base.Optional;
 import hy.tmc.core.configuration.ClientData;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ public class URLCommunicatorTest {
     public WireMockRule wireMockRule = new WireMockRule();
 
     @Test
-    public void okWithValidParams() throws IOException, ProtocolException {
+    public void okWithValidParams() throws IOException, TmcCoreException {
         new UrlCommunicator();
         HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080", "test:1234");
         assertEquals(200, result.getStatusCode());
@@ -83,19 +83,19 @@ public class URLCommunicatorTest {
     }
 
     @Test
-    public void badRequestWithoutValidURL() throws IOException, ProtocolException {
+    public void badRequestWithoutValidURL() throws IOException, TmcCoreException {
         HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080/vaaraurl", "test:1234");
         assertEquals(400, result.getStatusCode());
     }
 
     @Test
-    public void notFoundWithoutValidParams() throws IOException, ProtocolException {
+    public void notFoundWithoutValidParams() throws IOException, TmcCoreException {
         HttpResult result = UrlCommunicator.makeGetRequest("http://127.0.0.1:8080/", "ihanvaaraheaderi:1234");
         assertEquals(403, result.getStatusCode());
     }
 
     @Test
-    public void httpPostAddsFileToRequest() throws IOException, ProtocolException {
+    public void httpPostAddsFileToRequest() throws IOException, TmcCoreException {
         ClientData.setUserData("test", "1234");
         File testFile = new File("testResources/test.zip");
         HttpResult result = UrlCommunicator.makePostWithFile(
@@ -108,13 +108,13 @@ public class URLCommunicatorTest {
     }
 
     @Test(expected = IOException.class)
-    public void badGetRequestIsThrown() throws IOException, ProtocolException {
+    public void badGetRequestIsThrown() throws IOException, TmcCoreException {
         HttpResult makeGetRequest = UrlCommunicator.makeGetRequest("asasdasd", "chang:/\\\\eiparas");
         assertEquals(UrlCommunicator.BAD_REQUEST, makeGetRequest.getStatusCode());
     }
 
     @Test
-    public void makePutRequestSendsPut() throws IOException, ProtocolException {
+    public void makePutRequestSendsPut() throws IOException, TmcCoreException {
         ClientData.setUserData("test", "1234");
         Map<String, String> body = new HashMap<>();
         body.put("mark_as_read", "1");
@@ -123,7 +123,7 @@ public class URLCommunicatorTest {
     }
 
     @Test
-    public void makePutRequestHasCorrectHeaders() throws IOException, ProtocolException {
+    public void makePutRequestHasCorrectHeaders() throws IOException, TmcCoreException {
         ClientData.setUserData("test", "1234");
         Map<String, String> body = new HashMap<>();
         body.put("mark_as_read", "1");

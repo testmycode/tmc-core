@@ -8,7 +8,7 @@ import hy.tmc.core.communication.ExerciseLister;
 
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -54,7 +54,7 @@ public class ListExercisesTest {
     }
 
     @Before
-    public void setup() throws ProtocolException, IOException {
+    public void setup() throws TmcCoreException, IOException {
         buildExample();
         ClientData.setUserData("Chang", "Jamo");
         mock();
@@ -65,7 +65,7 @@ public class ListExercisesTest {
         list = new ListExercises(lister);
     }
 
-    private void mock() throws ProtocolException, IOException {
+    private void mock() throws TmcCoreException, IOException {
 
         PowerMockito.mockStatic(ClientData.class);
         PowerMockito
@@ -80,19 +80,19 @@ public class ListExercisesTest {
     }
 
     @Test
-    public void testCheckDataSuccess() throws ProtocolException, IOException {
+    public void testCheckDataSuccess() throws TmcCoreException, IOException {
         ListExercises ls = new ListExercises();
         ls.setParameter("courseUrl", "legit");
         ls.setParameter("path", "legit");
         try {
             ls.checkData();
-        } catch (ProtocolException p) {
+        } catch (TmcCoreException p) {
             fail("testCheckDataSuccess failed");
         }
     }
 
-    @Test(expected = ProtocolException.class)
-    public void throwsErrorIfNoUser() throws ProtocolException, IOException {
+    @Test(expected = TmcCoreException.class)
+    public void throwsErrorIfNoUser() throws TmcCoreException, IOException {
         PowerMockito.mockStatic(ClientData.class);
         ClientData.clearUserData();
         list.setParameter("path", "any");
@@ -100,8 +100,8 @@ public class ListExercisesTest {
         list.call();
     }
 
-    @Test(expected = ProtocolException.class)
-    public void throwsErrorIfNoCourseSpecified() throws ProtocolException, IOException {
+    @Test(expected = TmcCoreException.class)
+    public void throwsErrorIfNoCourseSpecified() throws TmcCoreException, IOException {
         ClientData.clearUserData();
         list.checkData();
         list.call();

@@ -8,7 +8,7 @@ import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -36,7 +36,7 @@ public class SubmitTest {
     private SubmissionPoller interpreter;
     private final String submissionUrl = "/submissions/1781.json?api_version=7";
 
-    private void mock() throws ParseException, ExpiredException, IOException, ZipException, ProtocolException {
+    private void mock() throws ParseException, ExpiredException, IOException, ZipException, TmcCoreException {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         PowerMockito.mockStatic(ClientData.class);
         PowerMockito
@@ -75,7 +75,7 @@ public class SubmitTest {
      * Check that data checking success.
      */
     @Test
-    public void testCheckDataSuccess() throws ProtocolException, IOException {
+    public void testCheckDataSuccess() throws TmcCoreException, IOException {
         Submit submitCommand = new Submit();
         submitCommand.setParameter("path", "/home/tmccli/testi");
         submitCommand.checkData();
@@ -84,14 +84,14 @@ public class SubmitTest {
     /**
      * Check that if user didn't give correct data, data checking fails.
      */
-    @Test(expected = ProtocolException.class)
-    public void testCheckDataFail() throws ProtocolException, IOException {
+    @Test(expected = TmcCoreException.class)
+    public void testCheckDataFail() throws TmcCoreException, IOException {
         Submit submitCommand = new Submit();
         submitCommand.checkData();
     }
 
-    @Test(expected = ProtocolException.class)
-    public void checkDataFailIfNoAuth() throws ProtocolException, IOException {
+    @Test(expected = TmcCoreException.class)
+    public void checkDataFailIfNoAuth() throws TmcCoreException, IOException {
         Submit submitCommand = new Submit();
         ClientData.clearUserData();
         submitCommand.checkData();

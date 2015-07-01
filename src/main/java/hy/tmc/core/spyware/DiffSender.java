@@ -4,7 +4,7 @@ import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class DiffSender {
      * @param currentCourse tell all spywareUrls
      * @return all results
      */
-    public List<HttpResult> sendToSpyware(File diffFile, Course currentCourse) throws ProtocolException {
+    public List<HttpResult> sendToSpyware(File diffFile, Course currentCourse) throws TmcCoreException {
         List<String> spywareUrls = currentCourse.getSpywareUrls();
         List<HttpResult> results = new ArrayList<>();
         for (String url : spywareUrls) {
@@ -41,7 +41,7 @@ public class DiffSender {
      * @param currentCourse tell all spywareUrls
      * @return all results
      */
-    public List<HttpResult> sendToSpyware(byte[] diffs, Course currentCourse) throws ProtocolException {
+    public List<HttpResult> sendToSpyware(byte[] diffs, Course currentCourse) throws TmcCoreException {
         List<String> spywareUrls = currentCourse.getSpywareUrls();
         List<HttpResult> results = new ArrayList<>();
         for (String url : spywareUrls) {
@@ -57,7 +57,7 @@ public class DiffSender {
      * @param url of destination
      * @return HttpResult from UrlCommunicator
      */
-    public HttpResult sendToUrl(File diffFile, String url) throws ProtocolException {
+    public HttpResult sendToUrl(File diffFile, String url) throws TmcCoreException {
         Map<String, String> headers = createHeaders();
         HttpResult result = makePostRequest(
                 new FileBody(diffFile), url, headers
@@ -72,7 +72,7 @@ public class DiffSender {
      * @param url of destination
      * @return HttpResult from UrlCommunicator
      */
-    public HttpResult sendToUrl(byte[] diffs, String url) throws ProtocolException {
+    public HttpResult sendToUrl(byte[] diffs, String url) throws TmcCoreException {
         Map<String, String> headers = createHeaders();
         HttpResult result = makePostRequest(
                 new ByteArrayBody(diffs, ""), url, headers
@@ -80,7 +80,7 @@ public class DiffSender {
         return result;
     }
 
-    private HttpResult makePostRequest(ContentBody diffFile, String url, Map<String, String> headers) throws ProtocolException {
+    private HttpResult makePostRequest(ContentBody diffFile, String url, Map<String, String> headers) throws TmcCoreException {
         HttpResult result = null;
         try {
             result = UrlCommunicator.makePostWithFile(diffFile, url, headers);

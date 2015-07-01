@@ -6,7 +6,7 @@ import hy.tmc.core.domain.submission.FeedbackQuestion;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.domain.submission.TestCase;
 import hy.tmc.core.domain.submission.ValidationError;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 
 import java.util.List;
@@ -64,11 +64,11 @@ public class SubmissionPoller {
      * @param url the submission url
      */
     public SubmissionResult getSubmissionResult(String url) throws InterruptedException,
-            ProtocolException,
+            TmcCoreException,
             IOException {
         Optional<SubmissionResult> result = pollSubmissionUrl(url);
         if (!result.isPresent()) {
-            throw new ProtocolException("Failed to receive response to submit.");
+            throw new TmcCoreException("Failed to receive response to submit.");
         }
         latestResult = result.get();
         return latestResult;

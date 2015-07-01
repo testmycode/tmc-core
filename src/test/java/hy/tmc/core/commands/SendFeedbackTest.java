@@ -8,7 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import java.io.IOException;
 import java.util.HashMap;
@@ -54,20 +54,20 @@ public class SendFeedbackTest {
         UrlCommunicator.makePostWithJson(expectedJson, url);
     }
     
-    @Test (expected = ProtocolException.class)
-    public void ensureParamsNotNull() throws ProtocolException, IOException {
+    @Test (expected = TmcCoreException.class)
+    public void ensureParamsNotNull() throws TmcCoreException, IOException {
         Command command = new SendFeedback(null, "chewbac.ca");
         command.checkData();
     }
     
-    @Test (expected = ProtocolException.class)
-    public void ensureParamsNotNull2() throws ProtocolException, IOException {
+    @Test (expected = TmcCoreException.class)
+    public void ensureParamsNotNull2() throws TmcCoreException, IOException {
         Command command = new SendFeedback(new HashMap<String, String>(), null);
         command.checkData();
     }
     
-    @Test (expected = ProtocolException.class)
-    public void ensureParamsNotNull3() throws ProtocolException, IOException {
+    @Test (expected = TmcCoreException.class)
+    public void ensureParamsNotNull3() throws TmcCoreException, IOException {
         Command command = new SendFeedback(null, null);
         command.checkData();
     }

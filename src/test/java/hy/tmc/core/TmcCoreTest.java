@@ -10,7 +10,7 @@ import hy.tmc.core.commands.ListExercises;
 import hy.tmc.core.commands.Logout;
 import hy.tmc.core.commands.RunTests;
 import hy.tmc.core.commands.Submit;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -35,50 +35,50 @@ public class TmcCoreTest {
     }
 
     @Test
-    public void login() throws ProtocolException, InterruptedException, ExecutionException, Exception {
+    public void login() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
         tmcCore.login("test", "1234");
         verify(threadPool, times(1)).submit(any(Authenticate.class));
     }
 
-    @Test(expected = ProtocolException.class)
-    public void loginWithoutNumberFails() throws ProtocolException, InterruptedException, ExecutionException, Exception {
+    @Test(expected = TmcCoreException.class)
+    public void loginWithoutNumberFails() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
         tmcCore.login("", "").get();
     }
 
     @Test
-    public void logout() throws ProtocolException, InterruptedException, ExecutionException, Exception {
+    public void logout() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
         tmcCore.logout();
         verify(threadPool, times(1)).submit(any(Logout.class));
     }
 
     @Test
-    public void selectServer() throws ProtocolException, InterruptedException, ExecutionException, Exception {
+    public void selectServer() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
         tmcCore.selectServer("uusiServu");
         verify(threadPool, times(1)).submit(any(ChooseServer.class));
     }
     
     
     @Test
-    public void downloadExercises() throws ProtocolException, InterruptedException, ExecutionException, Exception {
+    public void downloadExercises() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
         tmcCore.downloadExercises("/polku/tiedostoille", "21");
         verify(threadPool, times(1)).submit(any(DownloadExercises.class));
     }
 
 
     @Test
-    public void listCourses() throws ProtocolException, InterruptedException, ExecutionException, Exception {
+    public void listCourses() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
         tmcCore.listCourses();
         verify(threadPool, times(1)).submit(any(ListCourses.class));  
     }
 
     @Test
-    public void listExercises() throws ProtocolException, InterruptedException, ExecutionException, Exception {
+    public void listExercises() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
         tmcCore.listExercises("path/kurssiin");
         verify(threadPool, times(1)).submit(any(ListExercises.class));  
     }
 
     @Test
-    public void test() throws ProtocolException, InterruptedException, ExecutionException, Exception {
+    public void test() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
         tmcCore.test("testi/polku");
         verify(threadPool, times(1)).submit(any(RunTests.class));  
     }
@@ -89,13 +89,13 @@ public class TmcCoreTest {
         verify(threadPool, times(1)).submit(any(Submit.class));  
     }
     
-    @Test(expected=ProtocolException.class)
-    public void submitWithBadPathThrowsException() throws ProtocolException{
+    @Test(expected=TmcCoreException.class)
+    public void submitWithBadPathThrowsException() throws TmcCoreException{
         tmcCore.submit("");
     }
     
-    @Test(expected=ProtocolException.class)
-    public void downloadExercisesWithBadPathThrowsException() throws ProtocolException{
+    @Test(expected=TmcCoreException.class)
+    public void downloadExercisesWithBadPathThrowsException() throws TmcCoreException{
         tmcCore.downloadExercises(null, "2");
     }
     

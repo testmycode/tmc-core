@@ -1,7 +1,7 @@
 package hy.tmc.core.communication;
 
 import hy.tmc.core.configuration.ClientData;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import java.io.IOException;
 import org.junit.After;
@@ -33,7 +33,7 @@ public class SubmissionInterpreterTest {
         ClientData.clearUserData();
     }
 
-    private void initFailedMock() throws IOException, ProtocolException {
+    private void initFailedMock() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.failedSubmission, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -41,7 +41,7 @@ public class SubmissionInterpreterTest {
                 .thenReturn(fakeResult);
     }
 
-    private void initSuccessMock() throws IOException, ProtocolException {
+    private void initSuccessMock() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.successfulSubmission, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -49,7 +49,7 @@ public class SubmissionInterpreterTest {
                 .thenReturn(fakeResult);
     }
 
-    private void initFailedCheckstyle() throws IOException, ProtocolException {
+    private void initFailedCheckstyle() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.checkstyleFailed, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -57,7 +57,7 @@ public class SubmissionInterpreterTest {
                 .thenReturn(fakeResult);
     }
 
-    private void initFailedValgrind() throws IOException, ProtocolException {
+    private void initFailedValgrind() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.valgrindFailed, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),

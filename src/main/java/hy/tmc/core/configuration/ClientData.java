@@ -2,7 +2,7 @@ package hy.tmc.core.configuration;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.domain.Course;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import hy.tmc.core.zipping.RootFinder;
@@ -59,9 +59,9 @@ public final class ClientData {
      * @param currentPath path to navigate through.
      * @return optional which includes the course if found.
      */
-    public synchronized static Optional<Course> getCurrentCourse(String currentPath) throws ProtocolException, IOException {
+    public synchronized static Optional<Course> getCurrentCourse(String currentPath) throws TmcCoreException, IOException {
         if (!userDataExists()) {
-            throw new ProtocolException("Not logged in.");
+            throw new TmcCoreException("Not logged in.");
         }
         return getProjectRootFinder().getCurrentCourse(currentPath);
     }

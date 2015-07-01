@@ -2,7 +2,7 @@ package hy.tmc.core.commands;
 
 import hy.tmc.core.commands.ChooseServer;
 import hy.tmc.core.configuration.ConfigHandler;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 import org.apache.commons.io.FileUtils;
 
@@ -38,7 +38,7 @@ public class ChooseServerTest {
     }
 
     @Test
-    public void testFunctionality() throws ProtocolException, Exception {
+    public void testFunctionality() throws TmcCoreException, Exception {
         chooser.setParameter("tmc-server", "http://tmc.ebin.fi");
         chooser.call();
         try {
@@ -49,8 +49,8 @@ public class ChooseServerTest {
         }
     }
     
-    @Test (expected = ProtocolException.class)
-    public void throwsExceptionWithoutData() throws ProtocolException {
+    @Test (expected = TmcCoreException.class)
+    public void throwsExceptionWithoutData() throws TmcCoreException {
         chooser.checkData();
     }
     
@@ -59,13 +59,13 @@ public class ChooseServerTest {
         chooser.setParameter("tmc-server", "http://tmc.mooc.fi");
         try {
             chooser.checkData();
-        } catch (ProtocolException ex) {
+        } catch (TmcCoreException ex) {
             fail("checkData threw exception");
         }
     }
     
-    @Test (expected = ProtocolException.class)
-    public void incorrectUrlThrowsException() throws ProtocolException {
+    @Test (expected = TmcCoreException.class)
+    public void incorrectUrlThrowsException() throws TmcCoreException {
         chooser.setParameter("tmc-server", "lak3jf02ja3fji23j");
         chooser.checkData();
     }

@@ -8,7 +8,7 @@ import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.File;
 import java.io.FileWriter;
 
@@ -47,33 +47,33 @@ public class DownloadExercises extends Command<String> {
      * Checks that command has required parameters courseID is the id of the course and path is the
      * path of where files are downloaded and extracted.
      *
-     * @throws ProtocolException if path isn't supplied
+     * @throws TmcCoreException if path isn't supplied
      */
     @Override
-    public void checkData() throws ProtocolException {
+    public void checkData() throws TmcCoreException {
         checkCourseId();
         if (!this.data.containsKey("path")) {
-            throw new ProtocolException("Path required");
+            throw new TmcCoreException("Path required");
         }
         if (!ClientData.userDataExists()) {
-            throw new ProtocolException("You need to login first.");
+            throw new TmcCoreException("You need to login first.");
         }
     }
 
     /**
      * Check that user has given also course id.
      *
-     * @throws ProtocolException if course id is not a number
+     * @throws TmcCoreException if course id is not a number
      */
-    private void checkCourseId() throws ProtocolException {
+    private void checkCourseId() throws TmcCoreException {
         if (!this.data.containsKey("courseID")) {
-            throw new ProtocolException("Course ID required");
+            throw new TmcCoreException("Course ID required");
         }
         try {
             int courseId = Integer.parseInt(this.data.get("courseID"));
         }
         catch (NumberFormatException e) {
-            throw new ProtocolException("Given course id is not a number");
+            throw new TmcCoreException("Given course id is not a number");
         }
     }
 
@@ -83,7 +83,7 @@ public class DownloadExercises extends Command<String> {
      * @return
      */
     @Override
-    public String call() throws ProtocolException, IOException {
+    public String call() throws TmcCoreException, IOException {
         checkData();
 
         Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt(this.data.get("courseID")));
@@ -94,7 +94,7 @@ public class DownloadExercises extends Command<String> {
                 return downloadFiles.get();
             }
         }
-        throw new ProtocolException("Failed to fetch exercises. Check your internet connection or course ID");
+        throw new TmcCoreException("Failed to fetch exercises. Check your internet connection or course ID");
     }
 
     private Optional<String> downloadExercises(Course course) throws IOException {

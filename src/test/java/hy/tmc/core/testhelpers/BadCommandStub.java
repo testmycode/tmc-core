@@ -2,7 +2,7 @@ package hy.tmc.core.testhelpers;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.commands.Command;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 
 public class BadCommandStub extends Command{
@@ -12,8 +12,8 @@ public class BadCommandStub extends Command{
     }
 
     @Override
-    public void checkData() throws ProtocolException {   
-        throw new ProtocolException("I'm a bad command-stub :(");
+    public void checkData() throws TmcCoreException {   
+        throw new TmcCoreException("I'm a bad command-stub :(");
     }    
 
     @Override

@@ -3,7 +3,7 @@ package hy.tmc.core.commands;
 
 import hy.tmc.core.commands.DownloadExercises;
 import hy.tmc.core.configuration.ClientData;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ public class DownloadExercisesTest {
      * Check that data checking success.
      */
     @Test
-    public void testCheckDataSuccess() throws ProtocolException {
+    public void testCheckDataSuccess() throws TmcCoreException {
         ClientData.setUserData("mister", "Kristian");
         DownloadExercises de = new DownloadExercises();
         de.setParameter("path", "/home/tmccli/uolevipuistossa");
@@ -30,8 +30,8 @@ public class DownloadExercisesTest {
     /**
      * Check that if user didn't give correct data, data checking fails.
      */
-    @Test(expected = ProtocolException.class)
-    public void testCheckDataFail() throws ProtocolException {
+    @Test(expected = TmcCoreException.class)
+    public void testCheckDataFail() throws TmcCoreException {
         DownloadExercises de = new DownloadExercises();
         de.checkData();
     }
@@ -39,8 +39,8 @@ public class DownloadExercisesTest {
     /**
      * User gives course id that isn't a number and will be informed about it.
      */
-    @Test(expected = ProtocolException.class)
-    public void courseIdNotANumber() throws ProtocolException {
+    @Test(expected = TmcCoreException.class)
+    public void courseIdNotANumber() throws TmcCoreException {
         DownloadExercises de = new DownloadExercises();
         de.setParameter("path", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "not a number");

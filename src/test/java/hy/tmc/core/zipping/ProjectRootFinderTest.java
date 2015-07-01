@@ -7,7 +7,7 @@ import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.configuration.ConfigHandler;
 import hy.tmc.core.domain.Course;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
@@ -34,7 +34,7 @@ public class ProjectRootFinderTest {
     String otherFakeName = "2013-tira";
 
     @Before
-    public void setUp() throws IOException, ProtocolException {
+    public void setUp() throws IOException, TmcCoreException {
         ClientData.setUserData("chang", "paras");
 
         finder = new ProjectRootFinder(new DefaultRootDetector());
@@ -91,7 +91,7 @@ public class ProjectRootFinderTest {
     }
 
     @Test
-    public void getsCourseNameFromPath() throws IOException, ProtocolException {
+    public void getsCourseNameFromPath() throws IOException, TmcCoreException {
         String[] paths = new String[3];
         paths[0] = "paras";
         paths[1] = "path";
@@ -101,7 +101,7 @@ public class ProjectRootFinderTest {
     }
 
     @Test
-    public void getsCurrentCourse() throws IOException, ProtocolException {
+    public void getsCurrentCourse() throws IOException, TmcCoreException {
         Optional<Course> course = finder.getCurrentCourse("path/that/contains/course/" + fakeName);
         assertEquals(fakeName, course.get().getName());
     }

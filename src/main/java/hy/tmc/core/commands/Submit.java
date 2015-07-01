@@ -6,7 +6,7 @@ import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 import hy.tmc.core.domain.submission.SubmissionResult;
 
@@ -64,27 +64,27 @@ public class Submit extends Command<SubmissionResult> {
     /**
      * Requires auth and pwd in "path" parameter.
      *
-     * @throws ProtocolException if no auth or no path supplied.
+     * @throws TmcCoreException if no auth or no path supplied.
      */
     @Override
-    public void checkData() throws ProtocolException, IOException {
+    public void checkData() throws TmcCoreException, IOException {
         if (!ClientData.userDataExists()) {
-            throw new ProtocolException("User must be authorized first");
+            throw new TmcCoreException("User must be authorized first");
         }
         if (!this.data.containsKey("path")) {
-            throw new ProtocolException("path not supplied");
+            throw new TmcCoreException("path not supplied");
         }
 
         Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
         if (currentCourse.isPresent()) {
             course = currentCourse.get();
         } else {
-            throw new ProtocolException("Unable to determine course");
+            throw new TmcCoreException("Unable to determine course");
         }
     }
 
     @Override
-    public SubmissionResult call() throws ProtocolException, IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, InterruptedException {
+    public SubmissionResult call() throws TmcCoreException, IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, InterruptedException {
         checkData();
         String returnUrl = submitter.submit(data.get("path"));
         SubmissionResult result = interpreter.getSubmissionResult(returnUrl);

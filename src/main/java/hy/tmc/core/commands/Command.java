@@ -1,7 +1,7 @@
 package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,9 +43,9 @@ public abstract class Command<E> implements Callable<E> {
      * Command must have checkData method which throws ProtocolException if it
      * doesn't have all data needed.
      *
-     * @throws ProtocolException if the command lacks some necessary data
+     * @throws TmcCoreException if the command lacks some necessary data
      */
-    public abstract void checkData() throws ProtocolException, IOException;
+    public abstract void checkData() throws TmcCoreException, IOException;
 
     public void cleanData() {
         data.clear();

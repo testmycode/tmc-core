@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import java.nio.file.Path;
@@ -34,19 +34,19 @@ public class RunTests extends Command<RunResult> {
     }
 
     @Override
-    public void checkData() throws ProtocolException {
+    public void checkData() throws TmcCoreException {
         if (!this.data.containsKey("path") || this.data.get("path").isEmpty()) {
-            throw new ProtocolException("File path to exercise required.");
+            throw new TmcCoreException("File path to exercise required.");
         }
     }
 
     @Override
-    public RunResult call() throws ProtocolException, NoLanguagePluginFoundException {
+    public RunResult call() throws TmcCoreException, NoLanguagePluginFoundException {
         String path = (String) this.data.get("path");
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
         if (!exercise.isPresent()) {
-            throw new ProtocolException("Not an exercise. (null)");
+            throw new TmcCoreException("Not an exercise. (null)");
         }
         return runTests(exercise.get());
     }

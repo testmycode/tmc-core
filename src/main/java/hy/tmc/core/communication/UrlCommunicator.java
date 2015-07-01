@@ -7,7 +7,7 @@ import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
 
 import hy.tmc.core.configuration.ClientData;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -192,7 +192,7 @@ public class UrlCommunicator {
     /**
      * Validate httpResults. More logic could/should be implemented.
      * @param result
-     * @throws ProtocolException 
+     * @throws TmcCoreException 
      */
     private static void validateHttpResult(HttpResult result) throws TmcServerException {
         int statuscode = result.getStatusCode();

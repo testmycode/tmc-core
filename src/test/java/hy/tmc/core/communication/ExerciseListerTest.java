@@ -6,7 +6,7 @@ import com.google.common.base.Optional;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class ExerciseListerTest {
     Exercise fakeExercise2;
 
     @Before
-    public void setUp() throws IOException, ProtocolException {
+    public void setUp() throws IOException, TmcCoreException {
         ClientData.setUserData("chang", "paras");
         setupFakeCourses();
 
@@ -51,7 +51,7 @@ public class ExerciseListerTest {
 
     }
 
-    private void mockExercisesWith(List<Exercise> exercises) throws IOException, ProtocolException {
+    private void mockExercisesWith(List<Exercise> exercises) throws IOException, TmcCoreException {
         PowerMockito
                 .when(TmcJsonParser.getExercises((Course) Mockito.any()))
                 .thenReturn(exercises);
@@ -83,15 +83,15 @@ public class ExerciseListerTest {
         ClientData.clearUserData();
     }
 
-    @Test(expected=ProtocolException.class)
-    public void ifNoCourseIsFoundThenThrowsProtocolException() throws ProtocolException, IOException {
+    @Test(expected=TmcCoreException.class)
+    public void ifNoCourseIsFoundThenThrowsProtocolException() throws TmcCoreException, IOException {
         Mockito.when(rootFinderMock.getCurrentCourse(Mockito.anyString()))
                 .thenReturn(Optional.<Course>absent());
         lister.listExercises("polku/tuntemattomaan/tiedostoon");
     }
 
-    @Test(expected=ProtocolException.class)
-    public void ifNoExercisesFoundThenThrowsProtocolException() throws ProtocolException, IOException {
+    @Test(expected=TmcCoreException.class)
+    public void ifNoExercisesFoundThenThrowsProtocolException() throws TmcCoreException, IOException {
         String correct = "No exercises found";
 
         mockExercisesWith(null);

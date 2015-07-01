@@ -6,7 +6,7 @@ import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 
 import java.util.List;
@@ -37,26 +37,26 @@ public class ListExercises extends Command<List<Exercise>> {
     /**
      * Check the path and ClientData.
      *
-     * @throws ProtocolException if some data not specified
+     * @throws TmcCoreException if some data not specified
      */
     @Override
-    public void checkData() throws ProtocolException, IOException {
+    public void checkData() throws TmcCoreException, IOException {
         if (!data.containsKey("path")) {
-            throw new ProtocolException("Path not recieved");
+            throw new TmcCoreException("Path not recieved");
         }
         if (!ClientData.userDataExists()) {
-            throw new ProtocolException("Please authorize first.");
+            throw new TmcCoreException("Please authorize first.");
         }
         Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
         if (currentCourse.isPresent()) {
             this.current = currentCourse.get();
         } else {
-            throw new ProtocolException("No course resolved from the path.");
+            throw new TmcCoreException("No course resolved from the path.");
         }
     }
 
     @Override
-    public List<Exercise> call() throws ProtocolException, IOException {
+    public List<Exercise> call() throws TmcCoreException, IOException {
         checkData();
         List<Exercise> exercises = lister.listExercises(data.get("path"));
         return exercises;

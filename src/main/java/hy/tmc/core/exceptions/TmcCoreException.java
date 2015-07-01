@@ -3,12 +3,12 @@ package hy.tmc.core.exceptions;
 /**
  * ProtocolException is thrown when something goes wrong with protocol rules.
  */
-public class ProtocolException extends Exception {
+public class TmcCoreException extends Exception {
 
     /**
      * ProtocolException is thrown when system gets invalid protocol.
      */
-    public ProtocolException() {
+    public TmcCoreException() {
         super();
     }
 
@@ -16,7 +16,7 @@ public class ProtocolException extends Exception {
      * ProtocolException can give a message.
      * @param message is a final string.
      */
-    public ProtocolException(final String message) {
+    public TmcCoreException(final String message) {
         super(message);
     }
 
@@ -26,7 +26,7 @@ public class ProtocolException extends Exception {
      * @param message final string message
      * @param cause cause why exception is thrown
      */
-    public ProtocolException(final String message, final Throwable cause) {
+    public TmcCoreException(final String message, final Throwable cause) {
         super(message, cause);
     }
 
@@ -35,7 +35,7 @@ public class ProtocolException extends Exception {
      * 
      * @param cause why exception is thrown
      */
-    public ProtocolException(final Throwable cause) {
+    public TmcCoreException(final Throwable cause) {
         super(cause);
     }
 }

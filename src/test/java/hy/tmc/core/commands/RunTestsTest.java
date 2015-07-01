@@ -2,7 +2,7 @@ package hy.tmc.core.commands;
 
 import hy.tmc.core.configuration.ClientData;
 
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class RunTestsTest {
      * Check that data checking success.
      */
     @Test
-    public void testCheckDataSuccess() throws ProtocolException {
+    public void testCheckDataSuccess() throws TmcCoreException {
         RunTests rt = new RunTests();
         rt.setParameter("path", "/home/tmccli/uolevipuistossa");
         rt.checkData();
@@ -35,8 +35,8 @@ public class RunTestsTest {
     /**
      * Check that if user didn't give correct data, data checking fails.
      */
-    @Test(expected = ProtocolException.class)
-    public void testCheckDataFail() throws ProtocolException {
+    @Test(expected = TmcCoreException.class)
+    public void testCheckDataFail() throws TmcCoreException {
         RunTests rt = new RunTests();
         rt.checkData();
     }

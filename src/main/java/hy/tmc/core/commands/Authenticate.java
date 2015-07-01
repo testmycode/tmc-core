@@ -6,7 +6,7 @@ import static hy.tmc.core.communication.UrlCommunicator.makeGetRequest;
 
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.configuration.ConfigHandler;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 
 public class Authenticate extends Command<Boolean> {
@@ -31,18 +31,18 @@ public class Authenticate extends Command<Boolean> {
     }
 
     @Override
-    public void checkData() throws ProtocolException {
+    public void checkData() throws TmcCoreException {
         String username = this.data.get("username");
         if (username == null || username.isEmpty()) {
-            throw new ProtocolException("username must be set!");
+            throw new TmcCoreException("username must be set!");
         }
         String password = this.data.get("password");
         if (password == null || password.isEmpty()) {
-            throw new ProtocolException("password must be set!");
+            throw new TmcCoreException("password must be set!");
         }
     }
 
-    private int makeRequest() throws IOException, ProtocolException {
+    private int makeRequest() throws IOException, TmcCoreException {
         String auth = data.get("username") + ":" + data.get("password");
         int code = makeGetRequest(
                 new ConfigHandler().readAuthAddress(),
@@ -52,7 +52,7 @@ public class Authenticate extends Command<Boolean> {
     }
 
     @Override
-    public Boolean call() throws ProtocolException, IOException {
+    public Boolean call() throws TmcCoreException, IOException {
         checkData();
         if (isOk(makeRequest())) {
             ClientData.setUserData(data.get("username"), data.get("password"));

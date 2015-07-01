@@ -3,7 +3,7 @@ package hy.tmc.core.communication;
 import com.google.common.base.Optional;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import hy.tmc.core.zipping.RootFinder;
@@ -36,16 +36,16 @@ public class ExerciseLister {
      * @param path directory path to lookup course from
      * @return String with a list of exercises.
      */
-    public List<Exercise> listExercises(String path) throws ProtocolException, IOException {
+    public List<Exercise> listExercises(String path) throws TmcCoreException, IOException {
         Optional<Course> course = finder.getCurrentCourse(path);
 
         if (!course.isPresent()) {
-            throw new ProtocolException("No course found");
+            throw new TmcCoreException("No course found");
         }
 
         List<Exercise> exercises = TmcJsonParser.getExercises(course.get());
         if (exercises == null || exercises.isEmpty()) {
-            throw new ProtocolException("No exercises found");
+            throw new TmcCoreException("No exercises found");
         }
 
         return exercises;

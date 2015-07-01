@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.configuration.ConfigHandler;
 import hy.tmc.core.domain.Course;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -57,7 +57,7 @@ public class ProjectRootFinder implements RootFinder {
         String[] foldersOfPwd = path.split(File.separator);
         try {
             checkPwd(foldersOfPwd);
-        } catch (ProtocolException ex) {
+        } catch (TmcCoreException ex) {
             return Optional.absent();
         }
         return findCourseByPath(foldersOfPwd);
@@ -85,9 +85,9 @@ public class ProjectRootFinder implements RootFinder {
         return Optional.absent();
     }
 
-    private void checkPwd(String[] foldersOfPwd) throws ProtocolException {
+    private void checkPwd(String[] foldersOfPwd) throws TmcCoreException {
         if (foldersOfPwd.length == 0) {
-            throw new ProtocolException("No folders found from the path.");
+            throw new TmcCoreException("No folders found from the path.");
         }
     }
 }

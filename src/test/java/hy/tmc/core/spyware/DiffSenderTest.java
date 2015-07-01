@@ -17,7 +17,7 @@ import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.configuration.ConfigHandler;
 import hy.tmc.core.domain.Course;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +58,7 @@ public class DiffSenderTest {
     }
 
     @Test
-    public void testSendToSpywareWithFile() throws IOException, ProtocolException {
+    public void testSendToSpywareWithFile() throws IOException, TmcCoreException {
         final File file = new File("testResources/test.zip");
         DiffSender sender = new DiffSender();
         HttpResult res = sender.sendToUrl(file,
@@ -67,7 +67,7 @@ public class DiffSenderTest {
     }
 
     @Test
-    public void testSendToAllUrlsWithFile() throws IOException, ProtocolException {
+    public void testSendToAllUrlsWithFile() throws IOException, TmcCoreException {
         final File file = new File("testResources/test.zip");
         Course testCourse = new Course();
         List<String> urls = new ArrayList<>();
@@ -82,7 +82,7 @@ public class DiffSenderTest {
     }
 
     @Test
-    public void testSendToSpywareWithByteArray() throws IOException, ProtocolException {
+    public void testSendToSpywareWithByteArray() throws IOException, TmcCoreException {
         final File file = new File("testResources/test.zip");
         byte[] byteArray = Files.toByteArray(file);
         DiffSender sender = new DiffSender();
@@ -92,7 +92,7 @@ public class DiffSenderTest {
     }
     
     @Test
-    public void requestWithInvalidParams() throws IOException, ProtocolException {
+    public void requestWithInvalidParams() throws IOException, TmcCoreException {
         final File file = new File("testResources/test.zip");
         byte[] byteArray = Files.toByteArray(file);
         DiffSender sender = new DiffSender();
@@ -102,7 +102,7 @@ public class DiffSenderTest {
     }
     
     @Test
-    public void testSendToAllUrlsWithByteArray() throws IOException, ProtocolException {
+    public void testSendToAllUrlsWithByteArray() throws IOException, TmcCoreException {
         final File file = new File("testResources/test.zip");
         byte[] byteArray = Files.toByteArray(file);
         Course testCourse = new Course();
@@ -116,7 +116,7 @@ public class DiffSenderTest {
     }
     
     @Test
-    public void spywarePostIncludesFileAndHeaders() throws IOException, ProtocolException {
+    public void spywarePostIncludesFileAndHeaders() throws IOException, TmcCoreException {
         File testFile = new File("testResources/test.zip");
         HttpResult res = sender.sendToUrl(testFile, spywareUrl);
         assertEquals(200, res.getStatusCode());

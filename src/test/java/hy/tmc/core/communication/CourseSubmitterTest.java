@@ -15,7 +15,7 @@ import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.configuration.ConfigHandler;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.testhelpers.ProjectRootFinderStub;
 import hy.tmc.core.testhelpers.ZipperStub;
@@ -46,7 +46,7 @@ public class CourseSubmitterTest {
      * Mocks components that use Internet.
      */
     @Before
-    public void setup() throws IOException, ProtocolException {
+    public void setup() throws IOException, TmcCoreException {
         new ConfigHandler().writeServerAddress("http://mooc.fi/staging");
         PowerMockito.mockStatic(UrlCommunicator.class);
         rootFinder = new ProjectRootFinderStub();
@@ -79,7 +79,7 @@ public class CourseSubmitterTest {
     }
 
     @Test
-    public void testFindCourseByCorrectPath() throws IOException, ProtocolException {
+    public void testFindCourseByCorrectPath() throws IOException, TmcCoreException {
         final String path = "/home/kansio/toinen/c-demo/viikko_01";
         Optional<Course> course = realFinder.findCourseByPath(path.split(File.separator));
         assertEquals(7, course.get().getId());
@@ -89,7 +89,7 @@ public class CourseSubmitterTest {
     }
 
     @Test
-    public void testSubmitWithOneParam() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
+    public void testSubmitWithOneParam() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
@@ -98,7 +98,7 @@ public class CourseSubmitterTest {
     }
     
     @Test(expected = ExpiredException.class)
-    public void testSubmitWithExpiredExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
+    public void testSubmitWithExpiredExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/k2015-tira/viikko01/tira1.1";
 
         rootFinder.setReturnValue(testPath);
@@ -107,7 +107,7 @@ public class CourseSubmitterTest {
     }
     
     @Test
-    public void submitWithPasteReturnsPasteUrl() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
+    public void submitWithPasteReturnsPasteUrl() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String pastePath = "https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ";
@@ -116,27 +116,27 @@ public class CourseSubmitterTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void submitWithPasteFromBadPathThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
+    public void submitWithPasteFromBadPathThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikeintehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testSubmitWithNonexistentExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
+    public void testSubmitWithNonexistentExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikkitehtava";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void submitWithNonExistentCourseThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, ProtocolException {
+    public void submitWithNonExistentCourseThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
-     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException, ProtocolException {
+     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.contains(pieceOfUrl),
@@ -145,7 +145,7 @@ public class CourseSubmitterTest {
     }
 
     @SuppressWarnings("unchecked")
-    private void mockUrlCommunicatorWithFile(String url, String returnValue) throws IOException, ProtocolException {
+    private void mockUrlCommunicatorWithFile(String url, String returnValue) throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makePostWithFile(Mockito.any(FileBody.class),

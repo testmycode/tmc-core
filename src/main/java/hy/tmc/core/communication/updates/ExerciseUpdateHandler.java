@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
+import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,8 +21,12 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
     private File cache;
     private Map<Integer, String> exerciseChecksums;
     
-    public ExerciseUpdateHandler(File cacheFile) {
+    public ExerciseUpdateHandler(File cacheFile) throws TmcCoreException {
         super();
+        if (cacheFile == null) {
+            String errorMessage = "ExerciseUpdateHandler requires non-null cacheFile to function";
+            throw new TmcCoreException(errorMessage);
+        }
         this.cache = cacheFile;
     }
 

@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.submission.SubmissionResult;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import java.io.IOException;
 import org.junit.After;
@@ -31,7 +31,7 @@ public class TmcJsonParserTest {
      * Mocks UrlCommunicator.
      */
     @Before
-    public void setup() throws IOException, ProtocolException {
+    public void setup() throws IOException, TmcCoreException {
         PowerMockito.mockStatic(UrlCommunicator.class);
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
         ClientData.setUserData("chang", "paras");
@@ -43,7 +43,7 @@ public class TmcJsonParserTest {
     }
         
     @Test
-    public void getsExercisesCorrectlyFromCourseJson() throws IOException, ProtocolException {
+    public void getsExercisesCorrectlyFromCourseJson() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"),
@@ -57,7 +57,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void getsLastExerciseOfCourseJson() throws IOException, ProtocolException {
+    public void getsLastExerciseOfCourseJson() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq("ankka"),
@@ -69,7 +69,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void parsesSubmissionUrlFromJson() throws IOException, ProtocolException {
+    public void parsesSubmissionUrlFromJson() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.submitResponse, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -79,7 +79,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void parsesPasteUrlFromJson() throws IOException, ProtocolException {
+    public void parsesPasteUrlFromJson() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.pasteResponse, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
@@ -97,7 +97,7 @@ public class TmcJsonParserTest {
         ClientData.clearUserData();
     }
 
-    private void mockCourse(String url) throws IOException, ProtocolException {
+    private void mockCourse(String url) throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.eq(url),
@@ -106,7 +106,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void getsExercisesCorrectlyFromCourseJSON() throws IOException, ProtocolException {
+    public void getsExercisesCorrectlyFromCourseJSON() throws IOException, TmcCoreException {
         mockCourse(realAddress);
         String names = TmcJsonParser.getExerciseNames(realAddress);
 
@@ -116,7 +116,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void getsLastExerciseOfCourseJSON() throws IOException, ProtocolException {
+    public void getsLastExerciseOfCourseJSON() throws IOException, TmcCoreException {
         mockCourse(realAddress);
         String names = TmcJsonParser.getExerciseNames(realAddress);
 
@@ -124,7 +124,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void canFetchOneCourse() throws IOException, ProtocolException {
+    public void canFetchOneCourse() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(contains("/courses/3"),
@@ -137,7 +137,7 @@ public class TmcJsonParserTest {
 
     }
 
-    private void mockSubmissionUrl() throws IOException, ProtocolException {
+    private void mockSubmissionUrl() throws IOException, TmcCoreException {
         PowerMockito.mockStatic(UrlCommunicator.class);
 
         HttpResult fakeResult = new HttpResult(ExampleJson.successfulSubmission, 200, true);
@@ -148,7 +148,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void canFetchSubmissionData() throws IOException, ProtocolException {
+    public void canFetchSubmissionData() throws IOException, TmcCoreException {
         mockSubmissionUrl();
         SubmissionResult result = TmcJsonParser.getSubmissionResult("http://real.address.fi");
         assertNotNull(result);

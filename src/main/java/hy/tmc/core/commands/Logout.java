@@ -1,7 +1,7 @@
 package hy.tmc.core.commands;
 
 import hy.tmc.core.configuration.ClientData;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 /**
  * Allows the user to log out.
@@ -9,10 +9,10 @@ import hy.tmc.core.exceptions.ProtocolException;
 public class Logout extends Command<Boolean> {
 
     @Override
-    public void checkData() throws ProtocolException {}
+    public void checkData() throws TmcCoreException {}
 
     @Override
-    public Boolean call() throws ProtocolException {
+    public Boolean call() throws TmcCoreException {
         if (ClientData.userDataExists()) {
             ClientData.clearUserData();
             return true;

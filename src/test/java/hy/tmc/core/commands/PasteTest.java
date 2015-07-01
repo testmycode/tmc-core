@@ -10,7 +10,7 @@ import hy.tmc.core.communication.CourseSubmitter;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ProjectRootFinderStub;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -47,7 +47,7 @@ public class PasteTest {
         paste = new Paste(submitterMock);
     }
     
-    private void mock() throws ParseException, ExpiredException, IOException, ProtocolException {
+    private void mock() throws ParseException, ExpiredException, IOException, TmcCoreException {
         ClientData.setUserData("Massbon", "Samu");
         PowerMockito.mockStatic(ClientData.class);
         PowerMockito
@@ -67,7 +67,7 @@ public class PasteTest {
      * Check that data checking success.
      */
     @Test
-    public void testCheckDataSuccess() throws ProtocolException, IOException {
+    public void testCheckDataSuccess() throws TmcCoreException, IOException {
         PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
         paste.setParameter("path", "/home/tmccli/uolevipuistossa");
         paste.checkData();
@@ -84,32 +84,32 @@ public class PasteTest {
     /**
      * Check that if user didn't give correct data, data checking fails.
      */
-    @Test(expected = ProtocolException.class)
+    @Test(expected = TmcCoreException.class)
     public void testCheckDataFail() throws Exception {
         paste.checkData();
     }
 
-    @Test(expected = ProtocolException.class)
+    @Test(expected = TmcCoreException.class)
     public void checkDataFailIfNoAuth() throws Exception {
         ClientData.clearUserData();
         paste.checkData();
     }
 
-    @Test(expected = ProtocolException.class)
+    @Test(expected = TmcCoreException.class)
     public void throwsErrorIfNoCredentialsPresent() throws Exception {
         paste.data.put("path", "asdsad");
         ClientData.clearUserData();
         paste.checkData();
     }
     
-    @Test(expected = ProtocolException.class)
+    @Test(expected = TmcCoreException.class)
     public void throwsErrorIfNoPath() throws Exception {
         PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
         paste.checkData();
     }
     
 
-    @Test(expected = ProtocolException.class)
+    @Test(expected = TmcCoreException.class)
     public void throwsErrorIfCourseCantBeRetrieved() throws Exception {
         PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
         PowerMockito

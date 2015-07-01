@@ -6,7 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import hy.tmc.core.configuration.ClientData;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class LogoutTest {
     }
 
     @Test
-    public void clearsUserData() throws ProtocolException {
+    public void clearsUserData() throws TmcCoreException {
         ClientData.setUserData("Chang", "Samu");
         logout.call();
         assertFalse(ClientData.userDataExists());

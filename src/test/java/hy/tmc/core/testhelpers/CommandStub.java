@@ -2,7 +2,7 @@ package hy.tmc.core.testhelpers;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.commands.Command;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 //To change return value of this command, change class definition
 public class CommandStub extends Command<String> {
@@ -12,7 +12,7 @@ public class CommandStub extends Command<String> {
     }
 
     @Override
-    public void checkData() throws ProtocolException {        
+    public void checkData() throws TmcCoreException {        
     }    
 
 

@@ -5,7 +5,7 @@ import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
-import hy.tmc.core.exceptions.ProtocolException;
+import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ public class ListCoursesTest {
      * result.
      */
     @Before
-    public void setUp() throws IOException, ProtocolException {
+    public void setUp() throws IOException, TmcCoreException {
         list = new ListCourses();
 
         PowerMockito.mockStatic(UrlCommunicator.class);
@@ -50,21 +50,21 @@ public class ListCoursesTest {
     }
 
     @Test
-    public void testCheckDataSuccess() throws ProtocolException {
+    public void testCheckDataSuccess() throws TmcCoreException {
         ListCourses ls = new ListCourses();
         ClientData.setUserData("asdf", "bsdf");
         ls.checkData();
     }
 
-    @Test(expected = ProtocolException.class)
-    public void testNoAuthThrowsException() throws ProtocolException, Exception {
+    @Test(expected = TmcCoreException.class)
+    public void testNoAuthThrowsException() throws TmcCoreException, Exception {
         ClientData.setUserData("", "");
         list.checkData();
         list.call();
     }
 
     @Test
-    public void checkDataTest() throws ProtocolException {
+    public void checkDataTest() throws TmcCoreException {
         list.checkData();
     }
     

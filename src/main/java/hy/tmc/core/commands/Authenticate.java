@@ -45,7 +45,7 @@ public class Authenticate extends Command<Boolean> {
     private int makeRequest() throws IOException, TmcCoreException {
         String auth = data.get("username") + ":" + data.get("password");
         int code = makeGetRequest(
-                new ConfigHandler().readAuthAddress(),
+                ClientData.getServerAddress(),
                 auth
         ).getStatusCode();
         return code;

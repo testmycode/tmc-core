@@ -23,6 +23,8 @@ import hy.tmc.core.commands.SendFeedback;
 import hy.tmc.core.commands.Submit;
 import hy.tmc.core.communication.updates.ExerciseUpdateHandler;
 import hy.tmc.core.communication.updates.ReviewHandler;
+import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.domain.Credentials;
 import hy.tmc.core.domain.Review;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.File;
@@ -103,14 +105,15 @@ public class TmcCore {
     /**
      * Authenticates the given user on the server, and saves the data into memory.
      *
-     * @param username to authenticate with
-     * @param password to authenticate with
+     * @param credentials includes username and password
+     * @param serverAddress defines TMC-server to communicate with.
      * @return A future-object containing true or false on success or fail
      * @throws TmcCoreException if something in the given input was wrong
      */
-    public ListenableFuture<Boolean> login(String username, String password) throws TmcCoreException {
-        checkParameters(username, password);
-        Authenticate login = new Authenticate(username, password);
+    public ListenableFuture<Boolean> login(Credentials credentials, String serverAddress) throws TmcCoreException {
+        checkParameters(credentials.getUsername(), credentials.getPassword(), serverAddress);
+        ClientData.setServerAddress(serverAddress);
+        Authenticate login = new Authenticate(credentials.getUsername(), credentials.getPassword());
         @SuppressWarnings("unchecked")
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(login);
         return stringListenableFuture;

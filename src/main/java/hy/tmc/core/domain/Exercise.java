@@ -1,6 +1,7 @@
 package hy.tmc.core.domain;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,7 +9,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Exercise {
+public class Exercise implements Serializable {
 
     private int id; // = 284;
     private String name; //": "viikko1-Viikko1_000.Hiekkalaatikko",

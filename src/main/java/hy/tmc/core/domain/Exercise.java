@@ -1,6 +1,7 @@
 package hy.tmc.core.domain;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,7 +9,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Exercise {
+public class Exercise implements Serializable{
 
     private int id; // = 284;
     private String name; //": "viikko1-Viikko1_000.Hiekkalaatikko",
@@ -125,6 +126,18 @@ public class Exercise {
 
     public void setDeadline(String deadline) {
         this.deadline = deadline;
+    }
+    
+    public Date getDeadlineDate() {
+        try {
+            Date deadlineDate = new Date();
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            return format.parse(this.getDeadline());
+        }
+        catch (ParseException ex) {
+            System.out.println(ex.getMessage());
+            return new Date();
+        }
     }
 
     public String getChecksum() {
@@ -249,7 +262,6 @@ public class Exercise {
     private String courseName;
 
     public enum ValgrindStrategy {
-
         @SerializedName("")
         NONE,
         @SerializedName("fail")

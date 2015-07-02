@@ -107,7 +107,6 @@ public class PasteTest {
         PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
         paste.checkData();
     }
-    
 
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfCourseCantBeRetrieved() throws Exception {

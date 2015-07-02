@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
+import java.util.List;
 
 public class DownloadExercises extends Command<String> {
 
@@ -71,11 +72,12 @@ public class DownloadExercises extends Command<String> {
         }
         try {
             int courseId = Integer.parseInt(this.data.get("courseID"));
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             throw new TmcCoreException("Given course id is not a number");
         }
     }
-    
+
     public boolean cacheFileSet() {
         return this.cacheFile != null;
     }
@@ -100,17 +102,16 @@ public class DownloadExercises extends Command<String> {
         throw new TmcCoreException("Failed to fetch exercises. Check your internet connection or course ID");
     }
 
-    private Optional<String> downloadExercises(Course course) throws IOException {
-        int exCount = 0;
-        int totalCount = course.getExercises().size();
-        int downloaded = 0;
-        String path = exerciseDownloader.createCourseFolder(data.get("path"), course.getName());
-        List<Exercise> exercises = course.getExercises();
-        if (this.cacheFile != null) {
-            cacheExercise(exercises);
-        }
-        for (Exercise exercise : exercises) {
+    private Optional<String> downloadExercises(Course course) {
+        return downloadExercisesFromList(course.getExercises(), course.getName());
+    }
 
+    public Optional<String> downloadExercisesFromList(List<Exercise> exercises, String courseName) {
+        int exCount = 0;
+        int totalCount = exercises.size();
+        int downloaded = 0;
+        String path = exerciseDownloader.createCourseFolder(data.get("path"), courseName);
+        for (Exercise exercise : exercises) {
             String message = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
             exCount++;
             if (!message.contains("Skip")) {
@@ -119,24 +120,5 @@ public class DownloadExercises extends Command<String> {
             this.observer.progress(100.0 * exCount / totalCount, message);
         }
         return Optional.of(downloaded + " exercises downloaded");
-    }
-
-    private void cacheExercise(List<Exercise> exercises) throws IOException {
-        Gson gson = new Gson();
-        String json = FileUtils.readFileToString(cacheFile, Charset.forName("UTF-8"));
-        Map<Integer, String> checksums;
-        if (json != null && ! json.isEmpty()) {
-            Type typeOfHashMap = new TypeToken<Map<Integer, String>>() { }.getType();
-            checksums = gson.fromJson(json, typeOfHashMap); 
-        } else {
-            checksums = new HashMap<>();
-        }
-        
-        for (Exercise exercise : exercises) {
-            checksums.put(exercise.getId(), exercise.getChecksum());
-        }
-        
-        FileWriter writer = new FileWriter(this.cacheFile);
-        writer.write(gson.toJson(checksums));
     }
 }

@@ -15,7 +15,7 @@ public class ReviewHandler extends UpdateHandler<Review> {
     }
     
     @Override
-    protected List<Review> fetchFromServer(Course currentCourse) throws IOException{
+    public List<Review> fetchFromServer(Course currentCourse) throws IOException{
         List<Review> currentReviews = TmcJsonParser.getReviews(currentCourse.getReviewsUrl());
         if (currentReviews == null) {
             return new ArrayList<>();

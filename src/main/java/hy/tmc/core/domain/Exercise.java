@@ -130,13 +130,12 @@ public class Exercise implements Serializable{
     
     public Date getDeadlineDate() {
         try {
-            Date deadlineDate = new Date();
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssX");
             return format.parse(this.getDeadline());
         }
         catch (ParseException ex) {
             System.out.println(ex.getMessage());
-            return new Date();
+            return null;
         }
     }
 

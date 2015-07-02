@@ -42,7 +42,14 @@ public class DownloadExercises extends Command<String> {
         this(path, courseId);
         this.cacheFile = cacheFile;
     }
-
+    
+    public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile) {
+        this.exerciseDownloader = downloader;
+        this.setParameter("path", path);
+        this.setParameter("courseID", courseId);
+        this.cacheFile = cacheFile;
+    }
+    
     /**
      * Checks that command has required parameters courseID is the id of the course and path is the
      * path of where files are downloaded and extracted.
@@ -107,7 +114,7 @@ public class DownloadExercises extends Command<String> {
         String path = exerciseDownloader.createCourseFolder(data.get("path"), course.getName());
         List<Exercise> exercises = course.getExercises();
         if (this.cacheFile != null) {
-            cacheExercise(exercises);
+            cacheExercises(exercises);
         }
         for (Exercise exercise : exercises) {
 
@@ -116,18 +123,20 @@ public class DownloadExercises extends Command<String> {
             if (!message.contains("Skip")) {
                 downloaded++;
             }
-            this.observer.progress(100.0 * exCount / totalCount, message);
+            if (this.observer != null) {
+                this.observer.progress(100.0 * exCount / totalCount, message);
+            }
         }
         return Optional.of(downloaded + " exercises downloaded");
     }
 
-    private void cacheExercise(List<Exercise> exercises) throws IOException {
+    private void cacheExercises(List<Exercise> exercises) throws IOException {
         Gson gson = new Gson();
         String json = FileUtils.readFileToString(cacheFile, Charset.forName("UTF-8"));
         Map<Integer, String> checksums;
         if (json != null && ! json.isEmpty()) {
             Type typeOfHashMap = new TypeToken<Map<Integer, String>>() { }.getType();
-            checksums = gson.fromJson(json, typeOfHashMap); 
+            checksums = gson.fromJson(json, typeOfHashMap);
         } else {
             checksums = new HashMap<>();
         }
@@ -135,8 +144,8 @@ public class DownloadExercises extends Command<String> {
         for (Exercise exercise : exercises) {
             checksums.put(exercise.getId(), exercise.getChecksum());
         }
-        
-        FileWriter writer = new FileWriter(this.cacheFile);
-        writer.write(gson.toJson(checksums));
+        try (FileWriter writer = new FileWriter(this.cacheFile)) {
+            writer.write(gson.toJson(checksums, Map.class));
+        }
     }
 }

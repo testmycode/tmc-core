@@ -14,12 +14,10 @@ import hy.tmc.core.testhelpers.builders.ExerciseBuilder;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -30,25 +28,23 @@ import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import org.powermock.api.mockito.PowerMockito;
-import static org.powermock.api.mockito.PowerMockito.doReturn;
 import static org.powermock.api.mockito.PowerMockito.when;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({UrlCommunicator.class, TmcJsonParser.class})
 public class ExerciseUpdaterTest {
     
     private File cacheFile;
-    private ExerciseUpdateHandler command;
+    private ExerciseUpdateHandler handler;
     private ExerciseBuilder builder;
     
     @Before
     public void setUp() throws IOException, TmcCoreException {
         cacheFile = Paths.get("src", "test", "resources", "exercisetest.cache").toFile();
         cacheFile.createNewFile();
-        command = new ExerciseUpdateHandler(cacheFile);
+        handler = new ExerciseUpdateHandler(cacheFile);
         builder = new ExerciseBuilder();
         PowerMockito.mockStatic(UrlCommunicator.class);
         when(UrlCommunicator.makeGetRequest(anyString(), any(String[].class)))
@@ -63,7 +59,7 @@ public class ExerciseUpdaterTest {
 
     @Test
     public void getsCorrectExercisesFromServer() throws IOException {
-        List<Exercise> exercises = this.command.fetchFromServer(new Course());
+        List<Exercise> exercises = this.handler.fetchFromServer(new Course());
         assertEquals(153, exercises.size());
     }
     
@@ -86,7 +82,7 @@ public class ExerciseUpdaterTest {
         when(TmcJsonParser.getExercisesFromServer(any(Course.class)))
                 .thenReturn(serverExercises);
         
-        List<Exercise> exercises = command.getNewObjects(new Course());
+        List<Exercise> exercises = handler.getNewObjects(new Course());
         
         assertEquals(3, exercises.size());
         assertTrue(listHasExerciseWithName(exercises, "new"));
@@ -106,7 +102,7 @@ public class ExerciseUpdaterTest {
         when(TmcJsonParser.getExercisesFromServer(any(Course.class)))
                 .thenReturn(serverExercises);
         
-        List<Exercise> exercises = command.getNewObjects(new Course());
+        List<Exercise> exercises = handler.getNewObjects(new Course());
         
         assertEquals(4, exercises.size());
         assertTrue(listHasExerciseWithName(exercises, "b"));

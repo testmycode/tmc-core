@@ -14,6 +14,7 @@ import hy.tmc.core.commands.RunTests;
 import hy.tmc.core.commands.SendFeedback;
 import hy.tmc.core.commands.Submit;
 import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.Credentials;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.FileWriterHelper;
 import java.io.File;
@@ -26,7 +27,6 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.concurrent.ExecutionException;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -46,6 +46,7 @@ public class TmcCoreTest {
     private TmcCore tmcCore;
     private ListeningExecutorService threadPool;
     private Course course;
+    private String tmcServerAddress = "https://tmc.mooc.fi/mooc";
 
     @Before
     public void setUp() throws IOException {
@@ -63,61 +64,67 @@ public class TmcCoreTest {
     }
 
     @Test
-    public void login() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
-        tmcCore.login("test", "1234");
+    public void login() throws Exception {
+        tmcCore.login(new Credentials("test", "1234"), tmcServerAddress);
         verify(threadPool, times(1)).submit(any(Authenticate.class));
     }
 
     @Test(expected = TmcCoreException.class)
-    public void loginWithoutNumberFails() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
-        tmcCore.login("", "").get();
+    public void loginWithoutNumberFails() throws Exception {
+        tmcCore.login(new Credentials("",""), tmcServerAddress).get();
+    }
+    
+    @Test(expected = TmcCoreException.class)
+    public void loginWithoutServerAddrees() throws Exception {
+        tmcCore.login(new Credentials("test","1234"), "").get();
     }
 
+
     @Test
-    public void logout() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
+    public void logout() throws Exception {
         tmcCore.logout();
         verify(threadPool, times(1)).submit(any(Logout.class));
     }
 
     @Test
-    public void selectServer() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
+    public void selectServer() throws Exception {
         tmcCore.selectServer("uusiServu");
         verify(threadPool, times(1)).submit(any(ChooseServer.class));
     }
 
     @Test
-    public void downloadExercises() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
+    public void downloadExercises() throws Exception {
         tmcCore.downloadExercises("/polku/tiedostoille", "21");
         verify(threadPool, times(1)).submit(any(DownloadExercises.class));
     }
 
     @Test
-    public void listCourses() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
+    public void listCourses() throws Exception {
         tmcCore.listCourses();
         verify(threadPool, times(1)).submit(any(ListCourses.class));
     }
 
     @Test
-    public void listExercises() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
+    public void listExercises() throws Exception {
         tmcCore.listExercises("path/kurssiin");
         verify(threadPool, times(1)).submit(any(ListExercises.class));
     }
 
     @Test(expected = FileNotFoundException.class)
-    public void nonExistantCacheFileThrowsException() throws IOException, TmcCoreException {
+    public void nonExistantCacheFileThrowsException() throws Exception {
         Path path = Paths.get("src", "test", "resources", "nothere.cache");
         tmcCore.setCacheFile(path.toFile());
         tmcCore.getNewAndUpdatedExercises(course);
     }
 
     @Test(expected = FileNotFoundException.class)
-    public void nonExistantCacheFileThrowsExceptionFromConstructor() throws IOException, TmcCoreException {
+    public void nonExistantCacheFileThrowsExceptionFromConstructor() throws Exception {
         Path path = Paths.get("src", "test", "resources", "nothere.cache");
         new TmcCore(path.toFile(), threadPool);
     }
 
     @Test
-    public void getExerciseUpdatesTest() throws TmcCoreException, IOException {
+    public void getExerciseUpdatesTest() throws Exception {
         Path path = Paths.get("src", "test", "resources", "cachefile");
         tmcCore.setCacheFile(path.toFile());
         tmcCore.getNewAndUpdatedExercises(course);
@@ -126,7 +133,7 @@ public class TmcCoreTest {
     }
 
     @Test
-    public void withNoCacheFileErrorIsThrownWithExerciseUpdates() throws IOException {
+    public void withNoCacheFileErrorIsThrownWithExerciseUpdates() throws Exception {
         // using catch to verify command has not been sent
         try {
             tmcCore.getNewAndUpdatedExercises(course);
@@ -145,18 +152,18 @@ public class TmcCoreTest {
     }
 
     @Test(expected = FileNotFoundException.class)
-    public void nullCaughtInSetTest() throws FileNotFoundException, IOException, TmcCoreException {
+    public void nullCaughtInSetTest() throws Exception {
         tmcCore.setCacheFile(null);
     }
 
     @Test(expected = FileNotFoundException.class)
-    public void nonExistentFileInSetTest() throws FileNotFoundException, IOException, TmcCoreException {
+    public void nonExistentFileInSetTest() throws Exception {
         File fake = Paths.get("src", "test", "resources", "fakeFile.cache").toFile();
         tmcCore.setCacheFile(fake);
     }
 
     @Test
-    public void cacheFileGivenInConstructorTest() throws FileNotFoundException, TmcCoreException, IOException {
+    public void cacheFileGivenInConstructorTest() throws Exception {
         Path path = Paths.get("src", "test", "resources", "cachefile");
 
         TmcCore core = new TmcCore(path.toFile(), threadPool);
@@ -166,7 +173,7 @@ public class TmcCoreTest {
     }
 
     @Test
-    public void migratingCacheFileKeepsOldCacheData() throws IOException, FileNotFoundException, TmcCoreException {
+    public void migratingCacheFileKeepsOldCacheData() throws Exception {
         Path firstPath = Paths.get("src", "test", "resources", "cachefile");
         Path secondPath = Paths.get("src", "test", "resources", "file2.cache");
         tmcCore.setCacheFile(firstPath.toFile());
@@ -184,13 +191,13 @@ public class TmcCoreTest {
     }
 
     @Test
-    public void test() throws TmcCoreException, InterruptedException, ExecutionException, Exception {
+    public void test() throws Exception {
         tmcCore.test("testi/polku");
         verify(threadPool, times(1)).submit(any(RunTests.class));
     }
 
     @Test
-    public void sendFeedback() throws TmcCoreException, IOException {
+    public void sendFeedback() throws Exception {
         tmcCore.sendFeedback(new HashMap<String, String>(), "internet.computer/file");
         verify(threadPool, times(1)).submit(any(SendFeedback.class));
     }
@@ -202,7 +209,7 @@ public class TmcCoreTest {
     }
 
     @Test
-    public void pasteTest() throws TmcCoreException {
+    public void pasteTest() throws Exception {
         tmcCore.paste("polku/jonnekin");
         verify(threadPool, times(1)).submit(any(Paste.class));
     }
@@ -213,12 +220,12 @@ public class TmcCoreTest {
     }
 
     @Test(expected = TmcCoreException.class)
-    public void downloadExercisesWithBadPathThrowsException() throws TmcCoreException, IOException {
+    public void downloadExercisesWithBadPathThrowsException() throws Exception {
         tmcCore.downloadExercises(null, "2");
     }
 
     @Test
-    public void downloadExercisesUsesCacheIfSet() throws IOException, TmcCoreException {
+    public void downloadExercisesUsesCacheIfSet() throws Exception {
         tmcCore.setCacheFile(Paths.get("src", "test", "resources", "cachefile").toFile());
         tmcCore.downloadExercises("asdf", "asdf");
         final ArgumentCaptor<DownloadExercises> argument = ArgumentCaptor.forClass(DownloadExercises.class);
@@ -227,7 +234,7 @@ public class TmcCoreTest {
     }
     
     @Test
-    public void downloadExercisesDoesNotUseCacheIfNotSet() throws IOException, TmcCoreException {
+    public void downloadExercisesDoesNotUseCacheIfNotSet() throws Exception {
         tmcCore.downloadExercises("asdf", "asdf");
         final ArgumentCaptor<DownloadExercises> argument = ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());

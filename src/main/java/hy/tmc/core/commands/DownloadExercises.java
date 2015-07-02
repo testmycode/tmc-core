@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
+import java.util.List;
 
 public class DownloadExercises extends Command<String> {
 
@@ -78,11 +79,12 @@ public class DownloadExercises extends Command<String> {
         }
         try {
             int courseId = Integer.parseInt(this.data.get("courseID"));
-        } catch (NumberFormatException e) {
+        }
+        catch (NumberFormatException e) {
             throw new TmcCoreException("Given course id is not a number");
         }
     }
-    
+
     public boolean cacheFileSet() {
         return this.cacheFile != null;
     }
@@ -108,16 +110,20 @@ public class DownloadExercises extends Command<String> {
     }
 
     private Optional<String> downloadExercises(Course course) throws IOException {
+        return downloadExercisesFromList(course.getExercises(), course.getName());
+    }
+
+    public Optional<String> downloadExercisesFromList(List<Exercise> exercises, String courseName) throws IOException {
         int exCount = 0;
-        int totalCount = course.getExercises().size();
+        int totalCount = exercises.size();
         int downloaded = 0;
-        String path = exerciseDownloader.createCourseFolder(data.get("path"), course.getName());
-        List<Exercise> exercises = course.getExercises();
+
+        String path = exerciseDownloader.createCourseFolder(data.get("path"), courseName);
         if (this.cacheFile != null) {
             cacheExercises(exercises);
         }
-        for (Exercise exercise : exercises) {
 
+        for (Exercise exercise : exercises) {
             String message = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
             exCount++;
             if (!message.contains("Skip")) {

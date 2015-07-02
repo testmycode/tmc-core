@@ -1,8 +1,15 @@
 package hy.tmc.core.domain;
 
 import com.google.gson.annotations.SerializedName;
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Exercise {
+public class Exercise implements Serializable{
 
     private int id; // = 284;
     private String name; //": "viikko1-Viikko1_000.Hiekkalaatikko",
@@ -21,6 +28,17 @@ public class Exercise {
 
     @SerializedName("zip_url")
     private String zipUrl; //": "https://tmc.mooc.fi/staging/exercises/284.zip",
+
+//        /**
+//     * The URL this exercise can be downloaded from.
+//     */
+//    @SerializedName("zip_url")
+//    private String downloadUrl;
+    /**
+     * The URL the solution can be downloaded from (admins only).
+     */
+    @SerializedName("solution_zip_url")
+    private String solutionDownloadUrl;
 
     private boolean returnable; //": true,
 
@@ -41,16 +59,28 @@ public class Exercise {
     private String[] runtimeParams; //[ "-Xss8M" ]
 
     @SerializedName("valgrind_strategy")
-    private String valgrindStrategy; // "fail",
+    private ValgrindStrategy valgrindStrategy = ValgrindStrategy.FAIL;
 
     @SerializedName("code_review_requests_enabled")
-    private boolean codeReviewRequestsEnabled; //": true,
+    private boolean codeReviewRequestsEnabled = true;
 
     @SerializedName("run_tests_locally_action_enabled")
-    private boolean runTestsLocallyActionEnabled; //": true,
+    private boolean runTestsLocallyActionEnabled = true;
 
     @SerializedName("exercise_submissions_url")
     private String exerciseSubmissionsUrl; // https://tmc.mooc.fi/staging/exercises/284.json?api_version=7
+
+    public Exercise() {
+    }
+
+    public Exercise(String name) {
+        this(name, "unknown-course");
+    }
+
+    public Exercise(String name, String courseName) {
+        this.name = name;
+        this.courseName = courseName;
+    }
 
     public int getId() {
         return id;
@@ -65,6 +95,12 @@ public class Exercise {
     }
 
     public void setName(String name) {
+        if (name == null) {
+            throw new NullPointerException("name was null at Exercise.setName");
+        }
+        if (name.isEmpty()) {
+            throw new IllegalArgumentException("Name cannot be empty at Exercise.setName");
+        }
         this.name = name;
     }
 
@@ -90,6 +126,17 @@ public class Exercise {
 
     public void setDeadline(String deadline) {
         this.deadline = deadline;
+    }
+    
+    public Date getDeadlineDate() {
+        try {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssX");
+            return format.parse(this.getDeadline());
+        }
+        catch (ParseException ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
     }
 
     public String getChecksum() {
@@ -180,19 +227,11 @@ public class Exercise {
     }
 
     public String[] getRuntimeParams() {
-        return runtimeParams;
+        return runtimeParams != null ? runtimeParams : new String[0];
     }
 
     public void setRuntimeParams(String[] runtimeParams) {
         this.runtimeParams = runtimeParams;
-    }
-    
-    public String getValgrindStrategy() {
-        return valgrindStrategy;
-    }
-
-    public void setValgrindStrategy(String valgrindStrategy) {
-        this.valgrindStrategy = valgrindStrategy;
     }
 
     public boolean isCodeReviewRequestsEnabled() {
@@ -217,5 +256,86 @@ public class Exercise {
 
     public void setExerciseSubmissionsUrl(String exerciseSubmissionsUrl) {
         this.exerciseSubmissionsUrl = exerciseSubmissionsUrl;
+    }
+
+    private String courseName;
+
+    public enum ValgrindStrategy {
+        @SerializedName("")
+        NONE,
+        @SerializedName("fail")
+        FAIL
+    }
+
+    public boolean hasDeadlinePassed() {
+        return hasDeadlinePassedAt(new Date());
+    }
+
+    public boolean hasDeadlinePassedAt(Date time) {
+        if (time == null) {
+            throw new NullPointerException("Given time was null at Exercise.isDeadlineEnded");
+        }
+        if (deadline != null) {
+            try {
+                Date deadlineDate = new Date();
+                DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+                deadlineDate = format.parse(deadline);
+                return deadlineDate.getTime() < time.getTime();
+            }
+            catch (ParseException ex) {
+                System.err.println(ex.getMessage());
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    public ExerciseKey getKey() {
+        return new ExerciseKey(courseName, name);
+    }
+
+    public String getCourseName() {
+        return courseName;
+    }
+
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+
+    public String getDownloadUrl() {
+        return this.zipUrl;
+    }
+
+    public void setDownloadUrl(String downloadAddress) {
+        if (downloadAddress == null) {
+            throw new NullPointerException("downloadAddress was null at Exercise.setDownloadAddress");
+        }
+        if (downloadAddress.isEmpty()) {
+            throw new IllegalArgumentException("downloadAddress cannot be empty at Exercise.setDownloadAddress");
+        }
+
+        this.zipUrl = downloadAddress;
+    }
+
+    public void setSolutionDownloadUrl(String solutionDownloadUrl) {
+        this.solutionDownloadUrl = solutionDownloadUrl;
+    }
+
+    public String getSolutionDownloadUrl() {
+        return solutionDownloadUrl;
+    }
+
+    public boolean requiresReview() {
+        return requiresReview;
+    }
+
+    public ValgrindStrategy getValgrindStrategy() {
+        return valgrindStrategy;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

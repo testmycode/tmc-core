@@ -122,7 +122,7 @@ public class DownloadExercises extends Command<String> {
         if (this.cacheFile != null) {
             cacheExercises(exercises);
         }
-
+        
         for (Exercise exercise : exercises) {
             String message = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
             exCount++;
@@ -135,7 +135,7 @@ public class DownloadExercises extends Command<String> {
         }
         return Optional.of(downloaded + " exercises downloaded");
     }
-
+    
     private void cacheExercises(List<Exercise> exercises) throws IOException {
         Gson gson = new Gson();
         String json = FileUtils.readFileToString(cacheFile, Charset.forName("UTF-8"));
@@ -154,4 +154,5 @@ public class DownloadExercises extends Command<String> {
             writer.write(gson.toJson(checksums, Map.class));
         }
     }
+
 }

@@ -127,6 +127,17 @@ public class Exercise implements Serializable {
     public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
+    
+    public Date getDeadlineDate() {
+        try {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssX");
+            return format.parse(this.getDeadline());
+        }
+        catch (ParseException ex) {
+            System.out.println(ex.getMessage());
+            return null;
+        }
+    }
 
     public String getChecksum() {
         return checksum;
@@ -250,7 +261,6 @@ public class Exercise implements Serializable {
     private String courseName;
 
     public enum ValgrindStrategy {
-
         @SerializedName("")
         NONE,
         @SerializedName("fail")

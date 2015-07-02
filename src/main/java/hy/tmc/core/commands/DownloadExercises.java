@@ -71,10 +71,13 @@ public class DownloadExercises extends Command<String> {
         }
         try {
             int courseId = Integer.parseInt(this.data.get("courseID"));
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new TmcCoreException("Given course id is not a number");
         }
+    }
+    
+    public boolean cacheFileSet() {
+        return this.cacheFile != null;
     }
 
     /**

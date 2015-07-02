@@ -1,8 +1,5 @@
 package hy.tmc.core.communication;
 
-import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.communication.HttpResult;
-import hy.tmc.core.communication.CourseSubmitter;
 import com.google.common.base.Optional;
 import static org.junit.Assert.assertEquals;
 

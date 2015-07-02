@@ -28,6 +28,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.concurrent.ExecutionException;
 import org.apache.commons.io.FileUtils;
+import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -54,11 +55,14 @@ public class TmcCoreTest {
         threadPool = mock(ListeningExecutorService.class);
         tmcCore = new TmcCore(threadPool);
         course = new Course();
-        File testFile = Paths.get("src", "test", "resources", "cachefile").toFile();
-        if (testFile.exists()) {
-            testFile.delete();
-        }
-        testFile.createNewFile();
+        Paths.get("src", "test", "resources", "cachefile").toFile().createNewFile();
+        Paths.get("src", "test", "resources", "file2.cache").toFile().createNewFile();
+    }
+    
+    @After
+    public void cleanUp() {
+        Paths.get("src", "test", "resources", "cachefile").toFile().delete();
+        Paths.get("src", "test", "resources", "file2.cache").toFile().delete();
     }
 
     @Test
@@ -144,12 +148,12 @@ public class TmcCoreTest {
     }
 
     @Test(expected = FileNotFoundException.class)
-    public void nullCaughtInSetTest() throws FileNotFoundException, IOException {
+    public void nullCaughtInSetTest() throws FileNotFoundException, IOException, TmcCoreException {
         tmcCore.setCacheFile(null);
     }
 
     @Test(expected = FileNotFoundException.class)
-    public void nonExistentFileInSetTest() throws FileNotFoundException, IOException {
+    public void nonExistentFileInSetTest() throws FileNotFoundException, IOException, TmcCoreException {
         File fake = Paths.get("src", "test", "resources", "fakeFile.cache").toFile();
         tmcCore.setCacheFile(fake);
     }
@@ -165,7 +169,7 @@ public class TmcCoreTest {
     }
 
     @Test
-    public void migratingCacheFileKeepsOldCacheData() throws IOException {
+    public void migratingCacheFileKeepsOldCacheData() throws IOException, FileNotFoundException, TmcCoreException {
         Path firstPath = Paths.get("src", "test", "resources", "cachefile");
         Path secondPath = Paths.get("src", "test", "resources", "file2.cache");
         tmcCore.setCacheFile(firstPath.toFile());

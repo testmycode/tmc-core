@@ -1,4 +1,4 @@
-package fi.helsinki.cs.tmc.data;
+package hy.tmc.core.domain;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;

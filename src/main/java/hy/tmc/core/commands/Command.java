@@ -61,5 +61,4 @@ public abstract class Command<E> implements Callable<E> {
     public void setObserver(ProgressObserver observer) {
         this.observer = observer;
     }
-
 }

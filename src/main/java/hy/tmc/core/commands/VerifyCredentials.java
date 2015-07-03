@@ -43,7 +43,7 @@ public class VerifyCredentials extends Command<Boolean> {
     private int makeRequest() throws IOException, TmcCoreException {
         String auth = data.get("username") + ":" + data.get("password");
         int code = makeGetRequest(
-                ClientData.getServerAddress(),
+                settings.getServerAddress(),
                 auth
         ).getStatusCode();
         return code;
@@ -53,7 +53,7 @@ public class VerifyCredentials extends Command<Boolean> {
     public Boolean call() throws TmcCoreException, IOException {
         checkData();
         if (isOk(makeRequest())) {
-            ClientData.setUserData(data.get("username"), data.get("password"));
+            //ClientData.setUserData(data.get("username"), data.get("password"));
             return true;
         }
         return false;

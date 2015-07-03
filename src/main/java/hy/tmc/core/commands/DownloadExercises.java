@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -62,7 +61,7 @@ public class DownloadExercises extends Command<String> {
         if (!this.data.containsKey("path")) {
             throw new TmcCoreException("Path required");
         }
-        if (!ClientData.userDataExists()) {
+        if (!settings.userDataExists()) {
             throw new TmcCoreException("You need to login first.");
         }
     }

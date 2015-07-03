@@ -2,7 +2,6 @@ package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
@@ -21,7 +20,7 @@ public class ListCourses extends Command<List<Course>> {
      */
     @Override
     public void checkData() throws TmcCoreException {
-        if (!ClientData.userDataExists()) {
+        if (!settings.userDataExists()) {
             throw new TmcCoreException("User must be authorized first");
         }
     }

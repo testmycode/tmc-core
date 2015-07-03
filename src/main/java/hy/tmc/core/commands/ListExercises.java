@@ -2,7 +2,6 @@ package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.ExerciseLister;
-import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 
@@ -44,14 +43,14 @@ public class ListExercises extends Command<List<Exercise>> {
         if (!data.containsKey("path")) {
             throw new TmcCoreException("Path not recieved");
         }
-        if (!ClientData.userDataExists()) {
+        if (!settings.userDataExists()) {
             throw new TmcCoreException("Please authorize first.");
         }
-        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
+        Optional<Course> currentCourse = Optional.of(settings.getCurrentCourse());
         if (currentCourse.isPresent()) {
             this.current = currentCourse.get();
         } else {
-            throw new TmcCoreException("No course resolved from the path.");
+            throw new TmcCoreException("A course must be selected.");
         }
     }
 

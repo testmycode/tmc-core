@@ -3,7 +3,6 @@ package hy.tmc.core.commands;
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.CourseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
-import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -68,14 +67,14 @@ public class Submit extends Command<SubmissionResult> {
      */
     @Override
     public void checkData() throws TmcCoreException, IOException {
-        if (!ClientData.userDataExists()) {
+        if (!settings.userDataExists()) {
             throw new TmcCoreException("User must be authorized first");
         }
         if (!this.data.containsKey("path")) {
             throw new TmcCoreException("path not supplied");
         }
 
-        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
+        Optional<Course> currentCourse = Optional.of(settings.getCurrentCourse());
         if (currentCourse.isPresent()) {
             course = currentCourse.get();
         } else {

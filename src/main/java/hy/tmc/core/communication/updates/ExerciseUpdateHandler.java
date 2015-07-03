@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
@@ -23,6 +24,7 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
     
     public ExerciseUpdateHandler(File cacheFile) throws TmcCoreException {
         super();
+        exerciseChecksums = new HashMap<>();
         if (cacheFile == null) {
             String errorMessage = "ExerciseUpdateHandler requires non-null cacheFile to function";
             throw new TmcCoreException(errorMessage);
@@ -31,8 +33,8 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
     }
 
     @Override
-    protected List<Exercise> fetchFromServer(Course currentCourse) throws IOException {
-        List<Exercise> exercises = TmcJsonParser.getExercises(currentCourse);
+    public List<Exercise> fetchFromServer(Course currentCourse) throws IOException {
+        List<Exercise> exercises = TmcJsonParser.getExercisesFromServer(currentCourse);
         readChecksumMap();
         if (exercises == null) {
             return new ArrayList<>();
@@ -42,7 +44,7 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
 
     @Override
     protected boolean isNew(Exercise exercise) {
-        if (this.exerciseChecksums.containsKey(exercise.getId())) {
+        if (exerciseChecksums.containsKey(exercise.getId())) {
             String earlierChecksum = exerciseChecksums.get(exercise.getId());
             return ! exercise.getChecksum().equals(earlierChecksum);
         }
@@ -53,6 +55,9 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
         String json = FileUtils.readFileToString(cache, Charset.forName("UTF-8"));
         Type typeOfMap = new TypeToken<Map<Integer, String>>() { }.getType();
         this.exerciseChecksums = new Gson().fromJson(json, typeOfMap);
+        if (this.exerciseChecksums == null) {
+            this.exerciseChecksums = new HashMap<>();
+        }
     }
     
 }

@@ -43,7 +43,7 @@ public class ExerciseLister {
             throw new TmcCoreException("No course found");
         }
 
-        List<Exercise> exercises = TmcJsonParser.getExercises(course.get());
+        List<Exercise> exercises = TmcJsonParser.getExercisesFromServer(course.get());
         if (exercises == null || exercises.isEmpty()) {
             throw new TmcCoreException("No exercises found");
         }

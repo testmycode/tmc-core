@@ -17,6 +17,7 @@ public final class ClientData {
     private static String USERNAME = "";
     private static String PASSWORD = "";
     private static RootFinder rootFinder;
+    private static String serverAddress;
 
     private ClientData() {
     }
@@ -98,5 +99,13 @@ public final class ClientData {
 
     public synchronized static String getPassword() {
         return PASSWORD;
+    }
+
+    public synchronized static String getServerAddress() {
+        return serverAddress;
+    }
+
+    public synchronized static void setServerAddress(String serverAddress) {
+        ClientData.serverAddress = serverAddress;
     }
 }

@@ -53,7 +53,7 @@ public class ExerciseListerTest {
 
     private void mockExercisesWith(List<Exercise> exercises) throws IOException, TmcCoreException {
         PowerMockito
-                .when(TmcJsonParser.getExercises((Course) Mockito.any()))
+                .when(TmcJsonParser.getExercisesFromServer((Course) Mockito.any()))
                 .thenReturn(exercises);
     }
 

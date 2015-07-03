@@ -151,7 +151,7 @@ public class TmcJsonParser {
      * @param course Course that we are interested in
      * @return List of all exercises as Exercise-objects
      */
-    public static List<Exercise> getExercises(Course course) throws IOException {
+    public static List<Exercise> getExercisesFromServer(Course course) throws IOException {
         return getExercises(course.getId());
     }
 

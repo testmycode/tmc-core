@@ -23,15 +23,18 @@ import hy.tmc.core.commands.SendFeedback;
 import hy.tmc.core.commands.Submit;
 import hy.tmc.core.communication.updates.ExerciseUpdateHandler;
 import hy.tmc.core.communication.updates.ReviewHandler;
+import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.domain.Credentials;
 import hy.tmc.core.domain.Review;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import org.apache.commons.io.FileUtils;
 
@@ -51,24 +54,31 @@ public class TmcCore {
     public TmcCore(File updateCache) throws FileNotFoundException {
         this(updateCache, MoreExecutors.listeningDecorator(Executors.newCachedThreadPool()));
     }
-    
+
     public TmcCore(File updateCache, ListeningExecutorService threadPool) throws FileNotFoundException {
         this(threadPool);
         ensureCacheFileExists(updateCache);
         this.updateCache = updateCache;
     }
 
-    public void setCacheFile(File newCache) throws FileNotFoundException, IOException {
+    public void setCacheFile(File newCache) throws FileNotFoundException, IOException, TmcCoreException {
         ensureCacheFileExists(newCache);
         if (this.updateCache != null && this.updateCache.exists()) {
-            FileUtils.copyFile(this.updateCache, newCache);
-            File old = updateCache;
-            updateCache = newCache;
-            old.delete();
+            moveCacheFile(newCache);
         }
         updateCache = newCache;
     }
-    
+
+    private void moveCacheFile(File newCache) throws IOException, TmcCoreException {
+        String oldData = FileUtils.readFileToString(updateCache, Charset.forName("UTF-8"));
+        FileWriter writer = new FileWriter(newCache, true);
+        writer.write(oldData);
+        writer.close();
+        File old = updateCache;
+        updateCache = newCache;
+        old.delete();
+    }
+
     public File getCacheFile() {
         return this.updateCache;
     }
@@ -91,18 +101,19 @@ public class TmcCore {
     public TmcCore(ListeningExecutorService pool) {
         this.threadPool = pool;
     }
-    
+
     /**
      * Authenticates the given user on the server, and saves the data into memory.
      *
-     * @param username to authenticate with
-     * @param password to authenticate with
+     * @param credentials includes username and password
+     * @param serverAddress defines TMC-server to communicate with.
      * @return A future-object containing true or false on success or fail
      * @throws TmcCoreException if something in the given input was wrong
      */
-    public ListenableFuture<Boolean> login(String username, String password) throws TmcCoreException {
-        checkParameters(username, password);
-        Authenticate login = new Authenticate(username, password);
+    public ListenableFuture<Boolean> login(Credentials credentials, String serverAddress) throws TmcCoreException {
+        checkParameters(credentials.getUsername(), credentials.getPassword(), serverAddress);
+        ClientData.setServerAddress(serverAddress);
+        Authenticate login = new Authenticate(credentials.getUsername(), credentials.getPassword());
         @SuppressWarnings("unchecked")
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(login);
         return stringListenableFuture;
@@ -228,10 +239,10 @@ public class TmcCore {
         ListenableFuture<RunResult> runResultListenableFuture = (ListenableFuture<RunResult>) threadPool.submit(testCommand);
         return runResultListenableFuture;
     }
-    
+
     /**
      * Fetches unread reviews from the TMC server. Does not mark reviews as read.
-     * 
+     *
      * @param course the course whose reviews are checked
      * @return a list of unread reviews for the given course
      */
@@ -239,19 +250,18 @@ public class TmcCore {
         ReviewHandler reviewHandler = new ReviewHandler();
         GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler);
         command.checkData();
-        
+
         @SuppressWarnings("unchecked")
-        ListenableFuture<List<Review>> updateFuture 
+        ListenableFuture<List<Review>> updateFuture
                 = (ListenableFuture<List<Review>>) threadPool.submit(command);
         return updateFuture;
     }
-    
+
     /**
-     * Returns a list of exercises that have not been downloaded yet, or have newer versions
-     * on the tmc server. This method will use the cache file specified by the last call
-     * to setCacheFile. Updates are detected by comparing checksums. The checksums will be
-     * written to a file each time exercises are downloaded, provided that setCacheFile has 
-     * been called.
+     * Returns a list of exercises that have not been downloaded yet, or have newer versions on the
+     * tmc server. This method will use the cache file specified by the last call to setCacheFile.
+     * Updates are detected by comparing checksums. The checksums will be written to a file each
+     * time exercises are downloaded, provided that setCacheFile has been called.
      *
      * @param course the course whose exercises are checked
      * @return a list of exercises that are new or have updates
@@ -262,20 +272,20 @@ public class TmcCore {
         ExerciseUpdateHandler updater = new ExerciseUpdateHandler(updateCache);
         GetExerciseUpdates command = new GetExerciseUpdates(course, updater);
         command.checkData();
-        
+
         @SuppressWarnings("unchecked")
-        ListenableFuture<List<Exercise>> updateFuture 
+        ListenableFuture<List<Exercise>> updateFuture
                 = (ListenableFuture<List<Exercise>>) threadPool.submit(command);
         return updateFuture;
     }
 
     /**
      * Sends feedback answers to the TMC server.
-     * 
+     *
      * @param answers map of question_id -> answer
      * @param url url that the answers will be sent to
-     * @return a HttpResult of the servers reply. It should contain "{status:ok}" 
-     * if everything goes well
+     * @return a HttpResult of the servers reply. It should contain "{status:ok}" if everything goes
+     * well
      */
     public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url) throws TmcCoreException, IOException {
         SendFeedback feedback = new SendFeedback(answers, url);

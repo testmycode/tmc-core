@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import java.util.List;
@@ -43,7 +42,14 @@ public class DownloadExercises extends Command<String> {
         this(path, courseId);
         this.cacheFile = cacheFile;
     }
-
+    
+    public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile) {
+        this.exerciseDownloader = downloader;
+        this.setParameter("path", path);
+        this.setParameter("courseID", courseId);
+        this.cacheFile = cacheFile;
+    }
+    
     /**
      * Checks that command has required parameters courseID is the id of the course and path is the
      * path of where files are downloaded and extracted.
@@ -102,23 +108,50 @@ public class DownloadExercises extends Command<String> {
         throw new TmcCoreException("Failed to fetch exercises. Check your internet connection or course ID");
     }
 
-    private Optional<String> downloadExercises(Course course) {
+    private Optional<String> downloadExercises(Course course) throws IOException {
         return downloadExercisesFromList(course.getExercises(), course.getName());
     }
 
-    public Optional<String> downloadExercisesFromList(List<Exercise> exercises, String courseName) {
+    public Optional<String> downloadExercisesFromList(List<Exercise> exercises, String courseName) throws IOException {
         int exCount = 0;
         int totalCount = exercises.size();
         int downloaded = 0;
+
         String path = exerciseDownloader.createCourseFolder(data.get("path"), courseName);
+        if (this.cacheFile != null) {
+            cacheExercises(exercises);
+        }
+        
         for (Exercise exercise : exercises) {
             String message = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
             exCount++;
             if (!message.contains("Skip")) {
                 downloaded++;
             }
-            this.observer.progress(100.0 * exCount / totalCount, message);
+            if (this.observer != null) {
+                this.observer.progress(100.0 * exCount / totalCount, message);
+            }
         }
         return Optional.of(downloaded + " exercises downloaded");
     }
+
+    private void cacheExercises(List<Exercise> exercises) throws IOException {
+        Gson gson = new Gson();
+        String json = FileUtils.readFileToString(cacheFile, Charset.forName("UTF-8"));
+        Map<Integer, String> checksums;
+        if (json != null && ! json.isEmpty()) {
+            Type typeOfHashMap = new TypeToken<Map<Integer, String>>() { }.getType();
+            checksums = gson.fromJson(json, typeOfHashMap);
+        } else {
+            checksums = new HashMap<>();
+        }
+        
+        for (Exercise exercise : exercises) {
+            checksums.put(exercise.getId(), exercise.getChecksum());
+        }
+        try (FileWriter writer = new FileWriter(this.cacheFile)) {
+            writer.write(gson.toJson(checksums, Map.class));
+        }
+    }
+
 }

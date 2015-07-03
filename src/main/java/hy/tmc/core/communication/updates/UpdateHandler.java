@@ -10,8 +10,8 @@ public abstract class UpdateHandler<T> {
 
     protected TmcJsonParser jsonParser;
     
-    public UpdateHandler(TmcSettings settings) {
-        jsonParser = new TmcJsonParser(settings);
+    public UpdateHandler(TmcJsonParser jsonParser) {
+        this.jsonParser = jsonParser;
     }
     
     protected abstract boolean isNew(T object);

@@ -23,8 +23,8 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
     private File cache;
     private Map<Integer, String> exerciseChecksums;
     
-    public ExerciseUpdateHandler(File cacheFile, TmcSettings settings) throws TmcCoreException {
-        super(settings);
+    public ExerciseUpdateHandler(File cacheFile, TmcJsonParser jsonParser) throws TmcCoreException {
+        super(jsonParser);
         exerciseChecksums = new HashMap<>();
         if (cacheFile == null) {
             String errorMessage = "ExerciseUpdateHandler requires non-null cacheFile to function";

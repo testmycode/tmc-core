@@ -30,6 +30,10 @@ public class TmcJsonParser {
         this.urlCommunicator = new UrlCommunicator(settings);
     }
     
+    public TmcJsonParser(UrlCommunicator urlCommunicator) {
+        this.urlCommunicator = urlCommunicator;
+    }
+    
     /**
      * Get list of all the courses on the server specified by ServerData.
      *

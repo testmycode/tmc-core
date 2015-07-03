@@ -1,6 +1,7 @@
 package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
+import hy.tmc.core.configuration.TmcSettings;
 
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
@@ -27,6 +28,7 @@ public class CourseSubmitter {
 
     private RootFinder rootFinder;
     private ZipMaker zipper;
+    private UrlCommunicator urlCommunicator;
 
     /**
      * Exercise deadline is checked with this date format
@@ -35,9 +37,11 @@ public class CourseSubmitter {
 
     private String submissionZipPath;
 
-    public CourseSubmitter(RootFinder rootFinder, ZipMaker zipper) {
+    public CourseSubmitter(RootFinder rootFinder, ZipMaker zipper, TmcSettings settings) {
+        this.urlCommunicator = new UrlCommunicator(settings);
         this.zipper = zipper;
         this.rootFinder = rootFinder;
+        
     }
 
     /**
@@ -118,7 +122,7 @@ public class CourseSubmitter {
             String submissionZipPath,
             String url) throws IOException {
         final String pasteExtensionForTmcServer = "&paste=1";
-        HttpResult result = UrlCommunicator.makePostWithFile(
+        HttpResult result = urlCommunicator.makePostWithFile(
                 new FileBody(new File(submissionZipPath)),
                 url + pasteExtensionForTmcServer,
                 new HashMap<String, String>()
@@ -150,7 +154,7 @@ public class CourseSubmitter {
     }
 
      private String sendSubmissionToServer(String submissionZipPath, String url) throws IOException {
-        HttpResult result = UrlCommunicator.makePostWithFile(
+        HttpResult result = urlCommunicator.makePostWithFile(
                 new FileBody(new File(submissionZipPath)), 
                 url, 
                 new HashMap<String, String>()

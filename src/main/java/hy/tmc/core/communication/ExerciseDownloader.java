@@ -2,8 +2,8 @@ package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
 import static com.google.common.base.Strings.isNullOrEmpty;
+import hy.tmc.core.configuration.TmcSettings;
 
-import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Exercise;
 
 import hy.tmc.core.zipping.DefaultUnzipDecider;
@@ -13,27 +13,28 @@ import hy.tmc.core.zipping.Unzipper;
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
 
 public class ExerciseDownloader {
 
     private UnzipDecider decider;
     private File cacheFile;
+    private UrlCommunicator urlCommunicator;
 
-    public ExerciseDownloader() {
-        decider = new DefaultUnzipDecider();
+    public ExerciseDownloader(TmcSettings settings) {
+        this(new DefaultUnzipDecider(), settings);
     }
 
     /**
      * Constructor for dependency injection.
      *
      * @param decider UnzipDecider which decides which files to unzip
+     * @param settings settings required for downloading exercises
      */
-    public ExerciseDownloader(UnzipDecider decider) {
+    public ExerciseDownloader(UnzipDecider decider, TmcSettings settings) {
         this.decider = decider;
+        this.urlCommunicator = new UrlCommunicator(settings);
     }
 
     /**
@@ -193,8 +194,8 @@ public class ExerciseDownloader {
      * @param zipUrl url which will be downloaded
      * @param path where to download
      */
-    private static void downloadExerciseZip(String zipUrl, String path) {
+    private void downloadExerciseZip(String zipUrl, String path) {
         File file = new File(path);
-        UrlCommunicator.downloadToFile(zipUrl, file, ClientData.getFormattedUserData());
+        urlCommunicator.downloadToFile(zipUrl, file);
     }
 }

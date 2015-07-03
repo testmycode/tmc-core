@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Exercise implements Serializable{
+public class Exercise implements Serializable {
 
     private int id; // = 284;
     private String name; //": "viikko1-Viikko1_000.Hiekkalaatikko",

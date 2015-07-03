@@ -138,4 +138,8 @@ public class ConfigHandler {
     public void writePort(int port) throws IOException {
         writeData(portFieldName, Integer.toString(port));
     }
+
+    public String getAuthExtension() {
+        return authExtension;
+    }
 }

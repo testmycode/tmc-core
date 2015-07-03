@@ -9,7 +9,7 @@ import hy.tmc.core.zipping.RootFinder;
 import java.io.IOException;
 
 /**
- * This class will be initialized when Auth is successful. Use this to get data of user.
+ * This class contains information about user.
  */
 public final class ClientData {
 

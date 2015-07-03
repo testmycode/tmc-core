@@ -150,7 +150,10 @@ public class TmcCore {
      * @return list containing course-objects parsed from JSON
      * @throws TmcCoreException if something went wrong
      */
-    public ListenableFuture<List<Course>> listCourses() throws TmcCoreException {
+    public ListenableFuture<List<Course>> listCourses(Credentials credentials, String serverAddress) throws TmcCoreException {
+        ClientData.setUserData(credentials.getUsername(), credentials.getPassword());
+        ClientData.setServerAddress(serverAddress);
+        
         @SuppressWarnings("unchecked")
         ListCourses listCommand = new ListCourses();
         ListenableFuture<List<Course>> listCourses = (ListenableFuture<List<Course>>) threadPool.submit(listCommand);

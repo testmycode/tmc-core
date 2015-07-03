@@ -1,7 +1,7 @@
 package hy.tmc.core;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import hy.tmc.core.commands.Authenticate;
+import hy.tmc.core.commands.VerifyCredentials;
 import hy.tmc.core.commands.ChooseServer;
 import hy.tmc.core.commands.DownloadExercises;
 import hy.tmc.core.commands.GetExerciseUpdates;
@@ -66,7 +66,7 @@ public class TmcCoreTest {
     @Test
     public void login() throws Exception {
         tmcCore.login(new Credentials("test", "1234"), tmcServerAddress);
-        verify(threadPool, times(1)).submit(any(Authenticate.class));
+        verify(threadPool, times(1)).submit(any(VerifyCredentials.class));
     }
 
     @Test(expected = TmcCoreException.class)

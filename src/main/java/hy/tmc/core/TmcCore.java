@@ -9,7 +9,7 @@ import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.submission.SubmissionResult;
-import hy.tmc.core.commands.Authenticate;
+import hy.tmc.core.commands.VerifyCredentials;
 import hy.tmc.core.commands.ChooseServer;
 import hy.tmc.core.commands.DownloadExercises;
 import hy.tmc.core.commands.GetExerciseUpdates;
@@ -112,7 +112,7 @@ public class TmcCore {
     public ListenableFuture<Boolean> verifyCredentials(Credentials credentials, String serverAddress) throws TmcCoreException {
         checkParameters(credentials.getUsername(), credentials.getPassword(), serverAddress);
         ClientData.setServerAddress(serverAddress);
-        Authenticate login = new Authenticate(credentials.getUsername(), credentials.getPassword());
+        VerifyCredentials login = new VerifyCredentials(credentials.getUsername(), credentials.getPassword());
         @SuppressWarnings("unchecked")
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(login);
         return stringListenableFuture;

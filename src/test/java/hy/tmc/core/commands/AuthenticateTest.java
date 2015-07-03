@@ -2,7 +2,7 @@ package hy.tmc.core.commands;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.core.TmcCore;
-import hy.tmc.core.commands.Authenticate;
+import hy.tmc.core.commands.VerifyCredentials;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.communication.authorization.Authorization;
@@ -26,14 +26,14 @@ public class AuthenticateTest {
 
     private final String testUsername = "test";
     private final String testPassword = "1234";
-    private Authenticate auth;
+    private VerifyCredentials auth;
 
     /**
      * Set up server mock and Authenticate command.
      */
     @Before
     public void setUp() {
-        this.auth = new Authenticate();
+        this.auth = new VerifyCredentials();
     }
 
     @Test

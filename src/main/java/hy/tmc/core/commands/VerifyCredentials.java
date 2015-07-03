@@ -4,24 +4,22 @@ import com.google.common.base.Optional;
 
 import static hy.tmc.core.communication.UrlCommunicator.makeGetRequest;
 
-import hy.tmc.core.configuration.ClientData;
-import hy.tmc.core.configuration.ConfigHandler;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 
-public class Authenticate extends Command<Boolean> {
+public class VerifyCredentials extends Command<Boolean> {
 
     /**
      * Regex for HTTP OK codes.
      */
     private final String httpOk = "2..";
 
-    public Authenticate(String username, String password) {
+    public VerifyCredentials(String username, String password) {
         this.setParameter("username", username);
         this.setParameter("password", password);
     }
     
-    public Authenticate(){
+    public VerifyCredentials(){
         
     }
 

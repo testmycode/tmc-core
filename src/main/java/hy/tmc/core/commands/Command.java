@@ -1,6 +1,7 @@
 package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -11,6 +12,7 @@ public abstract class Command<E> implements Callable<E> {
 
     protected Map<String, String> data;
     private String defaultErrorMessage = "Unexpected exception.";
+    protected TmcSettings settings;
     protected ProgressObserver observer;
 
     /**
@@ -20,8 +22,13 @@ public abstract class Command<E> implements Callable<E> {
         data = new HashMap<>();
     }
     
-    public Command(ProgressObserver observer) {
+    public Command(TmcSettings settings){
         this();
+        this.settings = settings;
+    }
+    
+    public Command(ProgressObserver observer, TmcSettings settings) {
+        this(settings);
         this.observer = observer;
     }
 

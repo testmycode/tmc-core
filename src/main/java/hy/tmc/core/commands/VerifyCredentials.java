@@ -2,7 +2,7 @@ package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
 
-import static hy.tmc.core.communication.UrlCommunicator.makeGetRequest;
+import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.TmcSettings;
 
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -40,7 +40,7 @@ public class VerifyCredentials extends Command<Boolean> {
 
     private int makeRequest() throws IOException, TmcCoreException {
         String auth = data.get("username") + ":" + data.get("password");
-        int code = makeGetRequest(
+        int code = new UrlCommunicator(this.settings).makeGetRequest(
                 settings.getServerAddress(),
                 auth
         ).getStatusCode();

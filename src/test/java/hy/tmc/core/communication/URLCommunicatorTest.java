@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.base.Optional;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +27,7 @@ import org.junit.Test;
 
 public class URLCommunicatorTest {
 
+    ClientTmcSettings settings = new ClientTmcSettings();
     @Rule
     public WireMockRule wireMockRule = new WireMockRule();
 
@@ -96,14 +97,14 @@ public class URLCommunicatorTest {
 
     @Test
     public void httpPostAddsFileToRequest() throws IOException, TmcCoreException {
-        ClientData.setUserData("test", "1234");
+        settings.setUsername("test");
+        settings.setPassword("1234");
         File testFile = new File("testResources/test.zip");
         HttpResult result = UrlCommunicator.makePostWithFile(
                 new FileBody(testFile),
                 "http://127.0.0.1:8080/kivaurl",
                 new HashMap<String, String>());
 
-        ClientData.clearUserData();
         assertEquals("All tests passed", result.getData());
     }
 
@@ -115,7 +116,8 @@ public class URLCommunicatorTest {
 
     @Test
     public void makePutRequestSendsPut() throws IOException, TmcCoreException {
-        ClientData.setUserData("test", "1234");
+        settings.setUsername("test");
+        settings.setPassword("1234");
         Map<String, String> body = new HashMap<>();
         body.put("mark_as_read", "1");
         HttpResult makePutRequest = UrlCommunicator.makePutRequest("http://127.0.0.1:8080/putty", Optional.of(body));
@@ -124,15 +126,12 @@ public class URLCommunicatorTest {
 
     @Test
     public void makePutRequestHasCorrectHeaders() throws IOException, TmcCoreException {
-        ClientData.setUserData("test", "1234");
+        settings.setUsername("test");
+        settings.setPassword("1234");
         Map<String, String> body = new HashMap<>();
         body.put("mark_as_read", "1");
         HttpResult makePutRequest = UrlCommunicator.makePutRequest("http://127.0.0.1:8080/putty_with_headers", Optional.of(body));
         assertEquals(200, makePutRequest.getStatusCode());
     }
-
-    @After
-    public void clearUser() {
-        ClientData.clearUserData();
-    }
+    
 }

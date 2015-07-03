@@ -1,6 +1,6 @@
 package hy.tmc.core.communication;
 
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import java.io.IOException;
@@ -18,19 +18,17 @@ public class SubmissionInterpreterTest {
 
     SubmissionPoller submissionInterpreter;
     String url = "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7";
-
+    ClientTmcSettings settings;
+    
     @Before
     public void setup() {
+        settings = new ClientTmcSettings();
         PowerMockito.mockStatic(UrlCommunicator.class);
 
-        ClientData.setUserData("chang", "paras");
+        settings.setUsername("chang");
+        settings.setPassword("rajani");
 
         submissionInterpreter = new SubmissionPoller();
-    }
-
-    @After
-    public void teardown() {
-        ClientData.clearUserData();
     }
 
     private void initFailedMock() throws IOException, TmcCoreException {

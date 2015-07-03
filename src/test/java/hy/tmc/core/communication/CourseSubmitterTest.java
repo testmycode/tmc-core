@@ -8,8 +8,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import hy.tmc.core.configuration.ClientData;
-import hy.tmc.core.configuration.ConfigHandler;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -38,17 +37,20 @@ public class CourseSubmitterTest {
     private CourseSubmitter courseSubmitter;
     private ProjectRootFinderStub rootFinder;
     private ProjectRootFinder realFinder;
+    private ClientTmcSettings settings;
 
     /**
      * Mocks components that use Internet.
      */
     @Before
     public void setup() throws IOException, TmcCoreException {
-        new ConfigHandler().writeServerAddress("http://mooc.fi/staging");
+        settings = new ClientTmcSettings();
+        settings.setServerAddress("http://mooc.fi/staging");
         PowerMockito.mockStatic(UrlCommunicator.class);
         rootFinder = new ProjectRootFinderStub();
         this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub());
-        ClientData.setUserData("chang", "rajani");
+        settings.setUsername("chang");
+        settings.setPassword("rajani");
 
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
         mockUrlCommunicator("courses/3.json?api_version=7", ExampleJson.courseExample);
@@ -59,12 +61,6 @@ public class CourseSubmitterTest {
         realFinder = new ProjectRootFinder(new DefaultRootDetector());
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7", ExampleJson.submitResponse);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7", ExampleJson.pasteResponse);
-    }
-
-    @After
-    public void clear() throws IOException {
-        ClientData.clearUserData();
-        new ConfigHandler().writeServerAddress("");
     }
 
     @Test

@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -42,7 +42,7 @@ public class DownloadExercisesTest {
     
     @Before
     public void setup() throws IOException {
-        ClientData.setUserData("Bossman", "Samu");
+        ClientTmcSettings.setUserData("Bossman", "Samu");
         cache = Paths.get("src", "test", "resources", "downloadtest.cache").toFile();
         cache.createNewFile();
     }
@@ -57,12 +57,12 @@ public class DownloadExercisesTest {
      */
     @Test
     public void testCheckDataSuccess() throws TmcCoreException {
-        ClientData.setUserData("mister", "Kristian");
+        ClientTmcSettings.setUserData("mister", "Kristian");
         DownloadExercises de = new DownloadExercises();
         de.setParameter("path", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "21");
         de.checkData();
-        ClientData.clearUserData();
+        ClientTmcSettings.clearUserData();
     }
 
     /**

@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.base.Optional;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.DefaultUnzipDecider;
@@ -37,6 +37,7 @@ public class ExerciseDownloaderTest {
     public WireMockRule wireMockRule = new WireMockRule();
     private ArrayList<Exercise> exercises;
     private ExerciseDownloader exDl;
+    private ClientTmcSettings settings;
 
     /**
      * Creates required stubs and example data for downloader.
@@ -45,6 +46,7 @@ public class ExerciseDownloaderTest {
     public void setup() {
         exDl = new ExerciseDownloader();
         exercises = new ArrayList<>();
+        settings = new ClientTmcSettings();
 
         Exercise e1 = new Exercise();
         e1.setZipUrl("http://127.0.0.1:8080/ex1.zip");
@@ -81,7 +83,8 @@ public class ExerciseDownloaderTest {
                         .withHeader("Content-Type", "text/xml")
                         .withBody("<response>Exercise 2</response>")));
 
-        ClientData.setUserData("pihla", "juuh");
+        settings.setUsername("pihla");
+        settings.setPassword("juuh");
     }
 
     @After

@@ -2,7 +2,7 @@ package hy.tmc.core.spyware;
 
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 
@@ -17,7 +17,14 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
 
 public class DiffSender {
+    private TmcSettings settings;
+    private UrlCommunicator urlCommunicator;
 
+    public DiffSender(TmcSettings settings) {
+        this.settings = settings;
+        this.urlCommunicator = new UrlCommunicator(settings);
+    }
+    
     /**
      * Sends given file to all URLs specified by course.
      *
@@ -83,7 +90,7 @@ public class DiffSender {
     private HttpResult makePostRequest(ContentBody diffFile, String url, Map<String, String> headers) throws TmcCoreException {
         HttpResult result = null;
         try {
-            result = UrlCommunicator.makePostWithFile(diffFile, url, headers);
+            result = urlCommunicator.makePostWithFile(diffFile, url, headers);
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
         }
@@ -93,8 +100,8 @@ public class DiffSender {
     private Map<String, String> createHeaders() {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Tmc-Version", "1");
-        headers.put("X-Tmc-Username", ClientData.getUsername());
-        headers.put("X-Tmc-Password", ClientData.getPassword());
+        headers.put("X-Tmc-Username", settings.getUsername());
+        headers.put("X-Tmc-Password", settings.getPassword());
         return headers;
     }
 }

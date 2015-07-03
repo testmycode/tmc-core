@@ -9,6 +9,7 @@ public class ClientTmcSettings implements TmcSettings {
     private String password;
     private Boolean userDataExists;
     private Course currentCourse;
+    private String apiVersion;
 
     @Override
     public String getServerAddress() {
@@ -53,5 +54,10 @@ public class ClientTmcSettings implements TmcSettings {
 
     public void setCurrentCourse(Course currentCourse) {
         this.currentCourse = currentCourse;
+    }
+
+    @Override
+    public String apiVersion() {
+        return "api_version=" + apiVersion;
     }
 }

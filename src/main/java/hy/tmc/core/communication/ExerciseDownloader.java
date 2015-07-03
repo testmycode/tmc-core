@@ -2,8 +2,8 @@ package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
 import static com.google.common.base.Strings.isNullOrEmpty;
-import hy.tmc.core.configuration.TmcSettings;
 
+import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Exercise;
 
 import hy.tmc.core.zipping.DefaultUnzipDecider;
@@ -13,17 +13,18 @@ import hy.tmc.core.zipping.Unzipper;
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 
 public class ExerciseDownloader {
 
     private UnzipDecider decider;
     private File cacheFile;
-    private TmcSettings settings;
 
-    public ExerciseDownloader(TmcSettings settings) {
-        this(settings, new DefaultUnzipDecider());
+    public ExerciseDownloader() {
+        decider = new DefaultUnzipDecider();
     }
 
     /**
@@ -31,9 +32,8 @@ public class ExerciseDownloader {
      *
      * @param decider UnzipDecider which decides which files to unzip
      */
-    public ExerciseDownloader(TmcSettings settings, UnzipDecider decider) {
+    public ExerciseDownloader(UnzipDecider decider) {
         this.decider = decider;
-        this.settings = settings;
     }
 
     /**
@@ -117,7 +117,7 @@ public class ExerciseDownloader {
         }
         String exerciseInfo = tellStateForUser(exercise, exCount, totalCount);
         String filePath = path + exercise.getName() + ".zip";
-        downloadExerciseZip(exercise.getZipUrl(), filePath, settings);
+        downloadExerciseZip(exercise.getZipUrl(), filePath);
         try {
             unzipFile(filePath, path);
             deleteZip(filePath);
@@ -193,10 +193,8 @@ public class ExerciseDownloader {
      * @param zipUrl url which will be downloaded
      * @param path where to download
      */
-    private static void downloadExerciseZip(String zipUrl, String path, TmcSettings settings) {
+    private static void downloadExerciseZip(String zipUrl, String path) {
         File file = new File(path);
-        UrlCommunicator.downloadToFile(
-                zipUrl, file, settings.getUsername()+":"+settings.getPassword()
-        );
+        UrlCommunicator.downloadToFile(zipUrl, file, ClientData.getFormattedUserData());
     }
 }

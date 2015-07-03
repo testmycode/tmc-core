@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -28,24 +27,22 @@ public class DownloadExercises extends Command<String> {
     private ExerciseDownloader exerciseDownloader;
     private File cacheFile;
 
-    public DownloadExercises(TmcSettings settings) {
-        super(settings);
-        this.exerciseDownloader = new ExerciseDownloader(settings);
+    public DownloadExercises() {
+        this.exerciseDownloader = new ExerciseDownloader();
     }
 
-    public DownloadExercises(String path, String courseId, TmcSettings settings) {
-        this(settings);
+    public DownloadExercises(String path, String courseId) {
+        this();
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);
     }
 
-    public DownloadExercises(String path, String courseId, File cacheFile, TmcSettings settings) throws IOException {
-        this(path, courseId, settings);
+    public DownloadExercises(String path, String courseId, File cacheFile) throws IOException {
+        this(path, courseId);
         this.cacheFile = cacheFile;
     }
     
-    public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile, TmcSettings settings) {
-        super(settings);
+    public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile) {
         this.exerciseDownloader = downloader;
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);

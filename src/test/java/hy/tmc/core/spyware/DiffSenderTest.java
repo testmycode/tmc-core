@@ -15,7 +15,6 @@ import com.google.common.io.Files;
 
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.configuration.ClientTmcSettings;
-import hy.tmc.core.configuration.ConfigHandler;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 
@@ -43,16 +42,17 @@ public class DiffSenderTest {
     private final String spywareUrl = "http://127.0.0.1:8080/spyware";
     private DiffSender sender;
     private String originalServerUrl;
-    private ConfigHandler config;
+    private ClientTmcSettings settings;
     
     /**
      * Logins the users and creates fake server.
      */
     @Before
     public void setup() throws IOException {
-        config = new ConfigHandler();
-        config.writeServerAddress("http://127.0.0.1:8080");
-        ClientTmcSettings.setUserData("test", "1234");
+        settings = new ClientTmcSettings();
+        settings.setServerAddress("http://127.0.0.1:8080");
+        settings.setUsername("test");
+        settings.setPassword("1234");
         sender = new DiffSender();
         startWiremock();
     }
@@ -125,17 +125,9 @@ public class DiffSenderTest {
     private void startWiremock() {
         stubFor(post(urlEqualTo("/spyware"))
                 .withHeader("X-Tmc-Version", equalTo("1"))
-                .withHeader("X-Tmc-Username", equalTo(ClientTmcSettings.getUsername()))
-                .withHeader("X-Tmc-Password", equalTo(ClientTmcSettings.getPassword()))
+                .withHeader("X-Tmc-Username", equalTo(settings.getUsername()))
+                .withHeader("X-Tmc-Password", equalTo(settings.getPassword()))
                 .willReturn(aResponse().withBody("OK").withStatus(200)));
     }
 
-    /**
-     * Clears the state of test environment.
-     */
-    @After
-    public void cleanUp() throws IOException {
-        ClientTmcSettings.clearUserData();
-        config.writeServerAddress("https://tmc.mooc.fi/staging");
-    }
 }

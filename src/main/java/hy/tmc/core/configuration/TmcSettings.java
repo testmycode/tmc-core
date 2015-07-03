@@ -9,4 +9,5 @@ public interface TmcSettings {
     public String getUsername();
     public boolean userDataExists();
     public Course getCurrentCourse();
+    public String apiVersion();
 }

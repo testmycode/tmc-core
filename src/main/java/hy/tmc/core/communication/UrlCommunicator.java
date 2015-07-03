@@ -6,7 +6,7 @@ import static org.apache.http.HttpHeaders.USER_AGENT;
 import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
 
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
 
 import org.apache.http.HttpEntity;
@@ -36,9 +36,23 @@ import java.io.IOException;
 import java.util.Map;
 
 public class UrlCommunicator {
-    
-    public static final int BAD_REQUEST = 407;
 
+    public final String apiParam;
+    public final String coursesExtension; 
+    public final String authExtension;
+    private TmcSettings settings;
+
+    public UrlCommunicator(TmcSettings settings) {
+        this.settings = settings;
+        apiParam = "api_version=" + settings.apiVersion();
+        coursesExtension = "/courses.json?" + apiParam;
+        authExtension = "/user";
+    }
+    
+    private String getFormattedUserData() {
+        return this.settings.getUsername() + ":" + this.settings.getPassword();    
+    }
+    
     /**
      * Creates and executes post-request to specified URL.
      *
@@ -49,7 +63,7 @@ public class UrlCommunicator {
      * @return HttpResult that contains response from the server.
      * @throws java.io.IOException if file is invalid.
      */
-    public static HttpResult makePostWithFile(ContentBody fileBody,
+    public HttpResult makePostWithFile(ContentBody fileBody,
             String destinationUrl, Map<String, String> headers) throws IOException {
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
@@ -57,11 +71,11 @@ public class UrlCommunicator {
         return getResponseResult(httppost);
     }
     
-    private static void addFileToRequest(ContentBody fileBody, HttpPost httppost) {
+    private void addFileToRequest(ContentBody fileBody, HttpPost httppost) {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder.addPart("submission[file]", fileBody);
-        addCredentials(httppost, ClientData.getFormattedUserData());
+        addCredentials(httppost, getFormattedUserData());
         HttpEntity entity = builder.build();
         httppost.setEntity(entity);
     }
@@ -74,7 +88,7 @@ public class UrlCommunicator {
      * always username:password
      * @return A Result-object with some data and a state of success or fail
      */
-    public static HttpResult makeGetRequest(String url, String... params) throws IOException {
+    public HttpResult makeGetRequest(String url, String... params) throws IOException {
         HttpGet httpGet = createGet(url, params);
         return getResponseResult(httpGet);
     }
@@ -86,9 +100,9 @@ public class UrlCommunicator {
      * @param body contains key-value -pairs.
      * @return Result which contains the result.
      */
-    public static HttpResult makePutRequest(String url, Optional<Map<String, String>> body) throws IOException {
+    public HttpResult makePutRequest(String url, Optional<Map<String, String>> body) throws IOException {
             HttpPut httpPut = new HttpPut(url);
-            addCredentials(httpPut, ClientData.getFormattedUserData());
+            addCredentials(httpPut, getFormattedUserData());
             List<NameValuePair> params = new ArrayList<>();
             
             for (String key : body.get().keySet()) {
@@ -99,7 +113,7 @@ public class UrlCommunicator {
             return getResponseResult(httpPut);
     }
     
-    private static HttpGet createGet(String url, String[] params)
+    private HttpGet createGet(String url, String[] params)
             throws IOException {
         HttpGet request = new HttpGet(url);
         addCredentials(request, params[0]);
@@ -114,7 +128,7 @@ public class UrlCommunicator {
      * @param params params of the get request
      * @return true if successful
      */
-    public static boolean downloadToFile(String url, File file, String... params) {
+    public boolean downloadToFile(String url, File file, String... params) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             HttpGet httpget = createGet(url, params);
             HttpResponse response = executeRequest(httpget);
@@ -126,7 +140,14 @@ public class UrlCommunicator {
         }
     }
     
-    private static StringBuilder writeResponse(HttpResponse response)
+    /**
+     * Calls downloadToFile with username and password as params.
+     */
+    public boolean downloadToFile(String url, File file) {
+        return downloadToFile(url, file, this.getFormattedUserData());
+    }
+    
+    private StringBuilder writeResponse(HttpResponse response)
             throws UnsupportedOperationException, IOException {
         BufferedReader rd = new BufferedReader(
                 new InputStreamReader(response.getEntity().getContent()));
@@ -138,16 +159,16 @@ public class UrlCommunicator {
         return result;
     }
     
-    private static HttpClient createClient() {
+    private HttpClient createClient() {
         return HttpClientBuilder.create().build();
     }
     
-    private static HttpResponse executeRequest(HttpRequestBase request)
+    private HttpResponse executeRequest(HttpRequestBase request)
             throws IOException {
         return createClient().execute(request);
     }
     
-    private static void addCredentials(HttpRequestBase httpRequest, String credentials) {
+    private void addCredentials(HttpRequestBase httpRequest, String credentials) {
         httpRequest.setHeader("Authorization", "Basic " + encode(credentials));
         httpRequest.setHeader("User-Agent", USER_AGENT);
     }
@@ -158,7 +179,7 @@ public class UrlCommunicator {
      * @param httpRequest where to put headers.
      * @param headers to be included.
      */
-    private static void addHeadersTo(HttpRequestBase httpRequest, Map<String, String> headers) {
+    private void addHeadersTo(HttpRequestBase httpRequest, Map<String, String> headers) {
         if (!headers.isEmpty()) {
             for (String header : headers.keySet()) {
                 httpRequest.addHeader(header, headers.get(header));
@@ -166,7 +187,7 @@ public class UrlCommunicator {
         }
     }
     
-    private static HttpResult getResponseResult(HttpRequestBase httpRequest) throws IOException {
+    private HttpResult getResponseResult(HttpRequestBase httpRequest) throws IOException {
         HttpResponse response = executeRequest(httpRequest);
         StringBuilder result = writeResponse(response);
         int status = response.getStatusLine().getStatusCode();
@@ -178,13 +199,13 @@ public class UrlCommunicator {
     /**
      * Makes a POST HTTP request.
      */
-    public static HttpResult makePostWithJson(JsonObject req, String feedbackUrl)
+    public HttpResult makePostWithJson(JsonObject req, String feedbackUrl)
             throws IOException {
         HttpPost httppost = new HttpPost(feedbackUrl);
         String jsonString = req.toString();
         StringEntity feedbackJson = new StringEntity(jsonString);
         httppost.addHeader("content-type", "application/json");
-        addCredentials(httppost, ClientData.getFormattedUserData());
+        addCredentials(httppost, getFormattedUserData());
         httppost.setEntity(feedbackJson);
         return getResponseResult(httppost);
     }
@@ -194,10 +215,23 @@ public class UrlCommunicator {
      * @param result
      * @throws TmcCoreException 
      */
-    private static void validateHttpResult(HttpResult result) throws TmcServerException {
+    private void validateHttpResult(HttpResult result) throws TmcServerException {
         int statuscode = result.getStatusCode();
         if (statuscode >= 500 && statuscode < 600) {
             throw new TmcServerException("Error occured on TMC-server: statuscode " + statuscode);
         }
+    }
+    
+    public String getCourseUrl(int courseId) {
+        return settings.getServerAddress() + "/courses/" + courseId + ".json?" + apiParam;
+    }
+         
+
+    String allCoursesAddress(String serverAddress) {
+        return serverAddress + this.coursesExtension;
+    }
+
+    HttpResult makeGetRequestWithAuthentication(String url) throws IOException {
+        return this.makeGetRequest(url, this.getFormattedUserData());
     }
 }

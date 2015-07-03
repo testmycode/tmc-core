@@ -58,7 +58,7 @@ public class TmcJsonParser {
      * @return List of Course-objects
      */
     public static List<Course> getCourses() throws IOException, TmcCoreException {
-        return getCourses(new ConfigHandler().readCoursesAddress());
+        return getCourses(ClientData.getServerAddress());
     }
 
     /**

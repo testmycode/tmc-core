@@ -40,9 +40,8 @@ import org.apache.commons.io.FileUtils;
 
 public class TmcCore {
 
-    private ListeningExecutorService threadPool;
+    static ListeningExecutorService threadPool = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
     private File updateCache;
-
     /**
      * The TmcCore that can be used as a standalone businesslogic for any tmc client application.
      * The TmcCore provides all the essential backend functionalities as public methods.
@@ -110,43 +109,12 @@ public class TmcCore {
      * @return A future-object containing true or false on success or fail
      * @throws TmcCoreException if something in the given input was wrong
      */
-    public ListenableFuture<Boolean> login(Credentials credentials, String serverAddress) throws TmcCoreException {
+    public ListenableFuture<Boolean> verifyCredentials(Credentials credentials, String serverAddress) throws TmcCoreException {
         checkParameters(credentials.getUsername(), credentials.getPassword(), serverAddress);
         ClientData.setServerAddress(serverAddress);
         Authenticate login = new Authenticate(credentials.getUsername(), credentials.getPassword());
         @SuppressWarnings("unchecked")
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(login);
-        return stringListenableFuture;
-    }
-
-    /**
-     * Logs the user out, in other words clears the saved userdata from memory. Always clears the
-     * user data.
-     *
-     * @return A future-object containing true if user was logged in previously, and false if nobody
-     * was logged in
-     * @throws TmcCoreException if something in the given input was wrong
-     */
-    public ListenableFuture<Boolean> logout() throws TmcCoreException {
-        @SuppressWarnings("unchecked")
-        Logout logoutCommand = new Logout();
-        ListenableFuture<Boolean> logout = (ListenableFuture<Boolean>) threadPool.submit(logoutCommand);
-        return logout;
-    }
-
-    /**
-     * Selects the given server as the working TMC-server. All requests, submits, etc. will be made
-     * to that server.
-     *
-     * @param serverAddress this will be the new TMC-server address
-     * @return A future-object containing true or false on success or fail
-     * @throws TmcCoreException if something in the given input was wrong
-     */
-    public ListenableFuture<Boolean> selectServer(String serverAddress) throws TmcCoreException {
-        checkParameters(serverAddress);
-        @SuppressWarnings("unchecked")
-        ChooseServer chooseCommand = new ChooseServer(serverAddress);
-        ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(chooseCommand);
         return stringListenableFuture;
     }
 

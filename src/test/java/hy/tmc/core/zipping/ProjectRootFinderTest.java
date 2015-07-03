@@ -32,6 +32,7 @@ public class ProjectRootFinderTest {
     String fakeName = "2014-mooc-no-deadline";
     String otherFakeName = "2013-tira";
     ClientTmcSettings settings;
+    TmcJsonParser parser = new TmcJsonParser();
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
@@ -45,7 +46,7 @@ public class ProjectRootFinderTest {
 
         List<Course> courses = setupFakeCourses();
         PowerMockito
-                .when(TmcJsonParser.getCourses(new ConfigHandler()
+                .when(parser.getCourses(
                         .readCoursesAddress()))
                 .thenReturn(courses);
     }
@@ -63,10 +64,6 @@ public class ProjectRootFinderTest {
         return courses;
     }
 
-    @After
-    public void tearDown() {
-        ClientTmcSettings.clearUserData();
-    }
 
     @Test
     public void testGetRootDirectoryFromSame() {

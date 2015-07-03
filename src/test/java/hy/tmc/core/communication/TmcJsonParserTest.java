@@ -3,7 +3,7 @@ package hy.tmc.core.communication;
 import com.google.common.base.Optional;
 import static org.junit.Assert.assertTrue;
 
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -34,7 +34,7 @@ public class TmcJsonParserTest {
     public void setup() throws IOException, TmcCoreException {
         PowerMockito.mockStatic(UrlCommunicator.class);
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
-        ClientData.setUserData("chang", "paras");
+        ClientTmcSettings.setUserData("chang", "paras");
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
                                 Mockito.anyString()))
@@ -94,7 +94,7 @@ public class TmcJsonParserTest {
 
     @After
     public void teardown() {
-        ClientData.clearUserData();
+        ClientTmcSettings.clearUserData();
     }
 
     private void mockCourse(String url) throws IOException, TmcCoreException {

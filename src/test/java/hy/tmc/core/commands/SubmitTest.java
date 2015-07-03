@@ -5,7 +5,7 @@ import com.google.common.base.Optional;
 
 import hy.tmc.core.communication.CourseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -28,7 +28,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ClientData.class)
+@PrepareForTest(ClientTmcSettings.class)
 public class SubmitTest {
 
     private Submit submit;
@@ -38,15 +38,15 @@ public class SubmitTest {
 
     private void mock() throws ParseException, ExpiredException, IOException, ZipException, TmcCoreException {
         submitterMock = Mockito.mock(CourseSubmitter.class);
-        PowerMockito.mockStatic(ClientData.class);
+        PowerMockito.mockStatic(ClientTmcSettings.class);
         PowerMockito
-                .when(ClientData.getCurrentCourse(anyString()))
+                .when(ClientTmcSettings.getCurrentCourse(anyString()))
                 .thenReturn(Optional.<Course>of(new Course()));
         PowerMockito
-                .when(ClientData.getFormattedUserData())
+                .when(ClientTmcSettings.getFormattedUserData())
                 .thenReturn("Bossman:Samu");
         PowerMockito
-                .when(ClientData.userDataExists())
+                .when(ClientTmcSettings.userDataExists())
                 .thenReturn(true);
 
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080/submissions/1781.json?api_version=7");
@@ -62,12 +62,12 @@ public class SubmitTest {
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         interpreter = Mockito.mock(SubmissionPoller.class);
         submit = new Submit(submitterMock, interpreter);
-        ClientData.setUserData("Bossman", "Samu");
+        ClientTmcSettings.setUserData("Bossman", "Samu");
     }
 
     @After
     public void clean() {
-        ClientData.clearUserData();
+        ClientTmcSettings.clearUserData();
     }
 
    
@@ -93,7 +93,7 @@ public class SubmitTest {
     @Test(expected = TmcCoreException.class)
     public void checkDataFailIfNoAuth() throws TmcCoreException, IOException {
         Submit submitCommand = new Submit();
-        ClientData.clearUserData();
+        ClientTmcSettings.clearUserData();
         submitCommand.checkData();
     }
 

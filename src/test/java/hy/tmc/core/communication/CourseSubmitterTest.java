@@ -8,7 +8,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.configuration.ConfigHandler;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
@@ -48,7 +48,7 @@ public class CourseSubmitterTest {
         PowerMockito.mockStatic(UrlCommunicator.class);
         rootFinder = new ProjectRootFinderStub();
         this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub());
-        ClientData.setUserData("chang", "rajani");
+        ClientTmcSettings.setUserData("chang", "rajani");
 
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
         mockUrlCommunicator("courses/3.json?api_version=7", ExampleJson.courseExample);
@@ -63,7 +63,7 @@ public class CourseSubmitterTest {
 
     @After
     public void clear() throws IOException {
-        ClientData.clearUserData();
+        ClientTmcSettings.clearUserData();
         new ConfigHandler().writeServerAddress("");
     }
 

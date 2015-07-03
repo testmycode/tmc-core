@@ -3,7 +3,7 @@ package hy.tmc.core.communication;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.ExerciseLister;
 import com.google.common.base.Optional;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -37,7 +37,7 @@ public class ExerciseListerTest {
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
-        ClientData.setUserData("chang", "paras");
+        ClientTmcSettings.setUserData("chang", "paras");
         setupFakeCourses();
 
         rootFinderMock = Mockito.mock(ProjectRootFinder.class);
@@ -80,7 +80,7 @@ public class ExerciseListerTest {
 
     @After
     public void tearDown() {
-        ClientData.clearUserData();
+        ClientTmcSettings.clearUserData();
     }
 
     @Test(expected=TmcCoreException.class)

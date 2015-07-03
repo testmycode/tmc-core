@@ -1,6 +1,6 @@
 package hy.tmc.core.communication;
 
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import java.io.IOException;
@@ -23,14 +23,14 @@ public class SubmissionInterpreterTest {
     public void setup() {
         PowerMockito.mockStatic(UrlCommunicator.class);
 
-        ClientData.setUserData("chang", "paras");
+        ClientTmcSettings.setUserData("chang", "paras");
 
         submissionInterpreter = new SubmissionPoller();
     }
 
     @After
     public void teardown() {
-        ClientData.clearUserData();
+        ClientTmcSettings.clearUserData();
     }
 
     private void initFailedMock() throws IOException, TmcCoreException {

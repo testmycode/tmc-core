@@ -4,7 +4,7 @@ import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.configuration.ConfigHandler;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -35,7 +35,7 @@ public class ProjectRootFinderTest {
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
-        ClientData.setUserData("chang", "paras");
+        ClientTmcSettings.setUserData("chang", "paras");
 
         finder = new ProjectRootFinder(new DefaultRootDetector());
 
@@ -63,7 +63,7 @@ public class ProjectRootFinderTest {
 
     @After
     public void tearDown() {
-        ClientData.clearUserData();
+        ClientTmcSettings.clearUserData();
     }
 
     @Test

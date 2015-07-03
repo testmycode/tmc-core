@@ -3,7 +3,6 @@ package hy.tmc.core.configuration;
 
 import hy.tmc.core.domain.Course;
 
-
 public class ClientTmcSettings implements TmcSettings {
     private String serverAddress;
     private String username;

@@ -1,9 +1,12 @@
 package hy.tmc.core.commands;
 
+import com.google.common.util.concurrent.ListenableFuture;
+import hy.tmc.core.TmcCore;
 import hy.tmc.core.commands.Authenticate;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.communication.authorization.Authorization;
+import hy.tmc.core.domain.Credentials;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import static org.junit.Assert.assertTrue;

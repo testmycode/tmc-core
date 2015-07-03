@@ -23,15 +23,14 @@ public class ExerciseDownloader {
     private UrlCommunicator urlCommunicator;
     private TmcJsonParser tmcJsonParser;
 
-    public ExerciseDownloader(TmcSettings settings) {
-        this(new DefaultUnzipDecider(), settings);
+    public ExerciseDownloader() {
+        decider = new DefaultUnzipDecider();
     }
 
     /**
      * Constructor for dependency injection.
      *
      * @param decider UnzipDecider which decides which files to unzip
-     * @param settings settings required for downloading exercises
      */
     public ExerciseDownloader(UnzipDecider decider, TmcSettings settings) {
         this.decider = decider;

@@ -3,13 +3,13 @@ package hy.tmc.core.configuration;
 
 import hy.tmc.core.domain.Course;
 
-
 public class ClientTmcSettings implements TmcSettings {
     private String serverAddress;
     private String username;
     private String password;
     private Boolean userDataExists;
     private Course currentCourse;
+    private String apiVersion;
 
     @Override
     public String getServerAddress() {
@@ -54,5 +54,10 @@ public class ClientTmcSettings implements TmcSettings {
 
     public void setCurrentCourse(Course currentCourse) {
         this.currentCourse = currentCourse;
+    }
+
+    @Override
+    public String apiVersion() {
+        return "api_version=" + apiVersion;
     }
 }

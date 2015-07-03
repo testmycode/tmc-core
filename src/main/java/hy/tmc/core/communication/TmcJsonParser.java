@@ -118,7 +118,7 @@ public class TmcJsonParser {
         if (!courseExists(courseID)) {
             return Optional.absent();
         }
-        return getCourse(confighandler.getCourseUrl(courseID));
+        return getCourse(urlCommunicator.getCourseUrl(courseID));
     }
 
     private boolean courseExists(int courseID) throws IOException, TmcCoreException {
@@ -166,7 +166,7 @@ public class TmcJsonParser {
      * @return List of a all exercises as Exercise-objects
      */
     public List<Exercise> getExercises(int id) throws IOException {
-        return getExercises(confighandler.getCourseUrl(id));
+        return getExercises(urlCommunicator.getCourseUrl(id));
     }
 
     /**

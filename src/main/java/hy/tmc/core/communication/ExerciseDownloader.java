@@ -21,20 +21,21 @@ public class ExerciseDownloader {
     private UnzipDecider decider;
     private File cacheFile;
     private UrlCommunicator urlCommunicator;
+    private TmcJsonParser tmcJsonParser;
 
-    public ExerciseDownloader(TmcSettings settings) {
-        this(new DefaultUnzipDecider(), settings);
+    public ExerciseDownloader() {
+        decider = new DefaultUnzipDecider();
     }
 
     /**
      * Constructor for dependency injection.
      *
      * @param decider UnzipDecider which decides which files to unzip
-     * @param settings settings required for downloading exercises
      */
     public ExerciseDownloader(UnzipDecider decider, TmcSettings settings) {
         this.decider = decider;
         this.urlCommunicator = new UrlCommunicator(settings);
+        this.tmcJsonParser = new TmcJsonParser(settings);
     }
 
     /**
@@ -44,7 +45,7 @@ public class ExerciseDownloader {
      * @return info about downloading.
      */
     public Optional<String> downloadExercises(String courseUrl) throws IOException {
-        List<Exercise> exercises = TmcJsonParser.getExercises(courseUrl);
+        List<Exercise> exercises = tmcJsonParser.getExercises(courseUrl);
         if (exercises.isEmpty()) {
             return Optional.of("No exercises to download.");
         }

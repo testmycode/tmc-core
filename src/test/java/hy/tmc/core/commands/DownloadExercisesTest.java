@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.configuration.ClientTmcSettings;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -29,6 +30,7 @@ import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import static org.powermock.api.mockito.PowerMockito.when;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -39,10 +41,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 public class DownloadExercisesTest {
 
     private File cache;
+    private ClientTmcSettings settings;
     
     @Before
     public void setup() throws IOException {
-        ClientTmcSettings.setUserData("Bossman", "Samu");
+        settings = new ClientTmcSettings();
+        settings.setUsername("Bossman");
+        settings.setPassword("Samu");
         cache = Paths.get("src", "test", "resources", "downloadtest.cache").toFile();
         cache.createNewFile();
     }
@@ -57,12 +62,12 @@ public class DownloadExercisesTest {
      */
     @Test
     public void testCheckDataSuccess() throws TmcCoreException {
-        ClientTmcSettings.setUserData("mister", "Kristian");
-        DownloadExercises de = new DownloadExercises();
+        settings.setUsername("Bossman");
+        settings.setPassword("Samu");
+        DownloadExercises de = new DownloadExercises(settings);
         de.setParameter("path", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "21");
         de.checkData();
-        ClientTmcSettings.clearUserData();
     }
 
     /**
@@ -70,7 +75,7 @@ public class DownloadExercisesTest {
      */
     @Test(expected = TmcCoreException.class)
     public void testCheckDataFail() throws TmcCoreException {
-        DownloadExercises de = new DownloadExercises();
+        DownloadExercises de = new DownloadExercises(settings);
         de.checkData();
     }
 
@@ -79,7 +84,7 @@ public class DownloadExercisesTest {
      */
     @Test(expected = TmcCoreException.class)
     public void courseIdNotANumber() throws TmcCoreException {
-        DownloadExercises de = new DownloadExercises();
+        DownloadExercises de = new DownloadExercises(settings);
         de.setParameter("path", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "not a number");
         de.checkData();
@@ -87,7 +92,7 @@ public class DownloadExercisesTest {
     
     @Test
     public void writesChecksumsToFileIfCacheFileIsGiven() throws IOException, TmcCoreException {
-        ExerciseDownloader mock = PowerMockito.mock(ExerciseDownloader.class);
+        ExerciseDownloader mock = Mockito.mock(ExerciseDownloader.class);
         when(mock.createCourseFolder(anyString(), anyString()))
                 .thenReturn("");
         when(mock.handleSingleExercise(
@@ -104,7 +109,7 @@ public class DownloadExercisesTest {
         PowerMockito.mockStatic(TmcJsonParser.class);
         when(TmcJsonParser.getCourse(anyInt())).thenReturn(Optional.of(course));
         
-        DownloadExercises dl = new DownloadExercises(mock, "", "8", cache);
+        DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings);
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Gson gson = new Gson();
@@ -128,7 +133,7 @@ public class DownloadExercisesTest {
             writer.write("{\"33\":\"qwerty\",\"94\":\"aijw9\"}");
         }
         
-        ExerciseDownloader mock = PowerMockito.mock(ExerciseDownloader.class);
+        ExerciseDownloader mock = Mockito.mock(ExerciseDownloader.class);
         when(mock.createCourseFolder(anyString(), anyString()))
                 .thenReturn("");
         when(mock.handleSingleExercise(
@@ -145,7 +150,7 @@ public class DownloadExercisesTest {
         PowerMockito.mockStatic(TmcJsonParser.class);
         when(TmcJsonParser.getCourse(anyInt())).thenReturn(Optional.of(course));
         
-        DownloadExercises dl = new DownloadExercises(mock, "", "8", cache);
+        DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings);
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Type typeOfHashMap = new TypeToken<Map<Integer, String>>() { }.getType();
@@ -161,5 +166,4 @@ public class DownloadExercisesTest {
         assertEquals("abcdefg", checksums.get(88));
         assertEquals("aijw9", checksums.get(94));
     }
-    
 }

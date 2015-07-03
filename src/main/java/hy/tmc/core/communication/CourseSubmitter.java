@@ -6,7 +6,7 @@ import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.ExpiredException;
-import hy.tmc.core.zipping.DefaultRootDetector;
+import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import hy.tmc.core.zipping.RootFinder;
 import hy.tmc.core.zipping.ZipMaker;
@@ -28,7 +28,9 @@ public class CourseSubmitter {
 
     private RootFinder rootFinder;
     private ZipMaker zipper;
-    private UrlCommunicator urlCommunicator;
+    private final UrlCommunicator urlCommunicator;
+    private final TmcJsonParser tmcJsonParser;
+    private final ProjectRootFinder finder;
 
     /**
      * Exercise deadline is checked with this date format
@@ -39,9 +41,10 @@ public class CourseSubmitter {
 
     public CourseSubmitter(RootFinder rootFinder, ZipMaker zipper, TmcSettings settings) {
         this.urlCommunicator = new UrlCommunicator(settings);
+        this.tmcJsonParser = new TmcJsonParser(settings);
+        this.finder = new ProjectRootFinder(settings);
         this.zipper = zipper;
         this.rootFinder = rootFinder;
-        
     }
 
     /**
@@ -76,7 +79,7 @@ public class CourseSubmitter {
      * @throws java.text.ParseException
      * @throws hy.tmc.core.exceptions.ExpiredException
      */
-    public String submit(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public String submit(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
@@ -90,7 +93,7 @@ public class CourseSubmitter {
      * @throws java.text.ParseException
      * @throws hy.tmc.core.exceptions.ExpiredException
      */
-    public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException {
+    public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, true);
     }
@@ -100,7 +103,7 @@ public class CourseSubmitter {
      * @throws ParseException to frontend
      * @throws ExpiredException to frontend
      */
-    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException, IllegalArgumentException, IOException {
+    private Exercise initExercise(String currentPath) throws ParseException, ExpiredException, IllegalArgumentException, IOException, TmcCoreException {
         Exercise currentExercise = searchExercise(currentPath);
         if(isExpired(currentExercise) || !currentExercise.isReturnable()){
             deleteZipIfExists();
@@ -109,7 +112,7 @@ public class CourseSubmitter {
         return currentExercise;
     }
 
-    private Exercise searchExercise(String currentPath) throws IllegalArgumentException, IOException {
+    private Exercise searchExercise(String currentPath) throws IllegalArgumentException, IOException, TmcCoreException {
         Optional<Exercise> currentExercise = findExercise(currentPath);
         if (!currentExercise.isPresent()) {
             deleteZipIfExists();
@@ -127,7 +130,7 @@ public class CourseSubmitter {
                 url + pasteExtensionForTmcServer,
                 new HashMap<String, String>()
         );
-        return TmcJsonParser.getPasteUrl(result);
+        return tmcJsonParser.getPasteUrl(result);
     }
 
     private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste) throws IOException, ZipException {
@@ -159,21 +162,20 @@ public class CourseSubmitter {
                 url, 
                 new HashMap<String, String>()
         );
-        return TmcJsonParser.getSubmissionUrl(result);
+        return tmcJsonParser.getSubmissionUrl(result);
     }
 
-    private Optional<Exercise> findExercise(String currentPath) throws IllegalArgumentException, IOException {
+    private Optional<Exercise> findExercise(String currentPath) throws IllegalArgumentException, IOException, TmcCoreException {
         return findCurrentExercise(findCourseExercises(currentPath), currentPath);
     }
 
-    private List<Exercise> findCourseExercises(String currentPath) throws IllegalArgumentException, IOException {
-        Optional<Course> currentCourse = new ProjectRootFinder(
-                new DefaultRootDetector()).getCurrentCourse(currentPath);
+    private List<Exercise> findCourseExercises(String currentPath) throws IllegalArgumentException, IOException, TmcCoreException {
+        Optional<Course> currentCourse = finder.getCurrentCourse(currentPath);
         if (!currentCourse.isPresent()) {
             deleteZipIfExists();
             throw new IllegalArgumentException("Not under any course directory");
         }
-        List<Exercise> courseExercises = TmcJsonParser.getExercises(currentCourse.get().getId());
+        List<Exercise> courseExercises = tmcJsonParser.getExercises(currentCourse.get().getId());
         return courseExercises;
     }
 

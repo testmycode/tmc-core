@@ -26,6 +26,10 @@ public class ProjectRootFinder implements RootFinder {
         this.detector = detector;
         this.settings = settings;
     }
+    
+    public ProjectRootFinder(TmcSettings settings) {
+        this(new DefaultRootDetector(), settings);
+    }
 
     /**
      * Get the path of the project root directory.
@@ -55,7 +59,7 @@ public class ProjectRootFinder implements RootFinder {
      * @return Course-object containing information of the course found.
      */
     @Override
-    public Optional<Course> getCurrentCourse(String path) throws IOException {
+    public Optional<Course> getCurrentCourse(String path) throws IOException, TmcCoreException {
         String[] foldersOfPwd = path.split(File.separator);
         try {
             checkPwd(foldersOfPwd);
@@ -72,8 +76,8 @@ public class ProjectRootFinder implements RootFinder {
      * @param foldersPath contains the names of the folders in path
      * @return Course
      */
-    public Optional<Course> findCourseByPath(String[] foldersPath) throws IOException {
-        List<Course> courses = TmcJsonParser.getCourses(settings.getServerAddress());
+    public Optional<Course> findCourseByPath(String[] foldersPath) throws IOException, TmcCoreException {
+        List<Course> courses = new TmcJsonParser(settings).getCourses();
         for (Course course : courses) {
             for (String folderName : foldersPath) {
                 if (course.getName().equals(folderName)) {

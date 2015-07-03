@@ -27,14 +27,17 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(UrlCommunicator.class)
 public class TmcJsonParserTest {
 
+    ClientTmcSettings settings;
     /**
      * Mocks UrlCommunicator.
      */
     @Before
     public void setup() throws IOException, TmcCoreException {
         PowerMockito.mockStatic(UrlCommunicator.class);
+        settings = new ClientTmcSettings();
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
-        ClientTmcSettings.setUserData("chang", "paras");
+        settings.setUsername("chang");
+        settings.setPassword("rajani");
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
                                 Mockito.anyString()))
@@ -90,12 +93,7 @@ public class TmcJsonParserTest {
     
     String realAddress = "http://real.address.fi";
 
-    
-
-    @After
-    public void teardown() {
-        ClientTmcSettings.clearUserData();
-    }
+   
 
     private void mockCourse(String url) throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);

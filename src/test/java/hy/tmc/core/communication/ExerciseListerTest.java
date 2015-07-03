@@ -1,7 +1,5 @@
 package hy.tmc.core.communication;
 
-import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.communication.ExerciseLister;
 import com.google.common.base.Optional;
 import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
@@ -13,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,10 +30,13 @@ public class ExerciseListerTest {
     ExerciseLister lister;
     Exercise fakeExercise;
     Exercise fakeExercise2;
+    private ClientTmcSettings settings;
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
-        ClientTmcSettings.setUserData("chang", "paras");
+        settings = new ClientTmcSettings();
+        settings.setUsername("chang");
+        settings.setPassword("rajani");
         setupFakeCourses();
 
         rootFinderMock = Mockito.mock(ProjectRootFinder.class);
@@ -77,12 +76,8 @@ public class ExerciseListerTest {
         fakeCourse.setName(fakeName);
         fakeCourse.setId(99);
     }
-
-    @After
-    public void tearDown() {
-        ClientTmcSettings.clearUserData();
-    }
-
+    
+    
     @Test(expected=TmcCoreException.class)
     public void ifNoCourseIsFoundThenThrowsProtocolException() throws TmcCoreException, IOException {
         Mockito.when(rootFinderMock.getCurrentCourse(Mockito.anyString()))

@@ -18,19 +18,17 @@ public class SubmissionInterpreterTest {
 
     SubmissionPoller submissionInterpreter;
     String url = "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7";
-
+    ClientTmcSettings settings;
+    
     @Before
     public void setup() {
+        settings = new ClientTmcSettings();
         PowerMockito.mockStatic(UrlCommunicator.class);
 
-        ClientTmcSettings.setUserData("chang", "paras");
+        settings.setUsername("chang");
+        settings.setPassword("rajani");
 
         submissionInterpreter = new SubmissionPoller();
-    }
-
-    @After
-    public void teardown() {
-        ClientTmcSettings.clearUserData();
     }
 
     private void initFailedMock() throws IOException, TmcCoreException {

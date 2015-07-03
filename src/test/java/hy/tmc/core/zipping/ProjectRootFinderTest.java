@@ -5,7 +5,6 @@ import hy.tmc.core.zipping.ProjectRootFinder;
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.configuration.ClientTmcSettings;
-import hy.tmc.core.configuration.ConfigHandler;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
@@ -32,10 +31,13 @@ public class ProjectRootFinderTest {
     ProjectRootFinder finder;
     String fakeName = "2014-mooc-no-deadline";
     String otherFakeName = "2013-tira";
+    ClientTmcSettings settings;
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
-        ClientTmcSettings.setUserData("chang", "paras");
+        settings = new ClientTmcSettings();
+        settings.setUsername("chang");
+        settings.setPassword("paras");
 
         finder = new ProjectRootFinder(new DefaultRootDetector());
 

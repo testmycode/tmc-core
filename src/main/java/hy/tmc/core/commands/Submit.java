@@ -3,6 +3,7 @@ package hy.tmc.core.commands;
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.CourseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -30,10 +31,11 @@ public class Submit extends Command<SubmissionResult> {
     /**
      * Constructor for Submit command, creates the courseSubmitter.
      */
-    public Submit() {
+    public Submit(TmcSettings settings) {
+        super(settings);
         submitter = new CourseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector()),
-                new Zipper()
+                new ProjectRootFinder(new DefaultRootDetector(), settings),
+                new Zipper(), settings
         );
     }
     
@@ -41,10 +43,11 @@ public class Submit extends Command<SubmissionResult> {
      * Constructor for Submit command, creates the courseSubmitter.
      * @param path path which to submit
      */
-    public Submit(String path) {
+    public Submit(String path, TmcSettings settings) {
+        super(settings);
         submitter = new CourseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector()),
-                new Zipper()
+                new ProjectRootFinder(new DefaultRootDetector(), settings),
+                new Zipper(), settings
         );
         this.setParameter("path", path);
     }
@@ -55,7 +58,8 @@ public class Submit extends Command<SubmissionResult> {
      * @param submitter   can inject submitter mock.
      * @param interpreter can inject interpreter mock.
      */
-    public Submit(CourseSubmitter submitter, SubmissionPoller interpreter) {
+    public Submit(CourseSubmitter submitter, SubmissionPoller interpreter, TmcSettings settings) {
+        super(settings);
         this.interpreter = interpreter;
         this.submitter = submitter;
     }

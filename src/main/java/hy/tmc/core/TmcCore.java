@@ -110,7 +110,7 @@ public class TmcCore {
      */
     public ListenableFuture<Boolean> verifyCredentials(TmcSettings settings) throws TmcCoreException {
         checkParameters(settings.getUsername(), settings.getPassword(), settings.getServerAddress());
-        VerifyCredentials login = new VerifyCredentials(settings.getUsername(), settings.getPassword());
+        VerifyCredentials login = new VerifyCredentials(settings.getUsername(), settings.getPassword(), settings);
         @SuppressWarnings("unchecked")
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(login);
         return stringListenableFuture;
@@ -148,10 +148,10 @@ public class TmcCore {
      * @return list containing course-objects parsed from JSON
      * @throws TmcCoreException if something went wrong
      */
-    public ListenableFuture<List<Course>> listCourses(String serverAddress) throws TmcCoreException {
+    public ListenableFuture<List<Course>> listCourses(String serverAddress, TmcSettings settings) throws TmcCoreException {
         
         @SuppressWarnings("unchecked")
-        ListCourses listCommand = new ListCourses();
+        ListCourses listCommand = new ListCourses(settings);
         ListenableFuture<List<Course>> listCourses = (ListenableFuture<List<Course>>) threadPool.submit(listCommand);
         return listCourses;
     }
@@ -182,10 +182,10 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, no exercise in the given
      * path, or not logged in
      */
-    public ListenableFuture<SubmissionResult> submit(String path) throws TmcCoreException {
+    public ListenableFuture<SubmissionResult> submit(String path, TmcSettings settings) throws TmcCoreException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        Submit submit = new Submit(path);
+        Submit submit = new Submit(path, settings);
         ListenableFuture<SubmissionResult> submissionResultListenableFuture = (ListenableFuture<SubmissionResult>) threadPool.submit(submit);
         return submissionResultListenableFuture;
     }
@@ -199,10 +199,10 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
      * given path
      */
-    public ListenableFuture<RunResult> test(String path) throws TmcCoreException {
+    public ListenableFuture<RunResult> test(String path, TmcSettings settings) throws TmcCoreException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        RunTests testCommand = new RunTests(path);
+        RunTests testCommand = new RunTests(path, settings);
         ListenableFuture<RunResult> runResultListenableFuture = (ListenableFuture<RunResult>) threadPool.submit(testCommand);
         return runResultListenableFuture;
     }
@@ -215,7 +215,7 @@ public class TmcCore {
      */
     public ListenableFuture<List<Review>> getNewReviews(Course course, TmcSettings settings) throws TmcCoreException {
         ReviewHandler reviewHandler = new ReviewHandler(settings);
-        GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler);
+        GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler, settings);
         command.checkData();
 
         @SuppressWarnings("unchecked")
@@ -237,7 +237,7 @@ public class TmcCore {
      */
     public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course, TmcSettings settings) throws TmcCoreException, IOException {
         ExerciseUpdateHandler updater = new ExerciseUpdateHandler(updateCache, settings);
-        GetExerciseUpdates command = new GetExerciseUpdates(course, updater);
+        GetExerciseUpdates command = new GetExerciseUpdates(course, updater, settings);
         command.checkData();
 
         @SuppressWarnings("unchecked")
@@ -271,10 +271,10 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
      * given path
      */
-    public ListenableFuture<URI> paste(String path) throws TmcCoreException {
+    public ListenableFuture<URI> paste(String path, TmcSettings settings) throws TmcCoreException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        Paste paste = new Paste(path);
+        Paste paste = new Paste(path, settings);
         ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) threadPool.submit(paste);
         return stringListenableFuture;
     }

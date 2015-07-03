@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
@@ -12,14 +13,11 @@ import java.nio.file.Paths;
 
 public class RunTests extends Command<RunResult> {
 
-    public RunTests(String path) {
+    public RunTests(String path, TmcSettings settings) {
+        super(settings);
         this.setParameter("path", path);
     }
     
-    public RunTests(){
-        
-    }
-
     /**
      * Runs tests for exercise.
      *
@@ -43,7 +41,7 @@ public class RunTests extends Command<RunResult> {
     @Override
     public RunResult call() throws TmcCoreException, NoLanguagePluginFoundException {
         String path = (String) this.data.get("path");
-        ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector());
+        ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector(), settings);
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
         if (!exercise.isPresent()) {
             throw new TmcCoreException("Not an exercise. (null)");

@@ -1,6 +1,6 @@
 package hy.tmc.core.commands;
 
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 
 import hy.tmc.core.exceptions.TmcCoreException;
 
@@ -18,7 +18,7 @@ public class RunTestsTest {
      */
     @Before
     public void setup() {
-        ClientData.setUserData("test", "1234");
+        ClientTmcSettings.setUserData("test", "1234");
         runTests = new RunTests();
     }
 
@@ -43,6 +43,6 @@ public class RunTestsTest {
     
     @After
     public void clear() {
-        ClientData.clearUserData();
+        ClientTmcSettings.clearUserData();
     }
 }

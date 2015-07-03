@@ -1,12 +1,12 @@
 package hy.tmc.core.configuration;
 
-import hy.tmc.core.configuration.ClientData;
-import static hy.tmc.core.configuration.ClientData.getFormattedUserData;
-import static hy.tmc.core.configuration.ClientData.getPassword;
-import static hy.tmc.core.configuration.ClientData.getUsername;
-import static hy.tmc.core.configuration.ClientData.logOutCurrentUser;
-import static hy.tmc.core.configuration.ClientData.setUserData;
-import static hy.tmc.core.configuration.ClientData.userDataExists;
+import hy.tmc.core.configuration.ClientTmcSettings;
+import static hy.tmc.core.configuration.ClientTmcSettings.getFormattedUserData;
+import static hy.tmc.core.configuration.ClientTmcSettings.getPassword;
+import static hy.tmc.core.configuration.ClientTmcSettings.getUsername;
+import static hy.tmc.core.configuration.ClientTmcSettings.logOutCurrentUser;
+import static hy.tmc.core.configuration.ClientTmcSettings.setUserData;
+import static hy.tmc.core.configuration.ClientTmcSettings.userDataExists;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ClientDataTest {
+public class ClientTmcSettingsTest {
 
     @Before
     public void setUp() {
@@ -55,91 +55,91 @@ public class ClientDataTest {
     }
 
     /**
-     * Test of setUserData method, of class ClientData.
+     * Test of setUserData method, of class ClientTmcSettings.
      */
     @Test
     public final void testSetUserData() {
         String username = "";
         String password = "";
-        ClientData.setUserData(username, password);
-        assertEquals("", ClientData.getUsername());
+        ClientTmcSettings.setUserData(username, password);
+        assertEquals("", ClientTmcSettings.getUsername());
     }
 
     /**
-     * Test of userDataExists method, of class ClientData.
+     * Test of userDataExists method, of class ClientTmcSettings.
      */
     @Test
     public void testUserDataExists() {
         boolean expResult = false;
-        boolean result = ClientData.userDataExists();
+        boolean result = ClientTmcSettings.userDataExists();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of clearUserData method, of class ClientData.
+     * Test of clearUserData method, of class ClientTmcSettings.
      */
     @Test
     public void testClearUserData() {
-        ClientData.clearUserData();
-        assertFalse(ClientData.userDataExists());
+        ClientTmcSettings.clearUserData();
+        assertFalse(ClientTmcSettings.userDataExists());
     }
 
     /**
-     * Test of getFormattedUserData method, of class ClientData.
+     * Test of getFormattedUserData method, of class ClientTmcSettings.
      */
     @Test
     public void testGetFormattedUserData() {
         String expResult = ":";
-        String result = ClientData.getFormattedUserData();
+        String result = ClientTmcSettings.getFormattedUserData();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of logOutCurrentUser method, of class ClientData.
+     * Test of logOutCurrentUser method, of class ClientTmcSettings.
      */
     @Test
     public void testLogOutCurrentUser() {
-        ClientData.logOutCurrentUser();
-        assertFalse(ClientData.userDataExists());
+        ClientTmcSettings.logOutCurrentUser();
+        assertFalse(ClientTmcSettings.userDataExists());
     }
 
     /**
-     * Test of getPID method, of class ClientData.
+     * Test of getPID method, of class ClientTmcSettings.
      */
     @Test
     public void testGetPid() {
         int expResult = 0;
-        int result = ClientData.getPid();
+        int result = ClientTmcSettings.getPid();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of setPID method, of class ClientData.
+     * Test of setPID method, of class ClientTmcSettings.
      */
     @Test
     public void testSetPid() {
         int pid = 123;
-        ClientData.setPid(pid);
-        assertEquals(pid, ClientData.getPid());
+        ClientTmcSettings.setPid(pid);
+        assertEquals(pid, ClientTmcSettings.getPid());
     }
 
     /**
-     * Test of getUSERNAME method, of class ClientData.
+     * Test of getUSERNAME method, of class ClientTmcSettings.
      */
     @Test
     public void testGetUsername() {
         String expResult = "";
-        String result = ClientData.getUsername();
+        String result = ClientTmcSettings.getUsername();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of getPASSWORD method, of class ClientData.
+     * Test of getPASSWORD method, of class ClientTmcSettings.
      */
     @Test
     public void testGetPassword() {
         String expResult = "";
-        String result = ClientData.getPassword();
+        String result = ClientTmcSettings.getPassword();
         assertEquals(expResult, result);
     }
 

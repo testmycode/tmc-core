@@ -3,7 +3,7 @@ package hy.tmc.core.commands;
 
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
@@ -41,7 +41,7 @@ public class ListCoursesTest {
 
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
 
-        ClientData.setUserData("mockattu", "ei tarvi");
+        ClientTmcSettings.setUserData("mockattu", "ei tarvi");
         PowerMockito
                 .when(UrlCommunicator.makeGetRequest(
                         Mockito.anyString(), Mockito.anyString()))
@@ -52,13 +52,13 @@ public class ListCoursesTest {
     @Test
     public void testCheckDataSuccess() throws TmcCoreException {
         ListCourses ls = new ListCourses();
-        ClientData.setUserData("asdf", "bsdf");
+        ClientTmcSettings.setUserData("asdf", "bsdf");
         ls.checkData();
     }
 
     @Test(expected = TmcCoreException.class)
     public void testNoAuthThrowsException() throws TmcCoreException, Exception {
-        ClientData.setUserData("", "");
+        ClientTmcSettings.setUserData("", "");
         list.checkData();
         list.call();
     }

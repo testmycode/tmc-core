@@ -6,7 +6,7 @@ import com.google.common.base.Optional;
 
 import hy.tmc.core.communication.ExerciseLister;
 
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 
@@ -31,7 +31,7 @@ import org.mockito.Mockito;
 
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ClientData.class)
+@PrepareForTest(ClientTmcSettings.class)
 public class ListExercisesTest {
 
     private ListExercises list;
@@ -56,7 +56,7 @@ public class ListExercisesTest {
     @Before
     public void setup() throws TmcCoreException, IOException {
         buildExample();
-        ClientData.setUserData("Chang", "Jamo");
+        ClientTmcSettings.setUserData("Chang", "Jamo");
         mock();
         lister = Mockito.mock(ExerciseLister.class);
         Mockito.when(lister.listExercises(Mockito.anyString()))
@@ -67,15 +67,15 @@ public class ListExercisesTest {
 
     private void mock() throws TmcCoreException, IOException {
 
-        PowerMockito.mockStatic(ClientData.class);
+        PowerMockito.mockStatic(ClientTmcSettings.class);
         PowerMockito
-                .when(ClientData.getCurrentCourse(Mockito.anyString()))
+                .when(ClientTmcSettings.getCurrentCourse(Mockito.anyString()))
                 .thenReturn(Optional.of(new Course()));
         PowerMockito
-                .when(ClientData.getFormattedUserData())
+                .when(ClientTmcSettings.getFormattedUserData())
                 .thenReturn("Chang:Jamo");
         PowerMockito
-                .when(ClientData.userDataExists())
+                .when(ClientTmcSettings.userDataExists())
                 .thenReturn(true);
     }
 
@@ -93,8 +93,8 @@ public class ListExercisesTest {
 
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfNoUser() throws TmcCoreException, IOException {
-        PowerMockito.mockStatic(ClientData.class);
-        ClientData.clearUserData();
+        PowerMockito.mockStatic(ClientTmcSettings.class);
+        ClientTmcSettings.clearUserData();
         list.setParameter("path", "any");
         list.checkData();
         list.call();
@@ -102,7 +102,7 @@ public class ListExercisesTest {
 
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfNoCourseSpecified() throws TmcCoreException, IOException {
-        ClientData.clearUserData();
+        ClientTmcSettings.clearUserData();
         list.checkData();
         list.call();
     }

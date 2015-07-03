@@ -14,7 +14,7 @@ import com.google.common.io.Files;
 
 
 import hy.tmc.core.communication.HttpResult;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.ClientTmcSettings;
 import hy.tmc.core.configuration.ConfigHandler;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -52,7 +52,7 @@ public class DiffSenderTest {
     public void setup() throws IOException {
         config = new ConfigHandler();
         config.writeServerAddress("http://127.0.0.1:8080");
-        ClientData.setUserData("test", "1234");
+        ClientTmcSettings.setUserData("test", "1234");
         sender = new DiffSender();
         startWiremock();
     }
@@ -125,8 +125,8 @@ public class DiffSenderTest {
     private void startWiremock() {
         stubFor(post(urlEqualTo("/spyware"))
                 .withHeader("X-Tmc-Version", equalTo("1"))
-                .withHeader("X-Tmc-Username", equalTo(ClientData.getUsername()))
-                .withHeader("X-Tmc-Password", equalTo(ClientData.getPassword()))
+                .withHeader("X-Tmc-Username", equalTo(ClientTmcSettings.getUsername()))
+                .withHeader("X-Tmc-Password", equalTo(ClientTmcSettings.getPassword()))
                 .willReturn(aResponse().withBody("OK").withStatus(200)));
     }
 
@@ -135,7 +135,7 @@ public class DiffSenderTest {
      */
     @After
     public void cleanUp() throws IOException {
-        ClientData.clearUserData();
+        ClientTmcSettings.clearUserData();
         config.writeServerAddress("https://tmc.mooc.fi/staging");
     }
 }

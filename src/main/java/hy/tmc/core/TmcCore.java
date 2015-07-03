@@ -165,10 +165,10 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, or if the path was
      * erroneous
      */
-    public ListenableFuture<List<Exercise>> listExercises(String path) throws TmcCoreException {
+    public ListenableFuture<List<Exercise>> listExercises(String path, TmcSettings settings) throws TmcCoreException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        ListExercises listCommand = new ListExercises(path);
+        ListExercises listCommand = new ListExercises(path, settings);
         ListenableFuture<List<Exercise>> listExercises = (ListenableFuture<List<Exercise>>) threadPool.submit(listCommand);
         return listExercises;
     }
@@ -254,8 +254,8 @@ public class TmcCore {
      * @return a HttpResult of the servers reply. It should contain "{status:ok}" if everything goes
      * well
      */
-    public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url) throws TmcCoreException, IOException {
-        SendFeedback feedback = new SendFeedback(answers, url);
+    public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url, TmcSettings settings) throws TmcCoreException, IOException {
+        SendFeedback feedback = new SendFeedback(answers, url, settings);
         feedback.checkData();
         @SuppressWarnings("unchecked")
         ListenableFuture<HttpResult> feedbackListenableFuture

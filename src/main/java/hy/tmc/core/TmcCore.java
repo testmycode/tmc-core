@@ -10,20 +10,18 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.commands.VerifyCredentials;
-import hy.tmc.core.commands.ChooseServer;
 import hy.tmc.core.commands.DownloadExercises;
 import hy.tmc.core.commands.GetExerciseUpdates;
 import hy.tmc.core.commands.GetUnreadReviews;
 import hy.tmc.core.commands.ListCourses;
 import hy.tmc.core.commands.ListExercises;
-import hy.tmc.core.commands.Logout;
 import hy.tmc.core.commands.Paste;
 import hy.tmc.core.commands.RunTests;
 import hy.tmc.core.commands.SendFeedback;
 import hy.tmc.core.commands.Submit;
 import hy.tmc.core.communication.updates.ExerciseUpdateHandler;
 import hy.tmc.core.communication.updates.ReviewHandler;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Credentials;
 import hy.tmc.core.domain.Review;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -105,14 +103,14 @@ public class TmcCore {
      * Authenticates the given user on the server, and saves the data into memory.
      *
      * @param credentials includes username and password
+     * @param settings settings required by this command
      * @param serverAddress defines TMC-server to communicate with.
      * @return A future-object containing true or false on success or fail
      * @throws TmcCoreException if something in the given input was wrong
      */
-    public ListenableFuture<Boolean> verifyCredentials(Credentials credentials, String serverAddress) throws TmcCoreException {
-        checkParameters(credentials.getUsername(), credentials.getPassword(), serverAddress);
-        ClientData.setServerAddress(serverAddress);
-        VerifyCredentials login = new VerifyCredentials(credentials.getUsername(), credentials.getPassword());
+    public ListenableFuture<Boolean> verifyCredentials(TmcSettings settings) throws TmcCoreException {
+        checkParameters(settings.getUsername(), settings.getPassword(), settings.getServerAddress());
+        VerifyCredentials login = new VerifyCredentials(settings.getUsername(), settings.getPassword());
         @SuppressWarnings("unchecked")
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(login);
         return stringListenableFuture;
@@ -128,19 +126,19 @@ public class TmcCore {
      * @return A future-object containing true or false on success or fail
      * @throws TmcCoreException if something in the given input was wrong
      */
-    public ListenableFuture<String> downloadExercises(String path, String courseId) throws TmcCoreException, IOException {
+    public ListenableFuture<String> downloadExercises(String path, String courseId, TmcSettings settings) throws TmcCoreException, IOException {
         checkParameters(path, courseId);
         @SuppressWarnings("unchecked")
-        DownloadExercises downloadCommand = getDownloadCommand(path, courseId);
+        DownloadExercises downloadCommand = getDownloadCommand(path, courseId, settings);
         ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) threadPool.submit(downloadCommand);
         return stringListenableFuture;
     }
 
-    private DownloadExercises getDownloadCommand(String path, String courseId) throws IOException {
+    private DownloadExercises getDownloadCommand(String path, String courseId, TmcSettings settings) throws IOException {
         if (this.updateCache == null) {
-            return new DownloadExercises(path, courseId);
+            return new DownloadExercises(path, courseId, settings);
         }
-        return new DownloadExercises(path, courseId, this.updateCache);
+        return new DownloadExercises(path, courseId, settings, this.updateCache);
     }
 
     /**
@@ -150,9 +148,7 @@ public class TmcCore {
      * @return list containing course-objects parsed from JSON
      * @throws TmcCoreException if something went wrong
      */
-    public ListenableFuture<List<Course>> listCourses(Credentials credentials, String serverAddress) throws TmcCoreException {
-        ClientData.setUserData(credentials.getUsername(), credentials.getPassword());
-        ClientData.setServerAddress(serverAddress);
+    public ListenableFuture<List<Course>> listCourses(String serverAddress) throws TmcCoreException {
         
         @SuppressWarnings("unchecked")
         ListCourses listCommand = new ListCourses();
@@ -217,8 +213,8 @@ public class TmcCore {
      * @param course the course whose reviews are checked
      * @return a list of unread reviews for the given course
      */
-    public ListenableFuture<List<Review>> getNewReviews(Course course) throws TmcCoreException {
-        ReviewHandler reviewHandler = new ReviewHandler();
+    public ListenableFuture<List<Review>> getNewReviews(Course course, TmcSettings settings) throws TmcCoreException {
+        ReviewHandler reviewHandler = new ReviewHandler(settings);
         GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler);
         command.checkData();
 
@@ -239,8 +235,8 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
      * given path
      */
-    public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course) throws TmcCoreException, IOException {
-        ExerciseUpdateHandler updater = new ExerciseUpdateHandler(updateCache);
+    public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course, TmcSettings settings) throws TmcCoreException, IOException {
+        ExerciseUpdateHandler updater = new ExerciseUpdateHandler(updateCache, settings);
         GetExerciseUpdates command = new GetExerciseUpdates(course, updater);
         command.checkData();
 

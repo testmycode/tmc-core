@@ -2,13 +2,11 @@ package hy.tmc.core;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 import hy.tmc.core.commands.VerifyCredentials;
-import hy.tmc.core.commands.ChooseServer;
 import hy.tmc.core.commands.DownloadExercises;
 import hy.tmc.core.commands.GetExerciseUpdates;
 import hy.tmc.core.commands.GetUnreadReviews;
 import hy.tmc.core.commands.ListCourses;
 import hy.tmc.core.commands.ListExercises;
-import hy.tmc.core.commands.Logout;
 import hy.tmc.core.commands.Paste;
 import hy.tmc.core.commands.RunTests;
 import hy.tmc.core.commands.SendFeedback;

@@ -8,7 +8,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import hy.tmc.core.configuration.ClientTmcSettings;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;

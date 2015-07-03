@@ -1,6 +1,7 @@
 
-package hy.tmc.core.configuration;
+package hy.tmc.core.testhelpers;
 
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 
 public class ClientTmcSettings implements TmcSettings {
@@ -11,6 +12,31 @@ public class ClientTmcSettings implements TmcSettings {
     private Course currentCourse;
     private String apiVersion;
 
+    public ClientTmcSettings() {
+        apiVersion = "7";
+    }
+    
+    public ClientTmcSettings(String uname, String pword) {
+        this();
+        this.username = uname;
+        this.password = pword;
+    }
+    
+    public ClientTmcSettings(String uname, String pword, String url) {
+        this(uname, pword);
+        this.serverAddress = url;
+    }
+    
+    public ClientTmcSettings(Course course) {
+        this();
+        this.currentCourse = course;
+    }
+    
+    public ClientTmcSettings(String uname, String pword, Course course) {
+        this(uname, pword);
+        this.currentCourse = course;
+    }
+    
     @Override
     public String getServerAddress() {
         return serverAddress;

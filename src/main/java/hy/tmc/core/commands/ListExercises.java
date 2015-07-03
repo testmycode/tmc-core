@@ -2,6 +2,7 @@ package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.ExerciseLister;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 
@@ -15,8 +16,8 @@ public class ListExercises extends Command<List<Exercise>> {
     private ExerciseLister lister;
     private Course current;
 
-    public ListExercises() {
-        this(new ExerciseLister());
+    public ListExercises(TmcSettings settings) {
+        this(new ExerciseLister(settings), settings);
     }
 
     /**
@@ -24,12 +25,12 @@ public class ListExercises extends Command<List<Exercise>> {
      *
      * @param lister mocked lister object.
      */
-    public ListExercises(ExerciseLister lister) {
+    public ListExercises(ExerciseLister lister, TmcSettings settings) {
         this.lister = lister;
     }
 
-    public ListExercises(String path) {
-        this(new ExerciseLister());
+    public ListExercises(String path, TmcSettings settings) {
+        this(new ExerciseLister(settings), settings);
         this.setParameter("path", path);
     }
 

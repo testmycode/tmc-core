@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -27,22 +28,24 @@ public class DownloadExercises extends Command<String> {
     private ExerciseDownloader exerciseDownloader;
     private File cacheFile;
 
-    public DownloadExercises() {
+    public DownloadExercises(TmcSettings settings) {
+        super(settings);
         this.exerciseDownloader = new ExerciseDownloader();
     }
 
-    public DownloadExercises(String path, String courseId) {
-        this();
+    public DownloadExercises(String path, String courseId, TmcSettings settings) {
+        this(settings);
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);
     }
 
-    public DownloadExercises(String path, String courseId, File cacheFile) throws IOException {
-        this(path, courseId);
+    public DownloadExercises(String path, String courseId, TmcSettings settings, File cacheFile) throws IOException {
+        this(path, courseId, settings);
         this.cacheFile = cacheFile;
     }
     
-    public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile) {
+    public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile, TmcSettings settings) {
+        this.settings = settings;
         this.exerciseDownloader = downloader;
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);
@@ -96,7 +99,7 @@ public class DownloadExercises extends Command<String> {
     public String call() throws TmcCoreException, IOException {
         checkData();
 
-        Optional<Course> courseResult = TmcJsonParser.getCourse(Integer.parseInt(this.data.get("courseID")));
+        Optional<Course> courseResult = new TmcJsonParser(this.settings).getCourse(Integer.parseInt(this.data.get("courseID")));
 
         if (courseResult.isPresent()) {
             Optional<String> downloadFiles = downloadExercises(courseResult.get());

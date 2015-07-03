@@ -21,7 +21,10 @@ public class Paste extends Command<URI> {
     private Course course;
 
     public Paste(TmcSettings settings) {
-        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()), new Zipper()), settings);
+        this(new CourseSubmitter(
+                new ProjectRootFinder(new DefaultRootDetector(), settings),
+                new Zipper(), settings
+        ), settings);
     }
 
     /**
@@ -30,12 +33,12 @@ public class Paste extends Command<URI> {
      * @param submitter can inject submitter mock.
      */
     public Paste(CourseSubmitter submitter, TmcSettings settings) {
-        super(settings);
         this.submitter = submitter;
+        this.settings = settings;
     }
 
     public Paste(String path, TmcSettings settings) {
-        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()), new Zipper()), settings);
+        this(settings);
         this.setParameter("path", path);
     }
 

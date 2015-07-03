@@ -10,20 +10,17 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.commands.VerifyCredentials;
-import hy.tmc.core.commands.ChooseServer;
 import hy.tmc.core.commands.DownloadExercises;
 import hy.tmc.core.commands.GetExerciseUpdates;
 import hy.tmc.core.commands.GetUnreadReviews;
 import hy.tmc.core.commands.ListCourses;
 import hy.tmc.core.commands.ListExercises;
-import hy.tmc.core.commands.Logout;
 import hy.tmc.core.commands.Paste;
 import hy.tmc.core.commands.RunTests;
 import hy.tmc.core.commands.SendFeedback;
 import hy.tmc.core.commands.Submit;
 import hy.tmc.core.communication.updates.ExerciseUpdateHandler;
 import hy.tmc.core.communication.updates.ReviewHandler;
-import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Credentials;
 import hy.tmc.core.domain.Review;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -111,7 +108,7 @@ public class TmcCore {
      */
     public ListenableFuture<Boolean> verifyCredentials(Credentials credentials, String serverAddress) throws TmcCoreException {
         checkParameters(credentials.getUsername(), credentials.getPassword(), serverAddress);
-        ClientData.setServerAddress(serverAddress);
+        .setServerAddress(serverAddress);
         VerifyCredentials login = new VerifyCredentials(credentials.getUsername(), credentials.getPassword());
         @SuppressWarnings("unchecked")
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(login);

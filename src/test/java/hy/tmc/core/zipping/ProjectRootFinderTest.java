@@ -46,7 +46,7 @@ public class ProjectRootFinderTest {
 
         List<Course> courses = setupFakeCourses();
         PowerMockito
-                .when(parser.getCourses(
+                .when(parsert.getCourses(
                         .readCoursesAddress()))
                 .thenReturn(courses);
     }

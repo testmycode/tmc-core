@@ -2,6 +2,7 @@ package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.CourseSubmitter;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -19,8 +20,8 @@ public class Paste extends Command<URI> {
     private CourseSubmitter submitter;
     private Course course;
 
-    public Paste() {
-        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()), new Zipper()));
+    public Paste(TmcSettings settings) {
+        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()), new Zipper()), settings);
     }
 
     /**
@@ -28,12 +29,13 @@ public class Paste extends Command<URI> {
      *
      * @param submitter can inject submitter mock.
      */
-    public Paste(CourseSubmitter submitter) {
+    public Paste(CourseSubmitter submitter, TmcSettings settings) {
+        super(settings);
         this.submitter = submitter;
     }
 
-    public Paste(String path) {
-        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()), new Zipper()));
+    public Paste(String path, TmcSettings settings) {
+        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()), new Zipper()), settings);
         this.setParameter("path", path);
     }
 

@@ -3,6 +3,7 @@ package hy.tmc.core.commands;
 import com.google.common.base.Optional;
 
 import static hy.tmc.core.communication.UrlCommunicator.makeGetRequest;
+import hy.tmc.core.configuration.TmcSettings;
 
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
@@ -14,13 +15,10 @@ public class VerifyCredentials extends Command<Boolean> {
      */
     private final String httpOk = "2..";
 
-    public VerifyCredentials(String username, String password) {
+    public VerifyCredentials(String username, String password, TmcSettings settings) {
+        super(settings);
         this.setParameter("username", username);
         this.setParameter("password", password);
-    }
-    
-    public VerifyCredentials(){
-        
     }
 
     @Override

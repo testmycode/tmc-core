@@ -5,10 +5,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
+import hy.tmc.core.zipping.DefaultUnzipDecider;
+import hy.tmc.core.zipping.UnzipDecider;
 import java.io.File;
 import java.io.FileWriter;
 
@@ -31,13 +34,13 @@ public class DownloadExercises extends Command<String> {
 
     public DownloadExercises(TmcSettings settings) {
         super(settings);
-        this.exerciseDownloader = new ExerciseDownloader();
+        this.exerciseDownloader = new ExerciseDownloader(new DefaultUnzipDecider(),
+            new UrlCommunicator(settings), new TmcJsonParser(settings));
         this.parser = new TmcJsonParser(settings);
     }
     
     public DownloadExercises(TmcSettings settings, TmcJsonParser parser) {
         super(settings);
-        this.exerciseDownloader = new ExerciseDownloader();
         this.parser = parser;
     }
     

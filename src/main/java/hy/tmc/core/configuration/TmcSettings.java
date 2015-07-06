@@ -10,6 +10,9 @@ public interface TmcSettings {
 
     public String getUsername();
 
+    /**
+     * Checks that username and password are not null. 
+     */
     public boolean userDataExists();
 
     public Course getCurrentCourse();

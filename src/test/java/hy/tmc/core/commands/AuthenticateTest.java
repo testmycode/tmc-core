@@ -15,10 +15,12 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.Matchers.any;
 
 import org.mockito.Mockito;
 
 import org.powermock.api.mockito.PowerMockito;
+import static org.powermock.api.mockito.PowerMockito.mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -30,6 +32,7 @@ public class AuthenticateTest {
     private final String testPassword = "1234";
     private VerifyCredentials auth;
     TmcSettings settings;
+    UrlCommunicator comm;
 
     /**
      * Set up server mock and Authenticate command.
@@ -37,7 +40,8 @@ public class AuthenticateTest {
     @Before
     public void setUp() {
         settings = new ClientTmcSettings();
-        this.auth = new VerifyCredentials(settings);
+        comm = Mockito.mock(UrlCommunicator.class);
+        this.auth = new VerifyCredentials(settings, comm);
     }
 
     @Test
@@ -63,7 +67,7 @@ public class AuthenticateTest {
 
         auth.setParameter(key1, param1);
         auth.setParameter(key2, param2);
-        PowerMockito.mockStatic(UrlCommunicator.class);
+        Mockito.mock(UrlCommunicator.class);
         powerMockWithCredentials("test:1234", 200);
         powerMockWithCredentials("samu:salis", 400);
         auth.checkData();
@@ -73,8 +77,8 @@ public class AuthenticateTest {
 
     private void powerMockWithCredentials(String credentials, int status) throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult("", status, true);
-        PowerMockito
-                .when(new UrlCommunicator(settings).makeGetRequest(
+        Mockito
+                .when(comm.makeGetRequest(
                                 Mockito.anyString(),
                                 Mockito.eq(credentials)))
                 .thenReturn(fakeResult);

@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 import static org.junit.Assert.assertEquals;
 
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 

@@ -17,34 +17,28 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import org.mockito.Mockito;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import org.powermock.api.mockito.PowerMockito;
-import static org.powermock.api.mockito.PowerMockito.when;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(TmcJsonParser.class)
 public class ReviewHandlerTest {
 
-    ReviewHandler handler;
-    
-    public ReviewHandlerTest() {
-    }
+    private ReviewHandler handler;
+    private TmcJsonParser tmcJsonParser;
 
     @Before
     public void setUp() throws IOException {
-    //    handler = new ReviewHandler();
-        PowerMockito.mockStatic(TmcJsonParser.class);
-    /*    when(TmcJsonParser.getReviews(anyString()))
+
+        tmcJsonParser = Mockito.mock(TmcJsonParser.class);
+        handler = new ReviewHandler(tmcJsonParser);
+        Mockito.when(tmcJsonParser.getReviews(anyString()))
                 .thenReturn(
                         new ReviewListBuilder()
                                 .withExercise(3, true)
                                 .withExercise(123, false)
                                 .withExercise(52, false)
                                 .build()
-                );*/
+                );
     }
 
     @After
@@ -53,7 +47,8 @@ public class ReviewHandlerTest {
 
     @Test
     public void fetchReviewReturnsEmptyListIfServerSendsNull() throws IOException {
-       // when(TmcJsonParser.getReviews(anyString())).thenReturn(null);
+
+        Mockito.when(tmcJsonParser.getReviews(anyString())).thenReturn(null);
         assertNotNull(handler.fetchFromServer(new Course()));
         assertEquals(0, handler.fetchFromServer(new Course()).size());
     }
@@ -64,8 +59,7 @@ public class ReviewHandlerTest {
         Course course = new Course();
         course.setReviewsUrl(url);
         handler.getNewObjects(course);
-        PowerMockito.verifyStatic();
-//        TmcJsonParser.getReviews(eq(url));
+        tmcJsonParser.getReviews(Mockito.eq(url));
     }
     
     @Test

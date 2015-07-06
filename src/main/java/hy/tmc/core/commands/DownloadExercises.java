@@ -27,21 +27,31 @@ public class DownloadExercises extends Command<String> {
      */
     private ExerciseDownloader exerciseDownloader;
     private File cacheFile;
+    private TmcJsonParser parser;
 
     public DownloadExercises(TmcSettings settings) {
         super(settings);
         this.exerciseDownloader = new ExerciseDownloader();
+        this.parser = new TmcJsonParser(settings);
     }
-
+    
+    public DownloadExercises(TmcSettings settings, TmcJsonParser parser) {
+        super(settings);
+        this.exerciseDownloader = new ExerciseDownloader();
+        this.parser = parser;
+    }
+    
     public DownloadExercises(String path, String courseId, TmcSettings settings) {
         this(settings);
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);
+        this.parser = new TmcJsonParser(settings);
     }
 
     public DownloadExercises(String path, String courseId, TmcSettings settings, File cacheFile) throws IOException {
         this(path, courseId, settings);
         this.cacheFile = cacheFile;
+        this.parser = new TmcJsonParser(settings);
     }
     
     public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile, TmcSettings settings) {
@@ -50,6 +60,16 @@ public class DownloadExercises extends Command<String> {
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);
         this.cacheFile = cacheFile;
+        this.parser = new TmcJsonParser(settings);
+    }
+    
+    public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile, TmcSettings settings, TmcJsonParser parser) {
+        this.settings = settings;
+        this.exerciseDownloader = downloader;
+        this.setParameter("path", path);
+        this.setParameter("courseID", courseId);
+        this.cacheFile = cacheFile;
+        this.parser = parser;
     }
     
     /**
@@ -99,7 +119,7 @@ public class DownloadExercises extends Command<String> {
     public String call() throws TmcCoreException, IOException {
         checkData();
 
-        Optional<Course> courseResult = new TmcJsonParser(this.settings).getCourse(Integer.parseInt(this.data.get("courseID")));
+        Optional<Course> courseResult = this.parser.getCourse(Integer.parseInt(this.data.get("courseID")));
 
         if (courseResult.isPresent()) {
             Optional<String> downloadFiles = downloadExercises(courseResult.get());

@@ -9,13 +9,13 @@ import hy.tmc.core.communication.updates.ExerciseUpdateHandler;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.testhelpers.builders.ExerciseBuilder;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,32 +25,27 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import org.powermock.api.mockito.PowerMockito;
-import static org.powermock.api.mockito.PowerMockito.when;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.Mockito;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({UrlCommunicator.class, TmcJsonParser.class})
 public class ExerciseUpdaterTest {
     
     private File cacheFile;
-    private ExerciseUpdateHandler handler;
     private ExerciseBuilder builder;
+    private UrlCommunicator urlCommunicator;
    
     
     @Before
     public void setUp() throws IOException, TmcCoreException {
         cacheFile = Paths.get("src", "test", "resources", "exercisetest.cache").toFile();
         cacheFile.createNewFile();
-//        handler = new ExerciseUpdateHandler(cacheFile, new ClientTmcSettings());
+
         builder = new ExerciseBuilder();
-        PowerMockito.mockStatic(UrlCommunicator.class);
-       // when(UrlCommunicator.makeGetRequest(anyString(), any(String[].class)))
-              //  .thenReturn(new HttpResult(ExampleJson.courseExample, 200, true));
+        urlCommunicator = Mockito.mock(UrlCommunicator.class);
+        Mockito.when(urlCommunicator.makeGetRequest(anyString(), any(String[].class)))
+                .thenReturn(new HttpResult(ExampleJson.courseExample, 200, true));
+
     }
     
     @After
@@ -58,11 +53,15 @@ public class ExerciseUpdaterTest {
         cacheFile.delete();
     }
 
-
     @Test
-    public void getsCorrectExercisesFromServer() throws IOException {
-        List<Exercise> exercises = this.handler.fetchFromServer(new Course());
-        assertEquals(153, exercises.size());
+    public void getsCorrectExercisesFromServer() throws Exception {
+        int numberOfExercises = 153;
+        TmcJsonParser tmcJsonParser = Mockito.mock(TmcJsonParser.class);
+        Mockito.when(tmcJsonParser.getExercisesFromServer(any(Course.class)))
+                .thenReturn(makeExerciseList(numberOfExercises));
+        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcJsonParser);
+        List<Exercise> exercises = handler.fetchFromServer(new Course());
+        assertEquals(numberOfExercises, exercises.size());
     }
     
     @Test
@@ -74,16 +73,10 @@ public class ExerciseUpdaterTest {
             writer.write(new Gson().toJson(checksums));
         }
         
-        PowerMockito.mockStatic(TmcJsonParser.class);
-        List<Exercise> serverExercises = builder.withExercise("old", 5, "abcdefg")
-                                .withExercise("changed", 7, "oeoeoo")
-                                .withExercise("new", 8, "woksirjd")
-                                .withExercise("duck", 9, "asdfsdf")
-                                .build();
-        
-//        when(TmcJsonParser.getExercisesFromServer(any(Course.class)))
- //               .thenReturn(serverExercises);
-        
+
+        TmcJsonParser tmcJsonParser = mockTmcJsonParser();
+        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcJsonParser);
+
         List<Exercise> exercises = handler.getNewObjects(new Course());
         
         assertEquals(3, exercises.size());
@@ -94,24 +87,27 @@ public class ExerciseUpdaterTest {
     
     @Test
     public void getsCorrectExercisesWithEmptyCache() throws IOException, Exception {
-        PowerMockito.mockStatic(TmcJsonParser.class);
-        List<Exercise> serverExercises = builder.withExercise("a", 5, "abcdefg")
-                                .withExercise("b", 7, "oe14oo")
-                                .withExercise("c", 8, "woksirjd")
-                                .withExercise("d", 9, "asdf@1df")
-                                .build();
-        
-//        when(TmcJsonParser.getExercisesFromServer(any(Course.class)))
- //               .thenReturn(serverExercises);
-        
+
+        TmcJsonParser tmcJsonParser = mockTmcJsonParser();
+        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcJsonParser);
+
         List<Exercise> exercises = handler.getNewObjects(new Course());
-        
         assertEquals(4, exercises.size());
-        assertTrue(listHasExerciseWithName(exercises, "b"));
-        assertTrue(listHasExerciseWithName(exercises, "c"));
+        assertTrue(listHasExerciseWithName(exercises, "old"));
+        assertTrue(listHasExerciseWithName(exercises, "duck"));
     }
     
-    
+     private TmcJsonParser mockTmcJsonParser() throws IOException {
+        TmcJsonParser tmcJsonParser = Mockito.mock(TmcJsonParser.class);
+        List<Exercise> serverExercises = builder.withExercise("old", 5, "abcdefg")
+                .withExercise("changed", 7, "oeoeoo")
+                .withExercise("new", 8, "woksirjd")
+                .withExercise("duck", 9, "asdfsdf")
+                .build();
+        Mockito.when(tmcJsonParser.getExercisesFromServer(any(Course.class)))
+                .thenReturn(serverExercises);
+        return tmcJsonParser;
+    }
     
     private boolean listHasExerciseWithName(List<Exercise> list, String name) {
         for (Exercise exercise : list) {
@@ -121,5 +117,12 @@ public class ExerciseUpdaterTest {
         }
         return false;
     }
-   
+    
+    private List<Exercise> makeExerciseList(int exercises) {
+        List<Exercise> list = new ArrayList<>();
+        for (int i = 0; i < exercises; i++) {
+            list.add(new Exercise());
+        }
+        return list;
+    }
 }

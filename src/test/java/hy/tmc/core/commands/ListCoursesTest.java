@@ -18,7 +18,6 @@ import org.junit.runner.RunWith;
 
 import org.mockito.Mockito;
 
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -29,6 +28,7 @@ public class ListCoursesTest {
 
     private ListCourses list;
     ClientTmcSettings settings = new ClientTmcSettings();
+    UrlCommunicator communicator;
 
     /**
      * Set up FrontendStub, ListCourses command, power mockito and fake http
@@ -36,24 +36,23 @@ public class ListCoursesTest {
      */
     @Before
     public void setUp() throws IOException, TmcCoreException {
-        list = new ListCourses(settings);
-
-        PowerMockito.mockStatic(UrlCommunicator.class);
-
-        HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
-
+        communicator = Mockito.mock(UrlCommunicator.class);
+        
         settings.setUsername("mockattu");
         settings.setPassword("ei tarvi");
-        PowerMockito
-                .when(new UrlCommunicator(settings).makeGetRequest(
+        HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
+        Mockito
+                .when(communicator.makeGetRequest(
                         Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(fakeResult);
+        
+        list = new ListCourses(settings, communicator);
 
     }
 
     @Test
     public void testCheckDataSuccess() throws TmcCoreException {
-        ListCourses ls = new ListCourses(settings);
+        ListCourses ls = new ListCourses(settings, communicator);
         settings.setUsername("asdf");
         settings.setPassword("bsdf");
         ls.checkData();

@@ -12,7 +12,6 @@ import static org.junit.Assert.assertEquals;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.io.Files;
 
-
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
@@ -53,14 +52,15 @@ public class DiffSenderTest {
         settings.setServerAddress("http://127.0.0.1:8080");
         settings.setUsername("test");
         settings.setPassword("1234");
-        sender = new DiffSender(null);
+
+        sender = new DiffSender(settings);
         startWiremock();
     }
 
     @Test
     public void testSendToSpywareWithFile() throws IOException, TmcCoreException {
         final File file = new File("testResources/test.zip");
-        DiffSender sender = new DiffSender(null);
+        DiffSender sender = new DiffSender(settings);
         HttpResult res = sender.sendToUrl(file,
                 spywareUrl);
         assertEquals(200, res.getStatusCode());
@@ -85,7 +85,9 @@ public class DiffSenderTest {
     public void testSendToSpywareWithByteArray() throws IOException, TmcCoreException {
         final File file = new File("testResources/test.zip");
         byte[] byteArray = Files.toByteArray(file);
-        DiffSender sender = new DiffSender(null);
+
+        DiffSender sender = new DiffSender(settings);
+
         HttpResult res = sender.sendToUrl(byteArray,
                 spywareUrl);
         assertEquals(200, res.getStatusCode());
@@ -95,7 +97,9 @@ public class DiffSenderTest {
     public void requestWithInvalidParams() throws IOException, TmcCoreException {
         final File file = new File("testResources/test.zip");
         byte[] byteArray = Files.toByteArray(file);
-        DiffSender sender = new DiffSender(null);
+
+        DiffSender sender = new DiffSender(settings);
+
         HttpResult res = sender.sendToUrl(byteArray,
                 "vaaraUrl");
         assertNull(res);
@@ -129,5 +133,4 @@ public class DiffSenderTest {
                 .withHeader("X-Tmc-Password", equalTo(settings.getPassword()))
                 .willReturn(aResponse().withBody("OK").withStatus(200)));
     }
-
 }

@@ -1,7 +1,5 @@
 package hy.tmc.core.zipping;
 
-import hy.tmc.core.zipping.DefaultRootDetector;
-import hy.tmc.core.zipping.ProjectRootFinder;
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
@@ -10,7 +8,6 @@ import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.After;
 import org.junit.Before;
 
 import java.nio.file.Path;
@@ -19,35 +16,27 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.Mockito;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(TmcJsonParser.class)
 public class ProjectRootFinderTest {
 
     ProjectRootFinder finder;
     String fakeName = "2014-mooc-no-deadline";
     String otherFakeName = "2013-tira";
     ClientTmcSettings settings;
-    TmcJsonParser parser = new TmcJsonParser(settings);
+    TmcJsonParser parser;
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
         settings = new ClientTmcSettings();
         settings.setUsername("chang");
         settings.setPassword("paras");
-
-        finder = new ProjectRootFinder(settings);
-
-        PowerMockito.mockStatic(TmcJsonParser.class);
-
-        List<Course> courses = setupFakeCourses();
-        PowerMockito
+        
+        parser = Mockito.mock(TmcJsonParser.class);   
+        Mockito
                 .when(parser.getCourses())
-                .thenReturn(courses);
+                .thenReturn(setupFakeCourses());
+        finder = new ProjectRootFinder(parser);
     }
 
     private List<Course> setupFakeCourses() {

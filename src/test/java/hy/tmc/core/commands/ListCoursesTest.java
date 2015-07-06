@@ -29,6 +29,7 @@ public class ListCoursesTest {
 
     private ListCourses list;
     ClientTmcSettings settings = new ClientTmcSettings();
+    UrlCommunicator communicator;
 
     /**
      * Set up FrontendStub, ListCourses command, power mockito and fake http
@@ -38,14 +39,14 @@ public class ListCoursesTest {
     public void setUp() throws IOException, TmcCoreException {
         list = new ListCourses(settings);
 
-        PowerMockito.mockStatic(UrlCommunicator.class);
+        communicator = Mockito.mock(UrlCommunicator.class);
 
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
 
         settings.setUsername("mockattu");
         settings.setPassword("ei tarvi");
         PowerMockito
-                .when(new UrlCommunicator(settings).makeGetRequest(
+                .when(communicator.makeGetRequest(
                         Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(fakeResult);
 

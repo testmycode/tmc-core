@@ -31,7 +31,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
 import static org.powermock.api.mockito.PowerMockito.when;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -42,6 +41,7 @@ public class DownloadExercisesTest {
 
     private File cache;
     private ClientTmcSettings settings;
+    private TmcJsonParser parser;
     
     @Before
     public void setup() throws IOException {
@@ -50,6 +50,7 @@ public class DownloadExercisesTest {
         settings.setPassword("Samu");
         cache = Paths.get("src", "test", "resources", "downloadtest.cache").toFile();
         cache.createNewFile();
+        parser = Mockito.mock(TmcJsonParser.class);
     }
     
     @After
@@ -106,10 +107,10 @@ public class DownloadExercisesTest {
                 .withExercise("ankka", 88, "abcdefg")
                 .build());
         
-        PowerMockito.mockStatic(TmcJsonParser.class);
-        when(new TmcJsonParser(settings).getCourse(anyInt())).thenReturn(Optional.of(course));
+        Mockito.mock(TmcJsonParser.class);
+        when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
         
-        DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings);
+        DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings, parser);
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Gson gson = new Gson();
@@ -147,10 +148,10 @@ public class DownloadExercisesTest {
                 .withExercise("ankka", 88, "abcdefg")
                 .build());
         
-        PowerMockito.mockStatic(TmcJsonParser.class);
-        when(new TmcJsonParser(settings).getCourse(anyInt())).thenReturn(Optional.of(course));
+        Mockito.mock(TmcJsonParser.class);
+        when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
         
-        DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings);
+        DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings, parser);
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Type typeOfHashMap = new TypeToken<Map<Integer, String>>() { }.getType();

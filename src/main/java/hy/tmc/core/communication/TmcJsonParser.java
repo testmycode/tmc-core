@@ -35,6 +35,7 @@ public class TmcJsonParser {
     public TmcJsonParser(UrlCommunicator urlCommunicator, TmcSettings settings) {
         this.urlCommunicator = urlCommunicator;
         this.settings = settings;
+        this.helper = new UrlHelper(settings);
     }
     
     /**

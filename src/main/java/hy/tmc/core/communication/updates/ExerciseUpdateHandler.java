@@ -59,6 +59,5 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
         if (this.exerciseChecksums == null) {
             this.exerciseChecksums = new HashMap<>();
         }
-    }
-    
+    }   
 }

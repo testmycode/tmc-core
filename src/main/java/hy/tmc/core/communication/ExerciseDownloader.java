@@ -2,11 +2,9 @@ package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
 import static com.google.common.base.Strings.isNullOrEmpty;
-import hy.tmc.core.configuration.TmcSettings;
 
 import hy.tmc.core.domain.Exercise;
 
-import hy.tmc.core.zipping.DefaultUnzipDecider;
 import hy.tmc.core.zipping.UnzipDecider;
 import hy.tmc.core.zipping.Unzipper;
 

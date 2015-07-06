@@ -133,6 +133,12 @@ public class TmcCore {
         ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) threadPool.submit(downloadCommand);
         return stringListenableFuture;
     }
+    
+    public ListenableFuture<String> donwloadExercises(List<Exercise> exercises, TmcSettings settings) throws TmcCoreException {
+        DownloadExercises downloadCommand = new DownloadExercises(exercises, settings);
+        ListenableFuture<String> downloadInfoFuture = (ListenableFuture<String>) threadPool.submit(downloadCommand);
+        return downloadInfoFuture;
+    }
 
     private DownloadExercises getDownloadCommand(String path, String courseId, TmcSettings settings) throws IOException {
         if (this.updateCache == null) {

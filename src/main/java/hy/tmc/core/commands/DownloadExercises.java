@@ -31,19 +31,34 @@ public class DownloadExercises extends Command<String> {
     private ExerciseDownloader exerciseDownloader;
     private File cacheFile;
     private TmcJsonParser parser;
+    private List<Exercise> exercisesToDownload;
 
     public DownloadExercises(TmcSettings settings) {
         super(settings);
         this.exerciseDownloader = new ExerciseDownloader(new DefaultUnzipDecider(),
-            new UrlCommunicator(settings), new TmcJsonParser(settings));
+                new UrlCommunicator(settings), new TmcJsonParser(settings));
         this.parser = new TmcJsonParser(settings);
     }
-    
+
     public DownloadExercises(TmcSettings settings, TmcJsonParser parser) {
         super(settings);
         this.parser = parser;
     }
-    
+
+    public DownloadExercises(List<Exercise> exercisesToDownload, TmcSettings settings) throws TmcCoreException {
+        super(settings);
+        this.exerciseDownloader = new ExerciseDownloader(new DefaultUnzipDecider(),
+                new UrlCommunicator(settings), new TmcJsonParser(settings));
+        this.exercisesToDownload = exercisesToDownload;
+        Optional<Course> course = settings.getCurrentCourse();
+        if (course.isPresent()) {
+            this.setParameter("courseID", "" + course.get().getId());
+        } else {
+            throw new TmcCoreException("Unable to determine course, cannot download");
+        }
+
+    }
+
     public DownloadExercises(String path, String courseId, TmcSettings settings) {
         this(settings);
         this.setParameter("path", path);
@@ -56,7 +71,7 @@ public class DownloadExercises extends Command<String> {
         this.cacheFile = cacheFile;
         this.parser = new TmcJsonParser(settings);
     }
-    
+
     public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile, TmcSettings settings) {
         this.settings = settings;
         this.exerciseDownloader = downloader;
@@ -65,7 +80,7 @@ public class DownloadExercises extends Command<String> {
         this.cacheFile = cacheFile;
         this.parser = new TmcJsonParser(settings);
     }
-    
+
     public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile, TmcSettings settings, TmcJsonParser parser) {
         this.settings = settings;
         this.exerciseDownloader = downloader;
@@ -74,7 +89,7 @@ public class DownloadExercises extends Command<String> {
         this.cacheFile = cacheFile;
         this.parser = parser;
     }
-    
+
     /**
      * Checks that command has required parameters courseID is the id of the course and path is the
      * path of where files are downloaded and extracted.
@@ -124,13 +139,24 @@ public class DownloadExercises extends Command<String> {
 
         Optional<Course> courseResult = this.parser.getCourse(Integer.parseInt(this.data.get("courseID")));
 
+        System.out.println("id:" +this.data.get("courseID"));
+        
         if (courseResult.isPresent()) {
-            Optional<String> downloadFiles = downloadExercises(courseResult.get());
-            if (downloadFiles.isPresent()) {
-                return downloadFiles.get();
+            Course course = courseResult.get();
+            Optional<String> downloadResult = downloadExercisesFromList(getExercisesToDownload(course), course.getName());
+            if (downloadResult.isPresent()) {
+                return downloadResult.get();
             }
         }
+
         throw new TmcCoreException("Failed to fetch exercises. Check your internet connection or course ID");
+    }
+
+    private List<Exercise> getExercisesToDownload(Course course) {
+        if (this.exercisesToDownload == null) {
+            return course.getExercises();
+        }
+        return this.exercisesToDownload;
     }
 
     private Optional<String> downloadExercises(Course course) throws IOException {
@@ -146,7 +172,7 @@ public class DownloadExercises extends Command<String> {
         if (this.cacheFile != null) {
             cacheExercises(exercises);
         }
-        
+
         for (Exercise exercise : exercises) {
             String message = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
             exCount++;

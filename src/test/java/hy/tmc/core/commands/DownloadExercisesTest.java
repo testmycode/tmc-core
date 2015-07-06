@@ -102,6 +102,7 @@ public class DownloadExercisesTest {
                 .build());
         
         parser = Mockito.mock(TmcJsonParser.class);
+        
         Mockito.when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
         
         DownloadExercises dl = new DownloadExercises(downloader, "", "8", cache, settings, parser);

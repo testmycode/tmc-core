@@ -25,6 +25,11 @@ public class DiffSender {
         this.urlCommunicator = new UrlCommunicator(settings);
     }
     
+    public DiffSender(UrlCommunicator urlCommunicator, TmcSettings settings) {
+        this.settings = settings;
+        this.urlCommunicator = urlCommunicator;
+    }
+    
     /**
      * Sends given file to all URLs specified by course.
      *

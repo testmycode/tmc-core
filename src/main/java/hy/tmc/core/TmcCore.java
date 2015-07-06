@@ -11,6 +11,7 @@ import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.commands.VerifyCredentials;
 import hy.tmc.core.commands.DownloadExercises;
+import hy.tmc.core.commands.GetCourse;
 import hy.tmc.core.commands.GetExerciseUpdates;
 import hy.tmc.core.commands.GetUnreadReviews;
 import hy.tmc.core.commands.ListCourses;
@@ -114,6 +115,19 @@ public class TmcCore {
         @SuppressWarnings("unchecked")
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(login);
         return stringListenableFuture;
+    }
+    
+    /**
+     * 
+     * 
+     * @param settings
+     * @return 
+     */
+    public ListenableFuture<Course> getCourse(TmcSettings settings, String path) throws TmcCoreException {
+        checkParameters(settings.getUsername(), settings.getPassword(), settings.getServerAddress());
+        GetCourse getC = new GetCourse(settings, path);
+        ListenableFuture<Course> future = threadPool.submit(getC);
+        return future;
     }
 
     /**

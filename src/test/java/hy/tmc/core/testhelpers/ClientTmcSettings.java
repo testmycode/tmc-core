@@ -62,8 +62,8 @@ public class ClientTmcSettings implements TmcSettings {
     }
 
     @Override
-    public synchronized Course getCurrentCourse() {
-        return currentCourse;
+    public synchronized Optional<Course> getCurrentCourse() {
+        return Optional.of(currentCourse);
     }
 
     public synchronized void setServerAddress(String serverAddress) {
@@ -85,5 +85,10 @@ public class ClientTmcSettings implements TmcSettings {
     @Override
     public String apiVersion() {
         return apiVersion;
+    }
+    
+    @Override
+    public String toString() {
+        return this.password + ":" + this.password + " " + this.serverAddress;
     }
 }

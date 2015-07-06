@@ -1,5 +1,6 @@
 package hy.tmc.core.configuration;
 
+import com.google.common.base.Optional;
 import hy.tmc.core.domain.Course;
 
 public interface TmcSettings {
@@ -15,9 +16,10 @@ public interface TmcSettings {
      */
     public boolean userDataExists();
 
-    public Course getCurrentCourse();
+    public Optional<Course> getCurrentCourse();
 
     public String apiVersion();
 
     public String getFormattedUserData();
+    
 }

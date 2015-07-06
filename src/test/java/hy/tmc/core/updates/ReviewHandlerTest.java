@@ -28,6 +28,7 @@ public class ReviewHandlerTest {
 
     @Before
     public void setUp() throws IOException {
+
         tmcJsonParser = Mockito.mock(TmcJsonParser.class);
         handler = new ReviewHandler(tmcJsonParser);
         Mockito.when(tmcJsonParser.getReviews(anyString()))
@@ -46,6 +47,7 @@ public class ReviewHandlerTest {
 
     @Test
     public void fetchReviewReturnsEmptyListIfServerSendsNull() throws IOException {
+
         Mockito.when(tmcJsonParser.getReviews(anyString())).thenReturn(null);
         assertNotNull(handler.fetchFromServer(new Course()));
         assertEquals(0, handler.fetchFromServer(new Course()).size());

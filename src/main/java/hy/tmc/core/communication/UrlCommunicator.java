@@ -213,7 +213,7 @@ public class UrlCommunicator {
         }
     }
 
-    HttpResult makeGetRequestWithAuthentication(String url) throws IOException {
+    public HttpResult makeGetRequestWithAuthentication(String url) throws IOException {
         return this.makeGetRequest(url, this.settings.getFormattedUserData());
     }
 }

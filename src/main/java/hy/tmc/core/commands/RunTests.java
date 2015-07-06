@@ -17,6 +17,10 @@ public class RunTests extends Command<RunResult> {
         super(settings);
         this.setParameter("path", path);
     }
+
+    public RunTests(TmcSettings settings) {
+        super(settings);
+    }
     
     /**
      * Runs tests for exercise.

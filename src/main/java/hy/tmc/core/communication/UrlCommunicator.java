@@ -49,9 +49,6 @@ public class UrlCommunicator {
         authExtension = "/user";
     }
     
-    public String getFormattedUserData() {
-        return this.settings.getUsername() + ":" + this.settings.getPassword();    
-    }
     
     /**
      * Creates and executes post-request to specified URL.
@@ -75,7 +72,7 @@ public class UrlCommunicator {
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder.addPart("submission[file]", fileBody);
-        addCredentials(httppost, getFormattedUserData());
+        addCredentials(httppost, this.settings.getFormattedUserData());
         HttpEntity entity = builder.build();
         httppost.setEntity(entity);
     }
@@ -102,7 +99,7 @@ public class UrlCommunicator {
      */
     public HttpResult makePutRequest(String url, Optional<Map<String, String>> body) throws IOException {
             HttpPut httpPut = new HttpPut(url);
-            addCredentials(httpPut, getFormattedUserData());
+            addCredentials(httpPut, this.settings.getFormattedUserData());
             List<NameValuePair> params = new ArrayList<>();
             
             for (String key : body.get().keySet()) {
@@ -144,7 +141,7 @@ public class UrlCommunicator {
      * Calls downloadToFile with username and password as params.
      */
     public boolean downloadToFile(String url, File file) {
-        return downloadToFile(url, file, this.getFormattedUserData());
+        return downloadToFile(url, file, this.settings.getFormattedUserData());
     }
     
     private StringBuilder writeResponse(HttpResponse response)
@@ -205,7 +202,7 @@ public class UrlCommunicator {
         String jsonString = req.toString();
         StringEntity feedbackJson = new StringEntity(jsonString);
         httppost.addHeader("content-type", "application/json");
-        addCredentials(httppost, getFormattedUserData());
+        addCredentials(httppost, this.settings.getFormattedUserData());
         httppost.setEntity(feedbackJson);
         return getResponseResult(httppost);
     }
@@ -232,6 +229,6 @@ public class UrlCommunicator {
     }
 
     HttpResult makeGetRequestWithAuthentication(String url) throws IOException {
-        return this.makeGetRequest(url, this.getFormattedUserData());
+        return this.makeGetRequest(url, this.settings.getFormattedUserData());
     }
 }

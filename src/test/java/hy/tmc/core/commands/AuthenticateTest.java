@@ -6,7 +6,7 @@ import hy.tmc.core.commands.VerifyCredentials;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.communication.authorization.Authorization;
-import hy.tmc.core.configuration.ClientTmcSettings;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Credentials;
 import hy.tmc.core.exceptions.TmcCoreException;

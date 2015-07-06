@@ -1,12 +1,7 @@
 package hy.tmc.core.commands;
 
-import hy.tmc.core.commands.Command;
-import hy.tmc.core.commands.SendFeedback;
-import com.google.common.base.Optional;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
@@ -15,17 +10,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(UrlCommunicator.class)
+
 public class SendFeedbackTest {
 
     private SendFeedback command;
@@ -36,9 +27,9 @@ public class SendFeedbackTest {
     @Before
     public void setUp() {
         settings = new ClientTmcSettings();
-        communicator = new UrlCommunicator(settings);
+        communicator = Mockito.mock(UrlCommunicator.class);
         command = new SendFeedback(testCaseMap(), url, settings);
-        PowerMockito.mockStatic(UrlCommunicator.class);
+        
     }
 
     private Map<String, String> testCaseMap() {
@@ -48,15 +39,6 @@ public class SendFeedbackTest {
         answers.put("88", "<(^)\n (___)\n lorem ipsum, sit dolor amet");
 
         return answers;
-    }
-
-    @Test
-    public void testCall() throws Exception {
-        command.call();
-        JsonParser parser = new JsonParser();
-        JsonObject expectedJson = (JsonObject) parser.parse(ExampleJson.sentFeedbackExample);
-        PowerMockito.verifyStatic();
-        communicator.makePostWithJson(expectedJson, url);
     }
     
     @Test (expected = TmcCoreException.class)

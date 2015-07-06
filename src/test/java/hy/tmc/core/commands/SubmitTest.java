@@ -14,21 +14,13 @@ import java.io.IOException;
 import java.text.ParseException;
 
 import net.lingala.zip4j.exception.ZipException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(ClientTmcSettings.class)
 public class SubmitTest {
 
     private Submit submit;
@@ -38,24 +30,19 @@ public class SubmitTest {
     ClientTmcSettings settings;
 
     private void mock() throws ParseException, ExpiredException, IOException, ZipException, TmcCoreException {
-        submitterMock = Mockito.mock(CourseSubmitter.class);
-        PowerMockito.mockStatic(ClientTmcSettings.class);
-        settings = new ClientTmcSettings();
-        /*PowerMockito
-                .when(ClientTmcSettings.getCurrentCourse(anyString()))
-                .thenReturn(Optional.<Course>of(new Course()));*/
-        settings.setCurrentCourse(new Course());
-        PowerMockito
+        settings = Mockito.mock(ClientTmcSettings.class);
+        Mockito.when(settings.getUsername()).thenReturn("Samu");
+        Mockito.when(settings.getPassword()).thenReturn("Bossman");
+        Mockito.when(settings.getCurrentCourse()).thenReturn(Optional.of(new Course()));
+        Mockito
                 .when(settings.getFormattedUserData())
                 .thenReturn("Bossman:Samu");
-        PowerMockito
-                .when(settings.userDataExists())
-                .thenReturn(true);
-
+        submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080/submissions/1781.json?api_version=7");
 
         interpreter = Mockito.mock(SubmissionPoller.class);
     }
+   
 
     @Before
     public void setup() throws
@@ -65,13 +52,6 @@ public class SubmitTest {
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         interpreter = Mockito.mock(SubmissionPoller.class);
         submit = new Submit(submitterMock, interpreter, settings);
-        settings.setUsername("Bossman");
-        settings.setPassword("Samu");
-    }
-
-    @After
-    public void clean() {
-        settings = new ClientTmcSettings();
     }
 
    
@@ -80,6 +60,7 @@ public class SubmitTest {
      */
     @Test
     public void testCheckDataSuccess() throws TmcCoreException, IOException {
+        Mockito.when(settings.userDataExists()).thenReturn(true);
         Submit submitCommand = new Submit(settings);
         submitCommand.setParameter("path", "/home/tmccli/testi");
         submitCommand.checkData();

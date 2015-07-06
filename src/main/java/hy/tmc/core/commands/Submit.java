@@ -84,7 +84,7 @@ public class Submit extends Command<SubmissionResult> {
             throw new TmcCoreException("path not supplied");
         }
 
-        Optional<Course> currentCourse = Optional.of(settings.getCurrentCourse());
+        Optional<Course> currentCourse = settings.getCurrentCourse();
         if (currentCourse.isPresent()) {
             course = currentCourse.get();
         } else {

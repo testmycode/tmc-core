@@ -1,5 +1,6 @@
 package hy.tmc.core.testhelpers;
 
+import com.google.common.base.Optional;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 

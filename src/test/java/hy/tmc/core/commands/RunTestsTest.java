@@ -7,7 +7,6 @@ import hy.tmc.core.exceptions.TmcCoreException;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.junit.After;
 
 public class RunTestsTest {
 

@@ -19,8 +19,8 @@ public class ExerciseLister {
     /**
      * Default Constructor with default root finder.
      */
-    public ExerciseLister(TmcSettings settings) {
-        this(new ProjectRootFinder(settings), settings);
+    public ExerciseLister(TmcJsonParser jsonParser) {
+        this(new ProjectRootFinder(jsonParser), jsonParser);
         
     }
 
@@ -29,9 +29,9 @@ public class ExerciseLister {
      *
      * @param finder a RootFinder instance.
      */
-    public ExerciseLister(RootFinder finder, TmcSettings settings) {
+    public ExerciseLister(RootFinder finder, TmcJsonParser jsonParser) {
         this.finder = finder;
-        tmcJsonParser = new TmcJsonParser(settings);
+        tmcJsonParser = jsonParser;
     }
 
     /**

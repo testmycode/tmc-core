@@ -37,18 +37,12 @@ import java.util.Map;
 
 public class UrlCommunicator {
 
-    public final String apiParam;
-    public final String coursesExtension; 
-    public final String authExtension;
     private TmcSettings settings;
 
     public UrlCommunicator(TmcSettings settings) {
         this.settings = settings;
-        apiParam = "api_version=" + settings.apiVersion();
-        coursesExtension = "/courses.json?" + apiParam;
-        authExtension = "/user";
+        
     }
-    
     
     /**
      * Creates and executes post-request to specified URL.
@@ -217,15 +211,6 @@ public class UrlCommunicator {
         if (statuscode >= 500 && statuscode < 600) {
             throw new TmcServerException("Error occured on TMC-server: statuscode " + statuscode);
         }
-    }
-    
-    public String getCourseUrl(int courseId) {
-        return settings.getServerAddress() + "/courses/" + courseId + ".json?" + apiParam;
-    }
-         
-
-    String allCoursesAddress(String serverAddress) {
-        return serverAddress + this.coursesExtension;
     }
 
     HttpResult makeGetRequestWithAuthentication(String url) throws IOException {

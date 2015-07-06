@@ -24,14 +24,17 @@ import java.util.List;
 public class TmcJsonParser {
     private UrlCommunicator urlCommunicator;
     private TmcSettings settings;
+    private UrlHelper helper;
 
     public TmcJsonParser(TmcSettings settings) {
         this.settings = settings;
+        this.helper = new UrlHelper(settings);
         this.urlCommunicator = new UrlCommunicator(settings);
     }
     
-    public TmcJsonParser(UrlCommunicator urlCommunicator) {
+    public TmcJsonParser(UrlCommunicator urlCommunicator, TmcSettings settings) {
         this.urlCommunicator = urlCommunicator;
+        this.settings = settings;
     }
     
     /**
@@ -41,7 +44,7 @@ public class TmcJsonParser {
      * @return List of Course-objects
      */
     public List<Course> getCourses(String serverAddress) throws IOException {
-        String coursesAddress = urlCommunicator.allCoursesAddress(serverAddress);
+        String coursesAddress = helper.allCoursesAddress(serverAddress);
         JsonObject jsonObject = getJsonFrom(coursesAddress);
         Gson mapper = new Gson();
         Course[] courses = mapper
@@ -122,7 +125,7 @@ public class TmcJsonParser {
         if (!courseExists(courseID)) {
             return Optional.absent();
         }
-        return getCourse(urlCommunicator.getCourseUrl(courseID));
+        return getCourse(helper.getCourseUrl(courseID));
     }
 
     private boolean courseExists(int courseID) throws IOException, TmcCoreException {
@@ -170,7 +173,7 @@ public class TmcJsonParser {
      * @return List of a all exercises as Exercise-objects
      */
     public List<Exercise> getExercises(int id) throws IOException {
-        return getExercises(urlCommunicator.getCourseUrl(id));
+        return getExercises(helper.getCourseUrl(id));
     }
 
     /**

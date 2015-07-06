@@ -158,7 +158,7 @@ public class ExerciseDownloaderTest {
     @Test
     public void doesntCallUnzipOnLockedExercise() {
         DefaultUnzipDecider mockedDecider = mock(DefaultUnzipDecider.class);
-        exDl = new ExerciseDownloader(mockedDecider);
+        exDl = new ExerciseDownloader(mockedDecider, null, null);
         exercises.get(0).setLocked(true);
         exercises.get(1).setLocked(true);
         exDl.downloadFiles(exercises);

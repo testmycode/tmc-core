@@ -93,7 +93,7 @@ public class ClientTmcSettings implements TmcSettings {
     }
 
     @Override
-    public synchronized String apiVersion() {
-        return "api_version=" + apiVersion;
+    public String apiVersion() {
+        return apiVersion;
     }
 }

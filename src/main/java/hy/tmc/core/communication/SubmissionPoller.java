@@ -28,7 +28,7 @@ public class SubmissionPoller {
     private SubmissionResult latestResult;
     private TmcJsonParser tmcJsonParser;
     
-    private SubmissionPoller(TmcJsonParser jsonParser) {
+    public SubmissionPoller(TmcJsonParser jsonParser) {
         this.tmcJsonParser = jsonParser;
     }
 

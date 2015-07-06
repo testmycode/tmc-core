@@ -1,19 +1,13 @@
 package hy.tmc.core.testhelpers;
 
-import com.google.common.base.Optional;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
-import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.zipping.DefaultRootDetector;
-import hy.tmc.core.zipping.ProjectRootFinder;
-import java.io.IOException;
 
 public class ClientTmcSettings implements TmcSettings {
 
     private String serverAddress;
     private String username;
     private String password;
-    private Boolean userDataExists;
     private Course currentCourse;
     private String apiVersion;
 
@@ -84,10 +78,6 @@ public class ClientTmcSettings implements TmcSettings {
         this.password = password;
     }
 
-    public synchronized void setUserDataExists(Boolean userDataExists) {
-        this.userDataExists = userDataExists;
-    }
-
     public synchronized void setCurrentCourse(Course currentCourse) {
         this.currentCourse = currentCourse;
     }
@@ -95,5 +85,10 @@ public class ClientTmcSettings implements TmcSettings {
     @Override
     public String apiVersion() {
         return apiVersion;
+    }
+    
+    @Override
+    public String toString() {
+        return this.password + ":" + this.password + " " + this.serverAddress;
     }
 }

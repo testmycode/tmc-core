@@ -2,7 +2,6 @@
 package hy.tmc.core.updates;
 
 import com.google.gson.Gson;
-import edu.emory.mathcs.backport.java.util.Arrays;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
@@ -10,7 +9,6 @@ import hy.tmc.core.communication.updates.ExerciseUpdateHandler;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.testhelpers.builders.ExerciseBuilder;
 import java.io.File;
@@ -42,10 +40,12 @@ public class ExerciseUpdaterTest {
     public void setUp() throws IOException, TmcCoreException {
         cacheFile = Paths.get("src", "test", "resources", "exercisetest.cache").toFile();
         cacheFile.createNewFile();
+
         builder = new ExerciseBuilder();
         urlCommunicator = Mockito.mock(UrlCommunicator.class);
         Mockito.when(urlCommunicator.makeGetRequest(anyString(), any(String[].class)))
                 .thenReturn(new HttpResult(ExampleJson.courseExample, 200, true));
+
     }
     
     @After
@@ -73,8 +73,10 @@ public class ExerciseUpdaterTest {
             writer.write(new Gson().toJson(checksums));
         }
         
+
         TmcJsonParser tmcJsonParser = mockTmcJsonParser();
         ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcJsonParser);
+
         List<Exercise> exercises = handler.getNewObjects(new Course());
         
         assertEquals(3, exercises.size());
@@ -85,8 +87,10 @@ public class ExerciseUpdaterTest {
     
     @Test
     public void getsCorrectExercisesWithEmptyCache() throws IOException, Exception {
+
         TmcJsonParser tmcJsonParser = mockTmcJsonParser();
         ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcJsonParser);
+
         List<Exercise> exercises = handler.getNewObjects(new Course());
         assertEquals(4, exercises.size());
         assertTrue(listHasExerciseWithName(exercises, "old"));

@@ -1,13 +1,11 @@
 package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
-import hy.tmc.core.configuration.TmcSettings;
 
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.zipping.ProjectRootFinder;
 import hy.tmc.core.zipping.RootFinder;
 import hy.tmc.core.zipping.ZipMaker;
 import java.io.File;

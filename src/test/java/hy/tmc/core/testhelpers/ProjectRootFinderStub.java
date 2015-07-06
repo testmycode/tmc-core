@@ -21,14 +21,12 @@ public class ProjectRootFinderStub implements RootFinder {
     public ProjectRootFinderStub(TmcJsonParser jsonParser) {
         this.returnValue = "";
         courseStubs = new HashMap<>();
-        fillCourseStubs();
         this.jsonParser = jsonParser;
+        fillCourseStubs();
     }
 
     private void fillCourseStubs() {
         String allCourses = ExampleJson.allCoursesExample;
-        System.out.println("jsonParser " + jsonParser == null);
-        //System.out.println("class " + jsonParser.getClass());
         List<Course> courses = jsonParser.getCoursesFromString(allCourses);
         for (Course c:courses) {
             courseStubs.put(c.getName(), c);

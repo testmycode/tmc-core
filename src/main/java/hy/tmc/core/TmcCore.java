@@ -23,7 +23,6 @@ import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.updates.ExerciseUpdateHandler;
 import hy.tmc.core.communication.updates.ReviewHandler;
 import hy.tmc.core.configuration.TmcSettings;
-import hy.tmc.core.domain.Credentials;
 import hy.tmc.core.domain.Review;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.File;
@@ -149,7 +148,7 @@ public class TmcCore {
      * @return list containing course-objects parsed from JSON
      * @throws TmcCoreException if something went wrong
      */
-    public ListenableFuture<List<Course>> listCourses(String serverAddress, TmcSettings settings) throws TmcCoreException {
+    public ListenableFuture<List<Course>> listCourses(TmcSettings settings) throws TmcCoreException {
         
         @SuppressWarnings("unchecked")
         ListCourses listCommand = new ListCourses(settings);

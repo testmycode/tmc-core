@@ -8,7 +8,6 @@ public class ClientTmcSettings implements TmcSettings {
     private String serverAddress;
     private String username;
     private String password;
-    private Boolean userDataExists;
     private Course currentCourse;
     private String apiVersion;
 
@@ -77,10 +76,6 @@ public class ClientTmcSettings implements TmcSettings {
 
     public synchronized void setPassword(String password) {
         this.password = password;
-    }
-
-    public synchronized void setUserDataExists(Boolean userDataExists) {
-        this.userDataExists = userDataExists;
     }
 
     public synchronized void setCurrentCourse(Course currentCourse) {

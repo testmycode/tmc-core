@@ -2,19 +2,13 @@ package hy.tmc.core.commands;
 
 import static org.junit.Assert.fail;
 
-import com.google.common.base.Optional;
-
 import hy.tmc.core.communication.ExerciseLister;
-import hy.tmc.core.communication.UrlCommunicator;
+import hy.tmc.core.communication.TmcJsonParser;
 
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import hy.tmc.core.domain.Exercise;
 
 import java.io.IOException;
@@ -23,14 +17,11 @@ import java.util.List;
 import java.util.Random;
 import static org.junit.Assert.assertEquals;
 
-
 import org.junit.Before;
 import org.junit.Test;
 
 import org.mockito.Mockito;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(ClientTmcSettings.class)
 public class ListExercisesTest {
 
     private ListExercises list;
@@ -58,7 +49,6 @@ public class ListExercisesTest {
         buildExample();
         settings.setUsername("Chang");
         settings.setPassword("Jamo");
-        mock();
         lister = Mockito.mock(ExerciseLister.class);
         Mockito.when(lister.listExercises(Mockito.anyString()))
                 .thenReturn(exampleExercises);
@@ -66,34 +56,20 @@ public class ListExercisesTest {
         list = new ListExercises(lister, settings);
     }
 
-    private void mock() throws TmcCoreException, IOException {
-
-        PowerMockito.mockStatic(ClientTmcSettings.class);
-        settings.setCurrentCourse(new Course());
-        PowerMockito
-                .when(settings.getFormattedUserData())
-                .thenReturn("Chang:Jamo");
-        PowerMockito
-                .when(settings.userDataExists())
-                .thenReturn(true);
-    }
-
     @Test
     public void testCheckDataSuccess() throws TmcCoreException, IOException {
+        settings.setCurrentCourse(new Course());
         ListExercises ls = new ListExercises(settings);
         ls.setParameter("courseUrl", "legit");
         ls.setParameter("path", "legit");
-        try {
-            ls.checkData();
-        } catch (TmcCoreException p) {
-            fail("testCheckDataSuccess failed");
-        }
+        ls.checkData();
     }
 
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfNoUser() throws TmcCoreException, IOException {
-        PowerMockito.mockStatic(ClientTmcSettings.class);
-        settings = new ClientTmcSettings();
+        settings.setCurrentCourse(new Course());
+        settings.setUsername("");
+        settings.setUsername("");
         list.setParameter("path", "any");
         list.checkData();
         list.call();
@@ -101,16 +77,15 @@ public class ListExercisesTest {
 
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfNoCourseSpecified() throws TmcCoreException, IOException {
-        settings = new ClientTmcSettings();
         list.checkData();
         list.call();
     }
-    
+
     @Test
     public void listWithAuthSuccess() throws Exception {
         list.setParameter("path", "any");
+        settings.setCurrentCourse(new Course());
         List<Exercise> exercises = list.call();
         assertEquals("1 tehtävä", exercises.get(1).getName());
     }
-    
 }

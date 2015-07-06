@@ -6,6 +6,8 @@ import hy.tmc.core.commands.VerifyCredentials;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.communication.authorization.Authorization;
+import hy.tmc.core.configuration.ClientTmcSettings;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Credentials;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
@@ -27,13 +29,15 @@ public class AuthenticateTest {
     private final String testUsername = "test";
     private final String testPassword = "1234";
     private VerifyCredentials auth;
+    TmcSettings settings;
 
     /**
      * Set up server mock and Authenticate command.
      */
     @Before
     public void setUp() {
-        this.auth = new VerifyCredentials();
+        settings = new ClientTmcSettings();
+        this.auth = new VerifyCredentials(settings);
     }
 
     @Test
@@ -70,7 +74,7 @@ public class AuthenticateTest {
     private void powerMockWithCredentials(String credentials, int status) throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult("", status, true);
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(
+                .when(new UrlCommunicator(settings).makeGetRequest(
                                 Mockito.anyString(),
                                 Mockito.eq(credentials)))
                 .thenReturn(fakeResult);

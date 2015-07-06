@@ -57,7 +57,7 @@ public class ReviewHandlerTest {
         Course course = new Course();
         course.setReviewsUrl(url);
         handler.getNewObjects(course);
-        tmcJsonParser.getReviews(eq(url));
+        tmcJsonParser.getReviews(Mockito.eq(url));
     }
     
     @Test

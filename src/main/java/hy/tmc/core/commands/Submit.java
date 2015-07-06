@@ -99,5 +99,4 @@ public class Submit extends Command<SubmissionResult> {
         SubmissionResult result = interpreter.getSubmissionResult(returnUrl);
         return result;
     }
-    
 }

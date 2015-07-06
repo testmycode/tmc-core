@@ -53,9 +53,9 @@ public class ListExercises extends Command<List<Exercise>> {
         if (!settings.userDataExists()) {
             throw new TmcCoreException("Please authorize first.");
         }
-        Course currentCourse = settings.getCurrentCourse();
-        if (currentCourse != null) {
-            this.current = currentCourse;
+        Optional<Course> currentCourse = settings.getCurrentCourse();
+        if (currentCourse.isPresent()) {
+            this.current = currentCourse.get();
         } else {
             throw new TmcCoreException("A course must be selected.");
         }

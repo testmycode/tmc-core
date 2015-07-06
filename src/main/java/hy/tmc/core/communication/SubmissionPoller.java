@@ -14,7 +14,7 @@ public class SubmissionPoller {
     /**
      * Number of poll attempts. If the interval is one second, the timeout will be n seconds.
      */
-    private final int timeOut = 30;
+    private int timeOut = 30;
 
     /**
      * Milliseconds to sleep between each poll attempt.
@@ -28,8 +28,19 @@ public class SubmissionPoller {
     private SubmissionResult latestResult;
     private TmcJsonParser tmcJsonParser;
     
+    /**
+     * Default constuctor. 
+     */
     public SubmissionPoller(TmcJsonParser jsonParser) {
         this.tmcJsonParser = jsonParser;
+    }
+    
+    /**
+     * Constructor for tests.
+     */
+    public SubmissionPoller(TmcJsonParser jsonParser, int timeout) {
+        this(jsonParser);
+        this.timeOut = timeout;
     }
 
     /**

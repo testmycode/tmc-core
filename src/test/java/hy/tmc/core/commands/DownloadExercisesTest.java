@@ -7,7 +7,6 @@ import com.google.gson.reflect.TypeToken;
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
-import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -31,12 +30,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import org.mockito.Mockito;
-import static org.powermock.api.mockito.PowerMockito.when;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(TmcJsonParser.class)
 public class DownloadExercisesTest {
 
     private File cache;
@@ -93,10 +87,10 @@ public class DownloadExercisesTest {
     
     @Test
     public void writesChecksumsToFileIfCacheFileIsGiven() throws IOException, TmcCoreException {
-        ExerciseDownloader mock = Mockito.mock(ExerciseDownloader.class);
-        when(mock.createCourseFolder(anyString(), anyString()))
+        ExerciseDownloader downloader = Mockito.mock(ExerciseDownloader.class);
+        Mockito.when(downloader.createCourseFolder(anyString(), anyString()))
                 .thenReturn("");
-        when(mock.handleSingleExercise(
+        Mockito.when(downloader.handleSingleExercise(
                 any(Exercise.class), anyInt(), anyInt(), anyString())
         ).thenReturn("");
         
@@ -107,10 +101,10 @@ public class DownloadExercisesTest {
                 .withExercise("ankka", 88, "abcdefg")
                 .build());
         
-        Mockito.mock(TmcJsonParser.class);
-        when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
+        parser = Mockito.mock(TmcJsonParser.class);
+        Mockito.when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
         
-        DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings, parser);
+        DownloadExercises dl = new DownloadExercises(downloader, "", "8", cache, settings, parser);
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Gson gson = new Gson();
@@ -135,9 +129,9 @@ public class DownloadExercisesTest {
         }
         
         ExerciseDownloader mock = Mockito.mock(ExerciseDownloader.class);
-        when(mock.createCourseFolder(anyString(), anyString()))
+        Mockito.when(mock.createCourseFolder(anyString(), anyString()))
                 .thenReturn("");
-        when(mock.handleSingleExercise(
+        Mockito.when(mock.handleSingleExercise(
                 any(Exercise.class), anyInt(), anyInt(), anyString())
         ).thenReturn("");
         
@@ -148,8 +142,8 @@ public class DownloadExercisesTest {
                 .withExercise("ankka", 88, "abcdefg")
                 .build());
         
-        Mockito.mock(TmcJsonParser.class);
-        when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
+        parser = Mockito.mock(TmcJsonParser.class);
+        Mockito.when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
         
         DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings, parser);
         dl.call();

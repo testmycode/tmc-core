@@ -24,7 +24,7 @@ public class Paste extends Command<URI> {
 
     public Paste(TmcSettings settings) {
         this(new CourseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector(), settings),
+                new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings)),
                 new Zipper(),
                 new UrlCommunicator(settings),
                 new TmcJsonParser(settings)

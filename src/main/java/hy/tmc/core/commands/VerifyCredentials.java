@@ -14,15 +14,23 @@ public class VerifyCredentials extends Command<Boolean> {
      * Regex for HTTP OK codes.
      */
     private final String httpOk = "2..";
+    private UrlCommunicator communicator;
 
     public VerifyCredentials(String username, String password, TmcSettings settings) {
         super(settings);
         this.setParameter("username", username);
         this.setParameter("password", password);
+        this.communicator = new UrlCommunicator(settings);
     }
     
     public VerifyCredentials(TmcSettings settings) {
         super(settings);
+        this.communicator = new UrlCommunicator(settings);
+    }
+    
+    public VerifyCredentials(TmcSettings settings, UrlCommunicator communicator) {
+        super(settings);
+        this.communicator = communicator;
     }
 
     @Override
@@ -44,7 +52,7 @@ public class VerifyCredentials extends Command<Boolean> {
 
     private int makeRequest() throws IOException, TmcCoreException {
         String auth = data.get("username") + ":" + data.get("password");
-        int code = new UrlCommunicator(this.settings).makeGetRequest(
+        int code = communicator.makeGetRequest(
                 settings.getServerAddress(),
                 auth
         ).getStatusCode();

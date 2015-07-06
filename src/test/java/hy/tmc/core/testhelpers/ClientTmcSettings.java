@@ -59,7 +59,7 @@ public class ClientTmcSettings implements TmcSettings {
 
     @Override
     public synchronized boolean userDataExists() {
-        return userDataExists;
+        return !(this.username.isEmpty() || this.password.isEmpty());
     }
 
     @Override

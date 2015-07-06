@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.Matchers.any;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -31,6 +32,7 @@ public class ExerciseListerTest {
     Exercise fakeExercise;
     Exercise fakeExercise2;
     private ClientTmcSettings settings;
+    private TmcJsonParser jsonParser;
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
@@ -42,7 +44,7 @@ public class ExerciseListerTest {
         rootFinderMock = Mockito.mock(ProjectRootFinder.class);
         Mockito.when(rootFinderMock.getCurrentCourse(Mockito.anyString()))
                 .thenReturn(Optional.of(fakeCourse));
-        lister = new ExerciseLister(rootFinderMock);
+        lister = new ExerciseLister(rootFinderMock, settings);
 
         PowerMockito.mockStatic(TmcJsonParser.class);
 
@@ -52,7 +54,7 @@ public class ExerciseListerTest {
 
     private void mockExercisesWith(List<Exercise> exercises) throws IOException, TmcCoreException {
         PowerMockito
-                .when(TmcJsonParser.getExercisesFromServer((Course) Mockito.any()))
+                .when(jsonParser.getExercisesFromServer(any(Course.class)))
                 .thenReturn(exercises);
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 public class ProjectRootFinder implements RootFinder {
 
     private final ProjectRootDetector detector;
-    private TmcSettings settings;
+    private TmcJsonParser tmcJsonParser;
 
     /**
      * A helper class that searches for a project root directory. It must be given a
@@ -22,13 +22,13 @@ public class ProjectRootFinder implements RootFinder {
      *
      * @param detector the RootDetector that specifies if a directory is a project root
      */
-    public ProjectRootFinder(ProjectRootDetector detector, TmcSettings settings) {
+    public ProjectRootFinder(ProjectRootDetector detector, TmcJsonParser jsonParser) {
         this.detector = detector;
-        this.settings = settings;
+        this.tmcJsonParser = jsonParser;
     }
     
-    public ProjectRootFinder(TmcSettings settings) {
-        this(new DefaultRootDetector(), settings);
+    public ProjectRootFinder(TmcJsonParser jsonParser) {
+        this(new DefaultRootDetector(), jsonParser);
     }
 
     /**
@@ -77,7 +77,7 @@ public class ProjectRootFinder implements RootFinder {
      * @return Course
      */
     public Optional<Course> findCourseByPath(String[] foldersPath) throws IOException, TmcCoreException {
-        List<Course> courses = new TmcJsonParser(settings).getCourses();
+        List<Course> courses = tmcJsonParser.getCourses();
         for (Course course : courses) {
             for (String folderName : foldersPath) {
                 if (course.getName().equals(folderName)) {

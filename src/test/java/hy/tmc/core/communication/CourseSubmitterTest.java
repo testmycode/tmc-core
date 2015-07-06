@@ -24,17 +24,19 @@ import java.text.ParseException;
 import java.util.Map;
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.entity.mime.content.FileBody;
-import org.junit.After;
 import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.powermock.api.mockito.PowerMockito.mock;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
 public class CourseSubmitterTest {
 
     private CourseSubmitter courseSubmitter;
+    private UrlCommunicator urlCommunicator;
+    private TmcJsonParser jsonParser;
     private ProjectRootFinderStub rootFinder;
     private ProjectRootFinder realFinder;
     private ClientTmcSettings settings;
@@ -46,9 +48,10 @@ public class CourseSubmitterTest {
     public void setup() throws IOException, TmcCoreException {
         settings = new ClientTmcSettings();
         settings.setServerAddress("http://mooc.fi/staging");
-        PowerMockito.mockStatic(UrlCommunicator.class);
-        rootFinder = new ProjectRootFinderStub();
-        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub());
+        urlCommunicator = mock(UrlCommunicator.class);
+        jsonParser = new TmcJsonParser(urlCommunicator);
+        rootFinder = new ProjectRootFinderStub(jsonParser);
+        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub(), urlCommunicator, jsonParser);
         settings.setUsername("chang");
         settings.setPassword("rajani");
 
@@ -58,7 +61,7 @@ public class CourseSubmitterTest {
         mockUrlCommunicator("courses/21.json?api_version=7", ExampleJson.expiredCourseExample);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7", ExampleJson.submitResponse);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/287/submissions.json?api_version=7", ExampleJson.pasteResponse);
-        realFinder = new ProjectRootFinder(new DefaultRootDetector());
+        realFinder = new ProjectRootFinder(new DefaultRootDetector(), settings);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7", ExampleJson.submitResponse);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7", ExampleJson.pasteResponse);
     }
@@ -132,7 +135,7 @@ public class CourseSubmitterTest {
      private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.contains(pieceOfUrl),
+                .when(urlCommunicator.makeGetRequest(Mockito.contains(pieceOfUrl),
                                 Mockito.anyString()))
                 .thenReturn(fakeResult);
     }
@@ -141,7 +144,7 @@ public class CourseSubmitterTest {
     private void mockUrlCommunicatorWithFile(String url, String returnValue) throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makePostWithFile(Mockito.any(FileBody.class),
+                .when(urlCommunicator.makePostWithFile(Mockito.any(FileBody.class),
                                 Mockito.contains(url), Mockito.any(Map.class)))
                 .thenReturn(fakeResult);
     }

@@ -90,6 +90,6 @@ public class ClientTmcSettings implements TmcSettings {
 
     @Override
     public String apiVersion() {
-        return "api_version=" + apiVersion;
+        return apiVersion;
     }
 }

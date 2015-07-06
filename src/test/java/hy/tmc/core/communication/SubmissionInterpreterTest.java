@@ -16,9 +16,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(UrlCommunicator.class)
 public class SubmissionInterpreterTest {
 
-    SubmissionPoller submissionInterpreter;
-    String url = "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7";
-    ClientTmcSettings settings;
+    private SubmissionPoller submissionInterpreter;
+    private String url = "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7";
+    private ClientTmcSettings settings;
+    private TmcJsonParser jsonParser;
+    private UrlCommunicator urlCommunicator;
     
     @Before
     public void setup() {
@@ -28,13 +30,13 @@ public class SubmissionInterpreterTest {
         settings.setUsername("chang");
         settings.setPassword("rajani");
 
-        submissionInterpreter = new SubmissionPoller();
+        submissionInterpreter = new SubmissionPoller(jsonParser);
     }
 
     private void initFailedMock() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.failedSubmission, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
+                .when(urlCommunicator.makeGetRequest(Mockito.anyString(),
                                 Mockito.anyString()))
                 .thenReturn(fakeResult);
     }
@@ -42,7 +44,7 @@ public class SubmissionInterpreterTest {
     private void initSuccessMock() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.successfulSubmission, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
+                .when(urlCommunicator.makeGetRequest(Mockito.anyString(),
                                 Mockito.anyString()))
                 .thenReturn(fakeResult);
     }
@@ -50,7 +52,7 @@ public class SubmissionInterpreterTest {
     private void initFailedCheckstyle() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.checkstyleFailed, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
+                .when(urlCommunicator.makeGetRequest(Mockito.anyString(),
                                 Mockito.anyString()))
                 .thenReturn(fakeResult);
     }
@@ -58,7 +60,7 @@ public class SubmissionInterpreterTest {
     private void initFailedValgrind() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.valgrindFailed, 200, true);
         PowerMockito
-                .when(UrlCommunicator.makeGetRequest(Mockito.anyString(),
+                .when(urlCommunicator.makeGetRequest(Mockito.anyString(),
                                 Mockito.anyString()))
                 .thenReturn(fakeResult);
     }

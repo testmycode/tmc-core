@@ -1,6 +1,6 @@
 package hy.tmc.core.communication;
 
-import hy.tmc.core.configuration.ClientTmcSettings;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import java.io.IOException;

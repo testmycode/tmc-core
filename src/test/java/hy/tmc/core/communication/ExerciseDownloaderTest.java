@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.base.Optional;
-import hy.tmc.core.configuration.ClientTmcSettings;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.DefaultUnzipDecider;

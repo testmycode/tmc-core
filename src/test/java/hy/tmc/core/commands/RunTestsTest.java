@@ -1,6 +1,6 @@
 package hy.tmc.core.commands;
 
-import hy.tmc.core.configuration.ClientTmcSettings;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 
 import hy.tmc.core.exceptions.TmcCoreException;
 

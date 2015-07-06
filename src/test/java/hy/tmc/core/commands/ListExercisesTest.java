@@ -7,7 +7,7 @@ import com.google.common.base.Optional;
 import hy.tmc.core.communication.ExerciseLister;
 import hy.tmc.core.communication.UrlCommunicator;
 
-import hy.tmc.core.configuration.ClientTmcSettings;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 

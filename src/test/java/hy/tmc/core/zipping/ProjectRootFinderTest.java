@@ -4,7 +4,7 @@ import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.ClientTmcSettings;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;

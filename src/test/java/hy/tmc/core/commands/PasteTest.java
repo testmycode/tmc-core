@@ -43,27 +43,20 @@ public class PasteTest {
         mock();
         settings.setUsername("Bossman");
         settings.setUsername("Samu");
-        ClientTmcSettings.setProjectRootFinder(new ProjectRootFinderStub());
+        //ClientTmcSettings.setProjectRootFinder(new ProjectRootFinderStub());
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
-        paste = new Paste(submitterMock);
+        paste = new Paste(submitterMock, settings);
     }
     
     private void mock() throws ParseException, ExpiredException, IOException, TmcCoreException {
         settings.setUsername("Massbon");
         settings.setUsername("Samu");
         PowerMockito.mockStatic(ClientTmcSettings.class);
+        settings.setCurrentCourse(new Course());
         PowerMockito
-                .when(ClientTmcSettings.getCurrentCourse(Mockito.anyString()))
-                .thenReturn(Optional.<Course>of(new Course()));
-        PowerMockito
-                .when(ClientTmcSettings.getFormattedUserData())
+                .when(settings.getFormattedUserData())
                 .thenReturn("Bossman:Samu");
-    }
-
-    @After
-    public void clean() {
-        ClientTmcSettings.clearUserData();
     }
 
     /**
@@ -114,9 +107,7 @@ public class PasteTest {
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfCourseCantBeRetrieved() throws Exception {
         PowerMockito.when(settings.userDataExists()).thenReturn(true);
-        PowerMockito
-                .when(ClientTmcSettings.getCurrentCourse(Mockito.anyString()))
-                .thenReturn(Optional.<Course>absent());
+        settings.setCurrentCourse(null);
         paste.data.put("path", "asdsad");
         paste.checkData();
     }

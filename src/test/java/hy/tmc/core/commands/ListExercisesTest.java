@@ -71,7 +71,7 @@ public class ListExercisesTest {
         PowerMockito.mockStatic(ClientTmcSettings.class);
         settings.setCurrentCourse(new Course());
         PowerMockito
-                .when(new UrlCommunicator(settings).getFormattedUserData())
+                .when(settings.getFormattedUserData())
                 .thenReturn("Chang:Jamo");
         PowerMockito
                 .when(settings.userDataExists())

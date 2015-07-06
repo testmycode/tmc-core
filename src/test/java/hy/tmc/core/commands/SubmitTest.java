@@ -35,18 +35,21 @@ public class SubmitTest {
     CourseSubmitter submitterMock;
     private SubmissionPoller interpreter;
     private final String submissionUrl = "/submissions/1781.json?api_version=7";
+    ClientTmcSettings settings;
 
     private void mock() throws ParseException, ExpiredException, IOException, ZipException, TmcCoreException {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         PowerMockito.mockStatic(ClientTmcSettings.class);
-        PowerMockito
+        settings = new ClientTmcSettings();
+        /*PowerMockito
                 .when(ClientTmcSettings.getCurrentCourse(anyString()))
-                .thenReturn(Optional.<Course>of(new Course()));
+                .thenReturn(Optional.<Course>of(new Course()));*/
+        settings.setCurrentCourse(new Course());
         PowerMockito
-                .when(ClientTmcSettings.getFormattedUserData())
+                .when(settings.getFormattedUserData())
                 .thenReturn("Bossman:Samu");
         PowerMockito
-                .when(ClientTmcSettings.userDataExists())
+                .when(settings.userDataExists())
                 .thenReturn(true);
 
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080/submissions/1781.json?api_version=7");
@@ -61,13 +64,14 @@ public class SubmitTest {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         interpreter = Mockito.mock(SubmissionPoller.class);
-        submit = new Submit(submitterMock, interpreter);
-        ClientTmcSettings.setUserData("Bossman", "Samu");
+        submit = new Submit(submitterMock, interpreter, settings);
+        settings.setUsername("Bossman");
+        settings.setPassword("Samu");
     }
 
     @After
     public void clean() {
-        ClientTmcSettings.clearUserData();
+        settings = new ClientTmcSettings();
     }
 
    
@@ -76,7 +80,7 @@ public class SubmitTest {
      */
     @Test
     public void testCheckDataSuccess() throws TmcCoreException, IOException {
-        Submit submitCommand = new Submit();
+        Submit submitCommand = new Submit(settings);
         submitCommand.setParameter("path", "/home/tmccli/testi");
         submitCommand.checkData();
     }
@@ -86,14 +90,13 @@ public class SubmitTest {
      */
     @Test(expected = TmcCoreException.class)
     public void testCheckDataFail() throws TmcCoreException, IOException {
-        Submit submitCommand = new Submit();
+        Submit submitCommand = new Submit(settings);
         submitCommand.checkData();
     }
 
     @Test(expected = TmcCoreException.class)
     public void checkDataFailIfNoAuth() throws TmcCoreException, IOException {
-        Submit submitCommand = new Submit();
-        ClientTmcSettings.clearUserData();
+        Submit submitCommand = new Submit(settings);
         submitCommand.checkData();
     }
 

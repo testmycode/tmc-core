@@ -35,16 +35,16 @@ public class ReviewHandlerTest {
 
     @Before
     public void setUp() throws IOException {
-        handler = new ReviewHandler();
+    //    handler = new ReviewHandler();
         PowerMockito.mockStatic(TmcJsonParser.class);
-        when(TmcJsonParser.getReviews(anyString()))
+    /*    when(TmcJsonParser.getReviews(anyString()))
                 .thenReturn(
                         new ReviewListBuilder()
                                 .withExercise(3, true)
                                 .withExercise(123, false)
                                 .withExercise(52, false)
                                 .build()
-                );
+                );*/
     }
 
     @After
@@ -53,7 +53,7 @@ public class ReviewHandlerTest {
 
     @Test
     public void fetchReviewReturnsEmptyListIfServerSendsNull() throws IOException {
-        when(TmcJsonParser.getReviews(anyString())).thenReturn(null);
+       // when(TmcJsonParser.getReviews(anyString())).thenReturn(null);
         assertNotNull(handler.fetchFromServer(new Course()));
         assertEquals(0, handler.fetchFromServer(new Course()).size());
     }
@@ -65,7 +65,7 @@ public class ReviewHandlerTest {
         course.setReviewsUrl(url);
         handler.getNewObjects(course);
         PowerMockito.verifyStatic();
-        TmcJsonParser.getReviews(eq(url));
+//        TmcJsonParser.getReviews(eq(url));
     }
     
     @Test

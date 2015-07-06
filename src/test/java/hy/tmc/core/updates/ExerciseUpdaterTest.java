@@ -46,11 +46,11 @@ public class ExerciseUpdaterTest {
     public void setUp() throws IOException, TmcCoreException {
         cacheFile = Paths.get("src", "test", "resources", "exercisetest.cache").toFile();
         cacheFile.createNewFile();
-        handler = new ExerciseUpdateHandler(cacheFile, new ClientTmcSettings());
+//        handler = new ExerciseUpdateHandler(cacheFile, new ClientTmcSettings());
         builder = new ExerciseBuilder();
         PowerMockito.mockStatic(UrlCommunicator.class);
-        when(UrlCommunicator.makeGetRequest(anyString(), any(String[].class)))
-                .thenReturn(new HttpResult(ExampleJson.courseExample, 200, true));
+       // when(UrlCommunicator.makeGetRequest(anyString(), any(String[].class)))
+              //  .thenReturn(new HttpResult(ExampleJson.courseExample, 200, true));
     }
     
     @After
@@ -81,8 +81,8 @@ public class ExerciseUpdaterTest {
                                 .withExercise("duck", 9, "asdfsdf")
                                 .build();
         
-        when(TmcJsonParser.getExercisesFromServer(any(Course.class)))
-                .thenReturn(serverExercises);
+//        when(TmcJsonParser.getExercisesFromServer(any(Course.class)))
+ //               .thenReturn(serverExercises);
         
         List<Exercise> exercises = handler.getNewObjects(new Course());
         
@@ -101,8 +101,8 @@ public class ExerciseUpdaterTest {
                                 .withExercise("d", 9, "asdf@1df")
                                 .build();
         
-        when(TmcJsonParser.getExercisesFromServer(any(Course.class)))
-                .thenReturn(serverExercises);
+//        when(TmcJsonParser.getExercisesFromServer(any(Course.class)))
+ //               .thenReturn(serverExercises);
         
         List<Exercise> exercises = handler.getNewObjects(new Course());
         

@@ -22,11 +22,7 @@ public class ExerciseDownloader {
     private File cacheFile;
     private UrlCommunicator urlCommunicator;
     private TmcJsonParser tmcJsonParser;
-
-    public ExerciseDownloader() {
-        decider = new DefaultUnzipDecider();
-    }
-
+    
     /**
      * Constructor for dependency injection.
      *

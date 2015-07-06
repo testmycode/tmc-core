@@ -96,4 +96,9 @@ public class ClientTmcSettings implements TmcSettings {
     public String apiVersion() {
         return apiVersion;
     }
+    
+    @Override
+    public String toString() {
+        return this.password + ":" + this.password + " " + this.serverAddress;
+    }
 }

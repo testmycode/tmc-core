@@ -53,14 +53,14 @@ public class DiffSenderTest {
         settings.setServerAddress("http://127.0.0.1:8080");
         settings.setUsername("test");
         settings.setPassword("1234");
-        sender = new DiffSender();
+        sender = new DiffSender(null);
         startWiremock();
     }
 
     @Test
     public void testSendToSpywareWithFile() throws IOException, TmcCoreException {
         final File file = new File("testResources/test.zip");
-        DiffSender sender = new DiffSender();
+        DiffSender sender = new DiffSender(null);
         HttpResult res = sender.sendToUrl(file,
                 spywareUrl);
         assertEquals(200, res.getStatusCode());
@@ -85,7 +85,7 @@ public class DiffSenderTest {
     public void testSendToSpywareWithByteArray() throws IOException, TmcCoreException {
         final File file = new File("testResources/test.zip");
         byte[] byteArray = Files.toByteArray(file);
-        DiffSender sender = new DiffSender();
+        DiffSender sender = new DiffSender(null);
         HttpResult res = sender.sendToUrl(byteArray,
                 spywareUrl);
         assertEquals(200, res.getStatusCode());
@@ -95,7 +95,7 @@ public class DiffSenderTest {
     public void requestWithInvalidParams() throws IOException, TmcCoreException {
         final File file = new File("testResources/test.zip");
         byte[] byteArray = Files.toByteArray(file);
-        DiffSender sender = new DiffSender();
+        DiffSender sender = new DiffSender(null);
         HttpResult res = sender.sendToUrl(byteArray,
                 "vaaraUrl");
         assertNull(res);

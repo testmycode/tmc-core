@@ -1,6 +1,5 @@
 package hy.tmc.core.communication;
 
-import hy.tmc.core.communication.ExerciseDownloader;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -15,6 +14,7 @@ import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.DefaultUnzipDecider;
+import hy.tmc.core.zipping.UnzipDecider;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -44,9 +44,14 @@ public class ExerciseDownloaderTest {
      */
     @Before
     public void setup() {
-        exDl = new ExerciseDownloader();
-        exercises = new ArrayList<>();
         settings = new ClientTmcSettings();
+        exDl = new ExerciseDownloader(
+                new DefaultUnzipDecider(),
+                new UrlCommunicator(settings),
+                new TmcJsonParser(settings)
+        );
+        exercises = new ArrayList<>();
+        
 
         Exercise e1 = new Exercise();
         e1.setZipUrl("http://127.0.0.1:8080/ex1.zip");

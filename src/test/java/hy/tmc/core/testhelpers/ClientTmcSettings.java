@@ -1,8 +1,13 @@
 
 package hy.tmc.core.testhelpers;
 
+import com.google.common.base.Optional;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
+import hy.tmc.core.exceptions.TmcCoreException;
+import hy.tmc.core.zipping.DefaultRootDetector;
+import hy.tmc.core.zipping.ProjectRootFinder;
+import java.io.IOException;
 
 public class ClientTmcSettings implements TmcSettings {
     private String serverAddress;
@@ -81,6 +86,7 @@ public class ClientTmcSettings implements TmcSettings {
     public void setCurrentCourse(Course currentCourse) {
         this.currentCourse = currentCourse;
     }
+    
 
     @Override
     public String apiVersion() {

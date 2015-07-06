@@ -107,7 +107,7 @@ public class DownloadExercisesTest {
                 .build());
         
         PowerMockito.mockStatic(TmcJsonParser.class);
-        when(TmcJsonParser.getCourse(anyInt())).thenReturn(Optional.of(course));
+        when(new TmcJsonParser(settings).getCourse(anyInt())).thenReturn(Optional.of(course));
         
         DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings);
         dl.call();
@@ -148,7 +148,7 @@ public class DownloadExercisesTest {
                 .build());
         
         PowerMockito.mockStatic(TmcJsonParser.class);
-        when(TmcJsonParser.getCourse(anyInt())).thenReturn(Optional.of(course));
+        when(new TmcJsonParser(settings).getCourse(anyInt())).thenReturn(Optional.of(course));
         
         DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings);
         dl.call();

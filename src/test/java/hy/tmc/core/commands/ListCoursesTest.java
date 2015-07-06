@@ -18,7 +18,6 @@ import org.junit.runner.RunWith;
 
 import org.mockito.Mockito;
 
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -37,24 +36,23 @@ public class ListCoursesTest {
      */
     @Before
     public void setUp() throws IOException, TmcCoreException {
-        list = new ListCourses(settings);
-
         communicator = Mockito.mock(UrlCommunicator.class);
-
-        HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
-
+        
         settings.setUsername("mockattu");
         settings.setPassword("ei tarvi");
-        PowerMockito
+        HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
+        Mockito
                 .when(communicator.makeGetRequest(
                         Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(fakeResult);
+        
+        list = new ListCourses(settings, communicator);
 
     }
 
     @Test
     public void testCheckDataSuccess() throws TmcCoreException {
-        ListCourses ls = new ListCourses(settings);
+        ListCourses ls = new ListCourses(settings, communicator);
         settings.setUsername("asdf");
         settings.setPassword("bsdf");
         ls.checkData();

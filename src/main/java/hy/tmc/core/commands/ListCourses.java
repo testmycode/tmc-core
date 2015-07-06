@@ -22,6 +22,11 @@ public class ListCourses extends Command<List<Course>> {
         super(settings);
         this.parser = parser;
     }
+    
+    public ListCourses(TmcSettings settings, UrlCommunicator communicator){
+        super(settings);
+        this.parser = new TmcJsonParser(communicator, settings);
+    }
     /**
      * Checks that the user has authenticated, by verifying ClientData.
      *

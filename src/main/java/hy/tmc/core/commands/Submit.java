@@ -36,7 +36,7 @@ public class Submit extends Command<SubmissionResult> {
     public Submit(TmcSettings settings) {
         super(settings);
         submitter = new CourseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector(), settings),
+                new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings)),
                 new Zipper(),
                 new UrlCommunicator(settings), 
                 new TmcJsonParser(settings)
@@ -50,7 +50,7 @@ public class Submit extends Command<SubmissionResult> {
     public Submit(String path, TmcSettings settings) {
         super(settings);
         submitter = new CourseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector(), settings),
+                new ProjectRootFinder(new DefaultRootDetector(),  new TmcJsonParser(settings)),
                 new Zipper(),
                 new UrlCommunicator(settings), 
                 new TmcJsonParser(settings)

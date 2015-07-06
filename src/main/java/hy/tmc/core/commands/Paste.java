@@ -60,7 +60,7 @@ public class Paste extends Command<URI> {
         if (!this.data.containsKey("path")) {
             throw new TmcCoreException("path not supplied");
         }
-        Optional<Course> currentCourse = Optional.of(settings.getCurrentCourse());
+        Optional<Course> currentCourse = settings.getCurrentCourse();
         if (currentCourse.isPresent()) {
             course = currentCourse.get();
         } else {

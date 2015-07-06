@@ -49,7 +49,7 @@ public class UrlCommunicator {
         authExtension = "/user";
     }
     
-    private String getFormattedUserData() {
+    public String getFormattedUserData() {
         return this.settings.getUsername() + ":" + this.settings.getPassword();    
     }
     

@@ -19,6 +19,7 @@ import hy.tmc.core.commands.Paste;
 import hy.tmc.core.commands.RunTests;
 import hy.tmc.core.commands.SendFeedback;
 import hy.tmc.core.commands.Submit;
+import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.updates.ExerciseUpdateHandler;
 import hy.tmc.core.communication.updates.ReviewHandler;
 import hy.tmc.core.configuration.TmcSettings;
@@ -214,7 +215,7 @@ public class TmcCore {
      * @return a list of unread reviews for the given course
      */
     public ListenableFuture<List<Review>> getNewReviews(Course course, TmcSettings settings) throws TmcCoreException {
-        ReviewHandler reviewHandler = new ReviewHandler(settings);
+        ReviewHandler reviewHandler = new ReviewHandler(new TmcJsonParser(settings));
         GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler, settings);
         command.checkData();
 
@@ -236,7 +237,7 @@ public class TmcCore {
      * given path
      */
     public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course, TmcSettings settings) throws TmcCoreException, IOException {
-        ExerciseUpdateHandler updater = new ExerciseUpdateHandler(updateCache, settings);
+        ExerciseUpdateHandler updater = new ExerciseUpdateHandler(updateCache, new TmcJsonParser(settings));
         GetExerciseUpdates command = new GetExerciseUpdates(course, updater, settings);
         command.checkData();
 

@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import com.google.common.base.Optional;
 
 import hy.tmc.core.communication.ExerciseLister;
+import hy.tmc.core.communication.UrlCommunicator;
 
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
@@ -26,9 +27,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-
 import org.mockito.Mockito;
-
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ClientTmcSettings.class)
@@ -37,6 +36,7 @@ public class ListExercisesTest {
     private ListExercises list;
     private ExerciseLister lister;
     private List<Exercise> exampleExercises;
+    ClientTmcSettings settings = new ClientTmcSettings();
 
     private void buildExample() {
         exampleExercises = new ArrayList<>();
@@ -56,32 +56,31 @@ public class ListExercisesTest {
     @Before
     public void setup() throws TmcCoreException, IOException {
         buildExample();
-        ClientTmcSettings.setUserData("Chang", "Jamo");
+        settings.setUsername("Chang");
+        settings.setPassword("Jamo");
         mock();
         lister = Mockito.mock(ExerciseLister.class);
         Mockito.when(lister.listExercises(Mockito.anyString()))
                 .thenReturn(exampleExercises);
 
-        list = new ListExercises(lister);
+        list = new ListExercises(lister, settings);
     }
 
     private void mock() throws TmcCoreException, IOException {
 
         PowerMockito.mockStatic(ClientTmcSettings.class);
+        settings.setCurrentCourse(new Course());
         PowerMockito
-                .when(ClientTmcSettings.getCurrentCourse(Mockito.anyString()))
-                .thenReturn(Optional.of(new Course()));
-        PowerMockito
-                .when(ClientTmcSettings.getFormattedUserData())
+                .when(new UrlCommunicator(settings).getFormattedUserData())
                 .thenReturn("Chang:Jamo");
         PowerMockito
-                .when(ClientTmcSettings.userDataExists())
+                .when(settings.userDataExists())
                 .thenReturn(true);
     }
 
     @Test
     public void testCheckDataSuccess() throws TmcCoreException, IOException {
-        ListExercises ls = new ListExercises();
+        ListExercises ls = new ListExercises(settings);
         ls.setParameter("courseUrl", "legit");
         ls.setParameter("path", "legit");
         try {
@@ -94,7 +93,7 @@ public class ListExercisesTest {
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfNoUser() throws TmcCoreException, IOException {
         PowerMockito.mockStatic(ClientTmcSettings.class);
-        ClientTmcSettings.clearUserData();
+        settings = new ClientTmcSettings();
         list.setParameter("path", "any");
         list.checkData();
         list.call();
@@ -102,7 +101,7 @@ public class ListExercisesTest {
 
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfNoCourseSpecified() throws TmcCoreException, IOException {
-        ClientTmcSettings.clearUserData();
+        settings = new ClientTmcSettings();
         list.checkData();
         list.call();
     }

@@ -2,6 +2,7 @@ package hy.tmc.core.testhelpers;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.zipping.RootFinder;
 
@@ -15,16 +16,18 @@ public class ProjectRootFinderStub implements RootFinder {
 
     private String returnValue;
     private HashMap<String, Course> courseStubs;
+    private TmcSettings settings;
 
-    public ProjectRootFinderStub() {
+    public ProjectRootFinderStub(TmcSettings settings) {
         this.returnValue = "";
         courseStubs = new HashMap<>();
         fillCourseStubs();
+        this.settings = settings;
     }
 
     private void fillCourseStubs() {
         String allCourses = ExampleJson.allCoursesExample;
-        List<Course> courses = TmcJsonParser.getCoursesFromString(allCourses);
+        List<Course> courses = new TmcJsonParser(settings).getCoursesFromString(allCourses);
         for (Course c:courses) {
             courseStubs.put(c.getName(), c);
         }

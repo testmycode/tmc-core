@@ -2,6 +2,8 @@ package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.CourseSubmitter;
+import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
@@ -23,7 +25,9 @@ public class Paste extends Command<URI> {
     public Paste(TmcSettings settings) {
         this(new CourseSubmitter(
                 new ProjectRootFinder(new DefaultRootDetector(), settings),
-                new Zipper(), settings
+                new Zipper(),
+                new UrlCommunicator(settings),
+                new TmcJsonParser(settings)
         ), settings);
     }
 

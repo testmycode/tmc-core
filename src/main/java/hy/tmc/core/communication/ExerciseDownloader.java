@@ -32,10 +32,11 @@ public class ExerciseDownloader {
      *
      * @param decider UnzipDecider which decides which files to unzip
      */
-    public ExerciseDownloader(UnzipDecider decider, TmcSettings settings) {
+    public ExerciseDownloader(UnzipDecider decider, 
+            UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser) {
         this.decider = decider;
-        this.urlCommunicator = new UrlCommunicator(settings);
-        this.tmcJsonParser = new TmcJsonParser(settings);
+        this.urlCommunicator = urlCommunicator;
+        this.tmcJsonParser = tmcJsonParser;
     }
 
     /**

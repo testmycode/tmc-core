@@ -20,6 +20,10 @@ public class VerifyCredentials extends Command<Boolean> {
         this.setParameter("username", username);
         this.setParameter("password", password);
     }
+    
+    public VerifyCredentials(TmcSettings settings) {
+        super(settings);
+    }
 
     @Override
     public final void setParameter(String key, String value) {

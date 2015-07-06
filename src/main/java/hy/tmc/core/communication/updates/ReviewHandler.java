@@ -1,7 +1,6 @@
 package hy.tmc.core.communication.updates;
 
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Review;
 import java.io.IOException;
@@ -11,8 +10,8 @@ import java.util.List;
 public class ReviewHandler extends UpdateHandler<Review> {
 
 
-    public ReviewHandler(TmcSettings settings) {
-        super(settings);
+    public ReviewHandler(TmcJsonParser jsonParser) {
+        super(jsonParser);
     }
     
     @Override

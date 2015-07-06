@@ -30,7 +30,6 @@ public class CourseSubmitter {
     private ZipMaker zipper;
     private final UrlCommunicator urlCommunicator;
     private final TmcJsonParser tmcJsonParser;
-    private final ProjectRootFinder finder;
 
     /**
      * Exercise deadline is checked with this date format
@@ -39,10 +38,10 @@ public class CourseSubmitter {
 
     private String submissionZipPath;
 
-    public CourseSubmitter(RootFinder rootFinder, ZipMaker zipper, TmcSettings settings) {
-        this.urlCommunicator = new UrlCommunicator(settings);
-        this.tmcJsonParser = new TmcJsonParser(settings);
-        this.finder = new ProjectRootFinder(settings);
+    public CourseSubmitter(RootFinder rootFinder, ZipMaker zipper, 
+            UrlCommunicator urlCommunicator, TmcJsonParser jsonParser) {
+        this.urlCommunicator = urlCommunicator;
+        this.tmcJsonParser = jsonParser;
         this.zipper = zipper;
         this.rootFinder = rootFinder;
     }
@@ -170,7 +169,7 @@ public class CourseSubmitter {
     }
 
     private List<Exercise> findCourseExercises(String currentPath) throws IllegalArgumentException, IOException, TmcCoreException {
-        Optional<Course> currentCourse = finder.getCurrentCourse(currentPath);
+        Optional<Course> currentCourse = rootFinder.getCurrentCourse(currentPath);
         if (!currentCourse.isPresent()) {
             deleteZipIfExists();
             throw new IllegalArgumentException("Not under any course directory");

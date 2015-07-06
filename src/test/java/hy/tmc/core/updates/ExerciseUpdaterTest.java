@@ -9,6 +9,7 @@ import hy.tmc.core.communication.updates.ExerciseUpdateHandler;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.testhelpers.builders.ExerciseBuilder;
 import java.io.File;
@@ -39,12 +40,13 @@ public class ExerciseUpdaterTest {
     private File cacheFile;
     private ExerciseUpdateHandler handler;
     private ExerciseBuilder builder;
+   
     
     @Before
     public void setUp() throws IOException, TmcCoreException {
         cacheFile = Paths.get("src", "test", "resources", "exercisetest.cache").toFile();
         cacheFile.createNewFile();
-        handler = new ExerciseUpdateHandler(cacheFile);
+        handler = new ExerciseUpdateHandler(cacheFile, new ClientTmcSettings());
         builder = new ExerciseBuilder();
         PowerMockito.mockStatic(UrlCommunicator.class);
         when(UrlCommunicator.makeGetRequest(anyString(), any(String[].class)))

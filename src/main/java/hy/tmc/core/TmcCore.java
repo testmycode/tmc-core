@@ -23,7 +23,6 @@ import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.updates.ExerciseUpdateHandler;
 import hy.tmc.core.communication.updates.ReviewHandler;
 import hy.tmc.core.configuration.TmcSettings;
-import hy.tmc.core.domain.Credentials;
 import hy.tmc.core.domain.Review;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.File;

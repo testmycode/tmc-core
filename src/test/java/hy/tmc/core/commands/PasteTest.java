@@ -43,7 +43,7 @@ public class PasteTest {
         mock();
         settings.setUsername("Bossman");
         settings.setUsername("Samu");
-        ClientTmcSettings.setProjectRootFinder(new ProjectRootFinderStub());
+        //ClientTmcSettings.setProjectRootFinder(new ProjectRootFinderStub());
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
         paste = new Paste(submitterMock, settings);

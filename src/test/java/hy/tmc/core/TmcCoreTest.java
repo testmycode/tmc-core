@@ -14,6 +14,7 @@ import hy.tmc.core.commands.Submit;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Credentials;
 import hy.tmc.core.exceptions.TmcCoreException;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.testhelpers.FileWriterHelper;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -62,8 +63,8 @@ public class TmcCoreTest {
     }
 
     @Test
-    public void login() throws Exception {
-        tmcCore.login(new Credentials("test", "1234"), tmcServerAddress);
+    public void verifyCredentials() throws Exception {
+        tmcCore.verifyCredentials(new ClientTmcSettings("test", "1234"));
         verify(threadPool, times(1)).submit(any(VerifyCredentials.class));
     }
 

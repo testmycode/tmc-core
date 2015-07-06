@@ -148,7 +148,7 @@ public class TmcCore {
      * @return list containing course-objects parsed from JSON
      * @throws TmcCoreException if something went wrong
      */
-    public ListenableFuture<List<Course>> listCourses(String serverAddress, TmcSettings settings) throws TmcCoreException {
+    public ListenableFuture<List<Course>> listCourses(TmcSettings settings) throws TmcCoreException {
         
         @SuppressWarnings("unchecked")
         ListCourses listCommand = new ListCourses(settings);

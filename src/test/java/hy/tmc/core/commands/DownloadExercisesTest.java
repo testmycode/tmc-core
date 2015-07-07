@@ -89,6 +89,7 @@ public class DownloadExercisesTest {
     @Test
     public void constructorWithoutPathUsesTmcSettings() throws TmcCoreException {
         String path = "pentti/tmc/java";
+        settings.setCurrentCourse(new Course());
         settings.setTmcMainDirectory(path);
         DownloadExercises de = new DownloadExercises(new ArrayList<Exercise>(), settings);
         assertTrue(de.data.containsKey("path"));

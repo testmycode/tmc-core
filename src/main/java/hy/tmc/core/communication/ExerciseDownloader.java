@@ -21,6 +21,7 @@ public class ExerciseDownloader {
     private File cacheFile;
     private UrlCommunicator urlCommunicator;
     private TmcJsonParser tmcJsonParser;
+    private Unzipper zipHandler;
     
     /**
      * Constructor for dependency injection.
@@ -32,6 +33,17 @@ public class ExerciseDownloader {
         this.decider = decider;
         this.urlCommunicator = urlCommunicator;
         this.tmcJsonParser = tmcJsonParser;
+    }
+    
+    /**
+     * Constructor for tests
+     *
+     * @param decider UnzipDecider which decides which files to unzip
+     */
+    public ExerciseDownloader(UnzipDecider decider, 
+            UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser, Unzipper zipHandler) {
+        this(decider, urlCommunicator, tmcJsonParser);
+        this.zipHandler = zipHandler;
     }
 
     /**
@@ -145,7 +157,9 @@ public class ExerciseDownloader {
      * @param destinationPath destination path
      */
     public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
-        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
+        if(this.zipHandler == null){
+            zipHandler = new Unzipper(unzipPath, destinationPath, decider);
+        }
         zipHandler.unzip();
     }
 

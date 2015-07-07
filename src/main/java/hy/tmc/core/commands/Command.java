@@ -1,6 +1,5 @@
 package hy.tmc.core.commands;
 
-import com.google.common.base.Optional;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;

@@ -41,6 +41,7 @@ public class TmcCore {
 
     static ListeningExecutorService threadPool = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
     private File updateCache;
+
     /**
      * The TmcCore that can be used as a standalone businesslogic for any tmc client application.
      * The TmcCore provides all the essential backend functionalities as public methods.
@@ -114,12 +115,12 @@ public class TmcCore {
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(login);
         return stringListenableFuture;
     }
-    
+
     /**
-     * 
-     * 
+     *
+     *
      * @param settings
-     * @return 
+     * @return
      */
     public ListenableFuture<Course> getCourse(TmcSettings settings, String path) throws TmcCoreException {
         checkParameters(settings.getUsername(), settings.getPassword(), settings.getServerAddress());
@@ -145,9 +146,14 @@ public class TmcCore {
         ListenableFuture<List<Exercise>> stringListenableFuture = (ListenableFuture<List<Exercise>>) threadPool.submit(downloadCommand);
         return stringListenableFuture;
     }
-    
+
     public ListenableFuture<List<Exercise>> donwloadExercises(List<Exercise> exercises, TmcSettings settings) throws TmcCoreException {
-        DownloadExercises downloadCommand = new DownloadExercises(exercises, settings);
+        DownloadExercises downloadCommand;
+        if (this.updateCache != null) {
+            downloadCommand = new DownloadExercises(exercises, settings, updateCache);
+        } else {
+            downloadCommand = new DownloadExercises(exercises, settings);
+        }
         ListenableFuture<List<Exercise>> downloadInfoFuture = (ListenableFuture<List<Exercise>>) threadPool.submit(downloadCommand);
         return downloadInfoFuture;
     }
@@ -167,7 +173,7 @@ public class TmcCore {
      * @throws TmcCoreException if something went wrong
      */
     public ListenableFuture<List<Course>> listCourses(TmcSettings settings) throws TmcCoreException {
-        
+
         @SuppressWarnings("unchecked")
         ListCourses listCommand = new ListCourses(settings);
         ListenableFuture<List<Course>> listCourses = (ListenableFuture<List<Course>>) threadPool.submit(listCommand);

@@ -1,6 +1,6 @@
 # tmc-core
 
-This is a library for the core functionalities of a [TestMyCode](testmycode.github.io) 
+This is a library for the core functionalities of a [TestMyCode](https://testmycode.github.io) 
 client. The tmc-core uses [tmc-langs](https://github.com/testmycode/tmc-langs) for 
 running tests locally, and supports fully the same languages as tmc-langs. Other features
 may be used with even languages other than those supported by tmc-langs, provided the
@@ -41,24 +41,54 @@ and will be integrated into [TMC-netbeans](https://github.com/testmycode/tmc-net
 
 ## Course
 
-A course
+A course using TMC.
+Some important fields:
+
+ - id (unique within a tmc-server)
+ - name
+ - exercises (a list of exercises that can be seen by the student)
 
 ## Exercise
 
-One exercise. Also a compilable project
+An exercise in a course. In current TMC implementations an exercise is a whole project,
+not just a few lines of code.
+Some important fields:
+
+ - id (unique in one course)
+ - name
+ - deadline (currently a String in the format yyyy-MM-dd'T'hh:mm:ssX)
 
 ## Review
 
-A code review
+A code review written by an instructor, for code submitted by the student.
+Some important fields:
+
+ - exerciseName
+ - reviewerName
+ - reviewBody (the content of the review)
 
 ## SubmissionResult
 
-The results of the serverside tests. Includes awarded points
+The results of the serverside tests. Include points awarded to the student. If all 
+serverside tests pass, the result will also have a list of feedbackquestions, if any
+have been set. 
+Some important fields:
+
+ - allTestsPassed
+ - userId
+ - course (the course name)
+ - exerciseName
+ - points
+ - feedbackQuestions
 
 ## RunResult
 
 The results of the local tests of this exercise. This is the same as the RunResult
-user by tmc-langs
+user by tmc-langs.
+Some important fields:
+
+ - status (passed, tests failed, compile failed or generic error)
+ - testResults (list of TestResult objects. These will contain error messages)
 
 # Examples
 
@@ -104,7 +134,7 @@ newStuffFuture.addListener(updateListener);
 # Credits
 
 The tmc-core was initially created as part of the [TMC commandline Client](https://github.com/rage/tmc-cli) project, which was a Software Engineering lab project at the
-[University Of Helsinki CS Dept.](cs.helsinki.fi). The authors of TMC commandline Client were
+[University Of Helsinki CS Dept.](https://cs.helsinki.fi). The authors of TMC commandline Client were
 
  - Jani Luukko
  - Chang Rajani
@@ -113,7 +143,8 @@ The tmc-core was initially created as part of the [TMC commandline Client](https
  - Pihla Toivanen
  - Kristian Wahlroos
 
-The tmc-core was later separated and is maintained by the University of Helsinki CS Dept. [Agile Education Research](https://github/rage) group.
+The tmc-core was later separated and is maintained by the University of Helsinki CS 
+Dept. [Agile Education Research](https://github.com/rage) group.
 
 
   [![Build Status](https://travis-ci.org/rage/tmc-core.svg?branch=master)](https://travis-ci.org/rage/tmc-core)

@@ -139,8 +139,6 @@ public class DownloadExercises extends Command<List<Exercise>> {
         checkData();
 
         Optional<Course> courseResult = this.parser.getCourse(Integer.parseInt(this.data.get("courseID")));
-
-        System.out.println("id:" +this.data.get("courseID"));
         
         if (courseResult.isPresent()) {
             Course course = courseResult.get();

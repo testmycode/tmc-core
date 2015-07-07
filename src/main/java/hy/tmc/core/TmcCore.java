@@ -103,9 +103,7 @@ public class TmcCore {
     /**
      * Authenticates the given user on the server, and saves the data into memory.
      *
-     * @param credentials includes username and password
      * @param settings settings required by this command
-     * @param serverAddress defines TMC-server to communicate with.
      * @return A future-object containing true or false on success or fail
      * @throws TmcCoreException if something in the given input was wrong
      */
@@ -140,17 +138,17 @@ public class TmcCore {
      * @return A future-object containing true or false on success or fail
      * @throws TmcCoreException if something in the given input was wrong
      */
-    public ListenableFuture<String> downloadExercises(String path, String courseId, TmcSettings settings) throws TmcCoreException, IOException {
+    public ListenableFuture<List<Exercise>> downloadExercises(String path, String courseId, TmcSettings settings) throws TmcCoreException, IOException {
         checkParameters(path, courseId);
         @SuppressWarnings("unchecked")
         DownloadExercises downloadCommand = getDownloadCommand(path, courseId, settings);
-        ListenableFuture<String> stringListenableFuture = (ListenableFuture<String>) threadPool.submit(downloadCommand);
+        ListenableFuture<List<Exercise>> stringListenableFuture = (ListenableFuture<List<Exercise>>) threadPool.submit(downloadCommand);
         return stringListenableFuture;
     }
     
-    public ListenableFuture<String> donwloadExercises(List<Exercise> exercises, TmcSettings settings) throws TmcCoreException {
+    public ListenableFuture<List<Exercise>> donwloadExercises(List<Exercise> exercises, TmcSettings settings) throws TmcCoreException {
         DownloadExercises downloadCommand = new DownloadExercises(exercises, settings);
-        ListenableFuture<String> downloadInfoFuture = (ListenableFuture<String>) threadPool.submit(downloadCommand);
+        ListenableFuture<List<Exercise>> downloadInfoFuture = (ListenableFuture<List<Exercise>>) threadPool.submit(downloadCommand);
         return downloadInfoFuture;
     }
 

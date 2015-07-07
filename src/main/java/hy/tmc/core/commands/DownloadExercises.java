@@ -18,12 +18,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import java.util.List;
 
-public class DownloadExercises extends Command<String> {
+public class DownloadExercises extends Command<List<Exercise>> {
 
     /**
      * ExerciseDownloader that is used for downloading.
@@ -134,14 +135,14 @@ public class DownloadExercises extends Command<String> {
      * @return
      */
     @Override
-    public String call() throws TmcCoreException, IOException {
+    public List<Exercise> call() throws TmcCoreException, IOException {
         checkData();
 
         Optional<Course> courseResult = this.parser.getCourse(Integer.parseInt(this.data.get("courseID")));
         
         if (courseResult.isPresent()) {
             Course course = courseResult.get();
-            Optional<String> downloadResult = downloadExercisesFromList(getExercisesToDownload(course), course.getName());
+            Optional<List<Exercise>> downloadResult = downloadExercisesFromList(getExercisesToDownload(course), course.getName());
             if (downloadResult.isPresent()) {
                 return downloadResult.get();
             }
@@ -157,14 +158,23 @@ public class DownloadExercises extends Command<String> {
         return this.exercisesToDownload;
     }
 
-    private Optional<String> downloadExercises(Course course) throws IOException {
+    private Optional<List<Exercise>> downloadExercises(Course course) throws IOException {
         return downloadExercisesFromList(course.getExercises(), course.getName());
     }
 
-    public Optional<String> downloadExercisesFromList(List<Exercise> exercises, String courseName) throws IOException {
+    /**
+     * Download exercises to under the directory specified by the path in the data map.
+     * 
+     * @param exercises
+     * @param courseName
+     * @return a list of the exercises that were downloaded successfully
+     * @throws IOException 
+     */
+    public Optional<List<Exercise>> downloadExercisesFromList(List<Exercise> exercises, String courseName) throws IOException {
         int exCount = 0;
         int totalCount = exercises.size();
         int downloaded = 0;
+        List<Exercise> downloadedExercises = new ArrayList<>();
 
         String path = exerciseDownloader.createCourseFolder(data.get("path"), courseName);
         if (this.cacheFile != null) {
@@ -172,16 +182,23 @@ public class DownloadExercises extends Command<String> {
         }
 
         for (Exercise exercise : exercises) {
-            String message = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
+            boolean downloadSuccessful = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
             exCount++;
-            if (!message.contains("Skip")) {
+            String status = "failed";
+            if (downloadSuccessful) {
+                downloadedExercises.add(exercise);
                 downloaded++;
+                status = "was succesful";
             }
             if (this.observer != null) {
+                String message = "Downloading exercise " + exercise.getName() + " " + status;
                 this.observer.progress(100.0 * exCount / totalCount, message);
             }
         }
-        return Optional.of(downloaded + " exercises downloaded");
+        if (downloadedExercises.isEmpty()) {
+            return Optional.absent();
+        }
+        return Optional.of(downloadedExercises);
     }
 
     private void cacheExercises(List<Exercise> exercises) throws IOException {

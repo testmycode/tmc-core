@@ -25,7 +25,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -92,7 +91,7 @@ public class DownloadExercisesTest {
                 .thenReturn("");
         Mockito.when(downloader.handleSingleExercise(
                 any(Exercise.class), anyInt(), anyInt(), anyString())
-        ).thenReturn("");
+        ).thenReturn(true);
         
         Course course = new Course();
         course.setExercises(new ExerciseBuilder()
@@ -134,7 +133,7 @@ public class DownloadExercisesTest {
                 .thenReturn("");
         Mockito.when(mock.handleSingleExercise(
                 any(Exercise.class), anyInt(), anyInt(), anyString())
-        ).thenReturn("");
+        ).thenReturn(true);
         
         Course course = new Course();
         course.setExercises(new ExerciseBuilder()

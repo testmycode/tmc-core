@@ -12,6 +12,7 @@ import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExerciseDownloader {
@@ -39,10 +40,10 @@ public class ExerciseDownloader {
      * @param courseUrl course url
      * @return info about downloading.
      */
-    public Optional<String> downloadExercises(String courseUrl) throws IOException {
+    public Optional<List<Exercise>> downloadExercises(String courseUrl) throws IOException {
         List<Exercise> exercises = tmcJsonParser.getExercises(courseUrl);
         if (exercises.isEmpty()) {
-            return Optional.of("No exercises to download.");
+            return Optional.absent();
         }
         return downloadFiles(exercises);
     }
@@ -53,7 +54,7 @@ public class ExerciseDownloader {
      * @param exercises list of exercises which will be downloaded, list is parsed from json.
      * @return info about downloading.
      */
-    public Optional<String> downloadFiles(List<Exercise> exercises) {
+    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises) {
         return downloadFiles(exercises, "");
     }
 
@@ -62,7 +63,7 @@ public class ExerciseDownloader {
      *
      * @return info about downloading.
      */
-    public Optional<String> downloadFiles(List<Exercise> exercises, String path) {
+    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, String path) {
         return downloadFiles(exercises, path, null);
     }
 
@@ -79,7 +80,7 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Method for downloading files if path where to download is defined. Also requires seperate
+     * Method for downloading files if path where to download is defined. Also requires separate
      * folder name that will be created to defined path.
      *
      * @param exercises list of exercises which will be downloaded, list is parsed from json.
@@ -87,17 +88,19 @@ public class ExerciseDownloader {
      * @param folderName folder name of where exercises will be extracted (for example course name)
      * @return
      */
-    public Optional<String> downloadFiles(List<Exercise> exercises, String path, String folderName) {
-        StringBuilder exercisesListed = new StringBuilder();
-        int exCount = 0;
+    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, String path, String folderName) {
+        List<Exercise> downloadedExercises = new ArrayList<>();
         path = createCourseFolder(path, folderName);
+        int exCount = 0;
         for (Exercise exercise : exercises) {
-            exercisesListed.append(handleSingleExercise(exercise, exCount, exercises.size(), path));
+            boolean success = handleSingleExercise(exercise, exCount, exercises.size(), path);
+            if (success) {
+                downloadedExercises.add(exercise);
+            }
             exCount++;
         }
-        exercisesListed.append(exercises.size())
-                .append(" exercises downloaded.");
-        return Optional.of(exercisesListed.toString());
+       
+        return Optional.of(downloadedExercises);
     }
 
     /**
@@ -108,11 +111,10 @@ public class ExerciseDownloader {
      * @param totalCount amount of all exercises
      * @param path path where single exercise will be downloaded
      */
-    public String handleSingleExercise(Exercise exercise, int exCount, int totalCount, String path) {
+    public boolean handleSingleExercise(Exercise exercise, int exCount, int totalCount, String path) {
         if (exercise.isLocked()) {
-            return "Skipping locked exercise: " + exercise.getName();
+            return false;
         }
-        String exerciseInfo = tellStateForUser(exercise, exCount, totalCount);
         String filePath = path + exercise.getName() + ".zip";
         downloadExerciseZip(exercise.getZipUrl(), filePath);
         try {
@@ -121,9 +123,9 @@ public class ExerciseDownloader {
         }
         catch (IOException | ZipException ex) {
             System.err.println(ex.getMessage());
-            exerciseInfo = "Unzipping exercise failed.\n";
+            return false;
         }
-        return exerciseInfo;
+        return true;
     }
 
     /**
@@ -148,17 +150,6 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Tells which exercise is currently being downloaded.
-     *
-     * @param exercise exercise to be showed
-     * @param exCount order number of which exercise is in downloading
-     */
-    private String tellStateForUser(Exercise exercise, int exCount,
-            int totalCount) {
-        return "downloaded " + exercise.getName();
-    }
-
-    /**
      * Modify path to correct. Adds a trailing '/' if necessary.
      *
      * @param path the pathname to be corrected
@@ -168,7 +159,7 @@ public class ExerciseDownloader {
         if (path == null) {
             path = "";
         } else if (!path.isEmpty() && !path.endsWith(File.separator)) {
-            path += File.separator + "";
+            path += File.separator;
         }
         return path;
     }

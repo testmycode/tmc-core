@@ -2,6 +2,7 @@ package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.communication.UrlHelper;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -33,9 +34,10 @@ public class GetCourse extends Command<Course> {
 
     @Override
     public Course call() throws Exception {
-        Optional<Course> course = jsonParser.getCourse(path);
+        String url = new UrlHelper(settings).withApiVersion(path);
+        Optional<Course> course = jsonParser.getCourse(url);
         if (!course.isPresent()) {
-            throw new TmcCoreException("No course found by specified url.");
+            throw new TmcCoreException("No course found by specified url: " + url);
         }
         return course.get();
     }

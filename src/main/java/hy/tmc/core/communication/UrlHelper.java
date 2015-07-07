@@ -28,4 +28,12 @@ public class UrlHelper {
     public String allCoursesAddress(String serverAddress) {
         return serverAddress + this.coursesExtension;
     }
+    
+    public String withApiVersion(String url) {
+        String postfix = "?api_version=" + settings.apiVersion();
+        if (!url.endsWith(postfix)) {
+            url += postfix;
+        }
+        return url;
+    }
 }

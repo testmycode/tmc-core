@@ -81,7 +81,7 @@ public class TmcJsonParser {
      * @return List of reviews
      */
     public List<Review> getReviews(String reviewUrl) throws IOException {
-        JsonObject jsonObject = getJsonFrom(withApiVersion(reviewUrl));
+        JsonObject jsonObject = getJsonFrom(helper.withApiVersion(reviewUrl));
         Gson mapper = new Gson();
         Review[] reviews = mapper
                 .fromJson(jsonObject.getAsJsonArray("reviews"), Review[].class);
@@ -228,13 +228,5 @@ public class TmcJsonParser {
         JsonElement jelement = new JsonParser().parse(result.getData());
         JsonObject jobject = jelement.getAsJsonObject();
         return jobject.get(property).getAsString();
-    }
-
-    private String withApiVersion(String url) {
-        String postfix = "?api_version=" + settings.apiVersion();
-        if (!url.endsWith(postfix)) {
-            url += postfix;
-        }
-        return url;
     }
 }

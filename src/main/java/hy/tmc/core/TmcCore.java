@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import fi.helsinki.cs.tmc.langs.RunResult;
+import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
@@ -17,6 +18,7 @@ import hy.tmc.core.commands.GetUnreadReviews;
 import hy.tmc.core.commands.ListCourses;
 import hy.tmc.core.commands.ListExercises;
 import hy.tmc.core.commands.Paste;
+import hy.tmc.core.commands.RunCheckStyle;
 import hy.tmc.core.commands.RunTests;
 import hy.tmc.core.commands.SendFeedback;
 import hy.tmc.core.commands.Submit;
@@ -229,6 +231,23 @@ public class TmcCore {
         RunTests testCommand = new RunTests(path, settings);
         ListenableFuture<RunResult> runResultListenableFuture = (ListenableFuture<RunResult>) threadPool.submit(testCommand);
         return runResultListenableFuture;
+    }
+    
+     /**
+     * Runs checkstyle on the specified directory. Looks for a build.xml or equivalent file upwards in
+     * the path to determine exercise folder. Doesn't require login.
+     *
+     * @param path inside any exercise directory
+     * @return ValidationResult object containing details of the checkstyle validation
+     * @throws TmcCoreException if there was no course in the given path, or no exercise in the
+     * given path
+     */
+    public ListenableFuture<ValidationResult> runCheckstyle(String path, TmcSettings settings) throws TmcCoreException{
+        checkParameters(path);
+        @SuppressWarnings("unchecked")
+        RunCheckStyle checkstyleCommand = new RunCheckStyle(path, settings);
+        ListenableFuture<ValidationResult> validationResultListenableFuture = (ListenableFuture<ValidationResult>) threadPool.submit(checkstyleCommand);
+        return validationResultListenableFuture;
     }
 
     /**

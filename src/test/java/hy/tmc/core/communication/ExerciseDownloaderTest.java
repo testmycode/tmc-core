@@ -179,7 +179,6 @@ public class ExerciseDownloaderTest {
         exercises.get(1).setLocked(true);
         exDl.downloadFiles(exercises, zipDestination);
         
-
         verify(mockedDecider, times(0)).canBeOverwritten(anyString());
         verify(mockedDecider, times(0)).readTmcprojectYml(any(Path.class));
     }

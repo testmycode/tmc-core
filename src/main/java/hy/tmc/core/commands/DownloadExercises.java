@@ -191,6 +191,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
         }
 
         for (Exercise exercise : exercises) {
+            exercise.setCourseName(courseName);
             boolean downloadSuccessful = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
             exCount++;
             String status = "failed";

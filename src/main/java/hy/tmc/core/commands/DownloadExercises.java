@@ -48,6 +48,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
 
     public DownloadExercises(List<Exercise> exercisesToDownload, TmcSettings settings) throws TmcCoreException {
         super(settings);
+        this.parser = new TmcJsonParser(settings);
         this.exerciseDownloader = new ExerciseDownloader(new DefaultUnzipDecider(),
                 new UrlCommunicator(settings), new TmcJsonParser(settings));
         this.exercisesToDownload = exercisesToDownload;

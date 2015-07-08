@@ -77,7 +77,6 @@ public class Unzipper {
 
         ZipFile zipFile = new ZipFile(zipPath);
         extractYml(zipFile);
-
         List<?> fileHeaders = (List<?>) zipFile.getFileHeaders();
 
         for (Object object : fileHeaders) {

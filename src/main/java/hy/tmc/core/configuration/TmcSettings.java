@@ -22,4 +22,11 @@ public interface TmcSettings {
 
     public String getFormattedUserData();
     
+    /**
+     * Return the directory where course directories will be located. Projects will be placed as 
+     * follows:
+     * maindirectory/courseName/exerciseName
+     */
+    public String getTmcMainDirectory();
+    
 }

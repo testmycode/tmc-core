@@ -11,6 +11,7 @@ public class ClientTmcSettings implements TmcSettings {
     private String password;
     private Course currentCourse;
     private String apiVersion;
+    private String mainDirectory;
 
     public ClientTmcSettings() {
         apiVersion = "7";
@@ -91,5 +92,14 @@ public class ClientTmcSettings implements TmcSettings {
     @Override
     public String toString() {
         return this.password + ":" + this.password + " " + this.serverAddress;
+    }
+
+    @Override
+    public String getTmcMainDirectory() {
+        return this.mainDirectory;
+    }
+
+    public void setTmcMainDirectory(String path) {
+        this.mainDirectory = path;
     }
 }

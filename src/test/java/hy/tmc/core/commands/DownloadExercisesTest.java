@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
@@ -16,6 +17,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
@@ -82,6 +84,16 @@ public class DownloadExercisesTest {
         de.setParameter("path", "/home/tmccli/uolevipuistossa");
         de.setParameter("courseID", "not a number");
         de.checkData();
+    }
+    
+    @Test
+    public void constructorWithoutPathUsesTmcSettings() throws TmcCoreException {
+        String path = "pentti/tmc/java";
+        settings.setCurrentCourse(new Course());
+        settings.setTmcMainDirectory(path);
+        DownloadExercises de = new DownloadExercises(new ArrayList<Exercise>(), settings);
+        assertTrue(de.data.containsKey("path"));
+        assertEquals(path, de.data.get("path"));
     }
     
     @Test

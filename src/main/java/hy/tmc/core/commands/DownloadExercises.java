@@ -51,9 +51,12 @@ public class DownloadExercises extends Command<List<Exercise>> {
         this.exerciseDownloader = new ExerciseDownloader(new DefaultUnzipDecider(),
                 new UrlCommunicator(settings), new TmcJsonParser(settings));
         this.exercisesToDownload = exercisesToDownload;
-        Optional<Course> course = settings.getCurrentCourse();
-        if (course.isPresent()) {
-            this.setParameter("courseID", "" + course.get().getId());
+        Optional<Course> currentCourse = settings.getCurrentCourse();
+        String mainDirectory = settings.getTmcMainDirectory();
+        if (currentCourse.isPresent()) {
+            Course course = currentCourse.get();
+            this.setParameter("courseID", "" + course.getId());
+            this.setParameter("path", mainDirectory);
         } else {
             throw new TmcCoreException("Unable to determine course, cannot download");
         }
@@ -89,6 +92,11 @@ public class DownloadExercises extends Command<List<Exercise>> {
         this.setParameter("courseID", courseId);
         this.cacheFile = cacheFile;
         this.parser = parser;
+    }
+
+    public DownloadExercises(List<Exercise> exercises, TmcSettings settings, File updateCache) throws TmcCoreException {
+        this(exercises, settings);
+        this.cacheFile = updateCache;
     }
 
     /**

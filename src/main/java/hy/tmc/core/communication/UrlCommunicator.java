@@ -183,7 +183,7 @@ public class UrlCommunicator {
         StringBuilder result = writeResponse(response);
         int status = response.getStatusLine().getStatusCode();
         HttpResult httpResult = new HttpResult(result.toString(), status, true);
-        validateHttpResult(httpResult);
+        new HttpStatusValidator().validate(httpResult.getStatusCode());
         return httpResult;
     }
 
@@ -199,18 +199,6 @@ public class UrlCommunicator {
         addCredentials(httppost, this.settings.getFormattedUserData());
         httppost.setEntity(feedbackJson);
         return getResponseResult(httppost);
-    }
-    
-    /**
-     * Validate httpResults. More logic could/should be implemented.
-     * @param result
-     * @throws TmcCoreException 
-     */
-    private void validateHttpResult(HttpResult result) throws TmcServerException {
-        int statuscode = result.getStatusCode();
-        if (statuscode >= 500 && statuscode < 600) {
-            throw new TmcServerException("Error occured on TMC-server: statuscode " + statuscode);
-        }
     }
 
     public HttpResult makeGetRequestWithAuthentication(String url) throws IOException {

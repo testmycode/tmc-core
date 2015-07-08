@@ -2,8 +2,9 @@ package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.CourseSubmitter;
-import hy.tmc.core.configuration.ClientData;
-
+import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.communication.UrlCommunicator;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -21,8 +22,13 @@ public class Paste extends Command<URI> {
     private CourseSubmitter submitter;
     private Course course;
 
-    public Paste() {
-        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()), new Zipper()));
+    public Paste(TmcSettings settings) {
+        this(new CourseSubmitter(
+                new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings)),
+                new Zipper(),
+                new UrlCommunicator(settings),
+                new TmcJsonParser(settings)
+        ), settings);
     }
 
     /**
@@ -30,12 +36,13 @@ public class Paste extends Command<URI> {
      *
      * @param submitter can inject submitter mock.
      */
-    public Paste(CourseSubmitter submitter) {
+    public Paste(CourseSubmitter submitter, TmcSettings settings) {
         this.submitter = submitter;
+        this.settings = settings;
     }
 
-    public Paste(String path) {
-        this(new CourseSubmitter(new ProjectRootFinder(new DefaultRootDetector()), new Zipper()));
+    public Paste(String path, TmcSettings settings) {
+        this(settings);
         this.setParameter("path", path);
     }
 
@@ -47,13 +54,13 @@ public class Paste extends Command<URI> {
      */
     @Override
     public void checkData() throws TmcCoreException, IOException {
-        if (!ClientData.userDataExists()) {
+        if (!settings.userDataExists()) {
             throw new TmcCoreException("User must be authorized first");
         }
         if (!this.data.containsKey("path")) {
             throw new TmcCoreException("path not supplied");
         }
-        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
+        Optional<Course> currentCourse = settings.getCurrentCourse();
         if (currentCourse.isPresent()) {
             course = currentCourse.get();
         } else {
@@ -64,13 +71,6 @@ public class Paste extends Command<URI> {
     /**
      * Takes a pwd command's output in "path" and prints out the URL for the
      * paste.
-     *
-     * @return
-     * @throws java.io.IOException
-     * @throws java.text.ParseException
-     * @throws hy.tmc.core.exceptions.ExpiredException
-     * @throws net.lingala.zip4j.exception.ZipException
-     * @throws hy.tmc.core.exceptions.TmcCoreException
      */
     @Override
     public URI call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {

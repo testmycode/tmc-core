@@ -3,6 +3,7 @@ package hy.tmc.core.communication.updates;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -22,8 +23,8 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
     private File cache;
     private Map<Integer, String> exerciseChecksums;
     
-    public ExerciseUpdateHandler(File cacheFile) throws TmcCoreException {
-        super();
+    public ExerciseUpdateHandler(File cacheFile, TmcJsonParser jsonParser) throws TmcCoreException {
+        super(jsonParser);
         exerciseChecksums = new HashMap<>();
         if (cacheFile == null) {
             String errorMessage = "ExerciseUpdateHandler requires non-null cacheFile to function";
@@ -34,7 +35,7 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
 
     @Override
     public List<Exercise> fetchFromServer(Course currentCourse) throws IOException {
-        List<Exercise> exercises = TmcJsonParser.getExercisesFromServer(currentCourse);
+        List<Exercise> exercises = jsonParser.getExercisesFromServer(currentCourse);
         readChecksumMap();
         if (exercises == null) {
             return new ArrayList<>();
@@ -58,6 +59,5 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
         if (this.exerciseChecksums == null) {
             this.exerciseChecksums = new HashMap<>();
         }
-    }
-    
+    }   
 }

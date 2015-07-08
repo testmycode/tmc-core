@@ -1,17 +1,13 @@
 package hy.tmc.core.zipping;
 
-import hy.tmc.core.zipping.DefaultRootDetector;
-import hy.tmc.core.zipping.ProjectRootFinder;
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.ClientData;
-import hy.tmc.core.configuration.ConfigHandler;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.After;
 import org.junit.Before;
 
 import java.nio.file.Path;
@@ -20,32 +16,27 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertFalse;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.Mockito;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(TmcJsonParser.class)
 public class ProjectRootFinderTest {
 
     ProjectRootFinder finder;
     String fakeName = "2014-mooc-no-deadline";
     String otherFakeName = "2013-tira";
+    ClientTmcSettings settings;
+    TmcJsonParser parser;
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
-        ClientData.setUserData("chang", "paras");
-
-        finder = new ProjectRootFinder(new DefaultRootDetector());
-
-        PowerMockito.mockStatic(TmcJsonParser.class);
-
-        List<Course> courses = setupFakeCourses();
-        PowerMockito
-                .when(TmcJsonParser.getCourses(new ConfigHandler()
-                        .readCoursesAddress()))
-                .thenReturn(courses);
+        settings = new ClientTmcSettings();
+        settings.setUsername("chang");
+        settings.setPassword("paras");
+        
+        parser = Mockito.mock(TmcJsonParser.class);   
+        Mockito
+                .when(parser.getCourses())
+                .thenReturn(setupFakeCourses());
+        finder = new ProjectRootFinder(parser);
     }
 
     private List<Course> setupFakeCourses() {
@@ -61,10 +52,6 @@ public class ProjectRootFinderTest {
         return courses;
     }
 
-    @After
-    public void tearDown() {
-        ClientData.clearUserData();
-    }
 
     @Test
     public void testGetRootDirectoryFromSame() {

@@ -1,9 +1,7 @@
 package hy.tmc.core.communication;
 
-import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.communication.ExerciseLister;
 import com.google.common.base.Optional;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -18,8 +16,10 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import static org.mockito.Matchers.any;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import static org.powermock.api.mockito.PowerMockito.mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -34,16 +34,22 @@ public class ExerciseListerTest {
     ExerciseLister lister;
     Exercise fakeExercise;
     Exercise fakeExercise2;
+    private ClientTmcSettings settings;
+    private TmcJsonParser jsonParser;
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
-        ClientData.setUserData("chang", "paras");
+        settings = new ClientTmcSettings();
+        settings.setUsername("chang");
+        settings.setPassword("rajani");
         setupFakeCourses();
+        
+        jsonParser = mock(TmcJsonParser.class);
 
         rootFinderMock = Mockito.mock(ProjectRootFinder.class);
         Mockito.when(rootFinderMock.getCurrentCourse(Mockito.anyString()))
                 .thenReturn(Optional.of(fakeCourse));
-        lister = new ExerciseLister(rootFinderMock);
+        lister = new ExerciseLister(rootFinderMock, jsonParser);
 
         PowerMockito.mockStatic(TmcJsonParser.class);
 
@@ -52,8 +58,7 @@ public class ExerciseListerTest {
     }
 
     private void mockExercisesWith(List<Exercise> exercises) throws IOException, TmcCoreException {
-        PowerMockito
-                .when(TmcJsonParser.getExercisesFromServer((Course) Mockito.any()))
+        Mockito.when(jsonParser.getExercisesFromServer(any(Course.class)))
                 .thenReturn(exercises);
     }
 
@@ -77,12 +82,33 @@ public class ExerciseListerTest {
         fakeCourse.setName(fakeName);
         fakeCourse.setId(99);
     }
-
-    @After
-    public void tearDown() {
-        ClientData.clearUserData();
+    
+    @Test
+    public void correctCoursesAreOnList() throws TmcCoreException, IOException {
+        List<Exercise> exercises = lister.listExercises("polku/tiedostoon/");
+        
+        assertTrue(exerciseWithNameOnList(exercises, "Nimi"));
+        assertTrue(exerciseWithNameOnList(exercises, "Kuusi"));
     }
-
+    
+    @Test
+    public void otherCoursesAreNotOnList() throws TmcCoreException, IOException {
+        List<Exercise> exercises = lister.listExercises("polku/tiedostoon/");
+        
+        assertFalse(exerciseWithNameOnList(exercises, "asdf"));
+        assertFalse(exerciseWithNameOnList(exercises, "Ankka"));
+    }
+    
+    private boolean exerciseWithNameOnList(List<Exercise> exercises, String name) {
+        for (Exercise exercise : exercises) {
+            if (exercise.getName().equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
     @Test(expected=TmcCoreException.class)
     public void ifNoCourseIsFoundThenThrowsProtocolException() throws TmcCoreException, IOException {
         Mockito.when(rootFinderMock.getCurrentCourse(Mockito.anyString()))

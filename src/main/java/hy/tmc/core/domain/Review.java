@@ -141,9 +141,9 @@ public class Review {
         this.updatedAt = updatedAt;
     }
 
-    public void markAs(boolean read) throws IOException, TmcCoreException {
+    public void markAs(boolean read, UrlCommunicator urlCommunicator) throws IOException, TmcCoreException {
         Map<String, String> headers = addHeaders(read);
-        HttpResult result = UrlCommunicator.makePutRequest(putUrl(), Optional.of(headers));
+        HttpResult result = urlCommunicator.makePutRequest(putUrl(), Optional.of(headers));
         if (result.getData().contains("OK")) {
             this.markedAsRead = read;
         }

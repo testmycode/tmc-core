@@ -1,6 +1,7 @@
 package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -13,12 +14,14 @@ import java.util.List;
 public class ExerciseLister {
 
     private RootFinder finder;
+    private TmcJsonParser tmcJsonParser;
 
     /**
      * Default Constructor with default root finder.
      */
-    public ExerciseLister() {
-        finder = new ProjectRootFinder(new DefaultRootDetector());
+    public ExerciseLister(TmcJsonParser jsonParser) {
+        this(new ProjectRootFinder(jsonParser), jsonParser);
+        
     }
 
     /**
@@ -26,8 +29,9 @@ public class ExerciseLister {
      *
      * @param finder a RootFinder instance.
      */
-    public ExerciseLister(RootFinder finder) {
+    public ExerciseLister(RootFinder finder, TmcJsonParser jsonParser) {
         this.finder = finder;
+        tmcJsonParser = jsonParser;
     }
 
     /**
@@ -43,7 +47,7 @@ public class ExerciseLister {
             throw new TmcCoreException("No course found");
         }
 
-        List<Exercise> exercises = TmcJsonParser.getExercisesFromServer(course.get());
+        List<Exercise> exercises = tmcJsonParser.getExercisesFromServer(course.get());
         if (exercises == null || exercises.isEmpty()) {
             throw new TmcCoreException("No exercises found");
         }

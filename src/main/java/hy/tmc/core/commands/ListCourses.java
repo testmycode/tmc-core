@@ -2,7 +2,8 @@ package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.communication.UrlCommunicator;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
@@ -10,9 +11,21 @@ import java.util.List;
 
 public class ListCourses extends Command<List<Course>> {
 
+    private TmcJsonParser parser;
     
-    public ListCourses(){
-        
+    public ListCourses(TmcSettings settings){
+        super(settings);
+        this.parser = new TmcJsonParser(settings);
+    }
+    
+    public ListCourses(TmcSettings settings, TmcJsonParser parser){
+        super(settings);
+        this.parser = parser;
+    }
+    
+    public ListCourses(TmcSettings settings, UrlCommunicator communicator){
+        super(settings);
+        this.parser = new TmcJsonParser(communicator, settings);
     }
     /**
      * Checks that the user has authenticated, by verifying ClientData.
@@ -21,7 +34,7 @@ public class ListCourses extends Command<List<Course>> {
      */
     @Override
     public void checkData() throws TmcCoreException {
-        if (!ClientData.userDataExists()) {
+        if (!settings.userDataExists()) {
             throw new TmcCoreException("User must be authorized first");
         }
     }
@@ -29,7 +42,7 @@ public class ListCourses extends Command<List<Course>> {
     @Override
     public List<Course> call() throws TmcCoreException, IOException {
         checkData();
-        List<Course> courses = TmcJsonParser.getCourses();
+        List<Course> courses = parser.getCourses();
         return courses;
     }
 }

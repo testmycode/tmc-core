@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import java.net.URI;
@@ -17,7 +18,8 @@ public class SendFeedback extends Command<HttpResult> {
     private Map<String, String> answers;
     private String url;
     
-    public SendFeedback(Map<String, String> answers, String url) {
+    public SendFeedback(Map<String, String> answers, String url, TmcSettings settings) {
+        super(settings);
         this.answers = answers;
         this.url = url;
     }
@@ -44,7 +46,7 @@ public class SendFeedback extends Command<HttpResult> {
         JsonObject req = new JsonObject();
         req.add("answers", feedbackAnswers);
 
-        return UrlCommunicator.makePostWithJson(req, url);
+        return new UrlCommunicator(settings).makePostWithJson(req, url);
     }
 
     

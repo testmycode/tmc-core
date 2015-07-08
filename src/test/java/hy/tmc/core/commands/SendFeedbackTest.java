@@ -1,39 +1,35 @@
 package hy.tmc.core.commands;
 
-import hy.tmc.core.commands.Command;
-import hy.tmc.core.commands.SendFeedback;
-import com.google.common.base.Optional;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.exceptions.TmcCoreException;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.testhelpers.ExampleJson;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(UrlCommunicator.class)
+
 public class SendFeedbackTest {
 
     private SendFeedback command;
     private String url = "www.example.tmc";
+    ClientTmcSettings settings;
+    UrlCommunicator communicator;
 
     @Before
     public void setUp() {
-        command = new SendFeedback(testCaseMap(), url);
-        PowerMockito.mockStatic(UrlCommunicator.class);
+        settings = new ClientTmcSettings();
+        communicator = Mockito.mock(UrlCommunicator.class);
+        command = new SendFeedback(testCaseMap(), url, settings);
+        
     }
 
     private Map<String, String> testCaseMap() {
@@ -44,31 +40,25 @@ public class SendFeedbackTest {
 
         return answers;
     }
-
-    @Test
-    public void testCall() throws Exception {
-        command.call();
-        JsonParser parser = new JsonParser();
-        JsonObject expectedJson = (JsonObject) parser.parse(ExampleJson.sentFeedbackExample);
-        PowerMockito.verifyStatic();
-        UrlCommunicator.makePostWithJson(expectedJson, url);
-    }
     
     @Test (expected = TmcCoreException.class)
     public void ensureParamsNotNull() throws TmcCoreException, IOException {
-        Command command = new SendFeedback(null, "chewbac.ca");
+        settings = new ClientTmcSettings();
+        Command command = new SendFeedback(null, "chewbac.ca", settings);
         command.checkData();
     }
     
     @Test (expected = TmcCoreException.class)
     public void ensureParamsNotNull2() throws TmcCoreException, IOException {
-        Command command = new SendFeedback(new HashMap<String, String>(), null);
+        settings = new ClientTmcSettings();
+        Command command = new SendFeedback(new HashMap<String, String>(), null, settings);
         command.checkData();
     }
     
     @Test (expected = TmcCoreException.class)
     public void ensureParamsNotNull3() throws TmcCoreException, IOException {
-        Command command = new SendFeedback(null, null);
+        settings = new ClientTmcSettings();
+        Command command = new SendFeedback(null, null, settings);
         command.checkData();
     }
 

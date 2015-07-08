@@ -2,27 +2,35 @@ package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
 
-import static hy.tmc.core.communication.UrlCommunicator.makeGetRequest;
+import hy.tmc.core.communication.UrlCommunicator;
+import hy.tmc.core.configuration.TmcSettings;
 
-import hy.tmc.core.configuration.ClientData;
-import hy.tmc.core.configuration.ConfigHandler;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 
-public class Authenticate extends Command<Boolean> {
+public class VerifyCredentials extends Command<Boolean> {
 
     /**
      * Regex for HTTP OK codes.
      */
     private final String httpOk = "2..";
+    private UrlCommunicator communicator;
 
-    public Authenticate(String username, String password) {
+    public VerifyCredentials(String username, String password, TmcSettings settings) {
+        super(settings);
         this.setParameter("username", username);
         this.setParameter("password", password);
+        this.communicator = new UrlCommunicator(settings);
     }
     
-    public Authenticate(){
-        
+    public VerifyCredentials(TmcSettings settings) {
+        super(settings);
+        this.communicator = new UrlCommunicator(settings);
+    }
+    
+    public VerifyCredentials(TmcSettings settings, UrlCommunicator communicator) {
+        super(settings);
+        this.communicator = communicator;
     }
 
     @Override
@@ -44,8 +52,8 @@ public class Authenticate extends Command<Boolean> {
 
     private int makeRequest() throws IOException, TmcCoreException {
         String auth = data.get("username") + ":" + data.get("password");
-        int code = makeGetRequest(
-                ClientData.getServerAddress(),
+        int code = communicator.makeGetRequest(
+                settings.getServerAddress(),
                 auth
         ).getStatusCode();
         return code;
@@ -55,7 +63,7 @@ public class Authenticate extends Command<Boolean> {
     public Boolean call() throws TmcCoreException, IOException {
         checkData();
         if (isOk(makeRequest())) {
-            ClientData.setUserData(data.get("username"), data.get("password"));
+            //ClientData.setUserData(data.get("username"), data.get("password"));
             return true;
         }
         return false;

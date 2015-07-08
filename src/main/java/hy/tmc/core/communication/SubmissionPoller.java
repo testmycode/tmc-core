@@ -4,21 +4,17 @@ import com.google.common.base.Optional;
 
 import hy.tmc.core.domain.submission.FeedbackQuestion;
 import hy.tmc.core.domain.submission.SubmissionResult;
-import hy.tmc.core.domain.submission.TestCase;
-import hy.tmc.core.domain.submission.ValidationError;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 public class SubmissionPoller {
 
     /**
      * Number of poll attempts. If the interval is one second, the timeout will be n seconds.
      */
-    private final int timeOut = 30;
+    private int timeOut = 30;
 
     /**
      * Milliseconds to sleep between each poll attempt.
@@ -30,6 +26,22 @@ public class SubmissionPoller {
 
     
     private SubmissionResult latestResult;
+    private TmcJsonParser tmcJsonParser;
+    
+    /**
+     * Default constuctor. 
+     */
+    public SubmissionPoller(TmcJsonParser jsonParser) {
+        this.tmcJsonParser = jsonParser;
+    }
+    
+    /**
+     * Constructor for tests.
+     */
+    public SubmissionPoller(TmcJsonParser jsonParser, int timeout) {
+        this(jsonParser);
+        this.timeOut = timeout;
+    }
 
     /**
      * Returns a ready SubmissionResult with all fields complete after
@@ -41,7 +53,7 @@ public class SubmissionPoller {
      */
     private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
-            SubmissionResult result = TmcJsonParser.getSubmissionResult(url);
+            SubmissionResult result = tmcJsonParser.getSubmissionResult(url);
             if (result.getStatus() == null || !result.getStatus().equals("processing")) {
                 return Optional.of(result);
             }

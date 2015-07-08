@@ -3,7 +3,9 @@ package hy.tmc.core.commands;
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.CourseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.communication.UrlCommunicator;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -31,10 +33,13 @@ public class Submit extends Command<SubmissionResult> {
     /**
      * Constructor for Submit command, creates the courseSubmitter.
      */
-    public Submit() {
+    public Submit(TmcSettings settings) {
+        super(settings);
         submitter = new CourseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector()),
-                new Zipper()
+                new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings)),
+                new Zipper(),
+                new UrlCommunicator(settings), 
+                new TmcJsonParser(settings)
         );
     }
     
@@ -42,10 +47,13 @@ public class Submit extends Command<SubmissionResult> {
      * Constructor for Submit command, creates the courseSubmitter.
      * @param path path which to submit
      */
-    public Submit(String path) {
+    public Submit(String path, TmcSettings settings) {
+        super(settings);
         submitter = new CourseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector()),
-                new Zipper()
+                new ProjectRootFinder(new DefaultRootDetector(),  new TmcJsonParser(settings)),
+                new Zipper(),
+                new UrlCommunicator(settings), 
+                new TmcJsonParser(settings)
         );
         this.setParameter("path", path);
     }
@@ -56,7 +64,8 @@ public class Submit extends Command<SubmissionResult> {
      * @param submitter   can inject submitter mock.
      * @param interpreter can inject interpreter mock.
      */
-    public Submit(CourseSubmitter submitter, SubmissionPoller interpreter) {
+    public Submit(CourseSubmitter submitter, SubmissionPoller interpreter, TmcSettings settings) {
+        super(settings);
         this.interpreter = interpreter;
         this.submitter = submitter;
     }
@@ -68,14 +77,14 @@ public class Submit extends Command<SubmissionResult> {
      */
     @Override
     public void checkData() throws TmcCoreException, IOException {
-        if (!ClientData.userDataExists()) {
+        if (!settings.userDataExists()) {
             throw new TmcCoreException("User must be authorized first");
         }
         if (!this.data.containsKey("path")) {
             throw new TmcCoreException("path not supplied");
         }
 
-        Optional<Course> currentCourse = ClientData.getCurrentCourse(data.get("path"));
+        Optional<Course> currentCourse = settings.getCurrentCourse();
         if (currentCourse.isPresent()) {
             course = currentCourse.get();
         } else {
@@ -90,5 +99,4 @@ public class Submit extends Command<SubmissionResult> {
         SubmissionResult result = interpreter.getSubmissionResult(returnUrl);
         return result;
     }
-    
 }

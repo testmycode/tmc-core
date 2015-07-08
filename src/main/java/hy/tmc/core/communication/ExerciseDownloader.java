@@ -3,37 +3,47 @@ package hy.tmc.core.communication;
 import com.google.common.base.Optional;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-import hy.tmc.core.configuration.ClientData;
 import hy.tmc.core.domain.Exercise;
 
-import hy.tmc.core.zipping.DefaultUnzipDecider;
 import hy.tmc.core.zipping.UnzipDecider;
 import hy.tmc.core.zipping.Unzipper;
 
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
 
 public class ExerciseDownloader {
 
     private UnzipDecider decider;
     private File cacheFile;
-
-    public ExerciseDownloader() {
-        decider = new DefaultUnzipDecider();
-    }
-
+    private UrlCommunicator urlCommunicator;
+    private TmcJsonParser tmcJsonParser;
+    private Unzipper zipHandler;
+    
     /**
      * Constructor for dependency injection.
      *
      * @param decider UnzipDecider which decides which files to unzip
      */
-    public ExerciseDownloader(UnzipDecider decider) {
+    public ExerciseDownloader(UnzipDecider decider, 
+            UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser) {
         this.decider = decider;
+        this.urlCommunicator = urlCommunicator;
+        this.tmcJsonParser = tmcJsonParser;
+    }
+    
+    /**
+     * Constructor for tests
+     *
+     * @param decider UnzipDecider which decides which files to unzip
+     */
+    public ExerciseDownloader(UnzipDecider decider, 
+            UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser, Unzipper zipHandler) {
+        this(decider, urlCommunicator, tmcJsonParser);
+        this.zipHandler = zipHandler;
     }
 
     /**
@@ -42,10 +52,10 @@ public class ExerciseDownloader {
      * @param courseUrl course url
      * @return info about downloading.
      */
-    public Optional<String> downloadExercises(String courseUrl) throws IOException {
-        List<Exercise> exercises = TmcJsonParser.getExercises(courseUrl);
+    public Optional<List<Exercise>> downloadExercises(String courseUrl) throws IOException {
+        List<Exercise> exercises = tmcJsonParser.getExercises(courseUrl);
         if (exercises.isEmpty()) {
-            return Optional.of("No exercises to download.");
+            return Optional.absent();
         }
         return downloadFiles(exercises);
     }
@@ -56,7 +66,7 @@ public class ExerciseDownloader {
      * @param exercises list of exercises which will be downloaded, list is parsed from json.
      * @return info about downloading.
      */
-    public Optional<String> downloadFiles(List<Exercise> exercises) {
+    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises) {
         return downloadFiles(exercises, "");
     }
 
@@ -65,7 +75,7 @@ public class ExerciseDownloader {
      *
      * @return info about downloading.
      */
-    public Optional<String> downloadFiles(List<Exercise> exercises, String path) {
+    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, String path) {
         return downloadFiles(exercises, path, null);
     }
 
@@ -82,7 +92,7 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Method for downloading files if path where to download is defined. Also requires seperate
+     * Method for downloading files if path where to download is defined. Also requires separate
      * folder name that will be created to defined path.
      *
      * @param exercises list of exercises which will be downloaded, list is parsed from json.
@@ -90,17 +100,19 @@ public class ExerciseDownloader {
      * @param folderName folder name of where exercises will be extracted (for example course name)
      * @return
      */
-    public Optional<String> downloadFiles(List<Exercise> exercises, String path, String folderName) {
-        StringBuilder exercisesListed = new StringBuilder();
-        int exCount = 0;
+    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, String path, String folderName) {
+        List<Exercise> downloadedExercises = new ArrayList<>();
         path = createCourseFolder(path, folderName);
+        int exCount = 0;
         for (Exercise exercise : exercises) {
-            exercisesListed.append(handleSingleExercise(exercise, exCount, exercises.size(), path));
+            boolean success = handleSingleExercise(exercise, exCount, exercises.size(), path);
+            if (success) {
+                downloadedExercises.add(exercise);
+            }
             exCount++;
         }
-        exercisesListed.append(exercises.size())
-                .append(" exercises downloaded.");
-        return Optional.of(exercisesListed.toString());
+       
+        return Optional.of(downloadedExercises);
     }
 
     /**
@@ -111,11 +123,10 @@ public class ExerciseDownloader {
      * @param totalCount amount of all exercises
      * @param path path where single exercise will be downloaded
      */
-    public String handleSingleExercise(Exercise exercise, int exCount, int totalCount, String path) {
+    public boolean handleSingleExercise(Exercise exercise, int exCount, int totalCount, String path) {
         if (exercise.isLocked()) {
-            return "Skipping locked exercise: " + exercise.getName();
+            return false;
         }
-        String exerciseInfo = tellStateForUser(exercise, exCount, totalCount);
         String filePath = path + exercise.getName() + ".zip";
         downloadExerciseZip(exercise.getZipUrl(), filePath);
         try {
@@ -124,9 +135,9 @@ public class ExerciseDownloader {
         }
         catch (IOException | ZipException ex) {
             System.err.println(ex.getMessage());
-            exerciseInfo = "Unzipping exercise failed.\n";
+            return false;
         }
-        return exerciseInfo;
+        return true;
     }
 
     /**
@@ -146,19 +157,10 @@ public class ExerciseDownloader {
      * @param destinationPath destination path
      */
     public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
-        Unzipper zipHandler = new Unzipper(unzipPath, destinationPath, decider);
+        if(this.zipHandler == null){
+            zipHandler = new Unzipper(unzipPath, destinationPath, decider);
+        }
         zipHandler.unzip();
-    }
-
-    /**
-     * Tells which exercise is currently being downloaded.
-     *
-     * @param exercise exercise to be showed
-     * @param exCount order number of which exercise is in downloading
-     */
-    private String tellStateForUser(Exercise exercise, int exCount,
-            int totalCount) {
-        return "downloaded " + exercise.getName();
     }
 
     /**
@@ -171,7 +173,7 @@ public class ExerciseDownloader {
         if (path == null) {
             path = "";
         } else if (!path.isEmpty() && !path.endsWith(File.separator)) {
-            path += File.separator + "";
+            path += File.separator;
         }
         return path;
     }
@@ -193,8 +195,8 @@ public class ExerciseDownloader {
      * @param zipUrl url which will be downloaded
      * @param path where to download
      */
-    private static void downloadExerciseZip(String zipUrl, String path) {
+    private void downloadExerciseZip(String zipUrl, String path) {
         File file = new File(path);
-        UrlCommunicator.downloadToFile(zipUrl, file, ClientData.getFormattedUserData());
+        urlCommunicator.downloadToFile(zipUrl, file);
     }
 }

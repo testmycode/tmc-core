@@ -2,7 +2,7 @@ package hy.tmc.core.zipping;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.ConfigHandler;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.File;
@@ -13,6 +13,7 @@ import java.util.List;
 public class ProjectRootFinder implements RootFinder {
 
     private final ProjectRootDetector detector;
+    private TmcJsonParser tmcJsonParser;
 
     /**
      * A helper class that searches for a project root directory. It must be given a
@@ -21,8 +22,13 @@ public class ProjectRootFinder implements RootFinder {
      *
      * @param detector the RootDetector that specifies if a directory is a project root
      */
-    public ProjectRootFinder(ProjectRootDetector detector) {
+    public ProjectRootFinder(ProjectRootDetector detector, TmcJsonParser jsonParser) {
         this.detector = detector;
+        this.tmcJsonParser = jsonParser;
+    }
+    
+    public ProjectRootFinder(TmcJsonParser jsonParser) {
+        this(new DefaultRootDetector(), jsonParser);
     }
 
     /**
@@ -53,7 +59,7 @@ public class ProjectRootFinder implements RootFinder {
      * @return Course-object containing information of the course found.
      */
     @Override
-    public Optional<Course> getCurrentCourse(String path) throws IOException {
+    public Optional<Course> getCurrentCourse(String path) throws IOException, TmcCoreException {
         String[] foldersOfPwd = path.split(File.separator);
         try {
             checkPwd(foldersOfPwd);
@@ -70,10 +76,8 @@ public class ProjectRootFinder implements RootFinder {
      * @param foldersPath contains the names of the folders in path
      * @return Course
      */
-    public Optional<Course> findCourseByPath(String[] foldersPath) throws IOException {
-        String address = new ConfigHandler()
-                .readCoursesAddress();
-        List<Course> courses = TmcJsonParser.getCourses(address);
+    public Optional<Course> findCourseByPath(String[] foldersPath) throws IOException, TmcCoreException {
+        List<Course> courses = tmcJsonParser.getCourses();
         for (Course course : courses) {
             for (String folderName : foldersPath) {
                 if (course.getName().equals(folderName)) {

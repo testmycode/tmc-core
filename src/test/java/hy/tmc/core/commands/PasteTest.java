@@ -1,38 +1,30 @@
 package hy.tmc.core.commands;
 
-import hy.tmc.core.commands.Paste;
-import static org.junit.Assert.assertTrue;
+import com.google.common.base.Optional;
 import static org.mockito.Mockito.when;
 
-import com.google.common.base.Optional;
 
 import hy.tmc.core.communication.CourseSubmitter;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.testhelpers.ProjectRootFinderStub;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;
 import static org.junit.Assert.assertEquals;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(ClientData.class)
+
 public class PasteTest {
 
     private Paste paste;
     private CourseSubmitter submitterMock;
     private String pasteUrl = "http://legit.paste.url.fi";
+    ClientTmcSettings settings = new ClientTmcSettings();
 
     /**
      * Mocks CourseSubmitter and injects it into Paste command.
@@ -40,27 +32,20 @@ public class PasteTest {
     @Before
     public void setup() throws Exception {
         mock();
-        ClientData.setUserData("Bossman", "Samu");
-        ClientData.setProjectRootFinder(new ProjectRootFinderStub());
+        //ClientTmcSettings.setProjectRootFinder(new ProjectRootFinderStub());
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
-        paste = new Paste(submitterMock);
+        paste = new Paste(submitterMock, settings);
     }
     
     private void mock() throws ParseException, ExpiredException, IOException, TmcCoreException {
-        ClientData.setUserData("Massbon", "Samu");
-        PowerMockito.mockStatic(ClientData.class);
-        PowerMockito
-                .when(ClientData.getCurrentCourse(Mockito.anyString()))
-                .thenReturn(Optional.<Course>of(new Course()));
-        PowerMockito
-                .when(ClientData.getFormattedUserData())
+        settings = Mockito.mock(ClientTmcSettings.class);
+        Mockito.when(settings.getUsername()).thenReturn("Samu");
+        Mockito.when(settings.getPassword()).thenReturn("Bossman");
+        Mockito.when(settings.getCurrentCourse()).thenReturn(Optional.of(new Course()));
+        Mockito
+                .when(settings.getFormattedUserData())
                 .thenReturn("Bossman:Samu");
-    }
-
-    @After
-    public void clean() {
-        ClientData.clearUserData();
     }
 
     /**
@@ -68,14 +53,14 @@ public class PasteTest {
      */
     @Test
     public void testCheckDataSuccess() throws TmcCoreException, IOException {
-        PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
+        Mockito.when(settings.userDataExists()).thenReturn(true);
         paste.setParameter("path", "/home/tmccli/uolevipuistossa");
         paste.checkData();
     }
     
     @Test
     public void pasteSuccess() throws Exception {
-        PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
+        Mockito.when(settings.userDataExists()).thenReturn(true);
         paste.data.put("path", "asdsad");
         URI uri = paste.call();
         assertEquals(uri.toString(), "http://legit.paste.url.fi");
@@ -91,29 +76,27 @@ public class PasteTest {
 
     @Test(expected = TmcCoreException.class)
     public void checkDataFailIfNoAuth() throws Exception {
-        ClientData.clearUserData();
+        settings = new ClientTmcSettings();
         paste.checkData();
     }
 
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfNoCredentialsPresent() throws Exception {
         paste.data.put("path", "asdsad");
-        ClientData.clearUserData();
+        settings = new ClientTmcSettings();
         paste.checkData();
     }
     
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfNoPath() throws Exception {
-        PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
+        Mockito.when(settings.userDataExists()).thenReturn(true);
         paste.checkData();
     }
 
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfCourseCantBeRetrieved() throws Exception {
-        PowerMockito.when(ClientData.userDataExists()).thenReturn(true);
-        PowerMockito
-                .when(ClientData.getCurrentCourse(Mockito.anyString()))
-                .thenReturn(Optional.<Course>absent());
+        Mockito.when(settings.userDataExists()).thenReturn(true);
+        Mockito.when(settings.getCurrentCourse()).thenReturn(Optional.<Course>absent());
         paste.data.put("path", "asdsad");
         paste.checkData();
     }

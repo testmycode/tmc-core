@@ -1,6 +1,7 @@
 package hy.tmc.core.commands;
 
 import hy.tmc.core.communication.updates.ReviewHandler;
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Review;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -13,8 +14,8 @@ public class GetUnreadReviews extends Command<List<Review>>{
     private final Course course;
     private final ReviewHandler handler;
     
-    public GetUnreadReviews(Course course, ReviewHandler handler) {
-        super();
+    public GetUnreadReviews(Course course, ReviewHandler handler, TmcSettings settings) {
+        super(settings);
         this.handler = handler;
         this.course = course;
     }

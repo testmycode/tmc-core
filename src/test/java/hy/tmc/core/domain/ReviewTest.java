@@ -1,6 +1,5 @@
 package hy.tmc.core.domain;
 
-import hy.tmc.core.domain.Review;
 import com.google.common.base.Optional;
 import edu.emory.mathcs.backport.java.util.Arrays;
 import hy.tmc.core.communication.HttpResult;
@@ -8,6 +7,7 @@ import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import static org.hamcrest.CoreMatchers.not;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -30,19 +31,6 @@ public class ReviewTest {
     private final String updateUrl = "http://test.mooc.duck.fi/courses/47/reviews/8";
     private final String putUrl = this.updateUrl + ".json?api_version=7";
     private Review review;
-
-    @Before
-    public void setUp() throws IOException, TmcCoreException {
-        PowerMockito.mockStatic(UrlCommunicator.class);
-        PowerMockito
-                .when(UrlCommunicator.makePutRequest(argThat(not(putUrl)), any(Optional.class)))
-                .thenReturn(new HttpResult("", 400, false));
-        PowerMockito
-                .when(UrlCommunicator.makePutRequest(eq(putUrl), any(Optional.class)))
-                .thenReturn(new HttpResult(
-                                "{\"status\":OK}", 200, true
-                        ));
-    }
 
     @Before
     public void setUpReview() {
@@ -79,15 +67,24 @@ public class ReviewTest {
 
     @Test
     public void markAsReadTest() throws IOException, TmcCoreException {
+        UrlCommunicator urlcom = mockUrlCommunicator();
         review.setMarkedAsRead(false);
-        review.markAs(true);
+        review.markAs(true, urlcom);
         assertTrue(review.isMarkedAsRead());
+    }
+
+    private UrlCommunicator mockUrlCommunicator() throws IOException {
+        UrlCommunicator urlcom = Mockito.mock(UrlCommunicator.class);
+        Mockito.when(urlcom.makePutRequest(Mockito.anyString(), Mockito.any(Optional.class)))
+                .thenReturn(new HttpResult("OK", 200, true));
+        return urlcom;
     }
 
     @Test
     public void markAsUnreadTest() throws IOException, TmcCoreException {
+        UrlCommunicator urlcom = mockUrlCommunicator();
         review.setMarkedAsRead(true);
-        review.markAs(false);
+        review.markAs(false, urlcom);
         assertFalse(review.isMarkedAsRead());
     }
 

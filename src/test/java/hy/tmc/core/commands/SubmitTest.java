@@ -5,7 +5,7 @@ import com.google.common.base.Optional;
 
 import hy.tmc.core.communication.CourseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
-import hy.tmc.core.configuration.ClientData;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -14,45 +14,35 @@ import java.io.IOException;
 import java.text.ParseException;
 
 import net.lingala.zip4j.exception.ZipException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(ClientData.class)
 public class SubmitTest {
 
     private Submit submit;
     CourseSubmitter submitterMock;
     private SubmissionPoller interpreter;
     private final String submissionUrl = "/submissions/1781.json?api_version=7";
+    ClientTmcSettings settings;
 
     private void mock() throws ParseException, ExpiredException, IOException, ZipException, TmcCoreException {
-        submitterMock = Mockito.mock(CourseSubmitter.class);
-        PowerMockito.mockStatic(ClientData.class);
-        PowerMockito
-                .when(ClientData.getCurrentCourse(anyString()))
-                .thenReturn(Optional.<Course>of(new Course()));
-        PowerMockito
-                .when(ClientData.getFormattedUserData())
+        settings = Mockito.mock(ClientTmcSettings.class);
+        Mockito.when(settings.getUsername()).thenReturn("Samu");
+        Mockito.when(settings.getPassword()).thenReturn("Bossman");
+        Mockito.when(settings.getCurrentCourse()).thenReturn(Optional.of(new Course()));
+        Mockito
+                .when(settings.getFormattedUserData())
                 .thenReturn("Bossman:Samu");
-        PowerMockito
-                .when(ClientData.userDataExists())
-                .thenReturn(true);
-
+        submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080/submissions/1781.json?api_version=7");
 
         interpreter = Mockito.mock(SubmissionPoller.class);
     }
+   
 
     @Before
     public void setup() throws
@@ -61,13 +51,7 @@ public class SubmitTest {
         submitterMock = Mockito.mock(CourseSubmitter.class);
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         interpreter = Mockito.mock(SubmissionPoller.class);
-        submit = new Submit(submitterMock, interpreter);
-        ClientData.setUserData("Bossman", "Samu");
-    }
-
-    @After
-    public void clean() {
-        ClientData.clearUserData();
+        submit = new Submit(submitterMock, interpreter, settings);
     }
 
    
@@ -76,7 +60,8 @@ public class SubmitTest {
      */
     @Test
     public void testCheckDataSuccess() throws TmcCoreException, IOException {
-        Submit submitCommand = new Submit();
+        Mockito.when(settings.userDataExists()).thenReturn(true);
+        Submit submitCommand = new Submit(settings);
         submitCommand.setParameter("path", "/home/tmccli/testi");
         submitCommand.checkData();
     }
@@ -86,14 +71,13 @@ public class SubmitTest {
      */
     @Test(expected = TmcCoreException.class)
     public void testCheckDataFail() throws TmcCoreException, IOException {
-        Submit submitCommand = new Submit();
+        Submit submitCommand = new Submit(settings);
         submitCommand.checkData();
     }
 
     @Test(expected = TmcCoreException.class)
     public void checkDataFailIfNoAuth() throws TmcCoreException, IOException {
-        Submit submitCommand = new Submit();
-        ClientData.clearUserData();
+        Submit submitCommand = new Submit(settings);
         submitCommand.checkData();
     }
 

@@ -10,13 +10,13 @@ import java.util.List;
 public class ReviewHandler extends UpdateHandler<Review> {
 
 
-    public ReviewHandler() {
-        super();
+    public ReviewHandler(TmcJsonParser jsonParser) {
+        super(jsonParser);
     }
     
     @Override
     public List<Review> fetchFromServer(Course currentCourse) throws IOException{
-        List<Review> currentReviews = TmcJsonParser.getReviews(currentCourse.getReviewsUrl());
+        List<Review> currentReviews = jsonParser.getReviews(currentCourse.getReviewsUrl());
         if (currentReviews == null) {
             return new ArrayList<>();
         }

@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -12,27 +13,27 @@ import hy.tmc.core.zipping.ProjectRootFinder;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class RunTests extends Command<RunResult> {
+public class RunCheckStyle extends Command<ValidationResult> {
 
-    public RunTests(String path, TmcSettings settings) {
+    public RunCheckStyle(String path, TmcSettings settings) {
         super(settings);
         this.setParameter("path", path);
     }
 
-    public RunTests(TmcSettings settings) {
+    public RunCheckStyle(TmcSettings settings) {
         super(settings);
     }
     
     /**
-     * Runs tests for exercise.
+     * Runs checkstyle for exercise.
      *
      * @param exercise Path object
      * @return String contaning results
      * @throws NoLanguagePluginFoundException if path doesn't contain exercise
      */
-    public RunResult runTests(Path exercise) throws NoLanguagePluginFoundException {
+    public ValidationResult runCheckStyle(Path exercise) throws NoLanguagePluginFoundException {
         TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
-        return taskExecutor.runTests(exercise);
+        return taskExecutor.runCheckCodeStyle(exercise);
     }
 
     @Override
@@ -43,13 +44,14 @@ public class RunTests extends Command<RunResult> {
     }
 
     @Override
-    public RunResult call() throws TmcCoreException, NoLanguagePluginFoundException {
+    public ValidationResult call() throws TmcCoreException, NoLanguagePluginFoundException {
         String path = (String) this.data.get("path");
         ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings));
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
         if (!exercise.isPresent()) {
             throw new TmcCoreException("Not an exercise. (null)");
         }
-        return runTests(exercise.get());
+        return runCheckStyle(exercise.get());
     }
 }
+

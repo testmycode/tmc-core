@@ -12,38 +12,39 @@ import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExerciseDownloader {
-
+    
     private UnzipDecider decider;
     private File cacheFile;
     private UrlCommunicator urlCommunicator;
     private TmcJsonParser tmcJsonParser;
-    private Unzipper zipHandler;
-    
+    private Unzipper unzipper;
+
     /**
      * Constructor for dependency injection.
      *
      * @param decider UnzipDecider which decides which files to unzip
      */
-    public ExerciseDownloader(UnzipDecider decider, 
+    public ExerciseDownloader(UnzipDecider decider,
             UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser) {
         this.decider = decider;
         this.urlCommunicator = urlCommunicator;
         this.tmcJsonParser = tmcJsonParser;
     }
-    
+
     /**
      * Constructor for tests
      *
      * @param decider UnzipDecider which decides which files to unzip
      */
-    public ExerciseDownloader(UnzipDecider decider, 
+    public ExerciseDownloader(UnzipDecider decider,
             UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser, Unzipper zipHandler) {
         this(decider, urlCommunicator, tmcJsonParser);
-        this.zipHandler = zipHandler;
+        this.unzipper = zipHandler;
     }
 
     /**
@@ -78,7 +79,7 @@ public class ExerciseDownloader {
     public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, String path) {
         return downloadFiles(exercises, path, null);
     }
-
+    
     public String createCourseFolder(String path, String folderName) {
         path = formatPath(path);
         if (!isNullOrEmpty(folderName)) {
@@ -111,7 +112,7 @@ public class ExerciseDownloader {
             }
             exCount++;
         }
-       
+        
         return Optional.of(downloadedExercises);
     }
 
@@ -131,11 +132,11 @@ public class ExerciseDownloader {
         downloadExerciseZip(exercise.getZipUrl(), filePath);
         try {
             unzipFile(filePath, path);
-            deleteZip(filePath);
-        }
-        catch (IOException | ZipException ex) {
+        } catch (IOException | ZipException ex) {
             System.err.println(ex.getMessage());
             return false;
+        } finally {
+            deleteZip(filePath);
         }
         return true;
     }
@@ -157,10 +158,13 @@ public class ExerciseDownloader {
      * @param destinationPath destination path
      */
     public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
-        if(this.zipHandler == null){
-            zipHandler = new Unzipper(unzipPath, destinationPath, decider);
+        if (unzipper == null) {
+            unzipper = new Unzipper(unzipPath, destinationPath, decider);
+        } else {
+            unzipper.setZipPath(unzipPath);
+            unzipper.setUnzipLocation(destinationPath);
         }
-        zipHandler.unzip();
+        unzipper.unzip();
     }
 
     /**

@@ -147,7 +147,7 @@ public class TmcCore {
         return stringListenableFuture;
     }
 
-    public ListenableFuture<List<Exercise>> donwloadExercises(List<Exercise> exercises, TmcSettings settings) throws TmcCoreException {
+    public ListenableFuture<List<Exercise>> downloadExercises(List<Exercise> exercises, TmcSettings settings) throws TmcCoreException {
         DownloadExercises downloadCommand;
         if (this.updateCache != null) {
             downloadCommand = new DownloadExercises(exercises, settings, updateCache);

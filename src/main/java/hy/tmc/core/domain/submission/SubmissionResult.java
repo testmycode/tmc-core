@@ -6,6 +6,12 @@ import java.util.List;
 
 public class SubmissionResult {
 
+    public static enum Status {
+        OK,
+        FAIL,
+        ERROR
+    }
+
     @SerializedName("api_version")
     private int apiVersion;
     
@@ -20,6 +26,7 @@ public class SubmissionResult {
     @SerializedName("exercise_name")
     private String exerciseName;
     
+    @SerializedName("status")
     private String status;
     
     private String[] points;

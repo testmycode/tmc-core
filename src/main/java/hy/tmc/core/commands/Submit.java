@@ -35,11 +35,12 @@ public class Submit extends Command<SubmissionResult> {
      */
     public Submit(TmcSettings settings) {
         super(settings);
+        UrlCommunicator urlComms = new UrlCommunicator(settings);
+        TmcJsonParser jsonParser = new TmcJsonParser(urlComms, settings);
+        interpreter = new SubmissionPoller(jsonParser);
         submitter = new CourseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings)),
-                new Zipper(),
-                new UrlCommunicator(settings), 
-                new TmcJsonParser(settings)
+                new ProjectRootFinder(new DefaultRootDetector(),  jsonParser),
+                new Zipper(), urlComms, jsonParser
         );
     }
     
@@ -48,13 +49,7 @@ public class Submit extends Command<SubmissionResult> {
      * @param path path which to submit
      */
     public Submit(String path, TmcSettings settings) {
-        super(settings);
-        submitter = new CourseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector(),  new TmcJsonParser(settings)),
-                new Zipper(),
-                new UrlCommunicator(settings), 
-                new TmcJsonParser(settings)
-        );
+        this(settings);
         this.setParameter("path", path);
     }
 

@@ -27,7 +27,7 @@ public class SubmissionResult {
     private String exerciseName;
     
     @SerializedName("status")
-    private String status;
+    private Status status;
     
     private String[] points;
     
@@ -176,11 +176,11 @@ public class SubmissionResult {
         this.exerciseName = exerciseName;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

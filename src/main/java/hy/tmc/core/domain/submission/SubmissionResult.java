@@ -9,6 +9,7 @@ public class SubmissionResult {
     public static enum Status {
         OK,
         FAIL,
+        PROCESSING,
         ERROR
     }
 

@@ -1,6 +1,7 @@
 package hy.tmc.core.domain.submission;
 
 import com.google.gson.annotations.SerializedName;
+import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
 
 import java.util.List;
 
@@ -23,6 +24,9 @@ public class SubmissionResult {
     @SerializedName("user_id")
     private int userId;
     
+    @SerializedName("error")
+    private String error; // e.g. compile error
+
     private String course;
     
     @SerializedName("exercise_name")
@@ -65,6 +69,24 @@ public class SubmissionResult {
     
     @SerializedName("submitted_at")
     private String submittedAt;
+    
+    private ValidationResult validationResult;
+    
+    public void setValidationResult(final ValidationResult result) {
+        this.validationResult = result;
+    }
+
+    public ValidationResult getValidationResult() {
+        return validationResult;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
 
     public Validations getValidations() {
         return validations;
@@ -237,6 +259,11 @@ public class SubmissionResult {
 
     public void setMissingReviewPoints(List<String> missingReviewPoints) {
         this.missingReviewPoints = missingReviewPoints;
+    }
+
+    public boolean validationsFailed() {
+        return this.validationResult == null ?
+                false : !this.validationResult.getValidationErrors().isEmpty();
     }
 
 }

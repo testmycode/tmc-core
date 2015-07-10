@@ -7,7 +7,7 @@ import org.mockito.Mockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import hy.tmc.core.testhelpers.ClientTmcSettings;
+import hy.tmc.core.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -161,5 +161,9 @@ public class CourseSubmitterTest {
         Mockito.when(urlCommunicator.makePostWithFile(Mockito.any(FileBody.class),
                                 Mockito.contains(url), Mockito.any(Map.class)))
                 .thenReturn(fakeResult);
+        Mockito.when(urlCommunicator.makePostWithFileAndParams(Mockito.any(FileBody.class),
+                                Mockito.contains(url), Mockito.any(Map.class), Mockito.any(Map.class)))
+                .thenReturn(fakeResult);
+        
     }
 }

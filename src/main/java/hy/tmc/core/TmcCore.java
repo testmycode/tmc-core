@@ -21,6 +21,7 @@ import hy.tmc.core.commands.Paste;
 import hy.tmc.core.commands.RunCheckStyle;
 import hy.tmc.core.commands.RunTests;
 import hy.tmc.core.commands.SendFeedback;
+import hy.tmc.core.commands.SendSpywareDiffs;
 import hy.tmc.core.commands.Submit;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.updates.ExerciseUpdateHandler;
@@ -321,6 +322,21 @@ public class TmcCore {
         ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) threadPool.submit(paste);
         return stringListenableFuture;
     }
+    
+     /**
+     * Sends given diffs to spyware server.
+     * Server is specified in current course that can be found from TmcSettings.
+     * 
+     * @param spywareDiffs byte array containing information of changes to project files.
+     * @return A future object containing a Boolean that will be true iff sending was successful.
+     */
+    public ListenableFuture<Boolean> sendSpywareDiffs(byte[] spywareDiffs, TmcSettings settings) throws TmcCoreException {
+        SendSpywareDiffs spyware = new SendSpywareDiffs(spywareDiffs, settings);
+        spyware.checkData();
+        ListenableFuture<Boolean> spywareFuture = (ListenableFuture<Boolean>) threadPool.submit(spyware);
+        return spywareFuture;
+    }
+
 
     private void checkParameters(String... params) throws TmcCoreException {
         for (String param : params) {

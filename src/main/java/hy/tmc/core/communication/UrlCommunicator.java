@@ -34,6 +34,7 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.util.Map;
+import org.apache.http.entity.ContentType;
 
 public class UrlCommunicator {
 
@@ -58,17 +59,53 @@ public class UrlCommunicator {
             String destinationUrl, Map<String, String> headers) throws IOException {
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
-        addFileToRequest(fileBody, httppost);
+        
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        builder = addFileToRequest(fileBody, httppost, builder);
+        
+        HttpEntity entity = builder.build();
+        httppost.setEntity(entity);
         return getResponseResult(httppost);
     }
     
-    private void addFileToRequest(ContentBody fileBody, HttpPost httppost) {
+     /**
+     * Creates and executes post-request to specified URL.
+     *
+     * @param fileBody FileBody or ByteArrayBody that includes data to be
+     * sended.
+     * @param destinationUrl destination of the url.
+     * @param headers Headers to be added to httprequest.
+     * @return HttpResult that contains response from the server.
+     * @throws java.io.IOException if file is invalid.
+     */
+    public HttpResult makePostWithFileAndParams(ContentBody fileBody,
+            String destinationUrl, Map<String, String> headers, Map<String, String> params) throws IOException {
+        HttpPost httppost = new HttpPost(destinationUrl);
+        addHeadersTo(httppost, headers);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+        
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        builder.addPart("submission[file]", fileBody);
-        addCredentials(httppost, this.settings.getFormattedUserData());
+        builder = addParamsToRequest(fileBody, httppost, params, builder);
+        builder = addFileToRequest(fileBody, httppost, builder);
+        System.err.println(builder.toString());
+        
         HttpEntity entity = builder.build();
         httppost.setEntity(entity);
+        return getResponseResult(httppost);
+    }
+    
+    private MultipartEntityBuilder addFileToRequest(ContentBody fileBody, HttpPost httppost, MultipartEntityBuilder builder) {
+        builder.addPart("submission[file]", fileBody);
+        addCredentials(httppost, this.settings.getFormattedUserData());
+        return builder;
+    }
+    
+    private MultipartEntityBuilder addParamsToRequest(ContentBody fileBody, HttpPost httppost, Map<String, String> params, MultipartEntityBuilder builder){
+        for (Map.Entry<String, String> e : params.entrySet()) {
+            builder.addTextBody(e.getKey(), e.getValue(), ContentType.create("text/plain", "utf-8"));
+        }
+        return builder;
     }
 
     /**

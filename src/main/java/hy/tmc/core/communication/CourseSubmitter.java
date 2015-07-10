@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.lingala.zip4j.exception.ZipException;
 import org.apache.http.entity.mime.content.FileBody;
@@ -92,7 +93,26 @@ public class CourseSubmitter {
      */
     public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         Exercise currentExercise = initExercise(currentPath);
+        System.err.println("Exercise: " + currentExercise.getCourseName());
         return sendZipFile(currentPath, currentExercise, true);
+    }
+    
+    /**
+     * Submits folder of exercise to TMC with paste with comment. Finds it from current directory. Result includes URL of
+     * paste.
+     * @param currentPath path from which this was called.
+     * @return String with url from which to get paste URL or null if exercise was not found.
+     * @throws IOException if failed to create zip.
+     * @throws java.text.ParseException
+     * @throws hy.tmc.core.exceptions.ExpiredException
+     */
+    public String submitPasteWithComment(String currentPath, String comment) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
+        Exercise currentExercise = initExercise(currentPath);
+        System.err.println("Exercise: " + currentExercise.getCourseName());
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("message_for_paste", comment);
+        params.put("paste", "1");
+        return sendZipFileWithParams(currentPath, currentExercise, true, params);
     }
     
     /**
@@ -146,6 +166,24 @@ public class CourseSubmitter {
         deleteZipIfExists();
         return resultUrl;
     }
+    
+    private String sendZipFileWithParams(String currentPath, Exercise currentExercise, boolean paste, Map<String, String> params) throws IOException, ZipException {
+        String submissionExtension = File.separator + "submission.zip";
+
+        this.submissionZipPath = currentPath + submissionExtension;
+        String returnUrl = currentExercise.getReturnUrlWithApiVersion();
+        System.out.println("Returnurl: " + returnUrl);
+        deleteZipIfExists();
+        zip(findExerciseFolderToZip(currentPath), submissionZipPath);
+        String resultUrl;
+        if (paste) {
+            resultUrl = sendSubmissionToServerWithPasteAndParams(submissionZipPath, returnUrl, params);
+        } else {
+            resultUrl = sendSubmissionToServerWithParams(submissionZipPath, returnUrl, params);
+        }
+        deleteZipIfExists();
+        return resultUrl;
+    }
 
     private String findExerciseFolderToZip(String currentPath) {
         return rootFinder.getRootDirectory(
@@ -160,6 +198,30 @@ public class CourseSubmitter {
                 new HashMap<String, String>()
         );
         return tmcJsonParser.getSubmissionUrl(result);
+    }
+     
+     private String sendSubmissionToServerWithParams(String submissionZipPath, String url, Map<String, String> params) throws IOException{
+         HttpResult result = urlCommunicator.makePostWithFileAndParams(
+                new FileBody(new File(submissionZipPath)), 
+                url, 
+                new HashMap<String, String>(), 
+                params
+        );
+        return tmcJsonParser.getSubmissionUrl(result);
+     }
+     
+     private String sendSubmissionToServerWithPasteAndParams(
+            String submissionZipPath,
+            String url, Map<String, String> params) throws IOException {
+        final String pasteExtensionForTmcServer = "&paste=1";
+        System.err.println("Url " + (url));
+        HttpResult result = urlCommunicator.makePostWithFileAndParams(
+                new FileBody(new File(submissionZipPath)),
+                url,
+                new HashMap<String, String>(), 
+                params
+        );
+        return tmcJsonParser.getPasteUrl(result);
     }
 
     private Optional<Exercise> findExercise(String currentPath) throws IllegalArgumentException, IOException, TmcCoreException {

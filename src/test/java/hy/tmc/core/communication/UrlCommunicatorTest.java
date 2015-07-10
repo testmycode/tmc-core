@@ -111,6 +111,23 @@ public class UrlCommunicatorTest {
 
         assertEquals("All tests passed", result.getData());
     }
+    
+    @Test
+    public void httpPostAddsCommentToRequest() throws IOException, TmcCoreException {
+        settings.setUsername("test");
+        settings.setPassword("1234");
+        File testFile = new File("testResources/test.zip");
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("paste", "Commentti");
+        HttpResult result = urlCommunicator.makePostWithFileAndParams(
+                new FileBody(testFile),
+                "http://127.0.0.1:8080/kivaurl",
+                new HashMap<String, String>(), 
+                params
+                );
+
+        assertEquals("All tests passed", result.getData());
+    }
 
     @Test(expected = IOException.class)
     public void badGetRequestIsThrown() throws IOException, TmcCoreException {

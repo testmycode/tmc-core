@@ -9,7 +9,7 @@
             "reviews_url": "http://127.0.0.1:8080/courses/3/reviews.json",
             "comet_url": "https://tmc.mooc.fi:8443/comet",
             "spyware_urls": [
-                "http://staging.spyware.testmycode.net/"
+                "http://127.0.0.1:8080/staging.spyware.testmycode.net/"
             ]
         },
         {

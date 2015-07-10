@@ -93,7 +93,6 @@ public class CourseSubmitter {
      */
     public String submitPaste(String currentPath) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         Exercise currentExercise = initExercise(currentPath);
-        System.err.println("Exercise: " + currentExercise.getCourseName());
         return sendZipFile(currentPath, currentExercise, true);
     }
     
@@ -108,7 +107,6 @@ public class CourseSubmitter {
      */
     public String submitPasteWithComment(String currentPath, String comment) throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         Exercise currentExercise = initExercise(currentPath);
-        System.err.println("Exercise: " + currentExercise.getCourseName());
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("message_for_paste", comment);
         params.put("paste", "1");

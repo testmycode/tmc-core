@@ -214,7 +214,6 @@ public class CourseSubmitter {
             String submissionZipPath,
             String url, Map<String, String> params) throws IOException {
         final String pasteExtensionForTmcServer = "&paste=1";
-        System.err.println("Url " + (url));
         HttpResult result = urlCommunicator.makePostWithFileAndParams(
                 new FileBody(new File(submissionZipPath)),
                 url,

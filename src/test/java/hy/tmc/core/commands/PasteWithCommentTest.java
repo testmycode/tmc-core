@@ -6,7 +6,7 @@ import hy.tmc.core.communication.CourseSubmitter;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
+import hy.tmc.core.ClientTmcSettings;
 import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;
@@ -31,7 +31,7 @@ public class PasteWithCommentTest {
         mock();
         //ClientTmcSettings.setProjectRootFinder(new ProjectRootFinderStub());
         submitterMock = Mockito.mock(CourseSubmitter.class);
-        when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
+        when(submitterMock.submitPasteWithComment(Mockito.anyString(), Mockito.anyString())).thenReturn(pasteUrl);
         paste = new PasteWithComment(submitterMock, settings, "Commentti");
     }
     

@@ -5,7 +5,7 @@ import com.google.common.base.Optional;
 
 import hy.tmc.core.communication.CourseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
+import hy.tmc.core.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;

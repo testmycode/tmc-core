@@ -13,7 +13,6 @@ import hy.tmc.core.commands.SendFeedback;
 import hy.tmc.core.commands.Submit;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.testhelpers.FileWriterHelper;
 import java.io.File;
 import java.io.FileNotFoundException;

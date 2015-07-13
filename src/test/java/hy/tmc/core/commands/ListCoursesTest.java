@@ -10,7 +10,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
+import hy.tmc.core.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.exceptions.TmcServerException;

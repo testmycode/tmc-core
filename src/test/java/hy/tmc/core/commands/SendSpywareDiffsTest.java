@@ -8,6 +8,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.core.TmcCore;
+import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -49,20 +50,22 @@ public class SendSpywareDiffsTest {
 
     @Test
     public void testCall() throws Exception {
-        wireMock.stubFor(get(urlEqualTo("/staging.spyware.testmycode.net/"))
-                .willReturn(WireMock.aResponse()
-                        .withStatus(200)
-                        .withBody("SPYWARE TULI PERILLE")));
+//        wireMock.stubFor(get(urlEqualTo("/staging.spyware.testmycode.net/"))
+//                .willReturn(WireMock.aResponse()
+//                        .withStatus(200)
+//                        .withBody("SPYWARE TULI PERILLE")));
         
         ClientTmcSettings settings = setupSettings();
         byte[] diffs = new byte[]{1, 4, 6};
-        final List<Boolean> result = new ArrayList<Boolean>();
-        ListenableFuture<Boolean> sendFuture = this.core.sendSpywareDiffs(diffs, settings);
-        Futures.addCallback(sendFuture, new FutureCallback<Boolean>() {
+        final List<HttpResult> result = new ArrayList<HttpResult>();
+        ListenableFuture<List<HttpResult>> sendFuture = this.core.sendSpywareDiffs(diffs, settings);
+        Futures.addCallback(sendFuture, new FutureCallback<List<HttpResult>>() {
 
             @Override
-            public void onSuccess(Boolean success) {
-                result.add(success);
+            public void onSuccess(List<HttpResult> results) {
+                for (HttpResult res : results) {
+                    result.add(res);
+                }
             }
 
             @Override
@@ -82,10 +85,11 @@ public class SendSpywareDiffsTest {
         ClientTmcSettings settings = new ClientTmcSettings();
         TmcJsonParser parser = new TmcJsonParser(settings);
         List<Course> courses = parser.getCoursesFromString(ExampleJson.allCoursesExample);
-        Course currentCourse = courses.get(0);
+        //Course currentCourse = courses.get(0);
+        Course currentCourse = courses.get(1);
         settings.setCurrentCourse(currentCourse);
-        settings.setUsername("tmcCoreSnapshot");
-        settings.setPassword("tmcCoreSnapshot");
+        settings.setUsername("snapshotNelja");
+        settings.setPassword("snapshotNelja");
         return settings;
     }
 }

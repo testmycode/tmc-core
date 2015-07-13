@@ -58,30 +58,6 @@ public class DiffSenderTest {
     }
 
     @Test
-    public void testSendToSpywareWithFile() throws IOException, TmcCoreException {
-        final File file = new File("testResources/test.zip");
-        DiffSender sender = new DiffSender(settings);
-        HttpResult res = sender.sendToUrl(file,
-                spywareUrl);
-        assertEquals(200, res.getStatusCode());
-    }
-
-    @Test
-    public void testSendToAllUrlsWithFile() throws IOException, TmcCoreException {
-        final File file = new File("testResources/test.zip");
-        Course testCourse = new Course();
-        List<String> urls = new ArrayList<>();
-        urls.add(spywareUrl);
-        testCourse.setSpywareUrls(
-                urls
-        );
-        List<HttpResult> results = sender.sendToSpyware(file, testCourse);
-        for (HttpResult res : results) {
-            assertEquals(200, res.getStatusCode());
-        }
-    }
-
-    @Test
     public void testSendToSpywareWithByteArray() throws IOException, TmcCoreException {
         final File file = new File("testResources/test.zip");
         byte[] byteArray = Files.toByteArray(file);
@@ -102,7 +78,7 @@ public class DiffSenderTest {
 
         HttpResult res = sender.sendToUrl(byteArray,
                 "vaaraUrl");
-        assertNull(res);
+        assertEquals(500, res.getStatusCode());
     }
     
     @Test
@@ -117,13 +93,6 @@ public class DiffSenderTest {
         for (HttpResult res : results) {
             assertEquals(200, res.getStatusCode());
         }
-    }
-    
-    @Test
-    public void spywarePostIncludesFileAndHeaders() throws IOException, TmcCoreException {
-        File testFile = new File("testResources/test.zip");
-        HttpResult res = sender.sendToUrl(testFile, spywareUrl);
-        assertEquals(200, res.getStatusCode());
     }
 
     private void startWiremock() {

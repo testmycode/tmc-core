@@ -34,6 +34,7 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.util.Map;
+import org.apache.http.entity.ByteArrayEntity;
 
 public class UrlCommunicator {
 
@@ -60,6 +61,21 @@ public class UrlCommunicator {
         addHeadersTo(httppost, headers);
         addFileToRequest(fileBody, httppost);
         return getResponseResult(httppost);
+    }
+    
+    public HttpResult makePostWithByteArray(String url, 
+                                           byte[] data, 
+                                           Map<String, String> extraHeaders) throws IOException {
+        HttpPost rawPost = makeRawPostRequest(url, data, extraHeaders);
+        return getResponseResult(rawPost);
+    }
+
+    private HttpPost makeRawPostRequest(String url, byte[] data, Map<String, String> extraHeaders) {
+        HttpPost request = new HttpPost(url);
+        addHeadersTo(request, extraHeaders);
+        ByteArrayEntity entity = new ByteArrayEntity(data);
+        request.setEntity(entity);
+        return request;
     }
     
     private void addFileToRequest(ContentBody fileBody, HttpPost httppost) {

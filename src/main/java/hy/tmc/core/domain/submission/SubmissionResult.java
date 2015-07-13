@@ -1,10 +1,19 @@
 package hy.tmc.core.domain.submission;
 
 import com.google.gson.annotations.SerializedName;
+import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
 
 import java.util.List;
 
 public class SubmissionResult {
+
+    public static enum Status {
+        OK, FAIL, PROCESSING, ERROR
+    }
+
+    public static enum TestResultStatus {
+        ALL_FAILED, SOME_FAILED, NONE_FAILED
+    }
 
     @SerializedName("api_version")
     private int apiVersion;
@@ -15,14 +24,18 @@ public class SubmissionResult {
     @SerializedName("user_id")
     private int userId;
     
+    @SerializedName("error")
+    private String error; // e.g. compile error
+
     private String course;
     
     @SerializedName("exercise_name")
     private String exerciseName;
     
-    private String status;
+    @SerializedName("status")
+    private Status status;
     
-    private String[] points;
+    private List<String> points;
     
     @SerializedName("processing_time")
     private int processingTime;
@@ -31,10 +44,10 @@ public class SubmissionResult {
     private String messageForPaste;
     
     @SerializedName("missing_review_points")
-    private String[] missingReviewPoints;
+    private List<String> missingReviewPoints;
     
     @SerializedName("test_cases")
-    private TestCase[] testCases;
+    private List<TestCase> testCases;
     
     @SerializedName("feedback_questions")
     private List<FeedbackQuestion> feedbackQuestions;
@@ -56,6 +69,24 @@ public class SubmissionResult {
     
     @SerializedName("submitted_at")
     private String submittedAt;
+    
+    private ValidationResult validationResult;
+    
+    public void setValidationResult(final ValidationResult result) {
+        this.validationResult = result;
+    }
+
+    public ValidationResult getValidationResult() {
+        return validationResult;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
 
     public Validations getValidations() {
         return validations;
@@ -65,11 +96,11 @@ public class SubmissionResult {
         this.validations = validations;
     }
 
-    public TestCase[] getTestCases() {
+    public List<TestCase> getTestCases() {
         return testCases;
     }
 
-    public void setTestCases(TestCase[] testCases) {
+    public void setTestCases(List<TestCase> testCases) {
         this.testCases = testCases;
     }
 
@@ -133,6 +164,27 @@ public class SubmissionResult {
         return apiVersion;
     }
 
+    public TestResultStatus getTestResultStatus() {
+
+        int testsFailed = 0;
+
+        for (TestCase test : testCases) {
+            if (!test.isSuccessful()) {
+                testsFailed++;
+            }
+        }
+
+        if (testsFailed == testCases.size()) {
+            return TestResultStatus.ALL_FAILED;
+        }
+
+        if (testsFailed != 0) {
+            return TestResultStatus.SOME_FAILED;
+        }
+
+        return TestResultStatus.NONE_FAILED;
+    }
+
     public void setApiVersion(int apiVersion) {
         this.apiVersion = apiVersion;
     }
@@ -169,19 +221,19 @@ public class SubmissionResult {
         this.exerciseName = exerciseName;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    public String[] getPoints() {
+    public List<String> getPoints() {
         return points;
     }
 
-    public void setPoints(String[] points) {
+    public void setPoints(List<String> points) {
         this.points = points;
     }
 
@@ -201,12 +253,17 @@ public class SubmissionResult {
         this.messageForPaste = messageForPaste;
     }
 
-    public String[] getMissingReviewPoints() {
+    public List<String> getMissingReviewPoints() {
         return missingReviewPoints;
     }
 
-    public void setMissingReviewPoints(String[] missingReviewPoints) {
+    public void setMissingReviewPoints(List<String> missingReviewPoints) {
         this.missingReviewPoints = missingReviewPoints;
+    }
+
+    public boolean validationsFailed() {
+        return this.validationResult == null ?
+                false : !this.validationResult.getValidationErrors().isEmpty();
     }
 
 }

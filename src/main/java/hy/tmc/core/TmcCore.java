@@ -18,6 +18,7 @@ import hy.tmc.core.commands.GetUnreadReviews;
 import hy.tmc.core.commands.ListCourses;
 import hy.tmc.core.commands.ListExercises;
 import hy.tmc.core.commands.Paste;
+import hy.tmc.core.commands.PasteWithComment;
 import hy.tmc.core.commands.RunCheckStyle;
 import hy.tmc.core.commands.RunTests;
 import hy.tmc.core.commands.SendFeedback;
@@ -324,6 +325,23 @@ public class TmcCore {
     }
     
      /**
+     * Submits the current exercise to the TMC-server and requests for a paste to be made, with comment given by user.
+     *
+     * @param path inside any exercise directory
+     * @param comment, comment given by user
+     * @return URI object containing location of the paste
+     * @throws TmcCoreException if there was no course in the given path, or no exercise in the
+     * given path
+     */
+    public ListenableFuture<URI> pasteWithComment(String path, TmcSettings settings, String comment) throws TmcCoreException {
+        checkParameters(path);
+        @SuppressWarnings("unchecked")
+        PasteWithComment paste = new PasteWithComment(path, settings, comment);
+        ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) threadPool.submit(paste);
+        return stringListenableFuture;
+    }
+
+     /*
      * Sends given diffs to spyware server.
      * Server is specified in current course that can be found from TmcSettings.
      * 

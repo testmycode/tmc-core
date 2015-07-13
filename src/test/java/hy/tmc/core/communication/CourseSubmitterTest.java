@@ -112,6 +112,16 @@ public class CourseSubmitterTest {
         String result = courseSubmitter.submitPaste(testPath);
         assertEquals(pastePath, result);
     }
+    
+    @Test
+    public void submitWithPasteAndCommentReturnsPasteUrl() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
+        String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
+        rootFinder.setReturnValue(testPath);
+        String pastePath = "https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ";
+        String result = courseSubmitter.submitPasteWithComment(testPath, "Commentti");
+        assertEquals(pastePath, result);
+    }
+
 
     @Test(expected = IllegalArgumentException.class)
     public void submitWithPasteFromBadPathThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
@@ -151,5 +161,9 @@ public class CourseSubmitterTest {
         Mockito.when(urlCommunicator.makePostWithFile(Mockito.any(FileBody.class),
                                 Mockito.contains(url), Mockito.any(Map.class)))
                 .thenReturn(fakeResult);
+        Mockito.when(urlCommunicator.makePostWithFileAndParams(Mockito.any(FileBody.class),
+                                Mockito.contains(url), Mockito.any(Map.class), Mockito.any(Map.class)))
+                .thenReturn(fakeResult);
+        
     }
 }

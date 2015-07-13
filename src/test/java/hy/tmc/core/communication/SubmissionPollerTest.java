@@ -1,6 +1,7 @@
 package hy.tmc.core.communication;
 
 import hy.tmc.core.domain.submission.SubmissionResult;
+import static hy.tmc.core.domain.submission.SubmissionResult.Status.PROCESSING;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import static org.junit.Assert.assertEquals;
@@ -37,7 +38,7 @@ public class SubmissionPollerTest {
     @Test(expected = TmcCoreException.class)
     public void testTimeoutsIfResultIsProcessingTooLong() throws Exception {
         SubmissionResult result = new SubmissionResult();
-        result.setStatus("processing");
+        result.setStatus(PROCESSING);
         Mockito.when(jsonParser.getSubmissionResult(Mockito.anyString())).thenReturn(result);
         submissionPoller.getSubmissionResult(url);
     }

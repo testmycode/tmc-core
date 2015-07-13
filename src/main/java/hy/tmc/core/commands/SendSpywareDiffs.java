@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class SendSpywareDiffs extends Command<Boolean>{
+public class SendSpywareDiffs extends Command<List<HttpResult>>{
 
     private byte[] spywareDiffs;
     private Course currentCourse;
@@ -55,18 +55,8 @@ public class SendSpywareDiffs extends Command<Boolean>{
     }
 
     @Override
-    public Boolean call() throws Exception {
+    public List<HttpResult> call() throws Exception {
         checkData();
-        List<HttpResult> resultsFromSpywareServers = this.sender.sendToSpyware(spywareDiffs, currentCourse);
-        return allServersOk(resultsFromSpywareServers);
-    }
-
-    private boolean allServersOk(List<HttpResult> resultsFromSpywareServers) {
-        for (HttpResult result : resultsFromSpywareServers) {
-            if (result.getStatusCode() < 200 || result.getStatusCode() >= 300) {
-                return false;
-            }
-        }
-        return true;
+        return this.sender.sendToSpyware(spywareDiffs, currentCourse);
     }
 }

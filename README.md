@@ -20,6 +20,7 @@ and will be integrated into [TMC-netbeans](https://github.com/testmycode/tmc-net
  - get unread code reviews
  - get new exercises and updated exercises
  - send feedback on an exercise
+ - send snapshots to spyware server
  - paste code to the tmc pastebin
 
 # Usage

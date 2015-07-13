@@ -346,13 +346,13 @@ public class TmcCore {
      * Server is specified in current course that can be found from TmcSettings.
      * 
      * @param spywareDiffs byte array containing information of changes to project files.
-     * @return A future object containing a Boolean that will be true iff sending was successful.
+     * @return A future object containing a results from every spyware server.
      */
-    public ListenableFuture<Boolean> sendSpywareDiffs(byte[] spywareDiffs, TmcSettings settings) throws TmcCoreException {
+    public ListenableFuture<List<HttpResult>> sendSpywareDiffs(byte[] spywareDiffs, TmcSettings settings) throws TmcCoreException {
         SendSpywareDiffs spyware = new SendSpywareDiffs(spywareDiffs, settings);
         spyware.checkData();
-        ListenableFuture<Boolean> spywareFuture = (ListenableFuture<Boolean>) threadPool.submit(spyware);
-        return spywareFuture;
+        ListenableFuture<List<HttpResult>> spy = (ListenableFuture<List<HttpResult>>)threadPool.submit(spyware);
+        return spy;
     }
 
 

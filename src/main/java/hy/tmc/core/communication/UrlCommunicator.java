@@ -7,7 +7,6 @@ import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
 
 import hy.tmc.core.configuration.TmcSettings;
-import hy.tmc.core.exceptions.TmcCoreException;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -34,6 +33,7 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.util.Map;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
 
 public class UrlCommunicator {
@@ -48,7 +48,7 @@ public class UrlCommunicator {
     /**
      * Creates and executes post-request to specified URL.
      *
-     * @param fileBody FileBody or ByteArrayBody that includes data to be
+     * @param fileBody FileBody that includes data to be
      * sended.
      * @param destinationUrl destination of the url.
      * @param headers Headers to be added to httprequest.
@@ -67,6 +67,24 @@ public class UrlCommunicator {
         HttpEntity entity = builder.build();
         httppost.setEntity(entity);
         return getResponseResult(httppost);
+    }
+    
+    /**
+     * Adds byte-array to entity of post-request and executes it.
+     */
+    public HttpResult makePostWithByteArray(String url, 
+                                           byte[] data, 
+                                           Map<String, String> extraHeaders) throws IOException {
+        HttpPost rawPost = makeRawPostRequest(url, data, extraHeaders);
+        return getResponseResult(rawPost);
+    }
+
+    private HttpPost makeRawPostRequest(String url, byte[] data, Map<String, String> extraHeaders) {
+        HttpPost request = new HttpPost(url);
+        addHeadersTo(request, extraHeaders);
+        ByteArrayEntity entity = new ByteArrayEntity(data);
+        request.setEntity(entity);
+        return request;
     }
     
      /**

@@ -47,13 +47,13 @@ public class CourseSubmitterTest {
     public void setup() throws IOException, TmcCoreException {
         settings = new ClientTmcSettings();
         settings.setServerAddress("http://mooc.fi/staging");
+        settings.setUsername("chang");
+        settings.setPassword("rajani");
         urlCommunicator = mock(UrlCommunicator.class);
         jsonParser = new TmcJsonParser(urlCommunicator, settings);
         rootFinder = new ProjectRootFinderStub(jsonParser);
 
-        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub(), urlCommunicator, jsonParser);
-        settings.setUsername("chang");
-        settings.setPassword("rajani");
+        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub(), urlCommunicator, jsonParser, settings);
 
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
         mockUrlCommunicator("courses/3.json?api_version=7", ExampleJson.courseExample);

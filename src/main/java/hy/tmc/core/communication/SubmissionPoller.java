@@ -14,7 +14,7 @@ public class SubmissionPoller {
     /**
      * Number of poll attempts. If the interval is one second, the timeout will be n seconds.
      */
-    private int timeOut = 1000;
+    private int timeOut = 30;
 
     /**
      * Milliseconds to sleep between each poll attempt.
@@ -54,8 +54,6 @@ public class SubmissionPoller {
     private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
             SubmissionResult result = tmcJsonParser.getSubmissionResult(url);
-            System.out.println("STATUS: " + result.getStatus());
-            System.out.println("Url: " + url);
             if (result.getStatus() != null && result.getStatus().equals("processing")) {
                 return Optional.of(result);
             }

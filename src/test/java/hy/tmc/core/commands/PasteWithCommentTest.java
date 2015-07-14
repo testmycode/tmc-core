@@ -6,7 +6,7 @@ import hy.tmc.core.communication.CourseSubmitter;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;

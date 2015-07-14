@@ -2,7 +2,7 @@ package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
 
-import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;

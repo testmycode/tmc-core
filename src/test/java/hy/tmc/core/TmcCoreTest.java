@@ -1,5 +1,6 @@
 package hy.tmc.core;
 
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import hy.tmc.core.commands.VerifyCredentials;
 import hy.tmc.core.commands.DownloadExercises;

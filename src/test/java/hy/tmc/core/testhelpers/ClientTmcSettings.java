@@ -1,4 +1,4 @@
-package hy.tmc.core;
+package hy.tmc.core.testhelpers;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.configuration.TmcSettings;

@@ -3,7 +3,7 @@ package hy.tmc.core.communication;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import static hy.tmc.core.domain.submission.SubmissionResult.Status.PROCESSING;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.testhelpers.ClientTmcSettings;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;

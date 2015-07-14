@@ -85,7 +85,6 @@ public class SendSpywareDiffsTest {
         ClientTmcSettings settings = new ClientTmcSettings();
         TmcJsonParser parser = new TmcJsonParser(settings);
         List<Course> courses = parser.getCoursesFromString(ExampleJson.allCoursesExample);
-        //Course currentCourse = courses.get(0);
         Course currentCourse = courses.get(1);
         settings.setCurrentCourse(currentCourse);
         settings.setUsername("snapshotNelja");

@@ -1,17 +1,20 @@
 package hy.tmc.core.commands;
 
-
 import com.google.common.base.Optional;
 
 import hy.tmc.core.communication.CourseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
+import hy.tmc.core.testhelpers.ExampleJson;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 import net.lingala.zip4j.exception.ZipException;
 import org.junit.Before;
@@ -42,7 +45,6 @@ public class SubmitTest {
 
         interpreter = Mockito.mock(SubmissionPoller.class);
     }
-   
 
     @Before
     public void setup() throws
@@ -54,7 +56,6 @@ public class SubmitTest {
         submit = new Submit(submitterMock, interpreter, settings);
     }
 
-   
     /**
      * Check that data checking success.
      */
@@ -81,4 +82,25 @@ public class SubmitTest {
         submitCommand.checkData();
     }
 
+    @Test
+    public void testSubmissionInterpreter() throws Exception {
+        ClientTmcSettings localSettings = setSettings();
+        String path = "/home/samutamm/NetBeansProjects/2013_ohpeJaOhja/viikko1";
+        Submit submitCommand = new Submit(path, localSettings);
+        System.out.println("kurssi: " + localSettings.getCurrentCourse());
+        SubmissionResult submission = submitCommand.call();
+        System.out.println(submission);
+    }
+
+    private ClientTmcSettings setSettings() {
+        ClientTmcSettings localSettings = new ClientTmcSettings();
+        TmcJsonParser parser = new TmcJsonParser(settings);
+        List<Course> courses = parser.getCoursesFromString(ExampleJson.allCoursesExample);
+        Course currentCourse = courses.get(5);
+        localSettings.setCurrentCourse(currentCourse);
+        localSettings.setUsername("test");
+        localSettings.setPassword("1234");
+        localSettings.setServerAddress("https://tmc.mooc.fi/staging");
+        return localSettings;
+    }
 }

@@ -83,8 +83,7 @@ public class SubmissionPoller {
         if (!result.isPresent()) {
             throw new TmcCoreException("Failed to receive response to submit.");
         }
-        latestResult = result.get();
-        return latestResult;
+        return result.get();
     }
 
 }

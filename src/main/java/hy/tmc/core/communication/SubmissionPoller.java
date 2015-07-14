@@ -54,7 +54,7 @@ public class SubmissionPoller {
     private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
             SubmissionResult result = tmcJsonParser.getSubmissionResult(url);
-            if (result.getStatus() != null && result.getStatus().equals("processing")) {
+            if (result.getStatus() != null && !result.getStatus().equals("processing")) {
                 return Optional.of(result);
             }
             Thread.sleep(pollInterval);

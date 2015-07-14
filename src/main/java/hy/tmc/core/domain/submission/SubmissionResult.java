@@ -7,10 +7,6 @@ import java.util.List;
 
 public class SubmissionResult {
 
-    public static enum Status {
-        OK, FAIL, PROCESSING, ERROR
-    }
-
     public static enum TestResultStatus {
         ALL_FAILED, SOME_FAILED, NONE_FAILED
     }
@@ -33,7 +29,7 @@ public class SubmissionResult {
     private String exerciseName;
     
     @SerializedName("status")
-    private Status status;
+    private String status;
     
     private List<String> points;
     
@@ -221,12 +217,12 @@ public class SubmissionResult {
         this.exerciseName = exerciseName;
     }
 
-    public Status getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setStatus(String status) {
+       this.status = status;
     }
 
     public List<String> getPoints() {

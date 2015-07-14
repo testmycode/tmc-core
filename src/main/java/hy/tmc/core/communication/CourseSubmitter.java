@@ -1,6 +1,7 @@
 package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
+import hy.tmc.core.configuration.TmcSettings;
 
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
@@ -29,6 +30,7 @@ public class CourseSubmitter {
     private ZipMaker zipper;
     private final UrlCommunicator urlCommunicator;
     private final TmcJsonParser tmcJsonParser;
+    private TmcSettings settings;
 
     /**
      * Exercise deadline is checked with this date format
@@ -38,11 +40,13 @@ public class CourseSubmitter {
     private String submissionZipPath;
 
     public CourseSubmitter(RootFinder rootFinder, ZipMaker zipper, 
-            UrlCommunicator urlCommunicator, TmcJsonParser jsonParser) {
+            UrlCommunicator urlCommunicator, TmcJsonParser jsonParser,
+            TmcSettings settings) {
         this.urlCommunicator = urlCommunicator;
         this.tmcJsonParser = jsonParser;
         this.zipper = zipper;
         this.rootFinder = rootFinder;
+        this.settings = settings;
     }
 
     /**
@@ -226,7 +230,7 @@ public class CourseSubmitter {
     }
 
     private List<Exercise> findCourseExercises(String currentPath) throws IllegalArgumentException, IOException, TmcCoreException {
-        Optional<Course> currentCourse = rootFinder.getCurrentCourse(currentPath);
+        Optional<Course> currentCourse = this.settings.getCurrentCourse();
         if (!currentCourse.isPresent()) {
             deleteZipIfExists();
             throw new IllegalArgumentException("Not under any course directory");

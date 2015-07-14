@@ -4,7 +4,6 @@ import com.google.common.base.Optional;
 
 import hy.tmc.core.domain.submission.FeedbackQuestion;
 import hy.tmc.core.domain.submission.SubmissionResult;
-import static hy.tmc.core.domain.submission.SubmissionResult.Status.PROCESSING;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 
@@ -55,9 +54,9 @@ public class SubmissionPoller {
     private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
             SubmissionResult result = tmcJsonParser.getSubmissionResult(url);
-            //System.err.println("STATUS: " + result.getStatus());
-            System.err.println("Url: " + url);
-            if (result.getStatus() != null && result.getStatus() != PROCESSING) {
+            System.out.println("STATUS: " + result.getStatus());
+            System.out.println("Url: " + url);
+            if (result.getStatus() != null && result.getStatus().equals("processing")) {
                 return Optional.of(result);
             }
             Thread.sleep(pollInterval);

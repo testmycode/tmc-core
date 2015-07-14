@@ -40,7 +40,8 @@ public class Submit extends Command<SubmissionResult> {
         interpreter = new SubmissionPoller(jsonParser);
         submitter = new CourseSubmitter(
                 new ProjectRootFinder(new DefaultRootDetector(),  jsonParser),
-                new Zipper(), urlComms, jsonParser
+                new Zipper(), urlComms, jsonParser,
+                settings
         );
     }
     

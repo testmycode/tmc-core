@@ -266,4 +266,18 @@ public class SubmissionResult {
                 false : !this.validationResult.getValidationErrors().isEmpty();
     }
 
+    @Override
+    public String toString() {
+        return "SubmissionResult{" + "apiVersion=" + apiVersion + ", \nallTestsPassed=" +
+                allTestsPassed + ", userId=" + userId + ", error=" + error + 
+                ", \ncourse=" + course + ", exerciseName=" + exerciseName + ", status=" + 
+                status + ", points=" + points + ", processingTime=" + processingTime +
+                ", \nmessageForPaste=" + messageForPaste + ", missingReviewPoints=" + 
+                missingReviewPoints + ", testCases=" + testCases + ", feedbackQuestions=" 
+                + feedbackQuestions + ", feedbackAnswerUrl=" + feedbackAnswerUrl +
+                ", solutionUrl=" + solutionUrl + ", validations=" + validations +
+                ", \n valgrind=" + valgrind + ", reviewed=" + reviewed + ", requestsReview=" 
+                + requestsReview + ", submittedAt=" + submittedAt + ", validationResult="
+                + validationResult + '}';
+    }
 }

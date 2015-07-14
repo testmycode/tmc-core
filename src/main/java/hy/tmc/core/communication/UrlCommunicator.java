@@ -62,7 +62,8 @@ public class UrlCommunicator {
         
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        builder = addFileToRequest(fileBody, httppost, builder);
+        addCredentials(httppost, this.settings.getFormattedUserData());
+        builder = addFileToRequest(fileBody, builder);
         
         HttpEntity entity = builder.build();
         httppost.setEntity(entity);
@@ -105,7 +106,9 @@ public class UrlCommunicator {
         
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder = addParamsToRequest(fileBody, httppost, params, builder);
-        builder = addFileToRequest(fileBody, httppost, builder);
+        builder = addFileToRequest(fileBody, builder);
+        addCredentials(httppost, this.settings.getFormattedUserData());
+        
         System.err.println(builder.toString());
         
         HttpEntity entity = builder.build();
@@ -113,9 +116,8 @@ public class UrlCommunicator {
         return getResponseResult(httppost);
     }
     
-    private MultipartEntityBuilder addFileToRequest(ContentBody fileBody, HttpPost httppost, MultipartEntityBuilder builder) {
+    private MultipartEntityBuilder addFileToRequest(ContentBody fileBody, MultipartEntityBuilder builder) {
         builder.addPart("submission[file]", fileBody);
-        addCredentials(httppost, this.settings.getFormattedUserData());
         return builder;
     }
     

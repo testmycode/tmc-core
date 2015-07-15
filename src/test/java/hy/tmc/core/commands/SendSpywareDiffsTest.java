@@ -50,10 +50,10 @@ public class SendSpywareDiffsTest {
 
     @Test
     public void testCall() throws Exception {
-//        wireMock.stubFor(get(urlEqualTo("/staging.spyware.testmycode.net/"))
-//                .willReturn(WireMock.aResponse()
-//                        .withStatus(200)
-//                        .withBody("SPYWARE TULI PERILLE")));
+        wireMock.stubFor(get(urlEqualTo("/staging.spyware.testmycode.net/"))
+                .willReturn(WireMock.aResponse()
+                        .withStatus(200)
+                        .withBody("SPYWARE TULI PERILLE")));
         
         ClientTmcSettings settings = setupSettings();
         byte[] diffs = new byte[]{1, 4, 6};

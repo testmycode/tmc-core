@@ -41,8 +41,7 @@ public class UrlCommunicator {
     private TmcSettings settings;
 
     public UrlCommunicator(TmcSettings settings) {
-        this.settings = settings;
-        
+        this.settings = settings;    
     }
     
     /**

@@ -60,8 +60,12 @@ public class Submit extends Command<SubmissionResult> {
      * @param submitter   can inject submitter mock.
      * @param interpreter can inject interpreter mock.
      */
-    public Submit(CourseSubmitter submitter, SubmissionPoller interpreter, TmcSettings settings) {
+    public Submit(CourseSubmitter submitter, 
+                SubmissionPoller interpreter, 
+                TmcSettings settings,
+                String path) {
         super(settings);
+        this.setParameter("path", path);
         this.interpreter = interpreter;
         this.submitter = submitter;
     }

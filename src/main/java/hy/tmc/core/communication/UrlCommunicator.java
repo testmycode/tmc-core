@@ -108,8 +108,6 @@ public class UrlCommunicator {
         builder = addFileToRequest(fileBody, builder);
         addCredentials(httppost, this.settings.getFormattedUserData());
         
-        System.err.println(builder.toString());
-        
         HttpEntity entity = builder.build();
         httppost.setEntity(entity);
         return getResponseResult(httppost);

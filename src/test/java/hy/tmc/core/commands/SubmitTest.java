@@ -40,7 +40,6 @@ public class SubmitTest {
         settings.setCurrentCourse(new Course());
         interpreter = Mockito.mock(SubmissionPoller.class);
         submitterMock = Mockito.mock(CourseSubmitter.class);
-        //when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         when(submitterMock.submit(anyString())).thenReturn("https://tmc.mooc.fi/staging" + submissionUrl);
         submit = new Submit(submitterMock, interpreter, settings);
     }

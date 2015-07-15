@@ -1,9 +1,14 @@
 package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import hy.tmc.core.domain.submission.FeedbackQuestion;
 import hy.tmc.core.domain.submission.SubmissionResult;
+import static hy.tmc.core.domain.submission.SubmissionResult.Status.PROCESSING;
+import hy.tmc.core.domain.submission.SubmissionResultParser;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 
@@ -27,12 +32,14 @@ public class SubmissionPoller {
     
     private SubmissionResult latestResult;
     private TmcJsonParser tmcJsonParser;
+    private SubmissionResultParser submissionParser;
     
     /**
      * Default constuctor. 
      */
     public SubmissionPoller(TmcJsonParser jsonParser) {
         this.tmcJsonParser = jsonParser;
+        this.submissionParser = new SubmissionResultParser();
     }
     
     /**
@@ -53,8 +60,9 @@ public class SubmissionPoller {
      */
     private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
-            SubmissionResult result = tmcJsonParser.getSubmissionResult(url);
-            if (result.getStatus() != null && !result.getStatus().equals("processing")) {
+            String json = tmcJsonParser.getRawTextFrom(url);
+            if (!isProcessing(json)) {
+                SubmissionResult result = submissionParser.parseFromJson(json);
                 return Optional.of(result);
             }
             Thread.sleep(pollInterval);
@@ -85,4 +93,13 @@ public class SubmissionPoller {
         return result.get();
     }
 
+    private boolean isProcessing(String jsonResult) {
+        if (jsonResult == null || jsonResult.trim().isEmpty()) {
+            return false;
+        }
+        JsonElement jsonElement = new JsonParser().parse(jsonResult);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        String status = jsonObject.get("status").getAsString();
+        return status.equals("processing");
+    }
 }

@@ -1,9 +1,11 @@
 package hy.tmc.core.communication;
 
+import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.domain.submission.SubmissionResult;
-import hy.tmc.core.exceptions.TmcCoreException;
+import hy.tmc.core.domain.submission.SubmissionResult.Status;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -25,14 +27,20 @@ public class SubmissionPollerTest {
     }
 
     @Test
-    public void jsonParserIsCalled() throws Exception {
-        SubmissionResult result = new SubmissionResult();
-        result.setApiVersion(7);
-        result.setSubmittedAt("asdljasdjalsd");
-        result.setStatus("failed");
-        Mockito.when(jsonParser.getSubmissionResult(Mockito.anyString())).thenReturn(result);
+    public void successfulSubmission() throws Exception {
+        Mockito.when(jsonParser.getRawTextFrom(Mockito.anyString())).thenReturn(ExampleJson.successfulSubmission);
         SubmissionResult output = submissionPoller.getSubmissionResult(url);
-        assertEquals(output, result);
-    }
+        assertFalse(output == null);
+        assertEquals("2014-mooc-no-deadline", output.getCourse());
+        assertEquals(Status.OK, output.getStatus());
+    }   
     
+    @Test
+    public void unsuccessfulSubmission() throws Exception {
+        Mockito.when(jsonParser.getRawTextFrom(Mockito.anyString())).thenReturn(ExampleJson.failedSubmission);
+        SubmissionResult output = submissionPoller.getSubmissionResult(url);
+        assertFalse(output == null);
+        assertEquals("2014-mooc-no-deadline", output.getCourse());
+        assertEquals(Status.FAIL, output.getStatus());
+    }   
 }

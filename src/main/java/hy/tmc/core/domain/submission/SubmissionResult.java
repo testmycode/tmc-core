@@ -2,6 +2,7 @@ package hy.tmc.core.domain.submission;
 
 import com.google.gson.annotations.SerializedName;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
+import java.util.Collections;
 
 import java.util.List;
 
@@ -10,7 +11,14 @@ public class SubmissionResult {
     public static enum TestResultStatus {
         ALL_FAILED, SOME_FAILED, NONE_FAILED
     }
-
+    
+    public static enum Status {
+        OK,
+        FAIL,
+        ERROR,
+        PROCESSING
+    }
+    
     @SerializedName("api_version")
     private int apiVersion;
     
@@ -29,7 +37,7 @@ public class SubmissionResult {
     private String exerciseName;
     
     @SerializedName("status")
-    private String status;
+    private Status status;
     
     private List<String> points;
     
@@ -67,6 +75,15 @@ public class SubmissionResult {
     private String submittedAt;
     
     private ValidationResult validationResult;
+    
+    public SubmissionResult() {
+        status = Status.ERROR;
+        error = null;
+        testCases = Collections.emptyList();
+        points = Collections.emptyList();
+        missingReviewPoints = Collections.emptyList();
+        feedbackQuestions = Collections.emptyList();
+    }
     
     public void setValidationResult(final ValidationResult result) {
         this.validationResult = result;
@@ -217,11 +234,11 @@ public class SubmissionResult {
         this.exerciseName = exerciseName;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
        this.status = status;
     }
 

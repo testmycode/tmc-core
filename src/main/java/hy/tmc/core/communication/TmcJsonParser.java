@@ -59,11 +59,23 @@ public class TmcJsonParser {
      * @param url url from which the object data is fetched
      * @return JSON-object
      */
-    private JsonObject getJsonFrom(String url) throws IOException {
+    public JsonObject getJsonFrom(String url) throws IOException {
         HttpResult httpResult = urlCommunicator.makeGetRequestWithAuthentication(url);
         if(httpResult == null) return null;
         String data = httpResult.getData();
         return new JsonParser().parse(data).getAsJsonObject();
+    }
+    
+    /**
+     * Get String from url.
+     *
+     * @param url url from which the data is fetched
+     * @return JSON-object
+     */
+    public String getRawTextFrom(String url) throws IOException {
+        HttpResult httpResult = urlCommunicator.makeGetRequestWithAuthentication(url);
+        if(httpResult == null) return null;
+        return httpResult.getData();
     }
 
     /**
@@ -205,6 +217,8 @@ public class TmcJsonParser {
         Gson mapper = new Gson();
         return mapper.fromJson(submission, SubmissionResult.class);
     }
+    
+    
 
     /**
      * Parses the submission result URL from a HttpResult with JSON.

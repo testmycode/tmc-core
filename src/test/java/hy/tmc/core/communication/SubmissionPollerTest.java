@@ -21,7 +21,7 @@ public class SubmissionPollerTest {
         settings.setUsername("chang");
         settings.setPassword("rajani");
         jsonParser = Mockito.mock(TmcJsonParser.class);
-        submissionPoller = new SubmissionPoller(jsonParser, 1);
+        submissionPoller = new SubmissionPoller(jsonParser, 30);
     }
 
     @Test
@@ -29,6 +29,7 @@ public class SubmissionPollerTest {
         SubmissionResult result = new SubmissionResult();
         result.setApiVersion(7);
         result.setSubmittedAt("asdljasdjalsd");
+        result.setStatus("failed");
         Mockito.when(jsonParser.getSubmissionResult(Mockito.anyString())).thenReturn(result);
         SubmissionResult output = submissionPoller.getSubmissionResult(url);
         assertEquals(output, result);

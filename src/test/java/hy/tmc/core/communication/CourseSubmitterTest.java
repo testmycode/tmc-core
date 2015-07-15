@@ -1,7 +1,6 @@
 package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
-import edu.emory.mathcs.backport.java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 
 import org.mockito.Mockito;

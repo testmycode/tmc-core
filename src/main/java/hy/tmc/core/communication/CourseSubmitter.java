@@ -174,7 +174,6 @@ public class CourseSubmitter {
 
         this.submissionZipPath = currentPath + submissionExtension;
         String returnUrl = currentExercise.getReturnUrlWithApiVersion();
-        System.out.println("Returnurl: " + returnUrl);
         deleteZipIfExists();
         zip(findExerciseFolderToZip(currentPath), submissionZipPath);
         String resultUrl;

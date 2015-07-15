@@ -61,6 +61,7 @@ public class TmcJsonParser {
      */
     private JsonObject getJsonFrom(String url) throws IOException {
         HttpResult httpResult = urlCommunicator.makeGetRequestWithAuthentication(url);
+        if(httpResult == null) return null;
         String data = httpResult.getData();
         return new JsonParser().parse(data).getAsJsonObject();
     }
@@ -147,6 +148,7 @@ public class TmcJsonParser {
      */
     public Optional<Course> getCourse(String courseUrl) throws IOException {
         JsonObject courseJson = getJsonFrom(courseUrl);
+        if(courseJson == null) return Optional.absent();
         Gson mapper = new Gson();
         Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
 

@@ -1,11 +1,10 @@
 package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
+import edu.emory.mathcs.backport.java.util.Arrays;
 import static org.junit.Assert.assertEquals;
 
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
@@ -26,11 +25,9 @@ import org.apache.http.entity.mime.content.FileBody;
 import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.powermock.api.mockito.PowerMockito.mock;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(UrlCommunicator.class)
+
 public class CourseSubmitterTest {
 
     private CourseSubmitter courseSubmitter;
@@ -49,6 +46,7 @@ public class CourseSubmitterTest {
         settings.setServerAddress("http://mooc.fi/staging");
         settings.setUsername("chang");
         settings.setPassword("rajani");
+        
         urlCommunicator = mock(UrlCommunicator.class);
         jsonParser = new TmcJsonParser(urlCommunicator, settings);
         rootFinder = new ProjectRootFinderStub(jsonParser);
@@ -71,6 +69,8 @@ public class CourseSubmitterTest {
     @Test
     public void testGetExerciseName() {
         final String path = "/home/test/ohpe-test/viikko_01";
+        settings.setCurrentCourse(rootFinder.getCurrentCourse(path).or(new Course()));
+        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub(), urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(path);
         String[] names = courseSubmitter.getExerciseName(path);
         assertEquals("viikko_01", names[names.length - 1]);
@@ -89,6 +89,8 @@ public class CourseSubmitterTest {
     @Test
     public void testSubmitWithOneParam() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
+        settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
+        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub(), urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
         String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
@@ -99,6 +101,8 @@ public class CourseSubmitterTest {
     public void testSubmitWithExpiredExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/k2015-tira/viikko01/tira1.1";
 
+        settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
+        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub(), urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
         String submissionPath = "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
@@ -107,6 +111,8 @@ public class CourseSubmitterTest {
     @Test
     public void submitWithPasteReturnsPasteUrl() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
+        settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
+        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub(), urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
         String pastePath = "https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ";
         String result = courseSubmitter.submitPaste(testPath);
@@ -116,6 +122,8 @@ public class CourseSubmitterTest {
     @Test
     public void submitWithPasteAndCommentReturnsPasteUrl() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
+        settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
+        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub(), urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
         String pastePath = "https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ";
         String result = courseSubmitter.submitPasteWithComment(testPath, "Commentti");
@@ -126,6 +134,8 @@ public class CourseSubmitterTest {
     @Test(expected = IllegalArgumentException.class)
     public void submitWithPasteFromBadPathThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikeintehtava";
+        settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
+        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub(), urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
@@ -133,6 +143,8 @@ public class CourseSubmitterTest {
     @Test(expected = IllegalArgumentException.class)
     public void testSubmitWithNonexistentExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikkitehtava";
+        settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
+        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub(), urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
@@ -140,12 +152,13 @@ public class CourseSubmitterTest {
     @Test(expected = IllegalArgumentException.class)
     public void submitWithNonExistentCourseThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
         String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
+        settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
+        this.courseSubmitter = new CourseSubmitter(rootFinder, new ZipperStub(), urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
         String result = courseSubmitter.submit(testPath);
     }
 
     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException, TmcCoreException {
-        System.out.println("mocking " + pieceOfUrl);
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         Mockito.when(urlCommunicator.makeGetRequest(Mockito.contains(pieceOfUrl),
                                 Mockito.anyString()))

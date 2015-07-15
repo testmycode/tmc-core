@@ -146,18 +146,17 @@ public class DownloadExercises extends Command<List<Exercise>> {
     @Override
     public List<Exercise> call() throws TmcCoreException, IOException {
         checkData();
-
         Optional<Course> courseResult = this.parser.getCourse(Integer.parseInt(this.data.get("courseID")));
-        
         if (courseResult.isPresent()) {
             Course course = courseResult.get();
             Optional<List<Exercise>> downloadResult = downloadExercisesFromList(getExercisesToDownload(course), course.getName());
             if (downloadResult.isPresent()) {
                 return downloadResult.get();
             }
+            return new ArrayList<>();
         }
 
-        throw new TmcCoreException("Failed to fetch exercises. Check your internet connection or course ID");
+        throw new TmcCoreException("Could not find the course. Please check your internet connection");
     }
 
     private List<Exercise> getExercisesToDownload(Course course) {

@@ -1,8 +1,8 @@
 package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
-import fi.helsinki.cs.tmc.langs.NoLanguagePluginFoundException;
-import fi.helsinki.cs.tmc.langs.RunResult;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.configuration.TmcSettings;

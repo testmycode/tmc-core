@@ -10,6 +10,9 @@
     <url>http://testmycode.net</url>
 
     <repositories>
+        <!--
+        This external repo is outdated so all developers should have 
+        local jar of tmc-langs, until new external repo is buided up.
         <repository>
             <releases>
                 <enabled>true</enabled>
@@ -20,7 +23,7 @@
             <name>tmccli</name>
             <url>http://tmc-cli.jvn.lu/maven2/</url>
             <layout>default</layout>
-        </repository>
+        </repository> -->
     </repositories>
 
     <properties>
@@ -183,7 +186,7 @@
             <artifactId>checkstyle</artifactId>
             <version>6.6</version>
         </dependency>
-        <dependency>
+        <!--<dependency>
             <groupId>fi.helsinki.cs.tmc</groupId>
             <artifactId>tmc-langs-ant</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -193,6 +196,7 @@
             <artifactId>tmc-langs-maven</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        -->
         <dependency>
             <groupId>fi.helsinki.cs.tmc</groupId>
             <artifactId>tmc-langs-util</artifactId>

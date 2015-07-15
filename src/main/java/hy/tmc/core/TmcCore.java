@@ -4,7 +4,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import fi.helsinki.cs.tmc.langs.RunResult;
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.domain.Course;

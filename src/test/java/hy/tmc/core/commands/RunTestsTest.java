@@ -11,7 +11,7 @@ import org.junit.Test;
 public class RunTestsTest {
 
     private RunTests runTests;
-    ClientTmcSettings settings;
+    private ClientTmcSettings settings;
 
     /**
      * Create FrontendStub and RunTests command.

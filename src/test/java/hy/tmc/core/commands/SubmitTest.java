@@ -3,7 +3,6 @@ package hy.tmc.core.commands;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.matching;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -115,7 +114,7 @@ public class SubmitTest {
         Course course = parser.getCourseFromString(ExampleJson.noDeadlineCourseExample);
         settings.setCurrentCourse(course);
         ListenableFuture<SubmissionResult> submit = core.submit(
-                "/home/samutamm/NetBeansProjects/2014-mooc-no-deadline/viikko1/Viikko1_012.IkienSumma",
+                "testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat",
                 settings
         );
         final List<SubmissionResult> result = new ArrayList<SubmissionResult>();

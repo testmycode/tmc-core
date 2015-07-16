@@ -14,13 +14,22 @@ import java.nio.file.Paths;
 
 public class RunCheckStyle extends Command<ValidationResult> {
 
+    private TaskExecutorImpl taskExecutor;
+    private ProjectRootFinder rootfinder;
+
     public RunCheckStyle(String path, TmcSettings settings) {
-        super(settings);
+        this(settings);
         this.setParameter("path", path);
     }
 
     public RunCheckStyle(TmcSettings settings) {
+        this(new TaskExecutorImpl(), new ProjectRootFinder(new TmcJsonParser(settings)), settings);
+    }
+
+    public RunCheckStyle(TaskExecutorImpl executor, ProjectRootFinder finder, TmcSettings settings) {
         super(settings);
+        rootfinder = finder;
+        taskExecutor = executor;
     }
     
     /**
@@ -31,7 +40,6 @@ public class RunCheckStyle extends Command<ValidationResult> {
      * @throws NoLanguagePluginFoundException if path doesn't contain exercise
      */
     public ValidationResult runCheckStyle(Path exercise) throws NoLanguagePluginFoundException {
-        TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
         return taskExecutor.runCheckCodeStyle(exercise);
     }
 
@@ -44,9 +52,8 @@ public class RunCheckStyle extends Command<ValidationResult> {
 
     @Override
     public ValidationResult call() throws TmcCoreException, NoLanguagePluginFoundException {
-        String path = (String) this.data.get("path");
-        ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings));
-        Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
+        String path = this.data.get("path");
+        Optional<Path> exercise = rootfinder.getRootDirectory(Paths.get(path));
         if (!exercise.isPresent()) {
             throw new TmcCoreException("Not an exercise. (null)");
         }

@@ -127,7 +127,16 @@ public class TmcJsonParser {
                 .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
         return Arrays.asList(courses);
     }
-
+    
+     /**
+     * Reads one course from string.
+     */
+    public Course getCourseFromString(String jsonString) {
+        JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
+        Gson mapper = new Gson();
+        return mapper
+                .fromJson(jsonObject.get("course"), Course.class);
+    }
 
     /**
      * Get information about course specified by the course ID.

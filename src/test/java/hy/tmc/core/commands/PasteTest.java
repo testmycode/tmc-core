@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import static org.mockito.Mockito.when;
 
 
-import hy.tmc.core.communication.CourseSubmitter;
+import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 public class PasteTest {
 
     private Paste paste;
-    private CourseSubmitter submitterMock;
+    private ExerciseSubmitter submitterMock;
     private String pasteUrl = "http://legit.paste.url.fi";
     ClientTmcSettings settings = new ClientTmcSettings();
 
@@ -33,7 +33,7 @@ public class PasteTest {
     public void setup() throws Exception {
         mock();
         //ClientTmcSettings.setProjectRootFinder(new ProjectRootFinderStub());
-        submitterMock = Mockito.mock(CourseSubmitter.class);
+        submitterMock = Mockito.mock(ExerciseSubmitter.class);
         when(submitterMock.submitPaste(Mockito.anyString())).thenReturn(pasteUrl);
         paste = new Paste(submitterMock, settings);
     }

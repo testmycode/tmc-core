@@ -3,9 +3,14 @@ package hy.tmc.core.commands;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import hy.tmc.core.communication.CourseSubmitter;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
+import hy.tmc.core.TmcCore;
+import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
@@ -15,6 +20,8 @@ import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -28,7 +35,7 @@ import static org.mockito.Mockito.when;
 public class SubmitTest {
 
     private Submit submit;
-    private CourseSubmitter submitterMock;
+    private ExerciseSubmitter submitterMock;
     private final String submissionUrl = "/submissions/1781.json?api_version=7";
     private ClientTmcSettings settings;
 
@@ -41,7 +48,7 @@ public class SubmitTest {
         settings.setUsername("Samu");
         settings.setPassword("Bossman");
         settings.setCurrentCourse(new Course());
-        submitterMock = Mockito.mock(CourseSubmitter.class);
+        submitterMock = Mockito.mock(ExerciseSubmitter.class);
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         submit = new Submit(submitterMock, 
                             new SubmissionPoller(new TmcJsonParser(settings)), 
@@ -95,5 +102,57 @@ public class SubmitTest {
         SubmissionResult submissionResult = submit.call();
         assertFalse(submissionResult == null);
         assertFalse(submissionResult.isAllTestsPassed());
+    }
+    
+    @Test
+    public void submitWithTmcCore() throws Exception {
+        mockSubmit();
+        
+        TmcCore core = new TmcCore();
+        ClientTmcSettings settings = new ClientTmcSettings("test", "1234", "http://localhost:8080");
+        TmcJsonParser parser = new TmcJsonParser(settings);
+        Course course = parser.getCourseFromString(ExampleJson.noDeadlineCourseExample);
+        settings.setCurrentCourse(course);
+        ListenableFuture<SubmissionResult> submit = core.submit(
+                "testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat",
+                settings
+        );
+        final List<SubmissionResult> result = new ArrayList<SubmissionResult>();
+        Futures.addCallback(submit, new FutureCallback<SubmissionResult>() {
+
+            @Override
+            public void onSuccess(SubmissionResult sub) {
+                result.add(sub);
+            }
+
+            @Override
+            public void onFailure(Throwable thrwbl) {
+                System.out.println("VIRHE: "+ thrwbl);
+                thrwbl.printStackTrace();
+            }
+        });
+        while(!submit.isDone()) {
+            Thread.sleep(100);
+        }
+        assertFalse(result.isEmpty());
+        assertFalse(result.get(0).isAllTestsPassed());
+    }
+
+    private void mockSubmit() {
+        String urlToMock = "/exercises/1239/submissions.json?api_version=7";
+        wireMock.stubFor(post(urlEqualTo(urlToMock))
+                .willReturn(WireMock.aResponse()
+                        .withStatus(200)
+                        .withBody(ExampleJson.failedSubmitResponse)));
+        
+        wireMock.stubFor(get(urlEqualTo("/submissions/7777.json?api_version=7"))
+                .willReturn(WireMock.aResponse()
+                        .withStatus(200)
+                        .withBody(ExampleJson.failedSubmission)));
+        
+        wireMock.stubFor(get(urlEqualTo("/courses/19.json?api_version=7"))
+                .willReturn(WireMock.aResponse()
+                        .withStatus(200)
+                        .withBody(ExampleJson.noDeadlineCourseExample)));
     }
 }

@@ -1,7 +1,9 @@
 package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.core.communication.CourseSubmitter;
+import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
+import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
+import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
@@ -14,7 +16,6 @@ import hy.tmc.core.domain.submission.SubmissionResult;
 
 import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
-import hy.tmc.core.zipping.Zipper;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -26,7 +27,7 @@ import net.lingala.zip4j.exception.ZipException;
  */
 public class Submit extends Command<SubmissionResult> {
 
-    private CourseSubmitter submitter;
+    private ExerciseSubmitter submitter;
     private SubmissionPoller interpreter;
     private Course course;
 
@@ -38,9 +39,11 @@ public class Submit extends Command<SubmissionResult> {
         UrlCommunicator urlComms = new UrlCommunicator(settings);
         TmcJsonParser jsonParser = new TmcJsonParser(urlComms, settings);
         interpreter = new SubmissionPoller(jsonParser);
-        submitter = new CourseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector(),  jsonParser),
-                new Zipper(), urlComms, jsonParser,
+        submitter = new ExerciseSubmitter(
+                new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings)),
+                new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
+                new UrlCommunicator(settings),
+                new TmcJsonParser(settings), 
                 settings
         );
     }
@@ -60,7 +63,7 @@ public class Submit extends Command<SubmissionResult> {
      * @param submitter   can inject submitter mock.
      * @param interpreter can inject interpreter mock.
      */
-    public Submit(CourseSubmitter submitter, 
+    public Submit(ExerciseSubmitter submitter, 
                 SubmissionPoller interpreter, 
                 TmcSettings settings,
                 String path) {

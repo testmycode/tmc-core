@@ -52,7 +52,7 @@ public class DiffSender {
     public HttpResult sendToUrl(byte[] diffs, String url) throws TmcCoreException {
         try {
             HttpResult result = urlCommunicator.makePostWithByteArray(
-                    url, diffs, createHeaders()
+                    url, diffs, createHeaders(),new HashMap<String, String>()
             );
             return result;
         }

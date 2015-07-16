@@ -1,6 +1,5 @@
 package hy.tmc.core;
 
-import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import hy.tmc.core.commands.VerifyCredentials;

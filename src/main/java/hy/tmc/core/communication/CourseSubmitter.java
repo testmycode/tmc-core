@@ -29,6 +29,7 @@ public class CourseSubmitter {
     private ZipMaker zipper;
     private final UrlCommunicator urlCommunicator;
     private final TmcJsonParser tmcJsonParser;
+    private final StudentFileAwareZipper zipper;
 
     /**
      * Exercise deadline is checked with this date format
@@ -43,6 +44,7 @@ public class CourseSubmitter {
         this.tmcJsonParser = jsonParser;
         this.zipper = zipper;
         this.rootFinder = rootFinder;
+        this.zipper = new StudentFileAwareZipper();
     }
 
     /**
@@ -157,7 +159,7 @@ public class CourseSubmitter {
         /*
         * Muuta tämä!!!
         */
-        zip(findExerciseFolderToZip(currentPath), submissionZipPath);
+        //zip(findExerciseFolderToZip(currentPath), submissionZipPath);
         String resultUrl;
         if (paste) {
             resultUrl = sendSubmissionToServerWithPaste(submissionZipPath, returnUrl);
@@ -178,7 +180,7 @@ public class CourseSubmitter {
         /**
          * Muuta tämä!!
          */
-        zip(findExerciseFolderToZip(currentPath), submissionZipPath);
+        //zip(findExerciseFolderToZip(currentPath), submissionZipPath);
         String resultUrl;
         if (paste) {
             resultUrl = sendSubmissionToServerWithPasteAndParams(submissionZipPath, returnUrl, params);

@@ -3,9 +3,9 @@ package hy.tmc.core.testhelpers.testresults;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 
-import fi.helsinki.cs.tmc.langs.RunResult;
-import fi.helsinki.cs.tmc.langs.RunResult.Status;
-import fi.helsinki.cs.tmc.langs.TestResult;
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
+import fi.helsinki.cs.tmc.langs.domain.RunResult.Status;
+import fi.helsinki.cs.tmc.langs.domain.TestResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -2,7 +2,7 @@ package hy.tmc.core.testhelpers.testresults;
 
 import static org.junit.Assert.fail;
 
-import fi.helsinki.cs.tmc.langs.TestResult;
+import fi.helsinki.cs.tmc.langs.domain.TestResult;
 
 import java.io.File;
 import java.io.FileNotFoundException;

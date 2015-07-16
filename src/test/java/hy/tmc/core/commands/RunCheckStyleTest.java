@@ -9,6 +9,7 @@ import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -90,5 +91,17 @@ public class RunCheckStyleTest {
         assertFalse(result == null);
         assertTrue(result.getStrategy() == null);
         assertTrue(result.getValidationErrors() == null);
+    }
+    
+    @Test(expected = TmcCoreException.class)
+    public void exceptionIfPathToExerciseDoesNotExists() throws Exception{
+        String pathToExercise = "polku/tiedostoon";
+        String rootDirectory = "polku";
+        RunCheckStyle checkStyle = new RunCheckStyle(pathToExercise, settings, finderMock, taskExecutorMock);
+        Optional<Path> absentPath = Optional.absent();
+        when(this.finderMock.getRootDirectory(eq(Paths.get(pathToExercise)))).thenReturn(
+                absentPath
+        );
+        checkStyle.call();
     }
 }

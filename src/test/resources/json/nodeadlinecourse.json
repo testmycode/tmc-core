@@ -270,7 +270,7 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "998671ca9fce0593306d837676a201f0",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1239/submissions.json",
+                "return_url": "http://127.0.0.1:8080/exercises/1239/submissions.json",
                 "zip_url": "https://tmc.mooc.fi/staging/exercises/1239.zip",
                 "returnable": true,
                 "requires_review": false,

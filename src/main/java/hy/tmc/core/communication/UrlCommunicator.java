@@ -33,8 +33,8 @@ import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.util.Map;
-import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.entity.mime.content.FileBody;
 
 public class UrlCommunicator {
@@ -88,9 +88,11 @@ public class UrlCommunicator {
 
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder = addParamsToRequest(params, builder);
-        builder.addBinaryBody(submissionKey, data);
+        
+        ByteArrayBody byteBody = new ByteArrayBody(data, "submission.zip");
+        builder = addFileToRequest(byteBody, builder);
         HttpEntity entity = builder.build();
-
+        addCredentials(request, this.settings.getFormattedUserData());
         request.setEntity(entity);
         return request;
     }

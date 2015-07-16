@@ -1,5 +1,8 @@
 package hy.tmc.core;
 
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import hy.tmc.core.commands.VerifyCredentials;
@@ -12,7 +15,9 @@ import hy.tmc.core.commands.Paste;
 import hy.tmc.core.commands.RunTests;
 import hy.tmc.core.commands.SendFeedback;
 import hy.tmc.core.commands.Submit;
+import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.FileWriterHelper;
 import java.io.File;

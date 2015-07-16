@@ -1,7 +1,7 @@
 package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.core.communication.CourseSubmitter;
+import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.TmcSettings;
@@ -19,15 +19,16 @@ import java.text.ParseException;
 
 public class Paste extends Command<URI> {
 
-    private CourseSubmitter submitter;
+    private ExerciseSubmitter submitter;
     private Course course;
 
     public Paste(TmcSettings settings) {
-        this(new CourseSubmitter(
+        this(new ExerciseSubmitter(
                 new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings)),
-                new Zipper(),
+                new StudentFileAwareZipper()),
                 new UrlCommunicator(settings),
-                new TmcJsonParser(settings)
+                new TmcJsonParser(settings), 
+                settings
         ), settings);
     }
 
@@ -36,7 +37,7 @@ public class Paste extends Command<URI> {
      *
      * @param submitter can inject submitter mock.
      */
-    public Paste(CourseSubmitter submitter, TmcSettings settings) {
+    public Paste(ExerciseSubmitter submitter, TmcSettings settings) {
         this.submitter = submitter;
         this.settings = settings;
     }

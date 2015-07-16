@@ -1,7 +1,7 @@
 package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.core.communication.CourseSubmitter;
+import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
@@ -26,7 +26,7 @@ import net.lingala.zip4j.exception.ZipException;
  */
 public class Submit extends Command<SubmissionResult> {
 
-    private CourseSubmitter submitter;
+    private ExerciseSubmitter submitter;
     private SubmissionPoller interpreter;
     private Course course;
 
@@ -38,9 +38,10 @@ public class Submit extends Command<SubmissionResult> {
         UrlCommunicator urlComms = new UrlCommunicator(settings);
         TmcJsonParser jsonParser = new TmcJsonParser(urlComms, settings);
         interpreter = new SubmissionPoller(jsonParser);
-        submitter = new CourseSubmitter(
+        submitter = new ExerciseSubmitter(
                 new ProjectRootFinder(new DefaultRootDetector(),  jsonParser),
-                new Zipper(), urlComms, jsonParser
+                new Zipper(), urlComms, jsonParser,
+                settings
         );
     }
     
@@ -59,8 +60,12 @@ public class Submit extends Command<SubmissionResult> {
      * @param submitter   can inject submitter mock.
      * @param interpreter can inject interpreter mock.
      */
-    public Submit(CourseSubmitter submitter, SubmissionPoller interpreter, TmcSettings settings) {
+    public Submit(ExerciseSubmitter submitter, 
+                SubmissionPoller interpreter, 
+                TmcSettings settings,
+                String path) {
         super(settings);
+        this.setParameter("path", path);
         this.interpreter = interpreter;
         this.submitter = submitter;
     }

@@ -223,15 +223,6 @@ public class ExerciseSubmitter {
         return courseExercises;
     }
 
-    private void zip(String exerciseFolderToZip, String currentPath) throws ZipException {
-        try {
-            this.zipper.zip(exerciseFolderToZip, currentPath);
-        }
-        catch (ZipException ex) {
-            throw new ZipException("Zipping failed because of " + ex.getMessage());
-        }
-    }
-
     private Optional<Exercise> findCurrentExercise(List<Exercise> courseExercises, String currentDir) throws IllegalArgumentException {
         Optional<Path> rootDir = rootFinder.getRootDirectory(Paths.get(currentDir));
         if (!rootDir.isPresent()) {

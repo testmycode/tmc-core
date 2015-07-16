@@ -56,6 +56,8 @@ public class CourseSubmitterTest {
         rootFinder = new ProjectRootFinderStub(jsonParser);
         zipper = Mockito.mock(StudentFileAwareZipper.class);
 
+        Mockito.when(zipper.zip(Mockito.any(Path.class))).thenReturn(new byte[100]);
+        
         this.courseSubmitter = new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
 
         mockUrlCommunicator("/courses.json?api_version=7", ExampleJson.allCoursesExample);
@@ -69,8 +71,6 @@ public class CourseSubmitterTest {
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7", ExampleJson.pasteResponse);
 
         realFinder = new ProjectRootFinder(new DefaultRootDetector(), jsonParser);
-        
-        Mockito.doNothing().when(zipper.zip(Mockito.any(Path.class)));
     }
 
     @Test
@@ -178,12 +178,12 @@ public class CourseSubmitterTest {
     @SuppressWarnings("unchecked")
     private void mockUrlCommunicatorWithFile(String url, String returnValue) throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
-        Mockito.when(urlCommunicator.makePostWithFile(Mockito.any(FileBody.class),
-                                Mockito.contains(url), Mockito.any(Map.class)))
+        Mockito.when(urlCommunicator.makePostWithByteArray(
+                                Mockito.contains(url), Mockito.any(byte[].class), Mockito.any(Map.class), Mockito.any(Map.class)))
                 .thenReturn(fakeResult);
-        Mockito.when(urlCommunicator.makePostWithFileAndParams(Mockito.any(FileBody.class),
+        /*Mockito.when(urlCommunicator.makePostWithFileAndParams(Mockito.any(FileBody.class),
                                 Mockito.contains(url), Mockito.any(Map.class), Mockito.any(Map.class)))
-                .thenReturn(fakeResult);
+                .thenReturn(fakeResult);*/
         
     }
 }

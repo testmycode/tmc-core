@@ -1,6 +1,8 @@
 package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
+import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
+import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
 import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.communication.TmcJsonParser;
@@ -14,7 +16,6 @@ import hy.tmc.core.domain.submission.SubmissionResult;
 
 import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
-import hy.tmc.core.zipping.Zipper;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -39,8 +40,10 @@ public class Submit extends Command<SubmissionResult> {
         TmcJsonParser jsonParser = new TmcJsonParser(urlComms, settings);
         interpreter = new SubmissionPoller(jsonParser);
         submitter = new ExerciseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector(),  jsonParser),
-                new Zipper(), urlComms, jsonParser,
+                new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings)),
+                new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
+                new UrlCommunicator(settings),
+                new TmcJsonParser(settings), 
                 settings
         );
     }

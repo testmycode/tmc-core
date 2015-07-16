@@ -16,7 +16,6 @@ import hy.tmc.core.domain.submission.SubmissionResult;
 
 import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
-import hy.tmc.core.zipping.Zipper;
 
 import java.io.IOException;
 import java.text.ParseException;

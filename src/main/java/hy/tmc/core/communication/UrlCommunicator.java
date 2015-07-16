@@ -41,9 +41,12 @@ public class UrlCommunicator {
 
     final private String submissionKey = "submission[file]";
     private TmcSettings settings;
+    private UrlHelper urlHelper;
 
     public UrlCommunicator(TmcSettings settings) {
         this.settings = settings;
+
+        this.urlHelper = new UrlHelper(settings);
     }
 
     /**
@@ -255,6 +258,7 @@ public class UrlCommunicator {
      */
     public HttpResult makePostWithJson(JsonObject req, String feedbackUrl)
             throws IOException {
+        feedbackUrl = urlHelper.withApiVersion(feedbackUrl);
         HttpPost httppost = new HttpPost(feedbackUrl);
         String jsonString = req.toString();
         StringEntity feedbackJson = new StringEntity(jsonString);

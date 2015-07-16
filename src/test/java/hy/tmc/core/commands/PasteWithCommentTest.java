@@ -2,7 +2,7 @@
 package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
-import hy.tmc.core.communication.CourseSubmitter;
+import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 
 public class PasteWithCommentTest {
     private PasteWithComment paste;
-    private CourseSubmitter submitterMock;
+    private ExerciseSubmitter submitterMock;
     private String pasteUrl = "http://legit.paste.url.fi";
     ClientTmcSettings settings = new ClientTmcSettings();
 
@@ -30,7 +30,7 @@ public class PasteWithCommentTest {
     public void setup() throws Exception {
         mock();
         //ClientTmcSettings.setProjectRootFinder(new ProjectRootFinderStub());
-        submitterMock = Mockito.mock(CourseSubmitter.class);
+        submitterMock = Mockito.mock(ExerciseSubmitter.class);
         when(submitterMock.submitPasteWithComment(Mockito.anyString(), Mockito.anyString())).thenReturn(pasteUrl);
         paste = new PasteWithComment(submitterMock, settings, "Commentti");
     }

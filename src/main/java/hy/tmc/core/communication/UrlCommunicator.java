@@ -35,9 +35,11 @@ import java.io.IOException;
 import java.util.Map;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.content.FileBody;
 
 public class UrlCommunicator {
 
+    final private String submissionKey = "submission[file]";
     private TmcSettings settings;
     private UrlHelper urlHelper;
 
@@ -45,12 +47,11 @@ public class UrlCommunicator {
         this.settings = settings;
         this.urlHelper = new UrlHelper(settings);
     }
-    
+
     /**
      * Creates and executes post-request to specified URL.
      *
-     * @param fileBody FileBody that includes data to be
-     * sended.
+     * @param fileBody FileBody that includes data to be sended.
      * @param destinationUrl destination of the url.
      * @param headers Headers to be added to httprequest.
      * @return HttpResult that contains response from the server.
@@ -60,67 +61,73 @@ public class UrlCommunicator {
             String destinationUrl, Map<String, String> headers) throws IOException {
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
-        
+
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         addCredentials(httppost, this.settings.getFormattedUserData());
         builder = addFileToRequest(fileBody, builder);
-        
+
         HttpEntity entity = builder.build();
         httppost.setEntity(entity);
         return getResponseResult(httppost);
     }
-    
+
     /**
      * Adds byte-array to entity of post-request and executes it.
      */
-    public HttpResult makePostWithByteArray(String url, 
-                                           byte[] data, 
-                                           Map<String, String> extraHeaders) throws IOException {
-        HttpPost rawPost = makeRawPostRequest(url, data, extraHeaders);
+    public HttpResult makePostWithByteArray(String url,
+                                            byte[] data,
+                                            Map<String, String> extraHeaders,
+                                            Map<String, String> params) throws IOException {
+        HttpPost rawPost = makeRawPostRequest(url, data, extraHeaders, params);
         return getResponseResult(rawPost);
     }
 
-    private HttpPost makeRawPostRequest(String url, byte[] data, Map<String, String> extraHeaders) {
+    private HttpPost makeRawPostRequest(String url, byte[] data, Map<String, String> extraHeaders, Map<String, String> params) {
         HttpPost request = new HttpPost(url);
         addHeadersTo(request, extraHeaders);
-        ByteArrayEntity entity = new ByteArrayEntity(data);
+        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+
+        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+        builder = addParamsToRequest(params, builder);
+        builder.addBinaryBody(submissionKey, data);
+        HttpEntity entity = builder.build();
+
         request.setEntity(entity);
         return request;
     }
-    
-     /**
+
+    /**
      * Creates and executes post-request to specified URL.
      *
-     * @param fileBody FileBody or ByteArrayBody that includes data to be
-     * sended.
+     * @param fileBody FileBody or ByteArrayBody that includes data to be sended.
      * @param destinationUrl destination of the url.
      * @param headers Headers to be added to httprequest.
      * @return HttpResult that contains response from the server.
      * @throws java.io.IOException if file is invalid.
      */
-    public HttpResult makePostWithFileAndParams(ContentBody fileBody,
+    public HttpResult makePostWithFileAndParams(FileBody fileBody,
             String destinationUrl, Map<String, String> headers, Map<String, String> params) throws IOException {
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        
+
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        builder = addParamsToRequest(fileBody, httppost, params, builder);
+        builder = addParamsToRequest(params, builder);
         builder = addFileToRequest(fileBody, builder);
         addCredentials(httppost, this.settings.getFormattedUserData());
-        
+
         HttpEntity entity = builder.build();
         httppost.setEntity(entity);
         return getResponseResult(httppost);
     }
-    
+
     private MultipartEntityBuilder addFileToRequest(ContentBody fileBody, MultipartEntityBuilder builder) {
-        builder.addPart("submission[file]", fileBody);
+        builder.addPart(submissionKey, fileBody);
         return builder;
     }
-    
-    private MultipartEntityBuilder addParamsToRequest(ContentBody fileBody, HttpPost httppost, Map<String, String> params, MultipartEntityBuilder builder){
+
+    private MultipartEntityBuilder addParamsToRequest(Map<String, String> params, MultipartEntityBuilder builder) {
         for (Map.Entry<String, String> e : params.entrySet()) {
             builder.addTextBody(e.getKey(), e.getValue(), ContentType.create("text/plain", "utf-8"));
         }
@@ -131,35 +138,34 @@ public class UrlCommunicator {
      * Tries to make GET-request to specific url.
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request. params[0] is
-     * always username:password
+     * @param params Any amount of parameters for the request. params[0] is always username:password
      * @return A Result-object with some data and a state of success or fail
      */
     public HttpResult makeGetRequest(String url, String... params) throws IOException {
         HttpGet httpGet = createGet(url, params);
         return getResponseResult(httpGet);
     }
-    
+
     /**
-     * Makes PUT-request to wanted Url. Key-Value parameters gets added to body. 
-     * 
-     * @param url where the request is sent. 
+     * Makes PUT-request to wanted Url. Key-Value parameters gets added to body.
+     *
+     * @param url where the request is sent.
      * @param body contains key-value -pairs.
      * @return Result which contains the result.
      */
     public HttpResult makePutRequest(String url, Optional<Map<String, String>> body) throws IOException {
-            HttpPut httpPut = new HttpPut(url);
-            addCredentials(httpPut, this.settings.getFormattedUserData());
-            List<NameValuePair> params = new ArrayList<>();
-            
-            for (String key : body.get().keySet()) {
-                String value = body.get().get(key);
-                params.add(new BasicNameValuePair(key, value));
-            }            
-            httpPut.setEntity(new UrlEncodedFormEntity(params));           
-            return getResponseResult(httpPut);
+        HttpPut httpPut = new HttpPut(url);
+        addCredentials(httpPut, this.settings.getFormattedUserData());
+        List<NameValuePair> params = new ArrayList<>();
+
+        for (String key : body.get().keySet()) {
+            String value = body.get().get(key);
+            params.add(new BasicNameValuePair(key, value));
+        }
+        httpPut.setEntity(new UrlEncodedFormEntity(params));
+        return getResponseResult(httpPut);
     }
-    
+
     private HttpGet createGet(String url, String[] params)
             throws IOException {
         HttpGet request = new HttpGet(url);
@@ -181,19 +187,20 @@ public class UrlCommunicator {
             HttpResponse response = executeRequest(httpget);
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
             return true;
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             System.err.println(e.getMessage());
             return false;
         }
     }
-    
+
     /**
      * Calls downloadToFile with username and password as params.
      */
     public boolean downloadToFile(String url, File file) {
         return downloadToFile(url, file, this.settings.getFormattedUserData());
     }
-    
+
     private StringBuilder writeResponse(HttpResponse response)
             throws UnsupportedOperationException, IOException {
         BufferedReader rd = new BufferedReader(
@@ -205,16 +212,16 @@ public class UrlCommunicator {
         }
         return result;
     }
-    
+
     private HttpClient createClient() {
         return HttpClientBuilder.create().build();
     }
-    
+
     private HttpResponse executeRequest(HttpRequestBase request)
             throws IOException {
         return createClient().execute(request);
     }
-    
+
     private void addCredentials(HttpRequestBase httpRequest, String credentials) {
         httpRequest.setHeader("Authorization", "Basic " + encode(credentials));
         httpRequest.setHeader("User-Agent", USER_AGENT);
@@ -233,7 +240,7 @@ public class UrlCommunicator {
             }
         }
     }
-    
+
     private HttpResult getResponseResult(HttpRequestBase httpRequest) throws IOException {
         HttpResponse response = executeRequest(httpRequest);
         StringBuilder result = writeResponse(response);

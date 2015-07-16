@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import hy.tmc.core.communication.CourseSubmitter;
+import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class SubmitTest {
 
     private Submit submit;
-    private CourseSubmitter submitterMock;
+    private ExerciseSubmitter submitterMock;
     private final String submissionUrl = "/submissions/1781.json?api_version=7";
     private ClientTmcSettings settings;
 
@@ -41,7 +41,7 @@ public class SubmitTest {
         settings.setUsername("Samu");
         settings.setPassword("Bossman");
         settings.setCurrentCourse(new Course());
-        submitterMock = Mockito.mock(CourseSubmitter.class);
+        submitterMock = Mockito.mock(ExerciseSubmitter.class);
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         submit = new Submit(submitterMock, 
                             new SubmissionPoller(new TmcJsonParser(settings)), 

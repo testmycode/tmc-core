@@ -6,6 +6,7 @@ public class TestException {
     private String className;
     private String message;
     private StackTrace[] stackTrace;
+    private String cause;
 
     public String getClassName() {
         return className;
@@ -17,6 +18,14 @@ public class TestException {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getCause() {
+        return this.cause;
+    }
+
+    public void setCause(String cause) {
+        this.cause = cause;
     }
 
     public void setMessage(String message) {

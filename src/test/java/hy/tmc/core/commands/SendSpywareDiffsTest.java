@@ -50,10 +50,10 @@ public class SendSpywareDiffsTest {
 
     @Test
     public void testCall() throws Exception {
-//        wireMock.stubFor(get(urlEqualTo("/staging.spyware.testmycode.net/"))
-//                .willReturn(WireMock.aResponse()
-//                        .withStatus(200)
-//                        .withBody("SPYWARE TULI PERILLE")));
+        wireMock.stubFor(get(urlEqualTo("/staging.spyware.testmycode.net/"))
+                .willReturn(WireMock.aResponse()
+                        .withStatus(200)
+                        .withBody("SPYWARE TULI PERILLE")));
         
         ClientTmcSettings settings = setupSettings();
         byte[] diffs = new byte[]{1, 4, 6};
@@ -85,7 +85,6 @@ public class SendSpywareDiffsTest {
         ClientTmcSettings settings = new ClientTmcSettings();
         TmcJsonParser parser = new TmcJsonParser(settings);
         List<Course> courses = parser.getCoursesFromString(ExampleJson.allCoursesExample);
-        //Course currentCourse = courses.get(0);
         Course currentCourse = courses.get(1);
         settings.setCurrentCourse(currentCourse);
         settings.setUsername("snapshotNelja");

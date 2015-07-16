@@ -41,8 +41,7 @@ public class UrlCommunicator {
     private TmcSettings settings;
 
     public UrlCommunicator(TmcSettings settings) {
-        this.settings = settings;
-        
+        this.settings = settings;    
     }
     
     /**
@@ -62,7 +61,8 @@ public class UrlCommunicator {
         
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        builder = addFileToRequest(fileBody, httppost, builder);
+        addCredentials(httppost, this.settings.getFormattedUserData());
+        builder = addFileToRequest(fileBody, builder);
         
         HttpEntity entity = builder.build();
         httppost.setEntity(entity);
@@ -105,17 +105,16 @@ public class UrlCommunicator {
         
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder = addParamsToRequest(fileBody, httppost, params, builder);
-        builder = addFileToRequest(fileBody, httppost, builder);
-        System.err.println(builder.toString());
+        builder = addFileToRequest(fileBody, builder);
+        addCredentials(httppost, this.settings.getFormattedUserData());
         
         HttpEntity entity = builder.build();
         httppost.setEntity(entity);
         return getResponseResult(httppost);
     }
     
-    private MultipartEntityBuilder addFileToRequest(ContentBody fileBody, HttpPost httppost, MultipartEntityBuilder builder) {
+    private MultipartEntityBuilder addFileToRequest(ContentBody fileBody, MultipartEntityBuilder builder) {
         builder.addPart("submission[file]", fileBody);
-        addCredentials(httppost, this.settings.getFormattedUserData());
         return builder;
     }
     

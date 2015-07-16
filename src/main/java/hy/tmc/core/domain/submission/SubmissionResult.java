@@ -2,19 +2,23 @@ package hy.tmc.core.domain.submission;
 
 import com.google.gson.annotations.SerializedName;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
+import java.util.Collections;
 
 import java.util.List;
 
 public class SubmissionResult {
 
-    public static enum Status {
-        OK, FAIL, PROCESSING, ERROR
-    }
-
     public static enum TestResultStatus {
         ALL_FAILED, SOME_FAILED, NONE_FAILED
     }
-
+    
+    public static enum Status {
+        OK,
+        FAIL,
+        ERROR,
+        PROCESSING
+    }
+    
     @SerializedName("api_version")
     private int apiVersion;
     
@@ -71,6 +75,15 @@ public class SubmissionResult {
     private String submittedAt;
     
     private ValidationResult validationResult;
+    
+    public SubmissionResult() {
+        status = Status.ERROR;
+        error = null;
+        testCases = Collections.emptyList();
+        points = Collections.emptyList();
+        missingReviewPoints = Collections.emptyList();
+        feedbackQuestions = Collections.emptyList();
+    }
     
     public void setValidationResult(final ValidationResult result) {
         this.validationResult = result;
@@ -226,7 +239,7 @@ public class SubmissionResult {
     }
 
     public void setStatus(Status status) {
-        this.status = status;
+       this.status = status;
     }
 
     public List<String> getPoints() {
@@ -266,4 +279,18 @@ public class SubmissionResult {
                 false : !this.validationResult.getValidationErrors().isEmpty();
     }
 
+    @Override
+    public String toString() {
+        return "SubmissionResult{" + "apiVersion=" + apiVersion + ", \nallTestsPassed=" +
+                allTestsPassed + ", userId=" + userId + ", error=" + error + 
+                ", \ncourse=" + course + ", exerciseName=" + exerciseName + ", status=" + 
+                status + ", points=" + points + ", processingTime=" + processingTime +
+                ", \nmessageForPaste=" + messageForPaste + ", missingReviewPoints=" + 
+                missingReviewPoints + ", testCases=" + testCases + ", feedbackQuestions=" 
+                + feedbackQuestions + ", feedbackAnswerUrl=" + feedbackAnswerUrl +
+                ", solutionUrl=" + solutionUrl + ", validations=" + validations +
+                ", \n valgrind=" + valgrind + ", reviewed=" + reviewed + ", requestsReview=" 
+                + requestsReview + ", submittedAt=" + submittedAt + ", validationResult="
+                + validationResult + '}';
+    }
 }

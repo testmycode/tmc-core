@@ -27,7 +27,8 @@ public class Paste extends Command<URI> {
                 new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings)),
                 new Zipper(),
                 new UrlCommunicator(settings),
-                new TmcJsonParser(settings)
+                new TmcJsonParser(settings), 
+                settings
         ), settings);
     }
 

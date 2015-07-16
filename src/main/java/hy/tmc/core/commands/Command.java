@@ -60,4 +60,11 @@ public abstract class Command<E> implements Callable<E> {
     public void setObserver(ProgressObserver observer) {
         this.observer = observer;
     }
+    
+    public boolean settingsNotPresent() {
+        return this.settings == null
+            || !this.settings.userDataExists()
+            || this.settings.getServerAddress() == null
+            || this.settings.getServerAddress().isEmpty();
+    }
 }

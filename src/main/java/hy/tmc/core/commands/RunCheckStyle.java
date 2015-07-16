@@ -13,14 +13,34 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class RunCheckStyle extends Command<ValidationResult> {
+    
+    private ProjectRootFinder finder;
+    private TaskExecutorImpl taskExecutor;
 
+    /**
+     * Default constructor.
+     * @param path to exercise, that should be passed to TmcLangs checkstyle-runner.
+     * @param settings containing at least credentials and serverAddress to
+     * enable communication with server.
+     */
     public RunCheckStyle(String path, TmcSettings settings) {
-        super(settings);
-        this.setParameter("path", path);
+        this(path, settings, new ProjectRootFinder(
+                new DefaultRootDetector(), new TmcJsonParser(settings)),
+                new TaskExecutorImpl()
+        );
     }
 
-    public RunCheckStyle(TmcSettings settings) {
+    /**
+     * Constructor for dependency injection in tests.
+     */
+    public RunCheckStyle(String path,
+                         TmcSettings settings,
+                         ProjectRootFinder finder,
+                         TaskExecutorImpl executor) {
         super(settings);
+        this.setParameter("path", path);
+        this.finder= finder;
+        this.taskExecutor = executor;
     }
     
     /**
@@ -31,7 +51,6 @@ public class RunCheckStyle extends Command<ValidationResult> {
      * @throws NoLanguagePluginFoundException if path doesn't contain exercise
      */
     public ValidationResult runCheckStyle(Path exercise) throws NoLanguagePluginFoundException {
-        TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
         return taskExecutor.runCheckCodeStyle(exercise);
     }
 
@@ -40,17 +59,20 @@ public class RunCheckStyle extends Command<ValidationResult> {
         if (!this.data.containsKey("path") || this.data.get("path").isEmpty()) {
             throw new TmcCoreException("File path to exercise required.");
         }
+        if (this.settingsNotPresent()) {
+            throw new TmcCoreException("Credentials and serverAddress are required "
+                    + "for server communication.");
+        }
     }
 
     @Override
     public ValidationResult call() throws TmcCoreException, NoLanguagePluginFoundException {
         String path = (String) this.data.get("path");
-        ProjectRootFinder finder = new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings));
-        Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
-        if (!exercise.isPresent()) {
+        Optional<Path> rootDirectory = finder.getRootDirectory(Paths.get(path));
+        if (!rootDirectory.isPresent()) {
             throw new TmcCoreException("Not an exercise. (null)");
         }
-        return runCheckStyle(exercise.get());
+        return runCheckStyle(rootDirectory.get());
     }
 }
 

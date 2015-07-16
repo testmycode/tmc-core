@@ -43,10 +43,12 @@ public class FeedbackQuestion {
     }
     
     public int getIntRangeMin() {
+        setRangeLimits();
         return this.min;
     }
     
     public int getIntRangeMax() {
+        setRangeLimits();
         return this.max;
     }
 

@@ -7,7 +7,6 @@ import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import java.nio.file.Path;
 import java.nio.file.Paths;

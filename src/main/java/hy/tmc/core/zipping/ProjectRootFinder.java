@@ -27,7 +27,7 @@ public class ProjectRootFinder implements RootFinder {
         this.langs = langs;
         this.tmcJsonParser = jsonParser;
     }
-    
+
     public ProjectRootFinder(TmcJsonParser jsonParser) {
         this(new TaskExecutorImpl(), jsonParser);
     }
@@ -40,12 +40,16 @@ public class ProjectRootFinder implements RootFinder {
      */
     @Override
     public Optional<Path> getRootDirectory(Path start) {
-        return search(start);
+        return search(start.toAbsolutePath());
     }
 
     private Optional<Path> search(Path path) {
         while (path.getParent() != null) {
-            if (langs.isRootDirectory(path)) {
+            if (path.endsWith("tmc-core")) {
+                path = path.getParent();
+                continue;
+            }
+            if (langs.isExerciseDirectory(path)) {
                 return Optional.of(path);
             }
             path = path.getParent();
@@ -61,13 +65,14 @@ public class ProjectRootFinder implements RootFinder {
      */
     @Override
     public Optional<Course> getCurrentCourse(String path) throws IOException, TmcCoreException {
-        String[] foldersOfPwd = path.split("\\" + File.separator);
+        String[] foldersOfWorkingDirectory = path.split("\\" + File.separator);
         try {
-            checkPwd(foldersOfPwd);
-        } catch (TmcCoreException ex) {
+            checkPwd(foldersOfWorkingDirectory);
+        }
+        catch (TmcCoreException ex) {
             return Optional.absent();
         }
-        return findCourseByPath(foldersOfPwd);
+        return findCourseByPath(foldersOfWorkingDirectory);
     }
 
     /**

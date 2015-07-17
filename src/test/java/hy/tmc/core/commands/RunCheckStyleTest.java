@@ -6,10 +6,6 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import fi.helsinki.cs.tmc.stylerunner.validation.Strategy;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationError;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
-<<<<<<< HEAD
-import hy.tmc.core.configuration.TmcSettings;
-=======
->>>>>>> zippaus
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.zipping.ProjectRootFinder;
@@ -18,23 +14,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
-<<<<<<< HEAD
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import org.mockito.Mockito;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.junit.Before;
-import static org.mockito.Matchers.eq;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
+
 
 
 

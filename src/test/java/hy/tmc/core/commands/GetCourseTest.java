@@ -11,7 +11,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.domain.Course;
-import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import java.util.ArrayList;
@@ -29,7 +28,6 @@ public class GetCourseTest {
     public WireMockRule wireMock = new WireMockRule();
 
     private String finalUrl = "http://127.0.0.1:8080/courses/19.json";
-    //private String finalUrl = "https://tmc.mooc.fi/staging/courses/19.json";
     private String mockUrl = "/courses/19.json?api_version=7";
     private TmcCore core;
     private ClientTmcSettings settings;
@@ -104,6 +102,5 @@ public class GetCourseTest {
         Course course = courseResult.get(0);
         assertEquals(course.getId(), 3);
         assertEquals(course.getName(), "2013_ohpeJaOhja");
-
     }
 }

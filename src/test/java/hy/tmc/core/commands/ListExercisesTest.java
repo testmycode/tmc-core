@@ -1,9 +1,6 @@
 package hy.tmc.core.commands;
 
-import static org.junit.Assert.fail;
-
 import hy.tmc.core.communication.ExerciseLister;
-import hy.tmc.core.communication.TmcJsonParser;
 
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
@@ -27,7 +24,7 @@ public class ListExercisesTest {
     private ListExercises list;
     private ExerciseLister lister;
     private List<Exercise> exampleExercises;
-    ClientTmcSettings settings = new ClientTmcSettings();
+    private ClientTmcSettings settings = new ClientTmcSettings();
 
     private void buildExample() {
         exampleExercises = new ArrayList<>();
@@ -88,4 +85,5 @@ public class ListExercisesTest {
         List<Exercise> exercises = list.call();
         assertEquals("1 tehtävä", exercises.get(1).getName());
     }
+   
 }

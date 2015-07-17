@@ -66,7 +66,7 @@ public class ClientTmcSettings implements TmcSettings {
 
     @Override
     public synchronized Optional<Course> getCurrentCourse() {
-        return Optional.of(currentCourse);
+        return Optional.fromNullable(currentCourse);
     }
 
     public synchronized void setServerAddress(String serverAddress) {

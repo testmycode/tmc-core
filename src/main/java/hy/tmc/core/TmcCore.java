@@ -185,10 +185,10 @@ public class TmcCore {
     }
 
     /**
-     * Gives a list of all the exercises relating to a course. Course is found by path. Requires
-     * login.
+     * Gives a list of all the exercises relating to a course..
      *
      * @param path to any directory inside a course directory
+     * @param settings with credentials and serveraddress.
      * @return list containing exercise-objects parsed from JSON
      * @throws TmcCoreException if there was no course in the given path, or if the path was
      * erroneous

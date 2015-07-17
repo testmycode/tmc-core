@@ -1,26 +1,18 @@
 package hy.tmc.core.commands;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import hy.tmc.core.TmcCore;
-import hy.tmc.core.commands.VerifyCredentials;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.communication.authorization.Authorization;
 import hy.tmc.core.testhelpers.ClientTmcSettings;
 import hy.tmc.core.configuration.TmcSettings;
-import hy.tmc.core.domain.Credentials;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.mockito.Matchers.any;
 
 import org.mockito.Mockito;
 
-import org.powermock.api.mockito.PowerMockito;
-import static org.powermock.api.mockito.PowerMockito.mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -46,7 +38,6 @@ public class AuthenticateTest {
 
     @Test
     public void canAuthenticateWithTestCredentials() throws TmcCoreException, IOException {
-        new Authorization(); // for code coverage
         String result = executeWithParams("username", testUsername, "password", testPassword);
         assertTrue(result.contains("Auth successful."));
     }

@@ -11,7 +11,6 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.DefaultUnzipDecider;
-import hy.tmc.core.zipping.UnzipDecider;
 import java.io.File;
 import java.io.FileWriter;
 
@@ -21,8 +20,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.io.FileUtils;
 import java.util.List;
+import org.apache.commons.io.FileUtils;
 
 public class DownloadExercises extends Command<List<Exercise>> {
 
@@ -33,18 +32,6 @@ public class DownloadExercises extends Command<List<Exercise>> {
     private File cacheFile;
     private TmcJsonParser parser;
     private List<Exercise> exercisesToDownload;
-
-    public DownloadExercises(TmcSettings settings) {
-        super(settings);
-        this.exerciseDownloader = new ExerciseDownloader(new DefaultUnzipDecider(),
-                new UrlCommunicator(settings), new TmcJsonParser(settings));
-        this.parser = new TmcJsonParser(settings);
-    }
-
-    public DownloadExercises(TmcSettings settings, TmcJsonParser parser) {
-        super(settings);
-        this.parser = parser;
-    }
 
     public DownloadExercises(List<Exercise> exercisesToDownload, TmcSettings settings) throws TmcCoreException {
         super(settings);
@@ -61,11 +48,10 @@ public class DownloadExercises extends Command<List<Exercise>> {
         } else {
             throw new TmcCoreException("Unable to determine course, cannot download");
         }
-
     }
 
     public DownloadExercises(String path, String courseId, TmcSettings settings) {
-        this(settings);
+        super(settings);
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);
         this.parser = new TmcJsonParser(settings);
@@ -77,17 +63,8 @@ public class DownloadExercises extends Command<List<Exercise>> {
         this.parser = new TmcJsonParser(settings);
     }
 
-    public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile, TmcSettings settings) {
-        this.settings = settings;
-        this.exerciseDownloader = downloader;
-        this.setParameter("path", path);
-        this.setParameter("courseID", courseId);
-        this.cacheFile = cacheFile;
-        this.parser = new TmcJsonParser(settings);
-    }
-
     public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile, TmcSettings settings, TmcJsonParser parser) {
-        this.settings = settings;
+        super(settings);
         this.exerciseDownloader = downloader;
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);
@@ -228,5 +205,4 @@ public class DownloadExercises extends Command<List<Exercise>> {
             writer.write(gson.toJson(checksums, Map.class));
         }
     }
-
 }

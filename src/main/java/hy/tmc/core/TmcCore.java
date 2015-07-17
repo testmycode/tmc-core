@@ -16,7 +16,6 @@ import hy.tmc.core.commands.GetCourse;
 import hy.tmc.core.commands.GetExerciseUpdates;
 import hy.tmc.core.commands.GetUnreadReviews;
 import hy.tmc.core.commands.ListCourses;
-import hy.tmc.core.commands.ListExercises;
 import hy.tmc.core.commands.Paste;
 import hy.tmc.core.commands.PasteWithComment;
 import hy.tmc.core.commands.RunCheckStyle;
@@ -177,28 +176,10 @@ public class TmcCore {
      * @throws TmcCoreException if something went wrong
      */
     public ListenableFuture<List<Course>> listCourses(TmcSettings settings) throws TmcCoreException {
-
         @SuppressWarnings("unchecked")
         ListCourses listCommand = new ListCourses(settings);
         ListenableFuture<List<Course>> listCourses = (ListenableFuture<List<Course>>) threadPool.submit(listCommand);
         return listCourses;
-    }
-
-    /**
-     * Gives a list of all the exercises relating to a course..
-     *
-     * @param path to any directory inside a course directory
-     * @param settings with credentials and serveraddress.
-     * @return list containing exercise-objects parsed from JSON
-     * @throws TmcCoreException if there was no course in the given path, or if the path was
-     * erroneous
-     */
-    public ListenableFuture<List<Exercise>> listExercises(String path, TmcSettings settings) throws TmcCoreException {
-        checkParameters(path);
-        @SuppressWarnings("unchecked")
-        ListExercises listCommand = new ListExercises(path, settings);
-        ListenableFuture<List<Exercise>> listExercises = (ListenableFuture<List<Exercise>>) threadPool.submit(listCommand);
-        return listExercises;
     }
 
     /**

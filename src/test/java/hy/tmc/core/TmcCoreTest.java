@@ -7,7 +7,6 @@ import hy.tmc.core.commands.DownloadExercises;
 import hy.tmc.core.commands.GetExerciseUpdates;
 import hy.tmc.core.commands.GetUnreadReviews;
 import hy.tmc.core.commands.ListCourses;
-import hy.tmc.core.commands.ListExercises;
 import hy.tmc.core.commands.Paste;
 import hy.tmc.core.commands.RunTests;
 import hy.tmc.core.commands.SendFeedback;
@@ -94,12 +93,6 @@ public class TmcCoreTest {
     public void listCourses() throws Exception {
         tmcCore.listCourses(settings);
         verify(threadPool, times(1)).submit(any(ListCourses.class));
-    }
-
-    @Test
-    public void listExercises() throws Exception {
-        tmcCore.listExercises("path/kurssiin", settings);
-        verify(threadPool, times(1)).submit(any(ListExercises.class));
     }
 
     @Test(expected = FileNotFoundException.class)

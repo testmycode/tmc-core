@@ -9,6 +9,7 @@ public class UrlHelper {
     public final String coursesExtension;
     public final String authExtension;
     private final TmcSettings settings;
+    private String serverAddressPattern = "(https://)?([a-z]+\\.){2,}[a-z]+(/[a-z]+)*";
     
     public UrlHelper(TmcSettings settings) {
         apiParam = "api_version=" + settings.apiVersion();
@@ -35,5 +36,9 @@ public class UrlHelper {
             url += postfix;
         }
         return url;
+    }
+    
+    public boolean urlIsValid(String url) {
+        return url.matches(serverAddressPattern);
     }
 }

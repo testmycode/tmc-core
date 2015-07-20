@@ -1,5 +1,6 @@
 package hy.tmc.core.commands;
 
+import hy.tmc.core.communication.UrlHelper;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
@@ -20,12 +21,12 @@ public abstract class Command<E> implements Callable<E> {
     public Command() {
         data = new HashMap<>();
     }
-    
-    public Command(TmcSettings settings){
+
+    public Command(TmcSettings settings) {
         this();
         this.settings = settings;
     }
-    
+
     public Command(ProgressObserver observer, TmcSettings settings) {
         this(settings);
         this.observer = observer;
@@ -46,8 +47,8 @@ public abstract class Command<E> implements Callable<E> {
     }
 
     /**
-     * Command must have checkData method which throws ProtocolException if it
-     * doesn't have all data needed.
+     * Command must have checkData method which throws ProtocolException if it doesn't have all data
+     * needed.
      *
      * @throws TmcCoreException if the command lacks some necessary data
      */
@@ -60,11 +61,18 @@ public abstract class Command<E> implements Callable<E> {
     public void setObserver(ProgressObserver observer) {
         this.observer = observer;
     }
-    
+
     public boolean settingsNotPresent() {
         return this.settings == null
-            || !this.settings.userDataExists()
-            || this.settings.getServerAddress() == null
-            || this.settings.getServerAddress().isEmpty();
+                || !this.settings.userDataExists()
+                || !serverAddressIsValid();
+    }
+
+    private boolean serverAddressIsValid() {
+        if (this.settings.getServerAddress() == null || 
+            this.settings.getServerAddress().isEmpty()) {
+            return false;
+        }
+        return new UrlHelper(settings).urlIsValid(this.settings.getServerAddress());
     }
 }

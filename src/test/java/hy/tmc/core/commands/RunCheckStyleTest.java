@@ -7,7 +7,7 @@ import fi.helsinki.cs.tmc.stylerunner.validation.Strategy;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationError;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
+import hy.tmc.core.ClientTmcSettings;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import java.io.File;
 import java.nio.file.Path;

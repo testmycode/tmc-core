@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.mockito.Mockito;
 
-import hy.tmc.core.testhelpers.ClientTmcSettings;
+import hy.tmc.core.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;

@@ -13,7 +13,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.io.Files;
 
 import hy.tmc.core.communication.HttpResult;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
+import hy.tmc.core.ClientTmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 

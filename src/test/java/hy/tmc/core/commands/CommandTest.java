@@ -1,16 +1,16 @@
 package hy.tmc.core.commands;
 
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
 import java.io.IOException;
 import org.junit.Test;
 import org.junit.Before;
 
 public class CommandTest {
    
-    ClientTmcSettings settings = new ClientTmcSettings();
+    CoreTestSettings settings = new CoreTestSettings();
 
     @Before
     public void setup() {

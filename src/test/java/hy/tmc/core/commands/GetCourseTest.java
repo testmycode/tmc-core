@@ -47,11 +47,6 @@ public class GetCourseTest {
     }
 
     @Test(expected = TmcCoreException.class)
-    public void testCheckDataAddress() throws Exception{
-        core.getCourse(createSettingsWith("asda", "asdjh", ""), finalUrl);
-    }
-
-    @Test(expected = TmcCoreException.class)
     public void testCheckDataPassword() throws Exception{
         core.getCourse(createSettingsWith("", "asdjh", "adsljads"), finalUrl);
     }

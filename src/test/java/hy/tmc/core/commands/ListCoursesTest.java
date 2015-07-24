@@ -10,7 +10,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.exceptions.TmcServerException;
@@ -31,7 +31,7 @@ import org.mockito.Mockito;
 public class ListCoursesTest {
 
     private ListCourses list;
-    ClientTmcSettings settings = new ClientTmcSettings();
+    CoreTestSettings settings = new CoreTestSettings();
     UrlCommunicator communicator;
 
     /**
@@ -89,7 +89,7 @@ public class ListCoursesTest {
                 .willReturn(WireMock.aResponse()
                         .withStatus(401)));
         
-        ClientTmcSettings localSettings = new ClientTmcSettings();
+        CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setUsername("testy");
         localSettings.setPassword("1234");
         localSettings.setServerAddress("http://localhost:8080");

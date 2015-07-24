@@ -13,7 +13,7 @@ import hy.tmc.core.TmcCore;
 import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -37,14 +37,14 @@ public class SubmitTest {
     private Submit submit;
     private ExerciseSubmitter submitterMock;
     private final String submissionUrl = "/submissions/1781.json?api_version=7";
-    private ClientTmcSettings settings;
+    private CoreTestSettings settings;
 
     @Rule
     public WireMockRule wireMock = new WireMockRule();
     
     @Before
     public void setup() throws Exception {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         settings.setUsername("Samu");
         settings.setPassword("Bossman");
         settings.setCurrentCourse(new Course());
@@ -76,7 +76,7 @@ public class SubmitTest {
 
     @Test(expected = TmcCoreException.class)
     public void checkDataFailIfNoAuth() throws Exception {
-        Submit submitCommand = new Submit(new ClientTmcSettings());
+        Submit submitCommand = new Submit(new CoreTestSettings());
         submitCommand.checkData();
     }
     
@@ -109,7 +109,7 @@ public class SubmitTest {
         mockSubmit();
         
         TmcCore core = new TmcCore();
-        ClientTmcSettings settings = new ClientTmcSettings("test", "1234", "http://localhost:8080");
+        CoreTestSettings settings = new CoreTestSettings("test", "1234", "http://localhost:8080");
         TmcJsonParser parser = new TmcJsonParser(settings);
         Course course = parser.getCourseFromString(ExampleJson.noDeadlineCourseExample);
         settings.setCurrentCourse(course);

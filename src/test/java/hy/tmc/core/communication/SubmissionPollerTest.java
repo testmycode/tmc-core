@@ -3,7 +3,7 @@ package hy.tmc.core.communication;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.domain.submission.SubmissionResult.Status;
-import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import org.junit.Before;
@@ -14,12 +14,12 @@ public class SubmissionPollerTest {
 
     private SubmissionPoller submissionPoller;
     private String url = "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7";
-    private ClientTmcSettings settings;
+    private CoreTestSettings settings;
     private TmcJsonParser jsonParser;
 
     @Before
     public void setup() {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         settings.setUsername("chang");
         settings.setPassword("rajani");
         jsonParser = Mockito.mock(TmcJsonParser.class);

@@ -8,7 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.mockito.Mockito;
 
-import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -38,7 +38,7 @@ public class CourseSubmitterTest {
     private TmcJsonParser jsonParser;
     private ProjectRootFinderStub rootFinder;
     private ProjectRootFinder realFinder;
-    private ClientTmcSettings settings;
+    private CoreTestSettings settings;
     private Zipper zipper;
 
     /**
@@ -46,7 +46,7 @@ public class CourseSubmitterTest {
      */
     @Before
     public void setup() throws IOException, TmcCoreException {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         settings.setServerAddress("http://mooc.fi/staging");
         settings.setUsername("chang");
         settings.setPassword("rajani");

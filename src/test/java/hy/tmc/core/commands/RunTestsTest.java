@@ -1,6 +1,6 @@
 package hy.tmc.core.commands;
 
-import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 
 import hy.tmc.core.exceptions.TmcCoreException;
 
@@ -11,14 +11,14 @@ import org.junit.Test;
 public class RunTestsTest {
 
     private RunTests runTests;
-    private ClientTmcSettings settings;
+    private CoreTestSettings settings;
 
     /**
      * Create FrontendStub and RunTests command.
      */
     @Before
     public void setup() {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         settings.setUsername("test");
         settings.setUsername("1234");
         runTests = new RunTests(settings);
@@ -29,7 +29,7 @@ public class RunTestsTest {
      */
     @Test
     public void testCheckDataSuccess() throws TmcCoreException {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         RunTests rt = new RunTests(settings);
         rt.setParameter("path", "/home/tmccli/uolevipuistossa");
         rt.checkData();
@@ -40,7 +40,7 @@ public class RunTestsTest {
      */
     @Test(expected = TmcCoreException.class)
     public void testCheckDataFail() throws TmcCoreException {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         RunTests rt = new RunTests(settings);
         rt.checkData();
     }

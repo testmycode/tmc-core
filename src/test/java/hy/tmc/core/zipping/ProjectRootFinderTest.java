@@ -2,7 +2,7 @@ package hy.tmc.core.zipping;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
@@ -23,12 +23,12 @@ public class ProjectRootFinderTest {
     ProjectRootFinder finder;
     String fakeName = "2014-mooc-no-deadline";
     String otherFakeName = "2013-tira";
-    ClientTmcSettings settings;
+    CoreTestSettings settings;
     TmcJsonParser parser;
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         settings.setUsername("chang");
         settings.setPassword("paras");
         

@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 
 
 import hy.tmc.core.communication.ExerciseSubmitter;
-import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -24,7 +24,7 @@ public class PasteTest {
     private Paste paste;
     private ExerciseSubmitter submitterMock;
     private String pasteUrl = "http://legit.paste.url.fi";
-    ClientTmcSettings settings = new ClientTmcSettings();
+    CoreTestSettings settings = new CoreTestSettings();
 
     /**
      * Mocks CourseSubmitter and injects it into Paste command.
@@ -39,7 +39,7 @@ public class PasteTest {
     }
     
     private void mock() throws ParseException, ExpiredException, IOException, TmcCoreException {
-        settings = Mockito.mock(ClientTmcSettings.class);
+        settings = Mockito.mock(CoreTestSettings.class);
         Mockito.when(settings.getUsername()).thenReturn("Samu");
         Mockito.when(settings.getPassword()).thenReturn("Bossman");
         Mockito.when(settings.getCurrentCourse()).thenReturn(Optional.of(new Course()));
@@ -76,14 +76,14 @@ public class PasteTest {
 
     @Test(expected = TmcCoreException.class)
     public void checkDataFailIfNoAuth() throws Exception {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         paste.checkData();
     }
 
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfNoCredentialsPresent() throws Exception {
         paste.data.put("path", "asdsad");
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         paste.checkData();
     }
     

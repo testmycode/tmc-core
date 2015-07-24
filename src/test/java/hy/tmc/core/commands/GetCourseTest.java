@@ -12,7 +12,7 @@ import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
@@ -30,12 +30,12 @@ public class GetCourseTest {
     private String finalUrl = "http://127.0.0.1:8080/courses/19.json";
     private String mockUrl = "/courses/19.json?api_version=7";
     private TmcCore core;
-    private ClientTmcSettings settings;
+    private CoreTestSettings settings;
 
     @Before
     public void setup() {
         core = new TmcCore();
-        settings = Mockito.mock(ClientTmcSettings.class);
+        settings = Mockito.mock(CoreTestSettings.class);
         Mockito.when(settings.getUsername()).thenReturn("test");
         Mockito.when(settings.getPassword()).thenReturn("1234");
         Mockito.when(settings.getCurrentCourse()).thenReturn(Optional.of(new Course()));
@@ -66,8 +66,8 @@ public class GetCourseTest {
         core.getCourse(createSettingsWith("asda", "asdjh", "asdu"), finalUrl);
     }
     
-    private ClientTmcSettings createSettingsWith(String password, String username, String address) {
-        ClientTmcSettings localSettings = new ClientTmcSettings();
+    private CoreTestSettings createSettingsWith(String password, String username, String address) {
+        CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setPassword(password);
         localSettings.setUsername(username);
         localSettings.setServerAddress(address);

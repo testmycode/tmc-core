@@ -13,7 +13,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.io.Files;
 
 import hy.tmc.core.communication.HttpResult;
-import hy.tmc.core.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 
@@ -41,14 +41,14 @@ public class DiffSenderTest {
     private final String spywareUrl = "http://127.0.0.1:8080/spyware";
     private DiffSender sender;
     private String originalServerUrl;
-    private ClientTmcSettings settings;
+    private CoreTestSettings settings;
     
     /**
      * Logins the users and creates fake server.
      */
     @Before
     public void setup() throws IOException {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         settings.setServerAddress("http://127.0.0.1:8080");
         settings.setUsername("test");
         settings.setPassword("1234");

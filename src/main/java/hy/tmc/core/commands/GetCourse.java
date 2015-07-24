@@ -23,7 +23,6 @@ public class GetCourse extends Command<Course> {
     public void checkData() throws TmcCoreException, IOException {
         validate(this.settings.getUsername(), "username must be set!");
         validate(this.settings.getPassword(), "password must be set!");
-        validate(this.settings.getServerAddress(), "serverAddress must be set!");
     }
 
     private void validate(String field, String message) throws TmcCoreException {

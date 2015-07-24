@@ -120,13 +120,14 @@ public class TmcCore {
     }
 
     /**
+     * Fetch one course from tmc-server.
      *
-     *
-     * @param settings
+     * @param settings containing at least credentials
+     * @param path defines the url to course
      * @return
      */
     public ListenableFuture<Course> getCourse(TmcSettings settings, String path) throws TmcCoreException {
-        checkParameters(settings.getUsername(), settings.getPassword(), settings.getServerAddress());
+        checkParameters(settings.getUsername(), settings.getPassword());
         GetCourse getC = new GetCourse(settings, path);
         ListenableFuture<Course> future = threadPool.submit(getC);
         return future;

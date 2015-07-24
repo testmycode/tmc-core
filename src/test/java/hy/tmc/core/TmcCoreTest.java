@@ -1,6 +1,5 @@
 package hy.tmc.core;
 
-import hy.tmc.core.testhelpers.ClientTmcSettings;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import hy.tmc.core.commands.VerifyCredentials;
 import hy.tmc.core.commands.DownloadExercises;
@@ -44,14 +43,14 @@ public class TmcCoreTest {
     private ListeningExecutorService threadPool;
     private Course course;
     private String tmcServerAddress = "https://tmc.mooc.fi/mooc";
-    private ClientTmcSettings settings;
+    private CoreTestSettings settings;
 
     @Before
     public void setUp() throws IOException {
         threadPool = mock(ListeningExecutorService.class);
         tmcCore = new TmcCore(threadPool);
         course = new Course();
-        settings = new ClientTmcSettings("test", "1234");
+        settings = new CoreTestSettings("test", "1234");
         settings.setServerAddress(tmcServerAddress);
         Paths.get("src", "test", "resources", "cachefile").toFile().createNewFile();
         Paths.get("src", "test", "resources", "file2.cache").toFile().createNewFile();
@@ -71,14 +70,14 @@ public class TmcCoreTest {
 
     @Test(expected = TmcCoreException.class)
     public void loginWithoutNumberFails() throws Exception {
-        ClientTmcSettings emptySettings = new ClientTmcSettings("", "");
+        CoreTestSettings emptySettings = new CoreTestSettings("", "");
         emptySettings.setServerAddress(tmcServerAddress);
         tmcCore.verifyCredentials(emptySettings).get();
     }
     
     @Test(expected = TmcCoreException.class)
     public void loginWithoutServerAddrees() throws Exception {
-        ClientTmcSettings emptySettings = new ClientTmcSettings("", "");
+        CoreTestSettings emptySettings = new CoreTestSettings("", "");
         emptySettings.setServerAddress("");
         tmcCore.verifyCredentials(emptySettings).get();
     }

@@ -31,6 +31,7 @@ public class RunTests extends Command<RunResult> {
      * @throws NoLanguagePluginFoundException if path doesn't contain exercise
      */
     public RunResult runTests(Path exercise) throws NoLanguagePluginFoundException {
+        System.err.println("Path: " + exercise.toString());
         TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
         return taskExecutor.runTests(exercise);
     }

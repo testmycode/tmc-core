@@ -7,7 +7,7 @@ import fi.helsinki.cs.tmc.stylerunner.validation.Strategy;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationError;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.zipping.ProjectRootFinder;
 import java.io.File;
 import java.nio.file.Path;
@@ -32,7 +32,7 @@ import org.mockito.Mockito;
 public class RunCheckStyleTest {
 
     private RunCheckStyle command;
-    private ClientTmcSettings settings;
+    private CoreTestSettings settings;
     private TaskExecutorImpl executorMock;
     private ProjectRootFinder finderMock;
 
@@ -40,7 +40,7 @@ public class RunCheckStyleTest {
     public void setUp() throws NoLanguagePluginFoundException {
         executorMock = Mockito.mock(TaskExecutorImpl.class);
         finderMock = Mockito.mock(ProjectRootFinder.class);
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         String path = "/home/peteTheSwede/projects";
         command = new RunCheckStyle(path, settings, finderMock, executorMock);
         when(executorMock.runCheckCodeStyle(any(Path.class))).thenReturn(new ValidationResultImpl());
@@ -91,7 +91,7 @@ public class RunCheckStyleTest {
     }
 
     private void setupTwo() {
-        this.settings = new ClientTmcSettings();
+        this.settings = new CoreTestSettings();
         this.settings.setUsername("test");
         this.settings.setPassword("1234");
         this.settings.setServerAddress("https://tmc.mooc.fi/staging");

@@ -9,7 +9,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.base.Optional;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.DefaultUnzipDecider;
@@ -42,7 +42,7 @@ public class ExerciseDownloaderTest {
 
     private ArrayList<Exercise> exercises;
     private ExerciseDownloader exDl;
-    private ClientTmcSettings settings;
+    private CoreTestSettings settings;
     private Unzipper zipHandler;
     private String testFileContent = "Testfile for DownloadExercisesTest \n";
     private String testZipPath;
@@ -54,7 +54,7 @@ public class ExerciseDownloaderTest {
      */
     @Before
     public void setup() {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         zipHandler = Mockito.mock(Unzipper.class);
 
         exDl = new ExerciseDownloader(

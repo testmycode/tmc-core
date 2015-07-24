@@ -105,7 +105,7 @@ public class TmcCore {
     }
 
     /**
-     * Authenticates the given user on the server, and saves the data into memory.
+     * Authenticates the given user on the server.
      *
      * @param settings settings required by this command
      * @return A future-object containing true or false on success or fail
@@ -113,7 +113,7 @@ public class TmcCore {
      */
     public ListenableFuture<Boolean> verifyCredentials(TmcSettings settings) throws TmcCoreException {
         checkParameters(settings.getUsername(), settings.getPassword(), settings.getServerAddress());
-        VerifyCredentials login = new VerifyCredentials(settings.getUsername(), settings.getPassword(), settings);
+        VerifyCredentials login = new VerifyCredentials(settings);
         @SuppressWarnings("unchecked")
         ListenableFuture<Boolean> stringListenableFuture = (ListenableFuture<Boolean>) threadPool.submit(login);
         return stringListenableFuture;

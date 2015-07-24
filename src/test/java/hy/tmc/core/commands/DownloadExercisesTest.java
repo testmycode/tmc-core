@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -34,12 +34,12 @@ import org.mockito.Mockito;
 public class DownloadExercisesTest {
 
     private File cache;
-    private ClientTmcSettings settings;
+    private CoreTestSettings settings;
     private TmcJsonParser parser;
 
     @Before
     public void setup() throws IOException {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         settings.setUsername("Bossman");
         settings.setPassword("Samu");
         cache = Paths.get("src", "test", "resources", "downloadtest.cache").toFile();
@@ -60,7 +60,7 @@ public class DownloadExercisesTest {
 
     @Test(expected = TmcCoreException.class)
     public void settingsWithoutCredentials() throws TmcCoreException {
-        ClientTmcSettings localSettings = new ClientTmcSettings();
+        CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setCurrentCourse(
                 new TmcJsonParser(settings).getCourseFromString(ExampleJson.courseExample)
         );

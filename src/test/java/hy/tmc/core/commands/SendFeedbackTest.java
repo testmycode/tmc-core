@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.testhelpers.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.testhelpers.ExampleJson;
 import java.io.IOException;
 import java.util.HashMap;
@@ -21,12 +21,12 @@ public class SendFeedbackTest {
 
     private SendFeedback command;
     private String url = "www.example.tmc";
-    ClientTmcSettings settings;
+    CoreTestSettings settings;
     UrlCommunicator communicator;
 
     @Before
     public void setUp() {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         communicator = Mockito.mock(UrlCommunicator.class);
         command = new SendFeedback(testCaseMap(), url, settings);
         
@@ -43,21 +43,21 @@ public class SendFeedbackTest {
     
     @Test (expected = TmcCoreException.class)
     public void ensureParamsNotNull() throws TmcCoreException, IOException {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         Command command = new SendFeedback(null, "chewbac.ca", settings);
         command.checkData();
     }
     
     @Test (expected = TmcCoreException.class)
     public void ensureParamsNotNull2() throws TmcCoreException, IOException {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         Command command = new SendFeedback(new HashMap<String, String>(), null, settings);
         command.checkData();
     }
     
     @Test (expected = TmcCoreException.class)
     public void ensureParamsNotNull3() throws TmcCoreException, IOException {
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         Command command = new SendFeedback(null, null, settings);
         command.checkData();
     }

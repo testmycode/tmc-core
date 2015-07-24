@@ -1,10 +1,10 @@
-package hy.tmc.core.testhelpers;
+package hy.tmc.core;
 
 import com.google.common.base.Optional;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 
-public class ClientTmcSettings implements TmcSettings {
+public class CoreTestSettings implements TmcSettings {
 
     private String serverAddress;
     private String username;
@@ -13,27 +13,27 @@ public class ClientTmcSettings implements TmcSettings {
     private String apiVersion;
     private String mainDirectory;
 
-    public ClientTmcSettings() {
+    public CoreTestSettings() {
         apiVersion = "7";
     }
 
-    public ClientTmcSettings(String uname, String pword) {
+    public CoreTestSettings(String uname, String pword) {
         this();
         this.username = uname;
         this.password = pword;
     }
 
-    public ClientTmcSettings(String uname, String pword, String url) {
+    public CoreTestSettings(String uname, String pword, String url) {
         this(uname, pword);
         this.serverAddress = url;
     }
 
-    public ClientTmcSettings(Course course) {
+    public CoreTestSettings(Course course) {
         this();
         this.currentCourse = course;
     }
 
-    public ClientTmcSettings(String uname, String pword, Course course) {
+    public CoreTestSettings(String uname, String pword, Course course) {
         this(uname, pword);
         this.currentCourse = course;
     }

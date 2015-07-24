@@ -8,24 +8,21 @@ import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 
+/**
+ * Polls tmc-server (defined in settings) route "/user" with credentials.
+ * Tmc-server returns 200, if success and otherwise 401.
+ */
 public class VerifyCredentials extends Command<Boolean> {
 
     /**
      * Regex for HTTP OK codes.
      */
     private final String httpOk = "2..";
+    private String tmcServerRoute = "/user";
     private UrlCommunicator communicator;
 
-    public VerifyCredentials(String username, String password, TmcSettings settings) {
-        super(settings);
-        this.setParameter("username", username);
-        this.setParameter("password", password);
-        this.communicator = new UrlCommunicator(settings);
-    }
-    
     public VerifyCredentials(TmcSettings settings) {
-        super(settings);
-        this.communicator = new UrlCommunicator(settings);
+        this(settings, new UrlCommunicator(settings));
     }
     
     public VerifyCredentials(TmcSettings settings, UrlCommunicator communicator) {
@@ -34,26 +31,21 @@ public class VerifyCredentials extends Command<Boolean> {
     }
 
     @Override
-    public final void setParameter(String key, String value) {
-        getData().put(key, value);
-    }
-
-    @Override
     public void checkData() throws TmcCoreException {
-        String username = this.data.get("username");
+        String username = settings.getUsername();
         if (username == null || username.isEmpty()) {
             throw new TmcCoreException("username must be set!");
         }
-        String password = this.data.get("password");
+        String password = settings.getPassword();
         if (password == null || password.isEmpty()) {
             throw new TmcCoreException("password must be set!");
         }
     }
 
     private int makeRequest() throws IOException, TmcCoreException {
-        String auth = data.get("username") + ":" + data.get("password");
+        String auth = settings.getUsername() + ":" + settings.getPassword();
         int code = communicator.makeGetRequest(
-                settings.getServerAddress(),
+                settings.getServerAddress() + tmcServerRoute,
                 auth
         ).getStatusCode();
         return code;
@@ -63,7 +55,6 @@ public class VerifyCredentials extends Command<Boolean> {
     public Boolean call() throws TmcCoreException, IOException {
         checkData();
         if (isOk(makeRequest())) {
-            //ClientData.setUserData(data.get("username"), data.get("password"));
             return true;
         }
         return false;

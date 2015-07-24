@@ -2,7 +2,7 @@ package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
 
-import hy.tmc.core.testhelpers.ClientTmcSettings;
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -28,7 +28,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(UrlCommunicator.class)
 public class TmcJsonParserTest {
 
-    private ClientTmcSettings settings;
+    private CoreTestSettings settings;
     private UrlCommunicator urlCommunicator;
     private TmcJsonParser tmcJsonParser;
     /**
@@ -37,7 +37,7 @@ public class TmcJsonParserTest {
     @Before
     public void setup() throws IOException, TmcCoreException {
         urlCommunicator = mock(UrlCommunicator.class);
-        settings = new ClientTmcSettings();
+        settings = new CoreTestSettings();
         settings.setUsername("chang");
         settings.setPassword("rajani");
         tmcJsonParser = new TmcJsonParser(urlCommunicator, settings);

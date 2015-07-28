@@ -1,20 +1,17 @@
 package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 import hy.tmc.core.domain.Exercise;
-
 import hy.tmc.core.zipping.UnzipDecider;
 import hy.tmc.core.zipping.Unzipper;
-
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 public class ExerciseDownloader {
     

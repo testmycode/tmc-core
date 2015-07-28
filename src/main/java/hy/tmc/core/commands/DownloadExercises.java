@@ -55,9 +55,11 @@ public class DownloadExercises extends Command<List<Exercise>> {
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);
         this.parser = new TmcJsonParser(settings);
+        this.exerciseDownloader = new ExerciseDownloader(new DefaultUnzipDecider(),
+                new UrlCommunicator(settings), new TmcJsonParser(settings));
     }
 
-    public DownloadExercises(String path, String courseId, TmcSettings settings, File cacheFile) throws IOException {
+    public DownloadExercises(String path, String courseId, TmcSettings settings, File cacheFile) {
         this(path, courseId, settings);
         this.cacheFile = cacheFile;
         this.parser = new TmcJsonParser(settings);

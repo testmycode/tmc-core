@@ -16,7 +16,6 @@ import hy.tmc.core.commands.GetCourse;
 import hy.tmc.core.commands.GetExerciseUpdates;
 import hy.tmc.core.commands.GetUnreadReviews;
 import hy.tmc.core.commands.ListCourses;
-import hy.tmc.core.commands.Paste;
 import hy.tmc.core.commands.PasteWithComment;
 import hy.tmc.core.commands.RunCheckStyle;
 import hy.tmc.core.commands.RunTests;
@@ -296,22 +295,6 @@ public class TmcCore {
         ListenableFuture<HttpResult> feedbackListenableFuture
                 = (ListenableFuture<HttpResult>) threadPool.submit(feedback);
         return feedbackListenableFuture;
-    }
-
-    /**
-     * Submits the current exercise to the TMC-server and requests for a paste to be made.
-     *
-     * @param path inside any exercise directory
-     * @return URI object containing location of the paste
-     * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     * given path
-     */
-    public ListenableFuture<URI> paste(String path, TmcSettings settings) throws TmcCoreException {
-        checkParameters(path);
-        @SuppressWarnings("unchecked")
-        Paste paste = new Paste(path, settings);
-        ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) threadPool.submit(paste);
-        return stringListenableFuture;
     }
     
      /**

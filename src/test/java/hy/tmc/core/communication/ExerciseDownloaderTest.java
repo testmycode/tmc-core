@@ -144,13 +144,6 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void exerciseListIsEmpty() throws IOException, TmcCoreException {
-        Optional<List<Exercise>> exercises = exDl.downloadExercises("http://127.0.0.1:8080/emptyCourse.json");
-        List<Exercise> list = exercises.or(new ArrayList<Exercise>());
-        assertEquals(0, list.size());
-    }
-
-    @Test
     public void downloadedExercisesExists() {
         exDl.downloadFiles(exercises, zipDestination);
         File exercise1 = Paths.get("src", "test", "resources", "__files", "testfile.txt").toFile();

@@ -101,13 +101,11 @@ public class ExerciseDownloader {
     public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, String path, String folderName) {
         List<Exercise> downloadedExercises = new ArrayList<>();
         path = createCourseFolder(path, folderName);
-        int exCount = 0;
         for (Exercise exercise : exercises) {
-            boolean success = handleSingleExercise(exercise, exCount, exercises.size(), path);
+            boolean success = handleSingleExercise(exercise, path);
             if (success) {
                 downloadedExercises.add(exercise);
             }
-            exCount++;
         }
         
         return Optional.of(downloadedExercises);
@@ -117,11 +115,9 @@ public class ExerciseDownloader {
      * Handles downloading, unzipping & telling user information, for single exercise.
      *
      * @param exercise Exercise which will be downloaded
-     * @param exCount order number of exercise in downloading
-     * @param totalCount amount of all exercises
      * @param path path where single exercise will be downloaded
      */
-    public boolean handleSingleExercise(Exercise exercise, int exCount, int totalCount, String path) {
+    public boolean handleSingleExercise(Exercise exercise, String path) {
         if (exercise.isLocked()) {
             return false;
         }

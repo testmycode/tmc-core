@@ -12,6 +12,7 @@ import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.authorization.Authorization;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
+import hy.tmc.core.domain.ProgressObserver;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.testhelpers.builders.ExerciseBuilder;
@@ -36,6 +37,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.times;
 
 public class DownloadExercisesTest {
 
@@ -43,7 +45,6 @@ public class DownloadExercisesTest {
     private CoreTestSettings settings;
     private TmcJsonParser parser;
     private TmcCore core;
-    private String mockUrl = "";
 
     @Rule
     public WireMockRule wireMockServer = new WireMockRule();
@@ -105,7 +106,7 @@ public class DownloadExercisesTest {
         Mockito.when(downloader.createCourseFolder(anyString(), anyString()))
                 .thenReturn("");
         Mockito.when(downloader.handleSingleExercise(
-                any(Exercise.class), anyInt(), anyInt(), anyString())
+                any(Exercise.class), anyString())
         ).thenReturn(true);
 
         Course course = new Course();
@@ -148,7 +149,7 @@ public class DownloadExercisesTest {
         Mockito.when(mock.createCourseFolder(anyString(), anyString()))
                 .thenReturn("");
         Mockito.when(mock.handleSingleExercise(
-                any(Exercise.class), anyInt(), anyInt(), anyString())
+                any(Exercise.class), anyString())
         ).thenReturn(true);
 
         Course course = new Course();
@@ -181,15 +182,10 @@ public class DownloadExercisesTest {
 
     @Test
     public void downloadAllExercises() throws Exception {
-        CoreTestSettings settings1 = new CoreTestSettings();
-        String serverAddress = "http://127.0.0.1:8080";
-        settings1.setServerAddress(serverAddress);
-        settings1.setUsername("test");
-        settings1.setPassword("1234");
-        wiremock(settings1.getUsername(), settings1.getPassword(), "35",serverAddress);
+        CoreTestSettings settings1 = createSettingsAndWiremock();
         String folder = System.getProperty("user.dir") + "/testResources/";
         ListenableFuture<List<Exercise>> download = core.downloadExercises(
-                folder, "35", settings1
+                folder, "35", settings1, null
         );
 
         List<Exercise> exercises = download.get();
@@ -200,6 +196,34 @@ public class DownloadExercisesTest {
 
         FileUtils.deleteDirectory(new File(exercisePath));
         assertFalse(new File(exercisePath).exists());
+    }
+
+    @Test
+    public void testDowloadingWithProgress() throws Exception {
+        CoreTestSettings settings1 = createSettingsAndWiremock();
+        ProgressObserver observerMock = Mockito.mock(ProgressObserver.class);
+        String folder = System.getProperty("user.dir") + "/testResources/";
+        ListenableFuture<List<Exercise>> download = core.downloadExercises(
+                folder, "35", settings1, observerMock
+        );
+        List<Exercise> exercises = download.get();
+        String exercisePath = folder + "2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi";
+        assertEquals(exercises.size(), 153);
+        assertTrue(new File(exercisePath).exists());
+        FileUtils.deleteDirectory(new File(exercisePath));
+        assertFalse(new File(exercisePath).exists());
+
+        Mockito.verify(observerMock, times(153)).progress(anyDouble(), anyString());
+    }
+
+    private CoreTestSettings createSettingsAndWiremock() {
+        CoreTestSettings settings1 = new CoreTestSettings();
+        String serverAddress = "http://127.0.0.1:8080";
+        settings1.setServerAddress(serverAddress);
+        settings1.setUsername("test");
+        settings1.setPassword("1234");
+        wiremock(settings1.getUsername(), settings1.getPassword(), "35",serverAddress);
+        return settings1;
     }
 
     private void wiremock(String username, String password, String courseId, String serverAddress) {

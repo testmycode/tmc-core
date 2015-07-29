@@ -9,19 +9,20 @@ import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
+import hy.tmc.core.domain.ProgressObserver;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.DefaultUnzipDecider;
+import org.apache.commons.io.FileUtils;
+
 import java.io.File;
 import java.io.FileWriter;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
-import org.apache.commons.io.FileUtils;
+import java.util.Map;
 
 public class DownloadExercises extends Command<List<Exercise>> {
 
@@ -32,6 +33,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
     private File cacheFile;
     private TmcJsonParser parser;
     private List<Exercise> exercisesToDownload;
+    private ProgressObserver observer;
 
     public DownloadExercises(List<Exercise> exercisesToDownload, TmcSettings settings) throws TmcCoreException {
         super(settings);
@@ -50,22 +52,26 @@ public class DownloadExercises extends Command<List<Exercise>> {
         }
     }
 
-    public DownloadExercises(String path, String courseId, TmcSettings settings) {
+    public DownloadExercises(String path, String courseId,
+                             TmcSettings settings, ProgressObserver observer) {
         super(settings);
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);
         this.parser = new TmcJsonParser(settings);
         this.exerciseDownloader = new ExerciseDownloader(new DefaultUnzipDecider(),
                 new UrlCommunicator(settings), new TmcJsonParser(settings));
+        this.observer = observer;
     }
 
-    public DownloadExercises(String path, String courseId, TmcSettings settings, File cacheFile) {
-        this(path, courseId, settings);
+    public DownloadExercises(String path, String courseId, TmcSettings settings,
+                             File cacheFile, ProgressObserver observer) {
+        this(path, courseId, settings, observer);
         this.cacheFile = cacheFile;
         this.parser = new TmcJsonParser(settings);
     }
 
-    public DownloadExercises(ExerciseDownloader downloader, String path, String courseId, File cacheFile, TmcSettings settings, TmcJsonParser parser) {
+    public DownloadExercises(ExerciseDownloader downloader, String path, String courseId,
+                             File cacheFile, TmcSettings settings, TmcJsonParser parser) {
         super(settings);
         this.exerciseDownloader = downloader;
         this.setParameter("path", path);
@@ -119,8 +125,6 @@ public class DownloadExercises extends Command<List<Exercise>> {
 
     /**
      * Parses the course JSON and executes downloading of the course exercises.
-     *
-     * @return
      */
     @Override
     public List<Exercise> call() throws TmcCoreException, IOException {
@@ -128,11 +132,8 @@ public class DownloadExercises extends Command<List<Exercise>> {
         Optional<Course> courseResult = this.parser.getCourse(Integer.parseInt(this.data.get("courseID")));
         if (courseResult.isPresent()) {
             Course course = courseResult.get();
-            Optional<List<Exercise>> downloadResult = downloadExercisesFromList(getExercisesToDownload(course), course.getName());
-            if (downloadResult.isPresent()) {
-                return downloadResult.get();
-            }
-            return new ArrayList<>();
+            List<Exercise> downloadResult = downloadExercisesFromList(getExercisesToDownload(course), course.getName());
+            return downloadResult;
         }
 
         throw new TmcCoreException("Could not find the course. Please check your internet connection");
@@ -145,48 +146,51 @@ public class DownloadExercises extends Command<List<Exercise>> {
         return this.exercisesToDownload;
     }
 
-    private Optional<List<Exercise>> downloadExercises(Course course) throws IOException {
-        return downloadExercisesFromList(course.getExercises(), course.getName());
-    }
-
     /**
      * Download exercises to under the directory specified by the path in the data map.
      * 
      * @param exercises
      * @param courseName
      * @return a list of the exercises that were downloaded successfully
-     * @throws IOException 
      */
-    public Optional<List<Exercise>> downloadExercisesFromList(List<Exercise> exercises, String courseName) throws IOException {
-        int exCount = 0;
-        int totalCount = exercises.size();
-        int downloaded = 0;
+    public List<Exercise> downloadExercisesFromList(List<Exercise> exercises, String courseName)  {
         List<Exercise> downloadedExercises = new ArrayList<>();
+        String courseFolderPath = exerciseDownloader.createCourseFolder(data.get("path"), courseName);
+        downloadExercises(exercises, courseName, downloadedExercises, courseFolderPath);
+        cache(downloadedExercises);
+        return downloadedExercises;
+    }
 
-        String path = exerciseDownloader.createCourseFolder(data.get("path"), courseName);
-        if (this.cacheFile != null) {
-            cacheExercises(exercises);
-        }
-
+    private void downloadExercises(List<Exercise> exercises, String courseName, List<Exercise> downloadedExercises, String path) {
+        int exCount = 0;
         for (Exercise exercise : exercises) {
             exercise.setCourseName(courseName);
-            boolean downloadSuccessful = exerciseDownloader.handleSingleExercise(exercise, exCount, totalCount, path);
+            boolean downloadSuccessful = exerciseDownloader.handleSingleExercise(exercise, path);
             exCount++;
             String status = "failed";
             if (downloadSuccessful) {
                 downloadedExercises.add(exercise);
-                downloaded++;
                 status = "was succesful";
             }
-            if (this.observer != null) {
-                String message = "Downloading exercise " + exercise.getName() + " " + status;
-                this.observer.progress(100.0 * exCount / totalCount, message);
+            informProgressObserver(exercises, exCount, exercise, status);
+        }
+    }
+
+    private void informProgressObserver(List<Exercise> exercises, int exCount, Exercise exercise, String status) {
+        if (this.observer != null) {
+            String message = "Downloading exercise " + exercise.getName() + " " + status;
+            this.observer.progress(100.0 * exCount / exercises.size(), message);
+        }
+    }
+
+    private void cache(List<Exercise> exercises) {
+        if (this.cacheFile != null) {
+            try {
+                cacheExercises(exercises);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        if (downloadedExercises.isEmpty()) {
-            return Optional.absent();
-        }
-        return Optional.of(downloadedExercises);
     }
 
     private void cacheExercises(List<Exercise> exercises) throws IOException {

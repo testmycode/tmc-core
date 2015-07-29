@@ -1,42 +1,29 @@
 package hy.tmc.core;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import hy.tmc.core.commands.VerifyCredentials;
-import hy.tmc.core.commands.DownloadExercises;
-import hy.tmc.core.commands.GetExerciseUpdates;
-import hy.tmc.core.commands.GetUnreadReviews;
-import hy.tmc.core.commands.ListCourses;
-import hy.tmc.core.commands.Paste;
-import hy.tmc.core.commands.RunTests;
-import hy.tmc.core.commands.SendFeedback;
-import hy.tmc.core.commands.Submit;
+import hy.tmc.core.commands.*;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.FileWriterHelper;
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Mockito;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
 
-@RunWith(PowerMockRunner.class)
 public class TmcCoreTest {
 
     private TmcCore tmcCore;
@@ -47,7 +34,7 @@ public class TmcCoreTest {
 
     @Before
     public void setUp() throws IOException {
-        threadPool = mock(ListeningExecutorService.class);
+        threadPool = Mockito.mock(ListeningExecutorService.class);
         tmcCore = new TmcCore(threadPool);
         course = new Course();
         settings = new CoreTestSettings("test", "1234");
@@ -84,7 +71,7 @@ public class TmcCoreTest {
 
     @Test
     public void downloadExercises() throws Exception {
-        tmcCore.downloadExercises("/polku/tiedostoille", "21", settings);
+        tmcCore.downloadExercises("/polku/tiedostoille", "21", settings, null);
         verify(threadPool, times(1)).submit(any(DownloadExercises.class));
     }
 
@@ -204,13 +191,13 @@ public class TmcCoreTest {
 
     @Test(expected = TmcCoreException.class)
     public void downloadExercisesWithBadPathThrowsException() throws Exception {
-        tmcCore.downloadExercises(null, "2", settings);
+        tmcCore.downloadExercises(null, "2", settings, null);
     }
 
     @Test
     public void downloadExercisesUsesCacheIfSet() throws Exception {
         tmcCore.setCacheFile(Paths.get("src", "test", "resources", "cachefile").toFile());
-        tmcCore.downloadExercises("asdf", "asdf", settings);
+        tmcCore.downloadExercises("asdf", "asdf", settings, null);
         final ArgumentCaptor<DownloadExercises> argument = ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
         assertTrue(argument.getValue().cacheFileSet());
@@ -218,7 +205,7 @@ public class TmcCoreTest {
     
     @Test
     public void downloadExercisesDoesNotUseCacheIfNotSet() throws Exception {
-        tmcCore.downloadExercises("asdf", "asdf", settings);
+        tmcCore.downloadExercises("asdf", "asdf", settings, null);
         final ArgumentCaptor<DownloadExercises> argument = ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
         assertFalse(argument.getValue().cacheFileSet());

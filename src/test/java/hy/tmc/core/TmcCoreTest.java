@@ -6,7 +6,7 @@ import hy.tmc.core.commands.DownloadExercises;
 import hy.tmc.core.commands.GetExerciseUpdates;
 import hy.tmc.core.commands.GetUnreadReviews;
 import hy.tmc.core.commands.ListCourses;
-import hy.tmc.core.commands.Paste;
+import hy.tmc.core.commands.PasteWithComment;
 import hy.tmc.core.commands.RunTests;
 import hy.tmc.core.commands.SendFeedback;
 import hy.tmc.core.commands.Submit;
@@ -193,8 +193,8 @@ public class TmcCoreTest {
 
     @Test
     public void pasteTest() throws Exception {
-        tmcCore.paste("polku/jonnekin", settings);
-        verify(threadPool, times(1)).submit(any(Paste.class));
+        tmcCore.pasteWithComment("polku/jonnekin", settings, "");
+        verify(threadPool, times(1)).submit(any(PasteWithComment.class));
     }
 
     @Test(expected = TmcCoreException.class)

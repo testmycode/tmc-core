@@ -34,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
@@ -123,13 +124,25 @@ public class TmcCore {
      * Fetch one course from tmc-server.
      *
      * @param settings containing at least credentials
-     * @param path defines the url to course
+     * @param url defines the url to course
      * @return
      */
-    public ListenableFuture<Course> getCourse(TmcSettings settings, String path) throws TmcCoreException {
+    public ListenableFuture<Course> getCourse(TmcSettings settings, String url) throws TmcCoreException, TmcCoreException, TmcCoreException, TmcCoreException {
+        try {
+            checkParameters(settings.getUsername(), settings.getPassword());
+            GetCourse getter = new GetCourse(settings, new URI(url));
+            ListenableFuture<Course> future = threadPool.submit(getter);
+            return future;
+        }
+        catch (URISyntaxException ex) {
+            throw new TmcCoreException("Invalid url", ex);
+        }
+    }
+
+    public ListenableFuture<Course> getCourseByName(TmcSettings settings, String courseName) throws TmcCoreException, IOException {
         checkParameters(settings.getUsername(), settings.getPassword());
-        GetCourse getC = new GetCourse(settings, path);
-        ListenableFuture<Course> future = threadPool.submit(getC);
+        GetCourse getter = new GetCourse(settings, courseName);
+        ListenableFuture<Course> future = threadPool.submit(getter);
         return future;
     }
 
@@ -216,17 +229,17 @@ public class TmcCore {
         ListenableFuture<RunResult> runResultListenableFuture = (ListenableFuture<RunResult>) threadPool.submit(testCommand);
         return runResultListenableFuture;
     }
-    
-     /**
-     * Runs checkstyle on the specified directory. Looks for a build.xml or equivalent file upwards in
-     * the path to determine exercise folder. Doesn't require login.
+
+    /**
+     * Runs checkstyle on the specified directory. Looks for a build.xml or equivalent file upwards
+     * in the path to determine exercise folder. Doesn't require login.
      *
      * @param path inside any exercise directory
      * @return ValidationResult object containing details of the checkstyle validation
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
      * given path
      */
-    public ListenableFuture<ValidationResult> runCheckstyle(String path, TmcSettings settings) throws TmcCoreException{
+    public ListenableFuture<ValidationResult> runCheckstyle(String path, TmcSettings settings) throws TmcCoreException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
         RunCheckStyle checkstyleCommand = new RunCheckStyle(path, settings);
@@ -305,9 +318,10 @@ public class TmcCore {
         ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) threadPool.submit(paste);
         return stringListenableFuture;
     }
-    
-     /**
-     * Submits the current exercise to the TMC-server and requests for a paste to be made, with comment given by user.
+
+    /**
+     * Submits the current exercise to the TMC-server and requests for a paste to be made, with
+     * comment given by user.
      *
      * @param path inside any exercise directory
      * @param comment, comment given by user
@@ -323,7 +337,7 @@ public class TmcCore {
         return stringListenableFuture;
     }
 
-     /*
+    /**
      * Sends given diffs to spyware server.
      * Server is specified in current course that can be found from TmcSettings.
      * 
@@ -333,10 +347,9 @@ public class TmcCore {
     public ListenableFuture<List<HttpResult>> sendSpywareDiffs(byte[] spywareDiffs, TmcSettings settings) throws TmcCoreException {
         SendSpywareDiffs spyware = new SendSpywareDiffs(spywareDiffs, settings);
         spyware.checkData();
-        ListenableFuture<List<HttpResult>> spy = (ListenableFuture<List<HttpResult>>)threadPool.submit(spyware);
+        ListenableFuture<List<HttpResult>> spy = (ListenableFuture<List<HttpResult>>) threadPool.submit(spyware);
         return spy;
     }
-
 
     private void checkParameters(String... params) throws TmcCoreException {
         for (String param : params) {

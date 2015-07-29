@@ -5,8 +5,22 @@ import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
-import hy.tmc.core.commands.*;
 import hy.tmc.core.communication.HttpResult;
+import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.Exercise;
+import hy.tmc.core.domain.submission.SubmissionResult;
+import hy.tmc.core.commands.VerifyCredentials;
+import hy.tmc.core.commands.DownloadExercises;
+import hy.tmc.core.commands.GetCourse;
+import hy.tmc.core.commands.GetExerciseUpdates;
+import hy.tmc.core.commands.GetUnreadReviews;
+import hy.tmc.core.commands.ListCourses;
+import hy.tmc.core.commands.PasteWithComment;
+import hy.tmc.core.commands.RunCheckStyle;
+import hy.tmc.core.commands.RunTests;
+import hy.tmc.core.commands.SendFeedback;
+import hy.tmc.core.commands.SendSpywareDiffs;
+import hy.tmc.core.commands.Submit;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.updates.ExerciseUpdateHandler;
 import hy.tmc.core.communication.updates.ReviewHandler;
@@ -267,21 +281,6 @@ public class TmcCore {
         SendFeedback feedback = new SendFeedback(answers, url, settings);
         feedback.checkData();
         return threadPool.submit(feedback);
-    }
-
-    /**
-     * Submits the current exercise to the TMC-server and requests for a paste to be made.
-     *
-     * @param path inside any exercise directory
-     * @return URI object containing location of the paste
-     * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     * given path
-     */
-    public ListenableFuture<URI> paste(String path, TmcSettings settings) throws TmcCoreException {
-        checkParameters(path);
-        @SuppressWarnings("unchecked")
-        Paste paste = new Paste(path, settings);
-        return threadPool.submit(paste);
     }
     
      /**

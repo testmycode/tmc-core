@@ -1,38 +1,40 @@
 package hy.tmc.core.commands;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.exceptions.TmcServerException;
 import hy.tmc.core.testhelpers.ExampleJson;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
+import org.hamcrest.core.IsInstanceOf;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
+import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.Assert.assertEquals;
 
 public class ListCoursesTest {
 
     private ListCourses list;
     CoreTestSettings settings = new CoreTestSettings();
     UrlCommunicator communicator;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
 
     /**
      * Set up FrontendStub, ListCourses command, power mockito and fake http result.
@@ -84,7 +86,8 @@ public class ListCoursesTest {
     public WireMockRule wireMock = new WireMockRule();
     
     @Test
-    public void ListCoursesWillThrowExceptionIfAuthFailedOnServer() throws Exception {
+    public void ListCoursesWillThrowExceptionIfAuthFailedOnServer() throws ExecutionException, InterruptedException, TmcCoreException {
+        expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(TmcServerException.class));
         wireMock.stubFor(get(urlEqualTo("/courses.json?api_version=7"))
                 .willReturn(WireMock.aResponse()
                         .withStatus(401)));
@@ -94,23 +97,7 @@ public class ListCoursesTest {
         localSettings.setPassword("1234");
         localSettings.setServerAddress("http://localhost:8080");
         TmcCore core = new TmcCore();
-        final List<Throwable> exception = new ArrayList<>();
         ListenableFuture<List<Course>> courses = core.listCourses(localSettings);
-        Futures.addCallback(courses, new FutureCallback<List<Course>>() {
-
-            @Override
-            public void onSuccess(List<Course> courses) {
-            }
-
-            @Override
-            public void onFailure(Throwable thrwbl) {
-                exception.add(thrwbl);
-            }
-        });
-        while (!courses.isDone()) {
-            Thread.sleep(100);
-        }
-        assertFalse(exception.isEmpty());
-        assertEquals(exception.get(0).getClass(), TmcServerException.class);
+        courses.get();
     }
 }

@@ -7,16 +7,24 @@ import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
+import java.net.URI;
+import java.util.List;
 
 public class GetCourse extends Command<Course> {
 
     private TmcJsonParser jsonParser;
-    private String path;
-    
-    public GetCourse(TmcSettings settings, String path) {
+    private String url;
+
+    public GetCourse(TmcSettings settings, String courseName) throws IOException, TmcCoreException {
         super(settings);
         this.jsonParser = new TmcJsonParser(settings);
-        this.path = path;
+        url = getCourseUrlFromName(courseName);
+    }
+
+    public GetCourse(TmcSettings settings, URI courseUri) {
+        super(settings);
+        this.jsonParser = new TmcJsonParser(settings);
+        this.url = courseUri.toString();
     }
 
     @Override
@@ -33,11 +41,23 @@ public class GetCourse extends Command<Course> {
 
     @Override
     public Course call() throws Exception {
-        String url = new UrlHelper(settings).withApiVersion(path);
-        Optional<Course> course = jsonParser.getCourse(url);
+        String urlWithApiVersion = new UrlHelper(settings).withApiVersion(this.url);
+        Optional<Course> course = jsonParser.getCourse(urlWithApiVersion);
         if (!course.isPresent()) {
-            throw new TmcCoreException("No course found by specified url: " + url);
+            throw new TmcCoreException("No course found by specified url: " + urlWithApiVersion);
         }
         return course.get();
+    }
+
+    private String getCourseUrlFromName(String courseName) throws IOException, TmcCoreException {
+        List<Course> courses = jsonParser.getCourses();
+        for (Course course : courses) {
+            if (course.getName().equals(courseName)) {
+                return course.getDetailsUrl();
+            }
+        }
+        String errorMessage = "There is no course with name " + courseName
+                + " on the server " + settings.getServerAddress();
+        throw new TmcCoreException(errorMessage);
     }
 }

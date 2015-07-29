@@ -16,7 +16,6 @@ import hy.tmc.core.commands.GetCourse;
 import hy.tmc.core.commands.GetExerciseUpdates;
 import hy.tmc.core.commands.GetUnreadReviews;
 import hy.tmc.core.commands.ListCourses;
-import hy.tmc.core.commands.Paste;
 import hy.tmc.core.commands.PasteWithComment;
 import hy.tmc.core.commands.RunCheckStyle;
 import hy.tmc.core.commands.RunTests;
@@ -147,16 +146,15 @@ public class TmcCore {
     }
 
     /**
-     * Downloads the exercise files of a given source to the given directory. If files exist,
+     * Downloads all exercise files of a given course (specified by id) to the given directory. If files exist,
      * overrides everything except the source folder and files specified in .tmcproject.yml Requires
      * login.
      *
      * @param path where it downloads the exercises
      * @param courseId ID of course to download
-     * @return A future-object containing true or false on success or fail
      * @throws TmcCoreException if something in the given input was wrong
      */
-    public ListenableFuture<List<Exercise>> downloadExercises(String path, String courseId, TmcSettings settings) throws TmcCoreException, IOException {
+    public ListenableFuture<List<Exercise>> downloadExercises(String path, String courseId, TmcSettings settings) throws TmcCoreException {
         checkParameters(path, courseId);
         @SuppressWarnings("unchecked")
         DownloadExercises downloadCommand = getDownloadCommand(path, courseId, settings);
@@ -164,7 +162,16 @@ public class TmcCore {
         return stringListenableFuture;
     }
 
+    /**
+     * Downloads exercise files specified in the given list. The exercises will be located in
+     * TmcMainDirectory (field in TmcSettings).
+     * @param exercises to be downloaded
+     * @param settings object that implements TmcSettings-interface. Requisite fields are
+     *                 username, password, serverAddress and TmcMainDirectory.
+     */
     public ListenableFuture<List<Exercise>> downloadExercises(List<Exercise> exercises, TmcSettings settings) throws TmcCoreException {
+        checkParameters(settings.getFormattedUserData(), settings.getTmcMainDirectory(),
+                settings.getServerAddress());
         DownloadExercises downloadCommand;
         if (this.updateCache != null) {
             downloadCommand = new DownloadExercises(exercises, settings, updateCache);
@@ -175,7 +182,7 @@ public class TmcCore {
         return downloadInfoFuture;
     }
 
-    private DownloadExercises getDownloadCommand(String path, String courseId, TmcSettings settings) throws IOException {
+    private DownloadExercises getDownloadCommand(String path, String courseId, TmcSettings settings) {
         if (this.updateCache == null) {
             return new DownloadExercises(path, courseId, settings);
         }
@@ -303,25 +310,8 @@ public class TmcCore {
         return feedbackListenableFuture;
     }
 
-    /**
-     * Submits the current exercise to the TMC-server and requests for a paste to be made.
-     *
-     * @param path inside any exercise directory
-     * @return URI object containing location of the paste
-     * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     * given path
-     */
-    public ListenableFuture<URI> paste(String path, TmcSettings settings) throws TmcCoreException {
-        checkParameters(path);
-        @SuppressWarnings("unchecked")
-        Paste paste = new Paste(path, settings);
-        ListenableFuture<URI> stringListenableFuture = (ListenableFuture<URI>) threadPool.submit(paste);
-        return stringListenableFuture;
-    }
-
-    /**
-     * Submits the current exercise to the TMC-server and requests for a paste to be made, with
-     * comment given by user.
+     /**
+     * Submits the current exercise to the TMC-server and requests for a paste to be made, with comment given by user.
      *
      * @param path inside any exercise directory
      * @param comment, comment given by user

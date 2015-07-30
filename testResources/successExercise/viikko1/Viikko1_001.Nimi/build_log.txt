@@ -64,6 +64,8 @@ deps-jar:
 -compile-depend:
 
 -do-compile:
+    [mkdir] Created dir: /home/xtoxtox/tmc-core/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/empty
+    [mkdir] Created dir: /home/xtoxtox/tmc-core/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/generated-sources/ap-source-output
 
 -post-compile:
 

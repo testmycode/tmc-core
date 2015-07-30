@@ -88,10 +88,10 @@ public class CourseSubmitterTest {
     @Test
     public void testFindCourseByCorrectPath() throws IOException, TmcCoreException {
         final String path = v+"home"+v+"kansio"+v+"toinen"+v+"c-demo"+v+"viikko_01";
-        Optional<Course> course = realFinder.findCourseByPath(path.split(File.separator));
+        Optional<Course> course = realFinder.findCourseByPath(path.split("\\" + File.separator));
         assertEquals(7, course.get().getId());
         final String path2 = v+"home"+v+"kansio"+v+"toinen"+v+"OLEMATON"+v+"viikko_01";
-        Optional<Course> course2 = realFinder.findCourseByPath(path2.split(File.separator));
+        Optional<Course> course2 = realFinder.findCourseByPath(path2.split("\\" + File.separator));
         assertFalse(course2.isPresent());
     }
 

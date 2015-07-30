@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -78,54 +80,20 @@ public class GetCourseTest {
                         .withBody(ExampleJson.courseExample)));
 
         ListenableFuture<Course> getCourse = core.getCourse(settings, finalUrl);
-        final List<Course> courseResult = new ArrayList<>();
-        Futures.addCallback(getCourse, new FutureCallback<Course>() {
-            @Override
-            public void onSuccess(Course course) {
-                courseResult.add(course);
-            }
-
-            @Override
-            public void onFailure(Throwable thrwbl) {
-                System.err.println("virhe: " + thrwbl);
-            }
-        });
-
-        while (!getCourse.isDone()) {
-            Thread.sleep(100);
-        }
-        assertFalse(courseResult.isEmpty());
-        Course course = courseResult.get(0);
+        Course course = getCourse.get();
         assertEquals(course.getId(), 3);
         assertEquals(course.getName(), "2013_ohpeJaOhja");
     }
 
     @Test
-    public void testCallWithCourseName() throws TmcCoreException, InterruptedException, IOException {
+    public void testCallWithCourseName() throws Exception {
         wireMock.stubFor(get(urlEqualTo(mockUrl))
                 .willReturn(WireMock.aResponse()
                         .withStatus(200)
                         .withBody(ExampleJson.courseExample)));
 
         ListenableFuture<Course> getCourse = core.getCourseByName(settings, "2013_ohpeJaOhja");
-        final List<Course> courseResult = new ArrayList<>();
-        Futures.addCallback(getCourse, new FutureCallback<Course>() {
-            @Override
-            public void onSuccess(Course course) {
-                courseResult.add(course);
-            }
-
-            @Override
-            public void onFailure(Throwable thrwbl) {
-                System.err.println("virhe: " + thrwbl);
-            }
-        });
-
-        while (!getCourse.isDone()) {
-            Thread.sleep(100);
-        }
-        assertFalse(courseResult.isEmpty());
-        Course course = courseResult.get(0);
+        Course course = getCourse.get();
         assertEquals(course.getId(), 3);
         assertEquals(course.getName(), "2013_ohpeJaOhja");
     }

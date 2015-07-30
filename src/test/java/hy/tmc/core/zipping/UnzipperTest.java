@@ -26,7 +26,7 @@ import org.junit.Test;
 public class UnzipperTest {
 
     Unzipper handler;
-    String v = File.pathSeparator;
+    String v = File.separator;
     FileWriterHelper helper = new FileWriterHelper();
     String testZipPath = "testResources"+v+"test.zip";
     String unzipPath;

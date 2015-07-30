@@ -26,7 +26,7 @@ public class ProjectRootFinderTest {
     String otherFakeName = "2013-tira";
     CoreTestSettings settings;
     TmcJsonParser parser;
-    String v = File.pathSeparator;
+    String v = File.separator;
 
     @Before
     public void setUp() throws IOException, TmcCoreException {

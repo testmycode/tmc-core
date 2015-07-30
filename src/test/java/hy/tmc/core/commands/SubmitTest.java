@@ -42,7 +42,7 @@ public class SubmitTest {
 
     @Rule
     public WireMockRule wireMock = new WireMockRule();
-    String v = File.pathSeparator;
+    String v = File.separator;
     
     @Before
     public void setup() throws Exception {

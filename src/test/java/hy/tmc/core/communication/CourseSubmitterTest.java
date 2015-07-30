@@ -41,7 +41,7 @@ public class CourseSubmitterTest {
     private CoreTestSettings settings;
     private Zipper zipper;
     
-    String v = File.pathSeparator;
+    String v = File.separator;
 
     /**
      * Mocks components that use Internet.

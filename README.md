@@ -148,5 +148,5 @@ The tmc-core was later separated and is maintained by the University of Helsinki
 Dept. [Agile Education Research](https://github.com/rage) group.
 
 
-  [![Build Status](https://travis-ci.org/rage/tmc-core.svg?branch=master)](https://travis-ci.org/rage/tmc-core)
-  
+[![Build Status](https://travis-ci.org/rage/tmc-core.svg?branch=master)](https://travis-ci.org/rage/tmc-core)
+[![Build status](https://ci.appveyor.com/api/projects/status/o3l71ihukd7dwgks/branch/master?svg=true)](https://ci.appveyor.com/project/rage/tmc-core/branch/master)

@@ -53,7 +53,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
     }
 
     public DownloadExercises(String path, String courseId,
-                             TmcSettings settings, ProgressObserver observer) {
+            TmcSettings settings, ProgressObserver observer) {
         super(settings);
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);
@@ -64,14 +64,14 @@ public class DownloadExercises extends Command<List<Exercise>> {
     }
 
     public DownloadExercises(String path, String courseId, TmcSettings settings,
-                             File cacheFile, ProgressObserver observer) {
+            File cacheFile, ProgressObserver observer) {
         this(path, courseId, settings, observer);
         this.cacheFile = cacheFile;
         this.parser = new TmcJsonParser(settings);
     }
 
     public DownloadExercises(ExerciseDownloader downloader, String path, String courseId,
-                             File cacheFile, TmcSettings settings, TmcJsonParser parser) {
+            File cacheFile, TmcSettings settings, TmcJsonParser parser) {
         super(settings);
         this.exerciseDownloader = downloader;
         this.setParameter("path", path);
@@ -83,6 +83,16 @@ public class DownloadExercises extends Command<List<Exercise>> {
     public DownloadExercises(List<Exercise> exercises, TmcSettings settings, File updateCache) throws TmcCoreException {
         this(exercises, settings);
         this.cacheFile = updateCache;
+    }
+
+    public DownloadExercises(List<Exercise> exercises, TmcSettings settings, ProgressObserver observer) throws TmcCoreException {
+        this(exercises, settings);
+        this.observer = observer;
+    }
+
+    public DownloadExercises(List<Exercise> exercises, TmcSettings settings, File updateCache, ProgressObserver observer) throws TmcCoreException {
+        this(exercises, settings, updateCache);
+        this.observer = observer;
     }
 
     /**
@@ -148,12 +158,12 @@ public class DownloadExercises extends Command<List<Exercise>> {
 
     /**
      * Download exercises to under the directory specified by the path in the data map.
-     * 
+     *
      * @param exercises
      * @param courseName
      * @return a list of the exercises that were downloaded successfully
      */
-    public List<Exercise> downloadExercisesFromList(List<Exercise> exercises, String courseName)  {
+    public List<Exercise> downloadExercisesFromList(List<Exercise> exercises, String courseName) {
         List<Exercise> downloadedExercises = new ArrayList<>();
         String courseFolderPath = exerciseDownloader.createCourseFolder(data.get("path"), courseName);
         downloadExercises(exercises, courseName, downloadedExercises, courseFolderPath);
@@ -187,7 +197,8 @@ public class DownloadExercises extends Command<List<Exercise>> {
         if (this.cacheFile != null) {
             try {
                 cacheExercises(exercises);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -197,13 +208,14 @@ public class DownloadExercises extends Command<List<Exercise>> {
         Gson gson = new Gson();
         String json = FileUtils.readFileToString(cacheFile, Charset.forName("UTF-8"));
         Map<Integer, String> checksums;
-        if (json != null && ! json.isEmpty()) {
-            Type typeOfHashMap = new TypeToken<Map<Integer, String>>() { }.getType();
+        if (json != null && !json.isEmpty()) {
+            Type typeOfHashMap = new TypeToken<Map<Integer, String>>() {
+            }.getType();
             checksums = gson.fromJson(json, typeOfHashMap);
         } else {
             checksums = new HashMap<>();
         }
-        
+
         for (Exercise exercise : exercises) {
             checksums.put(exercise.getId(), exercise.getChecksum());
         }

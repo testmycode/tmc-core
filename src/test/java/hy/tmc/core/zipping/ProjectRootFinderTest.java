@@ -5,6 +5,7 @@ import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
+import java.io.File;
 import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 
@@ -25,6 +26,7 @@ public class ProjectRootFinderTest {
     String otherFakeName = "2013-tira";
     CoreTestSettings settings;
     TmcJsonParser parser;
+    String v = File.separator;
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
@@ -55,25 +57,25 @@ public class ProjectRootFinderTest {
 
     @Test
     public void testGetRootDirectoryFromSame() {
-        Optional<Path> root = finder.getRootDirectory(Paths.get("testResources/mockProject/root"));
-        assertEquals("testResources/mockProject/root", root.get().toString());
+        Optional<Path> root = finder.getRootDirectory(Paths.get("testResources"+v+"mockProject"+v+"root"));
+        assertEquals("testResources"+v+"mockProject"+v+"root", root.get().toString());
     }
 
     @Test
     public void testGetRootDirectoryFromSame2() {
-        Optional<Path> root = finder.getRootDirectory(Paths.get("testResources/noyml/rootWithoutYml"));
-        assertEquals("testResources/noyml/rootWithoutYml", root.get().toString());
+        Optional<Path> root = finder.getRootDirectory(Paths.get("testResources"+v+"noyml"+v+"rootWithoutYml"));
+        assertEquals("testResources"+v+"noyml"+v+"rootWithoutYml", root.get().toString());
     }
 
     @Test
     public void findsDeepRoot() {
-        Optional<Path> root = finder.getRootDirectory(Paths.get("testResources/2013_ohpeJaOhja/viikko1/Viikko1_002.HeiMaailma/src"));
-        assertEquals("testResources/2013_ohpeJaOhja/viikko1/Viikko1_002.HeiMaailma", root.get().toString());
+        Optional<Path> root = finder.getRootDirectory(Paths.get("testResources"+v+"2013_ohpeJaOhja"+v+"viikko1"+v+"Viikko1_002.HeiMaailma"+v+"src"));
+        assertEquals("testResources"+v+"2013_ohpeJaOhja"+v+"viikko1"+v+"Viikko1_002.HeiMaailma", root.get().toString());
     }
 
     @Test
     public void doesntFindRootWhenNoPom() {
-        Optional<Path> root = finder.getRootDirectory(Paths.get("testResources/2013_ohpeJaOhja"));
+        Optional<Path> root = finder.getRootDirectory(Paths.get("testResources"+v+"2013_ohpeJaOhja"));
         assertFalse(root.isPresent());
     }
 
@@ -89,7 +91,7 @@ public class ProjectRootFinderTest {
 
     @Test
     public void getsCurrentCourse() throws IOException, TmcCoreException {
-        Optional<Course> course = finder.getCurrentCourse("path/that/contains/course/" + fakeName);
+        Optional<Course> course = finder.getCurrentCourse("path"+v+"that"+v+"contains"+v+"course"+v + fakeName);
         assertEquals(fakeName, course.get().getName());
     }
 }

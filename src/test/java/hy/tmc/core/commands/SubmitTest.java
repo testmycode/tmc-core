@@ -18,6 +18,7 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
+import java.io.File;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class SubmitTest {
 
     @Rule
     public WireMockRule wireMock = new WireMockRule();
+    String v = File.separator;
     
     @Before
     public void setup() throws Exception {
@@ -52,7 +54,7 @@ public class SubmitTest {
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         submit = new Submit(submitterMock, 
                             new SubmissionPoller(new TmcJsonParser(settings)), 
-                settings, "polku/kurssi/kansioon/src");
+                settings, "polku"+v+"kurssi"+v+"kansioon"+v+"src");
     }
 
     /**
@@ -61,7 +63,7 @@ public class SubmitTest {
     @Test
     public void testCheckDataSuccess() throws TmcCoreException, IOException {
         Submit submitCommand = new Submit(settings);
-        submitCommand.setParameter("path", "/home/tmccli/testi");
+        submitCommand.setParameter("path", v+"home"+v+"tmccli"+v+"testi");
         submitCommand.checkData();
     }
 
@@ -114,7 +116,7 @@ public class SubmitTest {
         Course course = parser.getCourseFromString(ExampleJson.noDeadlineCourseExample);
         settings.setCurrentCourse(course);
         ListenableFuture<SubmissionResult> submit = core.submit(
-                "testResources/halfdoneExercise/viikko1/Viikko1_004.Muuttujat",
+                "testResources"+v+"halfdoneExercise"+v+"viikko1"+v+"Viikko1_004.Muuttujat",
                 settings
         );
         final List<SubmissionResult> result = new ArrayList<SubmissionResult>();

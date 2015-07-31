@@ -178,6 +178,12 @@ public class TmcCoreTest {
         verify(threadPool, times(1)).submit(any(Submit.class));
     }
 
+    /*@Test
+    public void pasteTest() throws Exception {
+        tmcCore.pasteWithComment("polku/jonnekin", settings, "");
+        verify(threadPool, times(1)).submit(any(PasteWithComment.class));
+    }*/
+
     @Test(expected = TmcCoreException.class)
     public void submitWithBadPathThrowsException() throws TmcCoreException {
         tmcCore.submit("", settings);

@@ -47,7 +47,7 @@ public class ProjectRootFinderStub implements RootFinder {
     }
 
     public Optional<Course> getCurrentCourse(String path) {
-        String[] folders = path.split(File.separator);
+        String[] folders = path.split("\\" + File.separator);
 
         for(String folder:folders) {
             if(courseStubs.containsKey(folder)) {

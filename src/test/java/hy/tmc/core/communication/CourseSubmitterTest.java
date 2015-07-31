@@ -40,6 +40,8 @@ public class CourseSubmitterTest {
     private ProjectRootFinder realFinder;
     private CoreTestSettings settings;
     private Zipper zipper;
+    
+    String v = File.separator;
 
     /**
      * Mocks components that use Internet.
@@ -75,7 +77,7 @@ public class CourseSubmitterTest {
 
     @Test
     public void testGetExerciseName() {
-        final String path = "/home/test/ohpe-test/viikko_01";
+        final String path = v+"home"+v+"test"+v+"ohpe-test"+v+"viikko_01";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(path).or(new Course()));
         this.courseSubmitter = new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(path);
@@ -85,17 +87,17 @@ public class CourseSubmitterTest {
 
     @Test
     public void testFindCourseByCorrectPath() throws IOException, TmcCoreException {
-        final String path = "/home/kansio/toinen/c-demo/viikko_01";
-        Optional<Course> course = realFinder.findCourseByPath(path.split(File.separator));
+        final String path = v+"home"+v+"kansio"+v+"toinen"+v+"c-demo"+v+"viikko_01";
+        Optional<Course> course = realFinder.findCourseByPath(path.split("\\" + File.separator));
         assertEquals(7, course.get().getId());
-        final String path2 = "/home/kansio/toinen/OLEMATON/viikko_01";
-        Optional<Course> course2 = realFinder.findCourseByPath(path2.split(File.separator));
+        final String path2 = v+"home"+v+"kansio"+v+"toinen"+v+"OLEMATON"+v+"viikko_01";
+        Optional<Course> course2 = realFinder.findCourseByPath(path2.split("\\" + File.separator));
         assertFalse(course2.isPresent());
     }
 
     @Test
     public void testSubmitWithOneParam() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
-        String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
+        String testPath = v+"home"+v+"test"+v+"2014-mooc-no-deadline"+v+"viikko1"+v+"viikko1-Viikko1_001.Nimi";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter = new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
@@ -106,7 +108,7 @@ public class CourseSubmitterTest {
 
     @Test(expected = ExpiredException.class)
     public void testSubmitWithExpiredExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
-        String testPath = "/home/test/k2015-tira/viikko01/tira1.1";
+        String testPath = v+"home"+v+"test"+v+"k2015-tira"+v+"viikko01"+v+"tira1.1";
 
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter = new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
@@ -117,7 +119,7 @@ public class CourseSubmitterTest {
 
     @Test
     public void submitWithPasteReturnsPasteUrl() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
-        String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
+        String testPath = v+"home"+v+"test"+v+"2014-mooc-no-deadline"+v+"viikko1"+v+"viikko1-Viikko1_001.Nimi";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter = new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
@@ -128,7 +130,7 @@ public class CourseSubmitterTest {
     
     @Test
     public void submitWithPasteAndCommentReturnsPasteUrl() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
-        String testPath = "/home/test/2014-mooc-no-deadline/viikko1/viikko1-Viikko1_001.Nimi";
+        String testPath = v+"home"+v+"test"+v+"2014-mooc-no-deadline"+v+"viikko1"+v+"viikko1-Viikko1_001.Nimi";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter = new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
@@ -140,7 +142,7 @@ public class CourseSubmitterTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void submitWithPasteFromBadPathThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
-        String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikeintehtava";
+        String testPath = v+"home"+v+"test"+v+"2014-mooc-no-deadline"+v+"viikko1"+v+"feikeintehtava";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter = new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
@@ -149,7 +151,7 @@ public class CourseSubmitterTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testSubmitWithNonexistentExercise() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
-        String testPath = "/home/test/2014-mooc-no-deadline/viikko1/feikkitehtava";
+        String testPath = v+"home"+v+"test"+v+"2014-mooc-no-deadline"+v+"viikko1"+v+"feikkitehtava";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter = new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
@@ -158,7 +160,7 @@ public class CourseSubmitterTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void submitWithNonExistentCourseThrowsException() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
-        String testPath = "/home/test/2013_FEIKKIKURSSI/viikko_01/viikko1-Viikko1_001.Nimi";
+        String testPath = v+"home"+v+"test"+v+"2013_FEIKKIKURSSI"+v+"viikko_01"+v+"viikko1-Viikko1_001.Nimi";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter = new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);

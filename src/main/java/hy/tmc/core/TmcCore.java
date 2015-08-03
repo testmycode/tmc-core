@@ -169,14 +169,13 @@ public class TmcCore {
      * password, serverAddress and TmcMainDirectory.
      */
     public ListenableFuture<List<Exercise>> downloadExercises(List<Exercise> exercises, TmcSettings settings) throws TmcCoreException {
+        return this.downloadExercises(exercises, settings, null);
+    }
+    
+    public ListenableFuture<List<Exercise>> downloadExercises(List<Exercise> exercises, TmcSettings settings, ProgressObserver observer) throws TmcCoreException {
         checkParameters(settings.getFormattedUserData(), settings.getTmcMainDirectory(),
                 settings.getServerAddress());
-        DownloadExercises downloadCommand;
-        if (this.updateCache != null) {
-            downloadCommand = new DownloadExercises(exercises, settings, updateCache);
-        } else {
-            downloadCommand = new DownloadExercises(exercises, settings);
-        }
+        DownloadExercises downloadCommand = this.getDownloadCommand(exercises, settings, observer);
         return threadPool.submit(downloadCommand);
     }
 

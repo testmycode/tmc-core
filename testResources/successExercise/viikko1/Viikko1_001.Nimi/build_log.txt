@@ -64,8 +64,9 @@ deps-jar:
 -compile-depend:
 
 -do-compile:
-    [mkdir] Created dir: /home/xtoxtox/tmc-core/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/empty
-    [mkdir] Created dir: /home/xtoxtox/tmc-core/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/generated-sources/ap-source-output
+    [javac] Compiling 1 source file to /home/xtoxtox/tmc-core/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
 
 -post-compile:
 
@@ -78,10 +79,13 @@ compile:
 -compile-test-depend:
 
 -do-compile-test:
+    [javac] Compiling 1 source file to /home/xtoxtox/tmc-core/testResources/successExercise/viikko1/Viikko1_001.Nimi/build/test/classes
+    [javac] warning: [options] bootstrap class path not set in conjunction with -source 1.6
+    [javac] 1 warning
 
 -post-compile-test:
 
 compile-test:
 
 BUILD SUCCESSFUL
-Total time: 0 seconds
+Total time: 1 second

@@ -143,18 +143,18 @@ public class TmcCore {
     }
 
     /**
-     * Downloads all exercise files of a given course (specified by id) to the given directory. If files exist,
-     * overrides everything except the source folder and files specified in .tmcproject.yml Requires
-     * login.
+     * Downloads all exercise files of a given course (specified by id) to the given directory. If
+     * files exist, overrides everything except the source folder and files specified in
+     * .tmcproject.yml Requires login.
      *
      * @param path where it downloads the exercises
      * @param courseId ID of course to download
-     * @param observer ProgressObserver will be informed about the progress
-     *                 of downloading exercises. Observer can print progress status to end-user.
+     * @param observer ProgressObserver will be informed about the progress of downloading
+     * exercises. Observer can print progress status to end-user.
      * @throws TmcCoreException if something in the given input was wrong
      */
     public ListenableFuture<List<Exercise>> downloadExercises(String path, String courseId,
-                                                              TmcSettings settings, ProgressObserver observer) throws TmcCoreException {
+            TmcSettings settings, ProgressObserver observer) throws TmcCoreException {
         checkParameters(path, courseId);
         DownloadExercises downloadCommand = getDownloadCommand(path, courseId, settings, observer);
         return threadPool.submit(downloadCommand);
@@ -163,9 +163,10 @@ public class TmcCore {
     /**
      * Downloads exercise files specified in the given list. The exercises will be located in
      * TmcMainDirectory (field in TmcSettings).
+     *
      * @param exercises to be downloaded
-     * @param settings object that implements TmcSettings-interface. Requisite fields are
-     *                 username, password, serverAddress and TmcMainDirectory.
+     * @param settings object that implements TmcSettings-interface. Requisite fields are username,
+     * password, serverAddress and TmcMainDirectory.
      */
     public ListenableFuture<List<Exercise>> downloadExercises(List<Exercise> exercises, TmcSettings settings) throws TmcCoreException {
         checkParameters(settings.getFormattedUserData(), settings.getTmcMainDirectory(),
@@ -176,15 +177,29 @@ public class TmcCore {
         } else {
             downloadCommand = new DownloadExercises(exercises, settings);
         }
-        return  threadPool.submit(downloadCommand);
+        return threadPool.submit(downloadCommand);
     }
 
     private DownloadExercises getDownloadCommand(String path, String courseId,
-                                                 TmcSettings settings, ProgressObserver observer) {
+            TmcSettings settings, ProgressObserver observer) {
         if (this.updateCache == null) {
             return new DownloadExercises(path, courseId, settings, observer);
         }
         return new DownloadExercises(path, courseId, settings, this.updateCache, observer);
+    }
+
+    private DownloadExercises getDownloadCommand(List<Exercise> exercises, TmcSettings settings, ProgressObserver observer)
+            throws TmcCoreException {
+        if (observer == null) {
+            if (this.updateCache == null) {
+                return new DownloadExercises(exercises, settings);
+            }
+            return new DownloadExercises(exercises, settings, this.updateCache);
+        }
+        if (this.updateCache == null) {
+            return new DownloadExercises(exercises, settings, observer);
+        }
+        return new DownloadExercises(exercises, settings, this.updateCache, observer);
     }
 
     /**
@@ -292,8 +307,9 @@ public class TmcCore {
         return threadPool.submit(feedback);
     }
 
-     /**
-     * Submits the current exercise to the TMC-server and requests for a paste to be made, with comment given by user.
+    /**
+     * Submits the current exercise to the TMC-server and requests for a paste to be made, with
+     * comment given by user.
      *
      * @param path inside any exercise directory
      * @param comment, comment given by user
@@ -308,9 +324,9 @@ public class TmcCore {
     }
 
     /**
-     * Sends given diffs to spyware server.
-     * Server is specified in current course that can be found from TmcSettings.
-     * 
+     * Sends given diffs to spyware server. Server is specified in current course that can be found
+     * from TmcSettings.
+     *
      * @param spywareDiffs byte array containing information of changes to project files.
      * @return A future object containing a results from every spyware server.
      */

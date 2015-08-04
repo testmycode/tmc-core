@@ -14,6 +14,7 @@ import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.CoreTestSettings;
+import hy.tmc.core.communication.UrlHelper;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
@@ -37,19 +38,24 @@ public class SubmitTest {
 
     private Submit submit;
     private ExerciseSubmitter submitterMock;
-    private final String submissionUrl = "/submissions/1781.json?api_version=7";
+    private final String submissionUrl;
     private CoreTestSettings settings;
 
     @Rule
     public WireMockRule wireMock = new WireMockRule();
     String v = File.separator;
     
-    @Before
-    public void setup() throws Exception {
+    public SubmitTest() {
         settings = new CoreTestSettings();
         settings.setUsername("Samu");
         settings.setPassword("Bossman");
         settings.setCurrentCourse(new Course());
+        settings.setApiVersion("7");
+        submissionUrl = new UrlHelper(settings).withParams("/submissions/1781.json");
+    }
+    
+    @Before
+    public void setup() throws Exception {
         submitterMock = Mockito.mock(ExerciseSubmitter.class);
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         submit = new Submit(submitterMock, 
@@ -141,7 +147,9 @@ public class SubmitTest {
     }
 
     private void mockSubmit() {
-        String urlToMock = "/exercises/1231/submissions.json?api_version=7";
+        UrlHelper helper = new UrlHelper(settings);
+        String urlToMock = helper.withParams("/exercises/1231/submissions.json");
+        System.out.println(urlToMock);
         wireMock.stubFor(post(urlEqualTo(urlToMock))
                 .willReturn(WireMock.aResponse()
                         .withStatus(200)
@@ -150,8 +158,10 @@ public class SubmitTest {
                         )
                 )
         );
-        
-        wireMock.stubFor(get(urlEqualTo("/submissions/7777.json?api_version=7"))
+
+        urlToMock = helper.withParams("/submissions/7777.json");
+        System.out.println(urlToMock);
+        wireMock.stubFor(get(urlEqualTo(urlToMock))
                 .willReturn(WireMock.aResponse()
                         .withStatus(200)
                         .withBody(ExampleJson.failedSubmission
@@ -160,7 +170,9 @@ public class SubmitTest {
                 )
         );
         
-        wireMock.stubFor(get(urlEqualTo("/courses/19.json?api_version=7"))
+        urlToMock = helper.withParams("/courses/19.json");
+        System.out.println(urlToMock);
+        wireMock.stubFor(get(urlEqualTo(urlToMock))
                 .willReturn(WireMock.aResponse()
                         .withStatus(200)
                         .withBody(ExampleJson.noDeadlineCourseExample

@@ -6,6 +6,7 @@ import hy.tmc.core.domain.Course;
 public class UrlHelper {
 
     public final String apiParam;
+    public final String clientParam;
     public final String coursesExtension;
     public final String authExtension;
     private final TmcSettings settings;
@@ -13,13 +14,16 @@ public class UrlHelper {
     
     public UrlHelper(TmcSettings settings) {
         apiParam = "api_version=" + settings.apiVersion();
-        coursesExtension = "/courses.json?" + apiParam;
+        String clientVersion = "&client_version=" + settings.clientVersion();
+        clientParam = "client=" + settings.clientName() + clientVersion;
+        coursesExtension = "/courses.json?" + apiParam + "&" + clientParam;
         authExtension = "/user";
         this.settings = settings;
     }
     
     public String getCourseUrl(int courseId) {
-        return settings.getServerAddress() + "/courses/" + courseId + ".json?" + apiParam;
+        String params = "?" + apiParam + "&" + clientParam;
+        return settings.getServerAddress() + "/courses/" + courseId + ".json" + params;
     }
     
     public String getCourseUrl(Course course) {
@@ -30,10 +34,12 @@ public class UrlHelper {
         return serverAddress + this.coursesExtension;
     }
     
-    public String withApiVersion(String url) {
-        String postfix = "?api_version=" + settings.apiVersion();
-        if (!url.endsWith(postfix)) {
-            url += postfix;
+    public String withParams(String url) {
+        String params = "?" + apiParam + "&" + clientParam;
+        if (url.endsWith("?" + apiParam)) {
+            url = url.substring(0, url.indexOf("?" + apiParam)) + params;
+        } else if (!url.endsWith(params)) {
+            url += params;
         }
         return url;
     }

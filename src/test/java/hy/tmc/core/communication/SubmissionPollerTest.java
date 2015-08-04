@@ -13,7 +13,7 @@ import org.mockito.Mockito;
 public class SubmissionPollerTest {
 
     private SubmissionPoller submissionPoller;
-    private String url = "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7";
+    private String url = "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7&client=tmc_cli&client_version=1";
     private CoreTestSettings settings;
     private TmcJsonParser jsonParser;
 
@@ -33,8 +33,8 @@ public class SubmissionPollerTest {
         assertFalse(output == null);
         assertEquals("2014-mooc-no-deadline", output.getCourse());
         assertEquals(Status.OK, output.getStatus());
-    }   
-    
+    }
+
     @Test
     public void unsuccessfulSubmission() throws Exception {
         Mockito.when(jsonParser.getRawTextFrom(Mockito.anyString())).thenReturn(ExampleJson.failedSubmission);
@@ -42,5 +42,5 @@ public class SubmissionPollerTest {
         assertFalse(output == null);
         assertEquals("2014-mooc-no-deadline", output.getCourse());
         assertEquals(Status.FAIL, output.getStatus());
-    }   
+    }
 }

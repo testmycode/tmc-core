@@ -1,7 +1,5 @@
 package hy.tmc.core;
 
-
-
 import com.google.common.base.Optional;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
@@ -62,8 +60,8 @@ public class CoreTestSettings implements TmcSettings {
 
     @Override
     public synchronized boolean userDataExists() {
-        return !(this.username == null || this.password == null || 
-                this.username.isEmpty() || this.password.isEmpty());
+        return !(this.username == null || this.password == null
+                || this.username.isEmpty() || this.password.isEmpty());
     }
 
     @Override
@@ -91,7 +89,7 @@ public class CoreTestSettings implements TmcSettings {
     public String apiVersion() {
         return apiVersion;
     }
-    
+
     @Override
     public String toString() {
         return this.password + ":" + this.password + " " + this.serverAddress;
@@ -104,5 +102,24 @@ public class CoreTestSettings implements TmcSettings {
 
     public void setTmcMainDirectory(String path) {
         this.mainDirectory = path;
+    }
+
+    @Override
+    public String clientName() {
+        return "tmc_cli";
+    }
+
+    @Override
+    public String clientVersion() {
+        return "1";
+    }
+
+    public void setCredentials(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public void setApiVersion(String string) {
+        this.apiVersion = "7";
     }
 }

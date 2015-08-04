@@ -41,7 +41,7 @@ public class GetCourse extends Command<Course> {
 
     @Override
     public Course call() throws Exception {
-        String urlWithApiVersion = new UrlHelper(settings).withApiVersion(this.url);
+        String urlWithApiVersion = new UrlHelper(settings).withParams(this.url);
         Optional<Course> course = jsonParser.getCourse(urlWithApiVersion);
         if (!course.isPresent()) {
             throw new TmcCoreException("No course found by specified url: " + urlWithApiVersion);

@@ -66,7 +66,7 @@ public class Exercise implements Serializable {
     private boolean runTestsLocallyActionEnabled = true;
 
     @SerializedName("exercise_submissions_url")
-    private String exerciseSubmissionsUrl; // https://tmc.mooc.fi/staging/exercises/284.json?api_version=7
+    private String exerciseSubmissionsUrl; 
 
     public Exercise() {
     }
@@ -146,13 +146,6 @@ public class Exercise implements Serializable {
     }
 
     public String getReturnUrl() {
-        return returnUrl;
-    }
-
-    public String getReturnUrlWithApiVersion() {
-        if (!returnUrl.contains("api_version")) {
-            return returnUrl + "?api_version=7";
-        }
         return returnUrl;
     }
 

@@ -12,7 +12,7 @@ public interface TmcSettings {
     public String getUsername();
 
     /**
-     * Checks that username and password are not null. 
+     * Checks that username and password are not null.
      */
     public boolean userDataExists();
 
@@ -20,13 +20,16 @@ public interface TmcSettings {
 
     public String apiVersion();
 
+    public String clientName();
+
+    public String clientVersion();
+
     public String getFormattedUserData();
-    
+
     /**
-     * Return the directory where course directories will be located. Projects will be placed as 
-     * follows:
-     * maindirectory/courseName/exerciseName
+     * Return the directory where course directories will be located. Projects
+     * will be placed as follows: maindirectory/courseName/exerciseName
      */
     public String getTmcMainDirectory();
-    
+
 }

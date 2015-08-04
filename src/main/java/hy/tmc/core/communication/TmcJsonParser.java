@@ -94,7 +94,7 @@ public class TmcJsonParser {
      * @return List of reviews
      */
     public List<Review> getReviews(String reviewUrl) throws IOException {
-        JsonObject jsonObject = getJsonFrom(helper.withApiVersion(reviewUrl));
+        JsonObject jsonObject = getJsonFrom(helper.withParams(reviewUrl));
         Gson mapper = new Gson();
         Review[] reviews = mapper
                 .fromJson(jsonObject.getAsJsonArray("reviews"), Review[].class);

@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import hy.tmc.core.communication.UrlHelper;
 import static org.junit.Assert.assertEquals;
 
 public class ListCoursesTest {
@@ -35,9 +36,9 @@ public class ListCoursesTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-
     /**
-     * Set up FrontendStub, ListCourses command, power mockito and fake http result.
+     * Set up FrontendStub, ListCourses command, power mockito and fake http
+     * result.
      */
     @Before
     public void setUp() throws IOException, TmcCoreException {
@@ -84,14 +85,14 @@ public class ListCoursesTest {
 
     @Rule
     public WireMockRule wireMock = new WireMockRule();
-    
+
     @Test
     public void ListCoursesWillThrowExceptionIfAuthFailedOnServer() throws ExecutionException, InterruptedException, TmcCoreException {
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(TmcServerException.class));
-        wireMock.stubFor(get(urlEqualTo("/courses.json?api_version=7"))
+        wireMock.stubFor(get(urlEqualTo(new UrlHelper(settings).withParams("/courses.json")))
                 .willReturn(WireMock.aResponse()
                         .withStatus(401)));
-        
+
         CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setUsername("testy");
         localSettings.setPassword("1234");

@@ -162,7 +162,7 @@ public class Review {
     }
 
     private String putUrl() {
-        return this.updateUrl + ".json?api_version=7";
+        return this.updateUrl;
     }
 
     @Override

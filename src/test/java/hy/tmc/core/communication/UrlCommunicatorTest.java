@@ -60,7 +60,7 @@ public class UrlCommunicatorTest {
                         .withStatus(200)
                 )
         );
-        stubFor(put(urlEqualTo("/putty"))
+        stubFor(put(urlEqualTo("/putty?api_version=7&client=tmc_cli&client_version=1"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .willReturn(
                         aResponse()
@@ -68,7 +68,7 @@ public class UrlCommunicatorTest {
                         .withStatus(200)
                 )
         );
-        stubFor(put(urlEqualTo("/putty_with_headers"))
+        stubFor(put(urlEqualTo("/putty_with_headers?api_version=7&client=tmc_cli&client_version=1"))
                 .withHeader("Authorization", containing("Basic dGVzdDoxMjM0"))
                 .withRequestBody(containing(new BasicNameValuePair("mark_as_read", "1").toString()))
                 .willReturn(

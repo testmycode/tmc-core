@@ -156,6 +156,7 @@ public class UrlCommunicator {
      * @return Result which contains the result.
      */
     public HttpResult makePutRequest(String url, Optional<Map<String, String>> body) throws IOException {
+        url = urlHelper.withParams(url);
         HttpPut httpPut = new HttpPut(url);
         addCredentials(httpPut, this.settings.getFormattedUserData());
         List<NameValuePair> params = new ArrayList<>();
@@ -257,7 +258,7 @@ public class UrlCommunicator {
      */
     public HttpResult makePostWithJson(JsonObject req, String feedbackUrl)
             throws IOException {
-        feedbackUrl = urlHelper.withApiVersion(feedbackUrl);
+        feedbackUrl = urlHelper.withParams(feedbackUrl);
         HttpPost httppost = new HttpPost(feedbackUrl);
         String jsonString = req.toString();
         StringEntity feedbackJson = new StringEntity(jsonString);

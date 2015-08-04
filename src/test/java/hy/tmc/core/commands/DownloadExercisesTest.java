@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import hy.tmc.core.communication.UrlHelper;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.times;
@@ -272,14 +273,16 @@ public class DownloadExercisesTest {
                 .willReturn(aResponse()
                         .withStatus(200)));
 
-        wireMockServer.stubFor(get(urlEqualTo("/courses.json?api_version=7"))
+        wireMockServer.stubFor(get(urlEqualTo(new UrlHelper(settings).coursesExtension))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")
                         .withBody(ExampleJson.allCoursesExample
                                 .replace("https://tmc.mooc.fi/staging", serverAddress))));
 
-        wireMockServer.stubFor(get(urlEqualTo("/courses/" + courseId + ".json?api_version=7"))
+        String mockUrl = "/courses/" + courseId + ".json";
+        mockUrl = new UrlHelper(settings).withParams(mockUrl);
+        wireMockServer.stubFor(get(urlEqualTo(mockUrl))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")

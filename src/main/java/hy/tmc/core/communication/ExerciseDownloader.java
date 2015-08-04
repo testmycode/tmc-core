@@ -1,13 +1,14 @@
 package hy.tmc.core.communication;
 
 import com.google.common.base.Optional;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import hy.tmc.core.domain.Exercise;
-import hy.tmc.core.zipping.UnzipDecider;
-import hy.tmc.core.zipping.Unzipper;
-import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,36 +16,30 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 public class ExerciseDownloader {
     
-    private UnzipDecider decider;
     private File cacheFile;
     private UrlCommunicator urlCommunicator;
     private TmcJsonParser tmcJsonParser;
-    private Unzipper unzipper;
+    private TaskExecutor taskExecutor;
 
     /**
      * Constructor for dependency injection.
-     *
-     * @param decider UnzipDecider which decides which files to unzip
      */
-    public ExerciseDownloader(UnzipDecider decider,
-            UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser) {
-        this.decider = decider;
+    public ExerciseDownloader(UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser,
+                              TaskExecutor taskExecutor) {
         this.urlCommunicator = urlCommunicator;
         this.tmcJsonParser = tmcJsonParser;
+        this.taskExecutor = taskExecutor;
     }
 
     /**
-     * Constructor for tests
-     *
-     * @param decider UnzipDecider which decides which files to unzip
+     * Creates a new ExerciseDownloader instance
      */
-    public ExerciseDownloader(UnzipDecider decider,
-            UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser, Unzipper zipHandler) {
-        this(decider, urlCommunicator, tmcJsonParser);
-        this.unzipper = zipHandler;
+    public ExerciseDownloader(UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser) {
+        this(urlCommunicator, tmcJsonParser, new TaskExecutorImpl());
     }
 
-    /**
+
+    /**s
      * Download exercises by course url.
      *
      * @param courseUrl course url
@@ -124,9 +119,9 @@ public class ExerciseDownloader {
         String filePath = path + exercise.getName() + ".zip";
         downloadExerciseZip(exercise.getZipUrl(), filePath);
         try {
-            unzipFile(filePath, path);
-        } catch (IOException | ZipException ex) {
-            System.err.println(ex.getMessage());
+            taskExecutor.extractProject(Paths.get(filePath), Paths.get(path));
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
             return false;
         } finally {
             deleteZip(filePath);
@@ -140,24 +135,11 @@ public class ExerciseDownloader {
      * @param filePath path to delete
      */
     private void deleteZip(String filePath) {
-        File file = new File(filePath);
-        file.delete();
-    }
-
-    /**
-     * Unzips single file after downloading.
-     *
-     * @param unzipPath path of file which will be unzipped
-     * @param destinationPath destination path
-     */
-    public void unzipFile(String unzipPath, String destinationPath) throws IOException, ZipException {
-        if (unzipper == null) {
-            unzipper = new Unzipper(unzipPath, destinationPath, decider);
-        } else {
-            unzipper.setZipPath(unzipPath);
-            unzipper.setUnzipLocation(destinationPath);
+        try {
+            Files.delete(Paths.get(filePath));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        unzipper.unzip();
     }
 
     /**

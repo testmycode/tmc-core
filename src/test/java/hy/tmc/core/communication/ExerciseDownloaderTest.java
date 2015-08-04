@@ -9,14 +9,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.base.Optional;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Exercise;
-import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.zipping.DefaultUnzipDecider;
-import hy.tmc.core.zipping.Unzipper;
+
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -29,7 +27,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+
 import org.mockito.Mockito;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -43,7 +41,6 @@ public class ExerciseDownloaderTest {
     private ArrayList<Exercise> exercises;
     private ExerciseDownloader exDl;
     private CoreTestSettings settings;
-    private Unzipper zipHandler;
     private String testFileContent = "Testfile for DownloadExercisesTest \n";
     private String testZipPath;
     private String contentFilePath;
@@ -55,13 +52,10 @@ public class ExerciseDownloaderTest {
     @Before
     public void setup() {
         settings = new CoreTestSettings();
-        zipHandler = Mockito.mock(Unzipper.class);
 
         exDl = new ExerciseDownloader(
-                new DefaultUnzipDecider(),
                 new UrlCommunicator(settings),
                 new TmcJsonParser(settings)
-
         );
         exercises = new ArrayList<>();
 
@@ -165,26 +159,25 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void doesntCallUnzipOnLockedExercise() {
-        DefaultUnzipDecider mockedDecider = mock(DefaultUnzipDecider.class);
-        exDl = new ExerciseDownloader(mockedDecider, new UrlCommunicator(settings), null);
+    public void doesntCallUnzipOnLockedExercise() throws IOException {
+        TaskExecutor executor = Mockito.mock(TaskExecutor.class);
+        verify(executor, times(0)).extractProject(any(Path.class), any(Path.class));
+        exDl = new ExerciseDownloader(new UrlCommunicator(settings), null, executor);
         exercises.get(0).setLocked(true);
         exercises.get(1).setLocked(true);
+        exercises.get(2).setLocked(true);
         exDl.downloadFiles(exercises, zipDestination);
-        
-        verify(mockedDecider, times(0)).canBeOverwritten(anyString());
-        verify(mockedDecider, times(0)).readTmcprojectYml(any(Path.class));
     }
 
     @Test
     public void downloadsCorrectAmount() throws IOException, ZipException {
+        TaskExecutor executor = Mockito.mock(TaskExecutor.class);
+        Mockito.doNothing().when(executor).extractProject(any(Path.class), any(Path.class));
         exDl = new ExerciseDownloader(
-                new DefaultUnzipDecider(),
                 new UrlCommunicator(settings),
-                new TmcJsonParser(settings), 
-                zipHandler
+                new TmcJsonParser(settings),
+                executor
         );
-        Mockito.doNothing().when(zipHandler).unzip();
         Optional<List<Exercise>> optionalList = exDl.downloadFiles(exercises, zipDestination);
         List<Exercise> list = optionalList.or(new ArrayList<Exercise>());
         assertEquals(3, list.size());

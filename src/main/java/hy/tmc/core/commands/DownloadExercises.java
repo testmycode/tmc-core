@@ -12,7 +12,6 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.ProgressObserver;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.zipping.DefaultUnzipDecider;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -39,7 +38,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
     public DownloadExercises(List<Exercise> exercisesToDownload, TmcSettings settings) throws TmcCoreException {
         super(settings);
         this.parser = new TmcJsonParser(settings);
-        this.exerciseDownloader = new ExerciseDownloader(new DefaultUnzipDecider(),
+        this.exerciseDownloader = new ExerciseDownloader(
                 new UrlCommunicator(settings), new TmcJsonParser(settings));
         this.exercisesToDownload = exercisesToDownload;
         Optional<Course> currentCourse = settings.getCurrentCourse();
@@ -59,7 +58,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);
         this.parser = new TmcJsonParser(settings);
-        this.exerciseDownloader = new ExerciseDownloader(new DefaultUnzipDecider(),
+        this.exerciseDownloader = new ExerciseDownloader(
                 new UrlCommunicator(settings), new TmcJsonParser(settings));
         this.observer = observer;
     }

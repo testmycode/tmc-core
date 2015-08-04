@@ -25,7 +25,7 @@ public class RunCheckStyle extends Command<ValidationResult> {
      */
     public RunCheckStyle(String path, TmcSettings settings) {
         this(path, settings, new ProjectRootFinder(
-                new DefaultRootDetector(), new TmcJsonParser(settings)),
+                new TaskExecutorImpl(), new TmcJsonParser(settings)),
                 new TaskExecutorImpl()
         );
     }

@@ -4,15 +4,14 @@ import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
 import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
 import hy.tmc.core.communication.ExerciseSubmitter;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
-import hy.tmc.core.zipping.Zipper;
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.IOException;
@@ -32,10 +31,10 @@ public class PasteWithComment extends Command<URI> {
      */
     public PasteWithComment(TmcSettings settings, String comment) {
         this(new ExerciseSubmitter(
-                new ProjectRootFinder(new DefaultRootDetector(), new TmcJsonParser(settings)),
+                new ProjectRootFinder(new TaskExecutorImpl(), new TmcJsonParser(settings)),
                 new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
                 new UrlCommunicator(settings),
-                new TmcJsonParser(settings), 
+                new TmcJsonParser(settings),
                 settings
         ), settings, comment);
     }

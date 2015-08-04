@@ -17,11 +17,7 @@ public class ProjectRootFinder implements RootFinder {
     private TmcJsonParser tmcJsonParser;
 
     /**
-     * A helper class that searches for a project root directory. It must be given a
-     * ProjectRootDetector that corresponds with the project in question. For example, for a Maven
-     * project a DefaultRootDetector can be used.
-     *
-     * @param detector the RootDetector that specifies if a directory is a project root
+     * A helper class that searches for a project root directory.
      */
     public ProjectRootFinder(TaskExecutor langs, TmcJsonParser jsonParser) {
         this.langs = langs;
@@ -49,7 +45,7 @@ public class ProjectRootFinder implements RootFinder {
                 path = path.getParent();
                 continue;
             }
-            if (langs.isExerciseDirectory(path)) {
+            if (langs.isExerciseRootDirectory(path)) {
                 return Optional.of(path);
             }
             path = path.getParent();

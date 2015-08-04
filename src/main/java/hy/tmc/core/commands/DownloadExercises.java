@@ -2,6 +2,7 @@ package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
@@ -207,12 +208,18 @@ public class DownloadExercises extends Command<List<Exercise>> {
     private void cacheExercises(List<Exercise> exercises) throws IOException {
         Gson gson = new Gson();
         String json = FileUtils.readFileToString(cacheFile, Charset.forName("UTF-8"));
-        Map<Integer, String> checksums;
+        Map<Integer, String> checksums = null;
         if (json != null && !json.isEmpty()) {
             Type typeOfHashMap = new TypeToken<Map<Integer, String>>() {
             }.getType();
-            checksums = gson.fromJson(json, typeOfHashMap);
-        } else {
+            try {
+                checksums = gson.fromJson(json, typeOfHashMap);
+            } catch (JsonSyntaxException ex) {
+                System.err.println("WARNING: corrupt cachefile, ignoring and overwriting");
+                checksums = new HashMap<>();
+            }
+        }
+        if (checksums == null) {
             checksums = new HashMap<>();
         }
 

@@ -35,7 +35,6 @@ import java.util.Map;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.times;
 
@@ -140,6 +139,46 @@ public class DownloadExercisesTest {
     }
 
     @Test
+    public void overwritesToCacheFileIfCacheFileHasBadContents() throws IOException, TmcCoreException {
+        new FileWriter(cache).write(" asdfjljlkasdf ");
+
+        ExerciseDownloader downloader = Mockito.mock(ExerciseDownloader.class);
+        Mockito.when(downloader.createCourseFolder(anyString(), anyString()))
+                .thenReturn("");
+        Mockito.when(downloader.handleSingleExercise(
+                any(Exercise.class), anyString())
+        ).thenReturn(true);
+
+        Course course = new Course();
+        course.setExercises(new ExerciseBuilder()
+                .withExercise("kissa", 2, "eujwuc")
+                .withExercise("asdf", 793, "alnwnec")
+                .withExercise("ankka", 88, "abcdefg")
+                .build());
+
+        parser = Mockito.mock(TmcJsonParser.class);
+
+        Mockito.when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
+
+        DownloadExercises dl = new DownloadExercises(downloader, "", "8", cache, settings, parser);
+        dl.call();
+        String json = FileUtils.readFileToString(cache);
+        Gson gson = new Gson();
+        Map<Integer, String> checksums;
+        Type typeOfHashMap = new TypeToken<Map<Integer, String>>() {
+        }.getType();
+        checksums = gson.fromJson(json, typeOfHashMap);
+
+        assertNotNull(checksums);
+        assertTrue(checksums.containsKey(2));
+        assertTrue(checksums.containsKey(793));
+        assertTrue(checksums.containsKey(88));
+        assertEquals("eujwuc", checksums.get(2));
+        assertEquals("alnwnec", checksums.get(793));
+        assertEquals("abcdefg", checksums.get(88));
+    }
+
+    @Test
     public void keepsOldChecksumsInTheCache() throws IOException, TmcCoreException {
         try (FileWriter writer = new FileWriter(cache)) {
             writer.write("{\"33\":\"qwerty\",\"94\":\"aijw9\"}");
@@ -222,7 +261,7 @@ public class DownloadExercisesTest {
         settings1.setServerAddress(serverAddress);
         settings1.setUsername("test");
         settings1.setPassword("1234");
-        wiremock(settings1.getUsername(), settings1.getPassword(), "35",serverAddress);
+        wiremock(settings1.getUsername(), settings1.getPassword(), "35", serverAddress);
         return settings1;
     }
 
@@ -240,7 +279,7 @@ public class DownloadExercisesTest {
                         .withBody(ExampleJson.allCoursesExample
                                 .replace("https://tmc.mooc.fi/staging", serverAddress))));
 
-        wireMockServer.stubFor(get(urlEqualTo("/courses/"+courseId+".json?api_version=7"))
+        wireMockServer.stubFor(get(urlEqualTo("/courses/" + courseId + ".json?api_version=7"))
                 .willReturn(aResponse()
                         .withStatus(200)
                         .withHeader("Content-Type", "text/json")

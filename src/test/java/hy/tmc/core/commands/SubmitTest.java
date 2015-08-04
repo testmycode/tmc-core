@@ -141,20 +141,32 @@ public class SubmitTest {
     }
 
     private void mockSubmit() {
-        String urlToMock = "/exercises/1239/submissions.json?api_version=7";
+        String urlToMock = "/exercises/1231/submissions.json?api_version=7";
         wireMock.stubFor(post(urlEqualTo(urlToMock))
                 .willReturn(WireMock.aResponse()
                         .withStatus(200)
-                        .withBody(ExampleJson.failedSubmitResponse)));
+                        .withBody(ExampleJson.failedSubmitResponse
+                                .replace("https://tmc.mooc.fi/staging", "http://localhost:8080")
+                        )
+                )
+        );
         
         wireMock.stubFor(get(urlEqualTo("/submissions/7777.json?api_version=7"))
                 .willReturn(WireMock.aResponse()
                         .withStatus(200)
-                        .withBody(ExampleJson.failedSubmission)));
+                        .withBody(ExampleJson.failedSubmission
+                            .replace("https://tmc.mooc.fi/staging", "http://localhost:8080")
+                        )
+                )
+        );
         
         wireMock.stubFor(get(urlEqualTo("/courses/19.json?api_version=7"))
                 .willReturn(WireMock.aResponse()
                         .withStatus(200)
-                        .withBody(ExampleJson.noDeadlineCourseExample)));
+                        .withBody(ExampleJson.noDeadlineCourseExample
+                            .replace("https://tmc.mooc.fi/staging", "http://localhost:8080")
+                        )
+                )
+        );
     }
 }

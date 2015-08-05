@@ -110,6 +110,7 @@ public class DownloadExercisesTest {
         ).thenReturn(true);
 
         Course course = new Course();
+        course.setName("test-course");
         course.setExercises(new ExerciseBuilder()
                 .withExercise("kissa", 2, "eujwuc")
                 .withExercise("asdf", 793, "alnwnec")
@@ -124,18 +125,18 @@ public class DownloadExercisesTest {
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Gson gson = new Gson();
-        Map<Integer, String> checksums;
-        Type typeOfHashMap = new TypeToken<Map<Integer, String>>() {
+        Map<String, Map<String, String>> checksums;
+        Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {
         }.getType();
         checksums = gson.fromJson(json, typeOfHashMap);
 
         assertNotNull(checksums);
-        assertTrue(checksums.containsKey(2));
-        assertTrue(checksums.containsKey(793));
-        assertTrue(checksums.containsKey(88));
-        assertEquals("eujwuc", checksums.get(2));
-        assertEquals("alnwnec", checksums.get(793));
-        assertEquals("abcdefg", checksums.get(88));
+        assertTrue(checksums.containsKey("test-course"));
+        assertTrue(checksums.get("test-course").containsKey("kissa"));
+        assertTrue(checksums.get("test-course").containsKey("asdf"));
+        assertEquals("eujwuc", checksums.get("test-course").get("kissa"));
+        assertEquals("alnwnec", checksums.get("test-course").get("asdf"));
+        assertEquals("abcdefg", checksums.get("test-course").get("ankka"));
 
     }
 
@@ -151,6 +152,7 @@ public class DownloadExercisesTest {
         ).thenReturn(true);
 
         Course course = new Course();
+        course.setName("test-course");
         course.setExercises(new ExerciseBuilder()
                 .withExercise("kissa", 2, "eujwuc")
                 .withExercise("asdf", 793, "alnwnec")
@@ -165,24 +167,26 @@ public class DownloadExercisesTest {
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Gson gson = new Gson();
-        Map<Integer, String> checksums;
-        Type typeOfHashMap = new TypeToken<Map<Integer, String>>() {
+        Map<String, Map<String, String>> checksums;
+        Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {
         }.getType();
         checksums = gson.fromJson(json, typeOfHashMap);
 
         assertNotNull(checksums);
-        assertTrue(checksums.containsKey(2));
-        assertTrue(checksums.containsKey(793));
-        assertTrue(checksums.containsKey(88));
-        assertEquals("eujwuc", checksums.get(2));
-        assertEquals("alnwnec", checksums.get(793));
-        assertEquals("abcdefg", checksums.get(88));
+        assertTrue(checksums.containsKey("test-course"));
+        assertTrue(checksums.get("test-course").containsKey("kissa"));
+        assertTrue(checksums.get("test-course").containsKey("asdf"));
+        assertTrue(checksums.get("test-course").containsKey("ankka"));
+
+        assertEquals("eujwuc", checksums.get("test-course").get("kissa"));
+        assertEquals("alnwnec", checksums.get("test-course").get("asdf"));
+        assertEquals("abcdefg", checksums.get("test-course").get("ankka"));
     }
 
     @Test
     public void keepsOldChecksumsInTheCache() throws IOException, TmcCoreException {
         try (FileWriter writer = new FileWriter(cache)) {
-            writer.write("{\"33\":\"qwerty\",\"94\":\"aijw9\"}");
+            writer.write("{\"test-course\":{\"kissa\":\"qwerty\",\"asdf2\":\"aijw9\"},\"test-course2\":{\"ankka\":\"22222\"}}");
         }
 
         ExerciseDownloader mock = Mockito.mock(ExerciseDownloader.class);
@@ -193,6 +197,7 @@ public class DownloadExercisesTest {
         ).thenReturn(true);
 
         Course course = new Course();
+        course.setName("test-course");
         course.setExercises(new ExerciseBuilder()
                 .withExercise("kissa", 2, "eujwuc")
                 .withExercise("asdf", 793, "alnwnec")
@@ -205,19 +210,20 @@ public class DownloadExercisesTest {
         DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings, parser);
         dl.call();
         String json = FileUtils.readFileToString(cache);
-        Type typeOfHashMap = new TypeToken<Map<Integer, String>>() {
+        Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {
         }.getType();
-        HashMap<Integer, String> checksums = new Gson().fromJson(json, typeOfHashMap);
+        Map<String, Map<String, String>> checksums = new Gson().fromJson(json, typeOfHashMap);
 
         assertNotNull(checksums);
-        assertTrue(checksums.containsKey(2));
-        assertTrue(checksums.containsKey(33));
-        assertTrue(checksums.containsKey(88));
-        assertTrue(checksums.containsKey(94));
-        assertEquals("eujwuc", checksums.get(2));
-        assertEquals("qwerty", checksums.get(33));
-        assertEquals("abcdefg", checksums.get(88));
-        assertEquals("aijw9", checksums.get(94));
+        assertTrue(checksums.containsKey("test-course"));
+        assertTrue(checksums.containsKey("test-course2"));
+        assertTrue(checksums.get("test-course").containsKey("kissa"));
+        assertTrue(checksums.get("test-course").containsKey("asdf"));
+        assertTrue(checksums.get("test-course").containsKey("ankka"));
+        assertEquals("eujwuc", checksums.get("test-course").get("kissa"));
+        assertEquals("alnwnec", checksums.get("test-course").get("asdf"));
+        assertEquals("aijw9", checksums.get("test-course").get("asdf2"));
+        assertEquals("22222", checksums.get("test-course2").get("ankka"));
     }
 
     @Test

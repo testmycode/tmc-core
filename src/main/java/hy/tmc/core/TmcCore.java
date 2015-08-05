@@ -285,7 +285,7 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
      * given path
      */
-    public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course, TmcSettings settings) throws TmcCoreException, IOException {
+    public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course, TmcSettings settings) throws TmcCoreException {
         ExerciseUpdateHandler updater = new ExerciseUpdateHandler(updateCache, new TmcJsonParser(settings));
         GetExerciseUpdates command = new GetExerciseUpdates(course, updater, settings);
         command.checkData();

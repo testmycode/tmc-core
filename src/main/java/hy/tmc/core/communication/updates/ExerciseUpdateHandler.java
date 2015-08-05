@@ -21,8 +21,8 @@ import org.apache.commons.io.FileUtils;
 public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
     
     private File cache;
-    private Map<Integer, String> exerciseChecksums;
-    
+    private Map<String, Map<String, String>> exerciseChecksums;
+
     public ExerciseUpdateHandler(File cacheFile, TmcJsonParser jsonParser) throws TmcCoreException {
         super(jsonParser);
         exerciseChecksums = new HashMap<>();
@@ -45,8 +45,9 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
 
     @Override
     protected boolean isNew(Exercise exercise) {
-        if (exerciseChecksums.containsKey(exercise.getId())) {
-            String earlierChecksum = exerciseChecksums.get(exercise.getId());
+        if (exerciseChecksums.containsKey(exercise.getCourseName()) &&
+                exerciseChecksums.get(exercise.getCourseName()).containsKey(exercise.getName())) {
+            String earlierChecksum = exerciseChecksums.get(exercise.getCourseName()).get(exercise.getName());
             return ! exercise.getChecksum().equals(earlierChecksum);
         }
         return true;
@@ -54,7 +55,7 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
 
     protected void readChecksumMap() throws FileNotFoundException, IOException {
         String json = FileUtils.readFileToString(cache, Charset.forName("UTF-8"));
-        Type typeOfMap = new TypeToken<Map<Integer, String>>() { }.getType();
+        Type typeOfMap = new TypeToken<Map<String, Map<String, String>>>() { }.getType();
         this.exerciseChecksums = new Gson().fromJson(json, typeOfMap);
         if (this.exerciseChecksums == null) {
             this.exerciseChecksums = new HashMap<>();

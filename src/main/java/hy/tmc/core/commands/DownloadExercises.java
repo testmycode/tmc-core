@@ -207,9 +207,9 @@ public class DownloadExercises extends Command<List<Exercise>> {
     private void cacheExercises(List<Exercise> exercises) throws IOException {
         Gson gson = new Gson();
         String json = FileUtils.readFileToString(cacheFile, Charset.forName("UTF-8"));
-        Map<Integer, String> checksums = null;
+        Map<String, Map<String, String>> checksums = null;
         if (json != null && !json.isEmpty()) {
-            Type typeOfHashMap = new TypeToken<Map<Integer, String>>() {
+            Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {
             }.getType();
             try {
                 checksums = gson.fromJson(json, typeOfHashMap);
@@ -223,7 +223,10 @@ public class DownloadExercises extends Command<List<Exercise>> {
         }
 
         for (Exercise exercise : exercises) {
-            checksums.put(exercise.getId(), exercise.getChecksum());
+            if (!checksums.containsKey(exercise.getCourseName())) {
+                checksums.put(exercise.getCourseName(), new HashMap());
+            }
+            checksums.get(exercise.getCourseName()).put(exercise.getName(), exercise.getChecksum());
         }
         try (FileWriter writer = new FileWriter(this.cacheFile)) {
             writer.write(gson.toJson(checksums, Map.class));

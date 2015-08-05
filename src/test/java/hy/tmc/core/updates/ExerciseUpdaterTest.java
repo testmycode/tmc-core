@@ -66,9 +66,9 @@ public class ExerciseUpdaterTest {
     
     @Test
     public void getsCorrectExercises() throws IOException, Exception {
-        Map<Integer, String> checksums = new HashMap<>();
-        checksums.put(5, "abcdefg");
-        checksums.put(7, "aleialc");
+        Map<String, Map<String, String>> checksums = new HashMap<>();
+        checksums.put("test-course", new HashMap());
+        checksums.get("test-course").put("old", "abcdefg");
         try (FileWriter writer = new FileWriter(this.cacheFile)) {
             writer.write(new Gson().toJson(checksums));
         }
@@ -99,10 +99,10 @@ public class ExerciseUpdaterTest {
     
      private TmcJsonParser mockTmcJsonParser() throws IOException {
         TmcJsonParser tmcJsonParser = Mockito.mock(TmcJsonParser.class);
-        List<Exercise> serverExercises = builder.withExercise("old", 5, "abcdefg")
-                .withExercise("changed", 7, "oeoeoo")
-                .withExercise("new", 8, "woksirjd")
-                .withExercise("duck", 9, "asdfsdf")
+        List<Exercise> serverExercises = builder.withExercise("old", 5, "abcdefg", "test-course")
+                .withExercise("changed", 7, "oeoeoo", "test-course")
+                .withExercise("new", 8, "woksirjd", "test-course")
+                .withExercise("duck", 9, "asdfsdf", "test-course")
                 .build();
         Mockito.when(tmcJsonParser.getExercisesFromServer(any(Course.class)))
                 .thenReturn(serverExercises);

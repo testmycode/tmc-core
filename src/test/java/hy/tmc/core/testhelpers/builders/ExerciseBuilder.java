@@ -6,18 +6,23 @@ import java.util.List;
 
 
 public class ExerciseBuilder {
-    
-    private List<Exercise> exercises;
-    
+
+    private final List<Exercise> exercises;
+
     public ExerciseBuilder() {
         this.exercises = new ArrayList<>();
     }
     
     public ExerciseBuilder withExercise(String name, int id, String checksum) {
+        return withExercise(name, id, checksum, null);
+    }
+
+    public ExerciseBuilder withExercise(String name, int id, String checksum, String courseName) {
         Exercise exercise = new Exercise();
         exercise.setName(name);
         exercise.setId(id);
         exercise.setChecksum(checksum);
+        exercise.setCourseName(courseName);
         exercises.add(exercise);
         return this;
     }

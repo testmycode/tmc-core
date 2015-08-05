@@ -37,6 +37,12 @@ public class FeedbackQuestionTest {
     }
     
     @Test
+    public void test() {
+        question.setKind("intrange[1..5]");
+        assertEquals(1, question.getIntRangeMin());
+    }
+    
+    @Test
     public void isTextTest() {
         question.setKind("text");
         assertTrue(question.isText());

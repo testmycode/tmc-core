@@ -1,8 +1,9 @@
 package hy.tmc.core.zipping;
 
 import com.google.common.base.Optional;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import java.io.File;
@@ -12,23 +13,19 @@ import java.util.List;
 
 public class ProjectRootFinder implements RootFinder {
 
-    private final ProjectRootDetector detector;
+    private final TaskExecutor langs;
     private TmcJsonParser tmcJsonParser;
 
     /**
-     * A helper class that searches for a project root directory. It must be given a
-     * ProjectRootDetector that corresponds with the project in question. For example, for a Maven
-     * project a DefaultRootDetector can be used.
-     *
-     * @param detector the RootDetector that specifies if a directory is a project root
+     * A helper class that searches for a project root directory.
      */
-    public ProjectRootFinder(ProjectRootDetector detector, TmcJsonParser jsonParser) {
-        this.detector = detector;
+    public ProjectRootFinder(TaskExecutor langs, TmcJsonParser jsonParser) {
+        this.langs = langs;
         this.tmcJsonParser = jsonParser;
     }
-    
+
     public ProjectRootFinder(TmcJsonParser jsonParser) {
-        this(new DefaultRootDetector(), jsonParser);
+        this(new TaskExecutorImpl(), jsonParser);
     }
 
     /**
@@ -39,12 +36,16 @@ public class ProjectRootFinder implements RootFinder {
      */
     @Override
     public Optional<Path> getRootDirectory(Path start) {
-        return search(start);
+        return search(start.toAbsolutePath());
     }
 
     private Optional<Path> search(Path path) {
         while (path.getParent() != null) {
-            if (detector.isRootDirectory(path)) {
+            if (path.endsWith("tmc-core")) {
+                path = path.getParent();
+                continue;
+            }
+            if (langs.isExerciseRootDirectory(path)) {
                 return Optional.of(path);
             }
             path = path.getParent();
@@ -60,13 +61,14 @@ public class ProjectRootFinder implements RootFinder {
      */
     @Override
     public Optional<Course> getCurrentCourse(String path) throws IOException, TmcCoreException {
-        String[] foldersOfPwd = path.split("\\" + File.separator);
+        String[] foldersOfWorkingDirectory = path.split("\\" + File.separator);
         try {
-            checkPwd(foldersOfPwd);
-        } catch (TmcCoreException ex) {
+            checkPwd(foldersOfWorkingDirectory);
+        }
+        catch (TmcCoreException ex) {
             return Optional.absent();
         }
-        return findCourseByPath(foldersOfPwd);
+        return findCourseByPath(foldersOfWorkingDirectory);
     }
 
     /**

@@ -3,6 +3,7 @@ package hy.tmc.core.communication;
 import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
 import fi.helsinki.cs.tmc.langs.io.zip.Zipper;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import static org.junit.Assert.assertEquals;
 
 import org.mockito.Mockito;
@@ -13,7 +14,6 @@ import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.testhelpers.ProjectRootFinderStub;
-import hy.tmc.core.zipping.DefaultRootDetector;
 import hy.tmc.core.zipping.ProjectRootFinder;
 
 import java.io.File;
@@ -68,7 +68,7 @@ public class CourseSubmitterTest {
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7&client=tmc_cli&client_version=1", ExampleJson.submitResponse);
         mockUrlCommunicatorWithFile("https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7&client=tmc_cli&client_version=1", ExampleJson.pasteResponse);
 
-        realFinder = new ProjectRootFinder(new DefaultRootDetector(), jsonParser);
+        realFinder = new ProjectRootFinder(new TaskExecutorImpl(), jsonParser);
     }
 
     @Test

@@ -1,20 +1,20 @@
 package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
+
 import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
 import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
-import hy.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
+import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.communication.SubmissionPoller;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
-
-import hy.tmc.core.domain.submission.SubmissionResult;
-
 import hy.tmc.core.zipping.ProjectRootFinder;
 
 import java.io.IOException;
@@ -47,9 +47,10 @@ public class Submit extends Command<SubmissionResult> {
                 settings
         );
     }
-    
+
      /**
      * Constructor for Submit command, creates the courseSubmitter.
+     *
      * @param path path which to submit
      */
     public Submit(String path, TmcSettings settings) {
@@ -60,11 +61,11 @@ public class Submit extends Command<SubmissionResult> {
     /**
      * Constructor for mocking.
      *
-     * @param submitter   can inject submitter mock.
-     * @param interpreter can inject interpreter mock.
+     * @param submitter   can inject submitter mock
+     * @param interpreter can inject interpreter mock
      */
-    public Submit(ExerciseSubmitter submitter, 
-                SubmissionPoller interpreter, 
+    public Submit(ExerciseSubmitter submitter,
+                SubmissionPoller interpreter,
                 TmcSettings settings,
                 String path) {
         super(settings);

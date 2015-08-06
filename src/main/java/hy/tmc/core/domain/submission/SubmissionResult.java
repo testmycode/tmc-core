@@ -1,7 +1,9 @@
 package hy.tmc.core.domain.submission;
 
 import com.google.gson.annotations.SerializedName;
+
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
+
 import java.util.Collections;
 
 import java.util.List;
@@ -11,71 +13,71 @@ public class SubmissionResult {
     public static enum TestResultStatus {
         ALL_FAILED, SOME_FAILED, NONE_FAILED
     }
-    
+
     public static enum Status {
         OK,
         FAIL,
         ERROR,
         PROCESSING
     }
-    
+
     @SerializedName("api_version")
     private int apiVersion;
-    
+
     @SerializedName("all_tests_passed")
     private boolean allTestsPassed;
-    
+
     @SerializedName("user_id")
     private int userId;
-    
+
     @SerializedName("error")
     private String error; // e.g. compile error
 
     private String course;
-    
+
     @SerializedName("exercise_name")
     private String exerciseName;
-    
+
     @SerializedName("status")
     private Status status;
-    
+
     private List<String> points;
-    
+
     @SerializedName("processing_time")
     private int processingTime;
-    
+
     @SerializedName("message_for_paste")
     private String messageForPaste;
-    
+
     @SerializedName("missing_review_points")
     private List<String> missingReviewPoints;
-    
+
     @SerializedName("test_cases")
     private List<TestCase> testCases;
-    
+
     @SerializedName("feedback_questions")
     private List<FeedbackQuestion> feedbackQuestions;
 
     @SerializedName("feedback_answer_url")
     private String feedbackAnswerUrl;
-    
+
     @SerializedName("solution_url")
     private String solutionUrl;
-    
+
     private Validations validations;
-    
+
     private String valgrind;
-    
+
     private boolean reviewed;
-    
+
     @SerializedName("requests_review")
     private boolean requestsReview;
-    
+
     @SerializedName("submitted_at")
     private String submittedAt;
-    
+
     private ValidationResult validationResult;
-    
+
     public SubmissionResult() {
         status = Status.ERROR;
         error = null;
@@ -84,7 +86,7 @@ public class SubmissionResult {
         missingReviewPoints = Collections.emptyList();
         feedbackQuestions = Collections.emptyList();
     }
-    
+
     public void setValidationResult(final ValidationResult result) {
         this.validationResult = result;
     }
@@ -282,14 +284,14 @@ public class SubmissionResult {
     @Override
     public String toString() {
         return "SubmissionResult{" + "apiVersion=" + apiVersion + ", \nallTestsPassed=" +
-                allTestsPassed + ", userId=" + userId + ", error=" + error + 
-                ", \ncourse=" + course + ", exerciseName=" + exerciseName + ", status=" + 
+                allTestsPassed + ", userId=" + userId + ", error=" + error +
+                ", \ncourse=" + course + ", exerciseName=" + exerciseName + ", status=" +
                 status + ", points=" + points + ", processingTime=" + processingTime +
-                ", \nmessageForPaste=" + messageForPaste + ", missingReviewPoints=" + 
-                missingReviewPoints + ", testCases=" + testCases + ", feedbackQuestions=" 
+                ", \nmessageForPaste=" + messageForPaste + ", missingReviewPoints=" +
+                missingReviewPoints + ", testCases=" + testCases + ", feedbackQuestions="
                 + feedbackQuestions + ", feedbackAnswerUrl=" + feedbackAnswerUrl +
                 ", solutionUrl=" + solutionUrl + ", validations=" + validations +
-                ", \n valgrind=" + valgrind + ", reviewed=" + reviewed + ", requestsReview=" 
+                ", \n valgrind=" + valgrind + ", reviewed=" + reviewed + ", requestsReview="
                 + requestsReview + ", submittedAt=" + submittedAt + ", validationResult="
                 + validationResult + '}';
     }

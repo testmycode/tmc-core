@@ -1,7 +1,7 @@
-
 package hy.tmc.core.exceptions;
 
 public class ExpiredException extends Exception {
+
     /**
      * ExpiredException is thrown when user tries to submit or download expired exercise.
      */
@@ -19,7 +19,7 @@ public class ExpiredException extends Exception {
 
     /**
      * ExpiredException can have cause as parameter.
-     * 
+     *
      * @param message final string message
      * @param cause cause why exception is thrown
      */
@@ -29,7 +29,7 @@ public class ExpiredException extends Exception {
 
     /**
      * ExpiredException can only have a cause.
-     * 
+     *
      * @param cause why exception is thrown
      */
     public ExpiredException(final Throwable cause) {

@@ -22,7 +22,7 @@ public class TmcCoreException extends Exception {
 
     /**
      * ProtocolException can have cause as parameter.
-     * 
+     *
      * @param message final string message
      * @param cause cause why exception is thrown
      */
@@ -32,7 +32,7 @@ public class TmcCoreException extends Exception {
 
     /**
      * ProtocolException can only have a cause.
-     * 
+     *
      * @param cause why exception is thrown
      */
     public TmcCoreException(final Throwable cause) {

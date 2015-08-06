@@ -1,8 +1,12 @@
 package hy.tmc.core.communication;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import com.google.common.base.Optional;
+
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
 import hy.tmc.core.domain.Exercise;
 
 import java.io.File;
@@ -12,10 +16,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 public class ExerciseDownloader {
-    
+
     private File cacheFile;
     private UrlCommunicator urlCommunicator;
     private TmcJsonParser tmcJsonParser;
@@ -38,8 +40,7 @@ public class ExerciseDownloader {
         this(urlCommunicator, tmcJsonParser, new TaskExecutorImpl());
     }
 
-
-    /**s
+    /**
      * Download exercises by course url.
      *
      * @param courseUrl course url
@@ -71,7 +72,7 @@ public class ExerciseDownloader {
     public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, String path) {
         return downloadFiles(exercises, path, null);
     }
-    
+
     public String createCourseFolder(String path, String folderName) {
         path = formatPath(path);
         if (!isNullOrEmpty(folderName)) {
@@ -102,7 +103,7 @@ public class ExerciseDownloader {
                 downloadedExercises.add(exercise);
             }
         }
-        
+
         return Optional.of(downloadedExercises);
     }
 
@@ -138,7 +139,7 @@ public class ExerciseDownloader {
         try {
             Files.delete(Paths.get(filePath));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

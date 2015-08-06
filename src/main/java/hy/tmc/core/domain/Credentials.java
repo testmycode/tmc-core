@@ -1,7 +1,7 @@
-
 package hy.tmc.core.domain;
 
 public class Credentials {
+
     private String username;
     private String password;
 

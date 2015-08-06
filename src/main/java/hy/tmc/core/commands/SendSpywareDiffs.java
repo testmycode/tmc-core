@@ -1,14 +1,16 @@
 package hy.tmc.core.commands;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
+
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.spyware.DiffSender;
-import java.util.List;
 
+import java.util.List;
 
 public class SendSpywareDiffs extends Command<List<HttpResult>>{
 
@@ -23,20 +25,22 @@ public class SendSpywareDiffs extends Command<List<HttpResult>>{
     public SendSpywareDiffs(byte[] spywereDiffs, TmcSettings settings) {
         this(spywereDiffs, new DiffSender(settings), new TmcJsonParser(settings), settings);
     }
-    
+
     /**
      * Dependecy injection for tests.
      */
-    public SendSpywareDiffs(byte[] spywareDiffs, 
-                            DiffSender sender, 
-                            TmcJsonParser jsonParser, 
-                            TmcSettings settings) {
+    @VisibleForTesting
+    SendSpywareDiffs(
+            byte[] spywareDiffs,
+            DiffSender sender,
+            TmcJsonParser jsonParser,
+            TmcSettings settings) {
         super(settings);
         this.spywareDiffs = spywareDiffs;
         this.sender = sender;
         this.jsonParser = jsonParser;
     }
-    
+
     @Override
     public void checkData() throws TmcCoreException {
         if (this.spywareDiffs == null) {

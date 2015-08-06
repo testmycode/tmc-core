@@ -1,51 +1,43 @@
 package hy.tmc.core.domain;
 
+import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
-import java.util.ArrayList;
 
 import java.util.List;
 
 public class Course {
-    
+
+    private boolean exercisesLoaded;
     private int id;
     private String name;
 
     private List<Exercise> exercises;
+    private List<String> unlockables;
 
     @SerializedName("details_url")
     private String detailsUrl;
-    
+
     @SerializedName("unlock_url")
     private String unlockUrl;
-    
+
     @SerializedName("comet_url")
     private String cometUrl;
 
-    public String getReviewsUrl() {
-        return reviewsUrl;
-    }
-
-    public void setReviewsUrl(String reviewsUrl) {
-        this.reviewsUrl = reviewsUrl;
-    }
-    
     @SerializedName("spyware_urls")
     private List<String> spywareUrls;
 
     @SerializedName("reviews_url")
     private String reviewsUrl;
-    
-    private List<String> unlockables;
-    
+
      public Course() {
         this(null);
     }
 
     public Course(String name) {
         this.name = name;
-        this.exercises = new ArrayList<Exercise>();
-        this.unlockables = new ArrayList<String>();
-        this.spywareUrls = new ArrayList<String>();
+        this.exercises = Lists.newArrayList();
+        this.unlockables = Lists.newArrayList();
+        this.spywareUrls = Lists.newArrayList();
     }
 
     public List<String> getSpywareUrls() {
@@ -56,7 +48,14 @@ public class Course {
         this.spywareUrls = spywareUrls;
     }
 
-    
+    public String getReviewsUrl() {
+        return reviewsUrl;
+    }
+
+    public void setReviewsUrl(String reviewsUrl) {
+        this.reviewsUrl = reviewsUrl;
+    }
+
     public List<Exercise> getExercises() {
         return exercises;
     }
@@ -108,8 +107,6 @@ public class Course {
         return this.id == other.id;
     }
 
-    private boolean exercisesLoaded;
-
     public String getUnlockUrl() {
         return unlockUrl;
     }
@@ -141,7 +138,7 @@ public class Course {
     public void setUnlockables(List<String> unlockables) {
         this.unlockables = unlockables;
     }
-    
+
     @Override
     public String toString() {
         //TODO: this cannot return anything else until PreferencesPanel is fixed to not use toString to present Course objects

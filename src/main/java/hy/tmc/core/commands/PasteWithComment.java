@@ -1,10 +1,12 @@
 package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
+
 import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
 import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
-import hy.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
+import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.TmcSettings;
@@ -12,11 +14,12 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.ProjectRootFinder;
-import net.lingala.zip4j.exception.ZipException;
 
 import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;
+
+import net.lingala.zip4j.exception.ZipException;
 
 public class PasteWithComment extends Command<URI> {
 
@@ -25,8 +28,8 @@ public class PasteWithComment extends Command<URI> {
     private String comment;
 
     /**
-     * Submit paste with comment. Used in tmc-netbeans plugin.
-     * @param settings
+     * Submit paste with comment. Used by the TMC-Netbeans plugin.
+     *
      * @param comment paste comment given by user
      */
     public PasteWithComment(TmcSettings settings, String comment) {
@@ -39,11 +42,6 @@ public class PasteWithComment extends Command<URI> {
         ), settings, comment);
     }
 
-    /**
-     * Constructor for mocking.
-     *
-     * @param submitter can inject submitter mock.
-     */
     public PasteWithComment(ExerciseSubmitter submitter, TmcSettings settings, String comment) {
         this.submitter = submitter;
         this.settings = settings;
@@ -54,7 +52,6 @@ public class PasteWithComment extends Command<URI> {
         this(settings, comment);
         this.setParameter("path", path);
     }
-
 
     /**
      * Requires auth and pwd in "path" parameter.

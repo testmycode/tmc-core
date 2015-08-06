@@ -4,10 +4,12 @@ import com.google.gson.annotations.SerializedName;
 
 public class TestCase {
 
-    private String name;
     private boolean successful;
     private String message;
+    private String name;
+
     private TestException exception;
+
     @SerializedName("detailed_message")
     private String detailedMessage;
 
@@ -50,5 +52,4 @@ public class TestCase {
     public void setDetailedMessage(String detailedMessage) {
         this.detailedMessage = detailedMessage;
     }
-
 }

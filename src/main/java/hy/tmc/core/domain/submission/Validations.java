@@ -6,6 +6,7 @@ import java.util.Map;
 public class Validations {
 
     private String strategy;
+
     private Map<String, List<ValidationError>> validationErrors;
 
     public String getStrategy() {

@@ -1,8 +1,7 @@
 package hy.tmc.core.domain.submission;
 
-
-
 public class ValidationError {
+
     private int column;
     private int line;
     private String message;
@@ -39,6 +38,4 @@ public class ValidationError {
     public void setSourceName(String sourceName) {
         this.sourceName = sourceName;
     }
-    
-    
 }

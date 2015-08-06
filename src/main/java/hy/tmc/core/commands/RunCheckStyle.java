@@ -1,24 +1,29 @@
 package hy.tmc.core.commands;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
+
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
+
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.ProjectRootFinder;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class RunCheckStyle extends Command<ValidationResult> {
-    
+
     private ProjectRootFinder finder;
     private TaskExecutorImpl taskExecutor;
     private ProjectRootFinder rootfinder;
 
     /**
      * Default constructor.
+     *
      * @param path to exercise, that should be passed to TmcLangs checkstyle-runner.
      * @param settings containing at least credentials and serverAddress to
      * enable communication with server.
@@ -33,21 +38,23 @@ public class RunCheckStyle extends Command<ValidationResult> {
     /**
      * Constructor for dependency injection in tests.
      */
-    public RunCheckStyle(String path,
-                         TmcSettings settings,
-                         ProjectRootFinder finder,
-                         TaskExecutorImpl executor) {
+    @VisibleForTesting
+    RunCheckStyle(
+            String path,
+            TmcSettings settings,
+            ProjectRootFinder finder,
+            TaskExecutorImpl executor) {
         super(settings);
         this.setParameter("path", path);
         this.finder= finder;
         this.taskExecutor = executor;
     }
-    
+
     /**
      * Runs checkstyle for exercise.
      *
-     * @param exercise Path object
-     * @return String contaning results
+     * @param exercise path object
+     * @return String containing results
      * @throws NoLanguagePluginFoundException if path doesn't contain exercise
      */
     public ValidationResult runCheckStyle(Path exercise) throws NoLanguagePluginFoundException {

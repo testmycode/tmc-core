@@ -1,10 +1,12 @@
 package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
+
 import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
 import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
-import hy.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
+import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.TmcSettings;
@@ -12,6 +14,7 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.ProjectRootFinder;
+
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.IOException;
@@ -26,17 +29,18 @@ public class PasteWithComment extends Command<URI> {
 
     /**
      * Submit paste with comment. Used in tmc-netbeans plugin.
-     * @param settings
      * @param comment paste comment given by user
      */
     public PasteWithComment(TmcSettings settings, String comment) {
-        this(new ExerciseSubmitter(
-                new ProjectRootFinder(new TaskExecutorImpl(), new TmcJsonParser(settings)),
-                new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
-                new UrlCommunicator(settings),
-                new TmcJsonParser(settings),
-                settings
-        ), settings, comment);
+        this(
+                new ExerciseSubmitter(
+                        new ProjectRootFinder(new TaskExecutorImpl(), new TmcJsonParser(settings)),
+                        new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
+                        new UrlCommunicator(settings),
+                        new TmcJsonParser(settings),
+                        settings),
+                settings,
+                comment);
     }
 
     /**
@@ -54,7 +58,6 @@ public class PasteWithComment extends Command<URI> {
         this(settings, comment);
         this.setParameter("path", path);
     }
-
 
     /**
      * Requires auth and pwd in "path" parameter.
@@ -82,7 +85,9 @@ public class PasteWithComment extends Command<URI> {
      * paste.
      */
     @Override
-    public URI call() throws IOException, ParseException, ExpiredException, IllegalArgumentException, ZipException, TmcCoreException {
+    public URI call()
+            throws IOException, ParseException, ExpiredException, IllegalArgumentException,
+                    ZipException, TmcCoreException {
         checkData();
         URI uri = URI.create(submitter.submitPasteWithComment(data.get("path"), this.comment));
         return uri;

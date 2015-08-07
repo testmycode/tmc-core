@@ -5,10 +5,10 @@ public class HttpResult {
     private String data;
     private int statusCode;
     private boolean success;
-    
+
     /**
      * Creates a new HttpResult object to model the result of some request.
-     * 
+     *
      * @param data data returned by the server
      * @param statusCode statuscode of the request e.g. 200
      * @param success was the request succesful

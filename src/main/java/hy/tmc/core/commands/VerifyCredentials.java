@@ -4,8 +4,8 @@ import com.google.common.base.Optional;
 
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.TmcSettings;
-
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import java.io.IOException;
 
 /**
@@ -18,13 +18,14 @@ public class VerifyCredentials extends Command<Boolean> {
      * Regex for HTTP OK codes.
      */
     private final String httpOk = "2..";
+
     private String tmcServerRoute = "/user";
     private UrlCommunicator communicator;
 
     public VerifyCredentials(TmcSettings settings) {
         this(settings, new UrlCommunicator(settings));
     }
-    
+
     public VerifyCredentials(TmcSettings settings, UrlCommunicator communicator) {
         super(settings);
         this.communicator = communicator;
@@ -44,10 +45,10 @@ public class VerifyCredentials extends Command<Boolean> {
 
     private int makeRequest() throws IOException, TmcCoreException {
         String auth = settings.getUsername() + ":" + settings.getPassword();
-        int code = communicator.makeGetRequest(
-                settings.getServerAddress() + tmcServerRoute,
-                auth
-        ).getStatusCode();
+        int code =
+                communicator
+                        .makeGetRequest(settings.getServerAddress() + tmcServerRoute, auth)
+                        .getStatusCode();
         return code;
     }
 

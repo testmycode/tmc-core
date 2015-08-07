@@ -1,22 +1,19 @@
 package hy.tmc.core.testhelpers;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+
 import java.net.Socket;
 
 public class TestClient {
 
+    private final int portnumber;
+
     private Socket socket;
     private PrintWriter output;
     private BufferedReader input;
-    private final int portnumber;
 
     public TestClient(int portnumber) throws IOException {
         this.portnumber = portnumber;
@@ -28,7 +25,7 @@ public class TestClient {
         this.output = new PrintWriter(socket.getOutputStream(), true);
         this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
     }
-    
+
     public boolean checkForMessages() throws IOException {
         return input.ready();
     }
@@ -52,6 +49,7 @@ public class TestClient {
 
     /**
      * Reads while socket is open.
+     *
      * @return all lines read from the socket
      * @throws IOException if reading fails
      */
@@ -84,7 +82,7 @@ public class TestClient {
             return "fail";
         }
     }
-    
+
     public boolean isReadyToBeRead() throws IOException {
         return input.ready();
     }

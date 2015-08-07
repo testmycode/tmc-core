@@ -1,4 +1,3 @@
-
 package hy.tmc.core.domain.submission;
 
 import com.google.gson.Gson;
@@ -9,9 +8,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import fi.helsinki.cs.tmc.langs.java.testrunner.StackTraceSerializer;
+
 import fi.helsinki.cs.tmc.stylerunner.validation.CheckstyleResult;
 
+import fi.helsinki.cs.tmc.langs.java.testrunner.StackTraceSerializer;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
@@ -25,10 +25,13 @@ public class SubmissionResultParser {
 
         try {
 
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(SubmissionResult.Status.class, new StatusDeserializer())
-                    .registerTypeAdapter(StackTraceElement.class, new StackTraceSerializer())
-                    .create();
+            Gson gson =
+                    new GsonBuilder()
+                            .registerTypeAdapter(
+                                    SubmissionResult.Status.class, new StatusDeserializer())
+                            .registerTypeAdapter(
+                                    StackTraceElement.class, new StackTraceSerializer())
+                            .create();
 
             SubmissionResult result = gson.fromJson(json, SubmissionResult.class);
 
@@ -45,24 +48,26 @@ public class SubmissionResultParser {
             return result;
 
         } catch (RuntimeException runtimeException) {
-            throw new RuntimeException("Failed to parse submission result: " + runtimeException.getMessage(),
-                                                                               runtimeException);
+            throw new RuntimeException(
+                    "Failed to parse submission result: " + runtimeException.getMessage(),
+                    runtimeException);
         } catch (IOException ioException) {
-            throw new RuntimeException("Failed to parse submission result: " + ioException.getMessage(), ioException);
+            throw new RuntimeException(
+                    "Failed to parse submission result: " + ioException.getMessage(), ioException);
         }
     }
 
     private static class StatusDeserializer implements JsonDeserializer<SubmissionResult.Status> {
         @Override
-        public SubmissionResult.Status deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+        public SubmissionResult.Status deserialize(
+                JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
-            String s = json.getAsJsonPrimitive().getAsString();
+            String string = json.getAsJsonPrimitive().getAsString();
             try {
-                return SubmissionResult.Status.valueOf(s.toUpperCase());
+                return SubmissionResult.Status.valueOf(string.toUpperCase());
             } catch (IllegalArgumentException e) {
-                throw new JsonParseException("Unknown submission status: " + s);
+                throw new JsonParseException("Unknown submission status: " + string);
             }
         }
     }
 }
-

@@ -1,7 +1,14 @@
 
 package hy.tmc.core.updates;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+
 import com.google.gson.Gson;
+
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
@@ -11,31 +18,30 @@ import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.testhelpers.builders.ExerciseBuilder;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.nio.file.Paths;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
+
 import org.mockito.Mockito;
 
 public class ExerciseUpdaterTest {
-    
+
     private File cacheFile;
     private ExerciseBuilder builder;
     private UrlCommunicator urlCommunicator;
-   
-    
+
     @Before
     public void setUp() throws IOException, TmcCoreException {
         cacheFile = Paths.get("src", "test", "resources", "exercisetest.cache").toFile();
@@ -45,9 +51,8 @@ public class ExerciseUpdaterTest {
         urlCommunicator = Mockito.mock(UrlCommunicator.class);
         Mockito.when(urlCommunicator.makeGetRequest(anyString(), any(String[].class)))
                 .thenReturn(new HttpResult(ExampleJson.courseExample, 200, true));
-
     }
-    
+
     @After
     public void tearDown() {
         cacheFile.delete();
@@ -63,7 +68,7 @@ public class ExerciseUpdaterTest {
         List<Exercise> exercises = handler.fetchFromServer(new Course());
         assertEquals(numberOfExercises, exercises.size());
     }
-    
+
     @Test
     public void getsCorrectExercises() throws IOException, Exception {
         Map<String, Map<String, String>> checksums = new HashMap<>();
@@ -72,19 +77,18 @@ public class ExerciseUpdaterTest {
         try (FileWriter writer = new FileWriter(this.cacheFile)) {
             writer.write(new Gson().toJson(checksums));
         }
-        
 
         TmcJsonParser tmcJsonParser = mockTmcJsonParser();
         ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcJsonParser);
 
         List<Exercise> exercises = handler.getNewObjects(new Course());
-        
+
         assertEquals(3, exercises.size());
         assertTrue(listHasExerciseWithName(exercises, "new"));
         assertTrue(listHasExerciseWithName(exercises, "changed"));
         assertFalse(listHasExerciseWithName(exercises, "old"));
     }
-    
+
     @Test
     public void getsCorrectExercisesWithEmptyCache() throws IOException, Exception {
 
@@ -96,19 +100,21 @@ public class ExerciseUpdaterTest {
         assertTrue(listHasExerciseWithName(exercises, "old"));
         assertTrue(listHasExerciseWithName(exercises, "duck"));
     }
-    
-     private TmcJsonParser mockTmcJsonParser() throws IOException {
+
+    private TmcJsonParser mockTmcJsonParser() throws IOException {
         TmcJsonParser tmcJsonParser = Mockito.mock(TmcJsonParser.class);
-        List<Exercise> serverExercises = builder.withExercise("old", 5, "abcdefg", "test-course")
-                .withExercise("changed", 7, "oeoeoo", "test-course")
-                .withExercise("new", 8, "woksirjd", "test-course")
-                .withExercise("duck", 9, "asdfsdf", "test-course")
-                .build();
+        List<Exercise> serverExercises =
+                builder
+                        .withExercise("old", 5, "abcdefg", "test-course")
+                        .withExercise("changed", 7, "oeoeoo", "test-course")
+                        .withExercise("new", 8, "woksirjd", "test-course")
+                        .withExercise("duck", 9, "asdfsdf", "test-course")
+                        .build();
         Mockito.when(tmcJsonParser.getExercisesFromServer(any(Course.class)))
                 .thenReturn(serverExercises);
         return tmcJsonParser;
     }
-    
+
     private boolean listHasExerciseWithName(List<Exercise> list, String name) {
         for (Exercise exercise : list) {
             if (exercise.getName().equals(name)) {
@@ -117,7 +123,7 @@ public class ExerciseUpdaterTest {
         }
         return false;
     }
-    
+
     private List<Exercise> makeExerciseList(int exercises) {
         List<Exercise> list = new ArrayList<>();
         for (int i = 0; i < exercises; i++) {

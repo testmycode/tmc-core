@@ -38,7 +38,4 @@ public class StackTrace {
     public void setLineNumber(int lineNumber) {
         this.lineNumber = lineNumber;
     }
-    
-    
-
 }

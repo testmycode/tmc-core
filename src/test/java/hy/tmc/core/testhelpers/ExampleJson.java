@@ -30,11 +30,11 @@ public class ExampleJson {
     private static String sentFeedbackExample() {
         return readFile("sentFeedbackExample.json");
     }
-    
+
     private static String failingCourse() {
         return readFile("failingCourse.json");
     }
-    
+
     private static String failedSubmitResponse() {
         return readFile("failedSubmitResponse.json");
     }
@@ -62,15 +62,15 @@ public class ExampleJson {
     private static String courseExample() {
         return readFile("course.json");
     }
-    
-    private static String noDeadlineCourseExample(){
+
+    private static String noDeadlineCourseExample() {
         return readFile("nodeadlinecourse.json");
     }
-    
-    private static String expiredCourseExample(){
+
+    private static String expiredCourseExample() {
         return readFile("expiredCourse.json");
     }
-   
+
     private static String allCoursesExample() {
         return readFile("courses.json");
     }

@@ -1,6 +1,7 @@
 package hy.tmc.core.domain;
 
 import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -27,11 +28,11 @@ public class Exercise implements Serializable {
     @SerializedName("zip_url")
     private String zipUrl; //": "https://tmc.mooc.fi/staging/exercises/284.zip",
 
-//        /**
-//     * The URL this exercise can be downloaded from.
-//     */
-//    @SerializedName("zip_url")
-//    private String downloadUrl;
+    //        /**
+    //     * The URL this exercise can be downloaded from.
+    //     */
+    //    @SerializedName("zip_url")
+    //    private String downloadUrl;
     /**
      * The URL the solution can be downloaded from (admins only).
      */
@@ -41,7 +42,7 @@ public class Exercise implements Serializable {
     private boolean returnable; //": true,
 
     @SerializedName("requires_review")
-    private boolean requiresReview;//": false,
+    private boolean requiresReview; //": false,
 
     private boolean attempted; //": false,
     private boolean completed; //": false,
@@ -66,10 +67,9 @@ public class Exercise implements Serializable {
     private boolean runTestsLocallyActionEnabled = true;
 
     @SerializedName("exercise_submissions_url")
-    private String exerciseSubmissionsUrl; 
+    private String exerciseSubmissionsUrl;
 
-    public Exercise() {
-    }
+    public Exercise() {}
 
     public Exercise(String name) {
         this(name, "unknown-course");
@@ -125,13 +125,12 @@ public class Exercise implements Serializable {
     public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
-    
+
     public Date getDeadlineDate() {
         try {
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssX");
             return format.parse(this.getDeadline());
-        }
-        catch (ParseException ex) {
+        } catch (ParseException ex) {
             System.out.println(ex.getMessage());
             return null;
         }
@@ -272,8 +271,7 @@ public class Exercise implements Serializable {
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
                 deadlineDate = format.parse(deadline);
                 return deadlineDate.getTime() < time.getTime();
-            }
-            catch (ParseException ex) {
+            } catch (ParseException ex) {
                 System.err.println(ex.getMessage());
                 return false;
             }
@@ -300,10 +298,12 @@ public class Exercise implements Serializable {
 
     public void setDownloadUrl(String downloadAddress) {
         if (downloadAddress == null) {
-            throw new NullPointerException("downloadAddress was null at Exercise.setDownloadAddress");
+            throw new NullPointerException(
+                    "downloadAddress was null at Exercise.setDownloadAddress");
         }
         if (downloadAddress.isEmpty()) {
-            throw new IllegalArgumentException("downloadAddress cannot be empty at Exercise.setDownloadAddress");
+            throw new IllegalArgumentException(
+                    "downloadAddress cannot be empty at Exercise.setDownloadAddress");
         }
 
         this.zipUrl = downloadAddress;

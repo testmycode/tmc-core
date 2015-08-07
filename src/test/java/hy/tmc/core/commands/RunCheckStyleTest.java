@@ -1,33 +1,36 @@
 package hy.tmc.core.commands;
 
-import com.google.common.base.Optional;
-import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
-import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-import fi.helsinki.cs.tmc.stylerunner.validation.Strategy;
-import fi.helsinki.cs.tmc.stylerunner.validation.ValidationError;
-import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
-import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.CoreTestSettings;
-import hy.tmc.core.zipping.ProjectRootFinder;
-import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+
+import com.google.common.base.Optional;
+
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+import fi.helsinki.cs.tmc.stylerunner.validation.Strategy;
+import fi.helsinki.cs.tmc.stylerunner.validation.ValidationError;
+import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
+
+import hy.tmc.core.CoreTestSettings;
+import hy.tmc.core.exceptions.TmcCoreException;
+import hy.tmc.core.zipping.ProjectRootFinder;
+
 import org.junit.Before;
+import org.junit.Test;
+
 import org.mockito.Mockito;
 
-
-
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 
 public class RunCheckStyleTest {
 
@@ -43,7 +46,8 @@ public class RunCheckStyleTest {
         settings = new CoreTestSettings();
         String path = "/home/peteTheSwede/projects";
         command = new RunCheckStyle(path, settings, finderMock, executorMock);
-        when(executorMock.runCheckCodeStyle(any(Path.class))).thenReturn(new ValidationResultImpl());
+        when(executorMock.runCheckCodeStyle(any(Path.class)))
+                .thenReturn(new ValidationResultImpl());
     }
 
     @Test
@@ -51,29 +55,27 @@ public class RunCheckStyleTest {
         Path path = Paths.get("asdf", "asdf", "qwerty", "kj283u-dkjda93");
         command.runCheckStyle(path);
         verify(executorMock, times(1)).runCheckCodeStyle(eq(path));
-
     }
 
     @Test(expected = TmcCoreException.class)
     public void testCheckDataEmptyPath() throws Exception {
         new RunCheckStyle("", settings).checkData();
     }
-    
+
     @Test
     public void testCall() throws Exception {
         Path path = Paths.get("a", "b", "d");
-        when(finderMock.getRootDirectory(any(Path.class)))
-                .thenReturn(Optional.of(path));
+        when(finderMock.getRootDirectory(any(Path.class))).thenReturn(Optional.of(path));
         ValidationResult expected = new ValidationResultImpl();
         when(executorMock.runCheckCodeStyle(eq(path))).thenReturn(expected);
         assertEquals(expected, command.call());
     }
 
     @Test(expected = TmcCoreException.class)
-    public void testThrowsErrorForAbsentExerciseDirectory() throws NoLanguagePluginFoundException, TmcCoreException {
+    public void testThrowsErrorForAbsentExerciseDirectory()
+            throws NoLanguagePluginFoundException, TmcCoreException {
         Path path = Paths.get("a", "b", "d");
-        when(finderMock.getRootDirectory(any(Path.class)))
-                .thenReturn(Optional.<Path>absent());
+        when(finderMock.getRootDirectory(any(Path.class))).thenReturn(Optional.<Path>absent());
         command.call();
     }
 
@@ -81,12 +83,14 @@ public class RunCheckStyleTest {
 
         @Override
         public Strategy getStrategy() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException(
+                    "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
         public Map<File, List<ValidationError>> getValidationErrors() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException(
+                    "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }
 
@@ -137,23 +141,24 @@ public class RunCheckStyleTest {
         setupTwo();
         String pathToExercise = "polku/tiedostoon";
         String rootDirectory = "polku";
-        RunCheckStyle checkStyle = new RunCheckStyle(pathToExercise, settings, finderMock, executorMock);
+        RunCheckStyle checkStyle =
+                new RunCheckStyle(pathToExercise, settings, finderMock, executorMock);
 
-        when(this.finderMock.getRootDirectory(eq(Paths.get(pathToExercise)))).thenReturn(
-                Optional.of(Paths.get(rootDirectory))
-        );
-        when(this.executorMock.runCheckCodeStyle(eq(Paths.get(rootDirectory)))).thenReturn(
-                new ValidationResult() {
-                    @Override
-                    public Strategy getStrategy() {
-                        return null;
-                    }
+        when(this.finderMock.getRootDirectory(eq(Paths.get(pathToExercise))))
+                .thenReturn(Optional.of(Paths.get(rootDirectory)));
+        when(this.executorMock.runCheckCodeStyle(eq(Paths.get(rootDirectory))))
+                .thenReturn(
+                        new ValidationResult() {
+                            @Override
+                            public Strategy getStrategy() {
+                                return null;
+                            }
 
-                    @Override
-                    public Map<File, List<ValidationError>> getValidationErrors() {
-                        return null;
-                    }
-                });
+                            @Override
+                            public Map<File, List<ValidationError>> getValidationErrors() {
+                                return null;
+                            }
+                        });
         ValidationResult result = checkStyle.call();
         assertFalse(result == null);
         assertTrue(result.getStrategy() == null);
@@ -165,11 +170,11 @@ public class RunCheckStyleTest {
         setupTwo();
         String pathToExercise = "polku/tiedostoon";
         String rootDirectory = "polku";
-        RunCheckStyle checkStyle = new RunCheckStyle(pathToExercise, settings, finderMock, executorMock);
+        RunCheckStyle checkStyle =
+                new RunCheckStyle(pathToExercise, settings, finderMock, executorMock);
         Optional<Path> absentPath = Optional.absent();
-        when(this.finderMock.getRootDirectory(eq(Paths.get(pathToExercise)))).thenReturn(
-                absentPath
-        );
+        when(this.finderMock.getRootDirectory(eq(Paths.get(pathToExercise))))
+                .thenReturn(absentPath);
         checkStyle.call();
     }
 }

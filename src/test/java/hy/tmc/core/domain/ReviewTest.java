@@ -1,28 +1,33 @@
 package hy.tmc.core.domain;
 
-import com.google.common.base.Optional;
-import edu.emory.mathcs.backport.java.util.Arrays;
-import hy.tmc.core.communication.HttpResult;
-import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.exceptions.TmcCoreException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
 import static org.hamcrest.CoreMatchers.not;
-import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
+
+import com.google.common.base.Optional;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
+
+import hy.tmc.core.communication.HttpResult;
+import hy.tmc.core.communication.UrlCommunicator;
+import hy.tmc.core.exceptions.TmcCoreException;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
@@ -40,8 +45,8 @@ public class ReviewTest {
         review.setCreatedAt("10.6.2015");
         review.setExerciseName("Nimi01");
         review.setMarkedAsRead(false);
-        String[] points = new String[]{"1.1", "1.2"};
-        String[] pointsNot = new String[]{"1.3", "1.4"};
+        String[] points = new String[] {"1.1", "1.2"};
+        String[] pointsNot = new String[] {"1.3", "1.4"};
         review.setPoints(new ArrayList<String>(Arrays.<String>asList(points)));
         review.setPointsNotAwarded(new ArrayList<String>(Arrays.<String>asList(pointsNot)));
         review.setReviewBody("Nice coding!");
@@ -52,8 +57,7 @@ public class ReviewTest {
     }
 
     @After
-    public void tearDown() {
-    }
+    public void tearDown() {}
 
     @Test
     public void toStringTest() {

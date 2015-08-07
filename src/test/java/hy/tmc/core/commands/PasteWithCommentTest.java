@@ -1,21 +1,24 @@
-
 package hy.tmc.core.commands;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+
 import com.google.common.base.Optional;
+
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.CoreTestSettings;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.mockito.Mockito;
+
 import java.io.IOException;
 import java.net.URI;
 import java.text.ParseException;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
-
 
 public class PasteWithCommentTest {
     private PasteWithComment paste;
@@ -31,18 +34,17 @@ public class PasteWithCommentTest {
         mock();
         //ClientTmcSettings.setProjectRootFinder(new ProjectRootFinderStub());
         submitterMock = Mockito.mock(ExerciseSubmitter.class);
-        when(submitterMock.submitPasteWithComment(Mockito.anyString(), Mockito.anyString())).thenReturn(pasteUrl);
+        when(submitterMock.submitPasteWithComment(Mockito.anyString(), Mockito.anyString()))
+                .thenReturn(pasteUrl);
         paste = new PasteWithComment(submitterMock, settings, "Commentti");
     }
-    
+
     private void mock() throws ParseException, ExpiredException, IOException, TmcCoreException {
         settings = Mockito.mock(CoreTestSettings.class);
         Mockito.when(settings.getUsername()).thenReturn("Samu");
         Mockito.when(settings.getPassword()).thenReturn("Bossman");
         Mockito.when(settings.getCurrentCourse()).thenReturn(Optional.of(new Course()));
-        Mockito
-                .when(settings.getFormattedUserData())
-                .thenReturn("Bossman:Samu");
+        Mockito.when(settings.getFormattedUserData()).thenReturn("Bossman:Samu");
     }
 
     /**
@@ -54,7 +56,7 @@ public class PasteWithCommentTest {
         paste.setParameter("path", "/home/tmccli/uolevipuistossa");
         paste.checkData();
     }
-    
+
     @Test
     public void pasteSuccess() throws Exception {
         Mockito.when(settings.userDataExists()).thenReturn(true);
@@ -83,7 +85,7 @@ public class PasteWithCommentTest {
         settings = new CoreTestSettings();
         paste.checkData();
     }
-    
+
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfNoPath() throws Exception {
         Mockito.when(settings.userDataExists()).thenReturn(true);

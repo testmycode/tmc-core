@@ -10,8 +10,8 @@ import java.io.File;
  * Class for zipping stuff.
  */
 
-public class Zipper implements ZipMaker {    
-    
+public class Zipper implements ZipMaker {
+
     /**
      * Zips a single folder to destination.
      *

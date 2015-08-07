@@ -7,8 +7,10 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import java.lang.reflect.Type;
+
 import org.apache.commons.lang3.ObjectUtils;
+
+import java.lang.reflect.Type;
 
 /**
  * A pair (course name, exercise name).
@@ -25,9 +27,9 @@ public final class ExerciseKey {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ExerciseKey) {
-            ExerciseKey that = (ExerciseKey)obj;
-            return ObjectUtils.equals(this.courseName, that.courseName) &&
-                    ObjectUtils.equals(this.exerciseName, that.exerciseName);
+            ExerciseKey that = (ExerciseKey) obj;
+            return ObjectUtils.equals(this.courseName, that.courseName)
+                    && ObjectUtils.equals(this.exerciseName, that.exerciseName);
         } else {
             return false;
         }
@@ -42,19 +44,21 @@ public final class ExerciseKey {
     public String toString() {
         return courseName + "/" + exerciseName;
     }
-    
-    
-    public static class GsonAdapter implements JsonSerializer<ExerciseKey>, JsonDeserializer<ExerciseKey> {
+
+    public static class GsonAdapter
+            implements JsonSerializer<ExerciseKey>, JsonDeserializer<ExerciseKey> {
         @Override
         public JsonElement serialize(ExerciseKey key, Type type, JsonSerializationContext jsc) {
             return new JsonPrimitive(key.toString());
         }
 
         @Override
-        public ExerciseKey deserialize(JsonElement je, Type type, JsonDeserializationContext jdc) throws JsonParseException {
+        public ExerciseKey deserialize(JsonElement je, Type type, JsonDeserializationContext jdc)
+                throws JsonParseException {
             String[] parts = je.getAsString().split("/", 2);
             if (parts.length != 2) {
-                throw new JsonParseException("Invalid ExerciseKey representation: \"" + je.getAsString() + "\"");
+                throw new JsonParseException(
+                        "Invalid ExerciseKey representation: \"" + je.getAsString() + "\"");
             }
             return new ExerciseKey(parts[0], parts[1]);
         }

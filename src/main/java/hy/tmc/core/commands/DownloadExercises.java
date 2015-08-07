@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
@@ -12,6 +13,7 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.ProgressObserver;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -30,16 +32,18 @@ public class DownloadExercises extends Command<List<Exercise>> {
      * ExerciseDownloader that is used for downloading.
      */
     private ExerciseDownloader exerciseDownloader;
+
     private File cacheFile;
     private TmcJsonParser parser;
     private List<Exercise> exercisesToDownload;
     private ProgressObserver observer;
 
-    public DownloadExercises(List<Exercise> exercisesToDownload, TmcSettings settings) throws TmcCoreException {
+    public DownloadExercises(List<Exercise> exercisesToDownload, TmcSettings settings)
+            throws TmcCoreException {
         super(settings);
         this.parser = new TmcJsonParser(settings);
-        this.exerciseDownloader = new ExerciseDownloader(
-                new UrlCommunicator(settings), new TmcJsonParser(settings));
+        this.exerciseDownloader =
+                new ExerciseDownloader(new UrlCommunicator(settings), new TmcJsonParser(settings));
         this.exercisesToDownload = exercisesToDownload;
         Optional<Course> currentCourse = settings.getCurrentCourse();
         String mainDirectory = settings.getTmcMainDirectory();
@@ -52,26 +56,35 @@ public class DownloadExercises extends Command<List<Exercise>> {
         }
     }
 
-    public DownloadExercises(String path, String courseId,
-            TmcSettings settings, ProgressObserver observer) {
+    public DownloadExercises(
+            String path, String courseId, TmcSettings settings, ProgressObserver observer) {
         super(settings);
         this.setParameter("path", path);
         this.setParameter("courseID", courseId);
         this.parser = new TmcJsonParser(settings);
-        this.exerciseDownloader = new ExerciseDownloader(
-                new UrlCommunicator(settings), new TmcJsonParser(settings));
+        this.exerciseDownloader =
+                new ExerciseDownloader(new UrlCommunicator(settings), new TmcJsonParser(settings));
         this.observer = observer;
     }
 
-    public DownloadExercises(String path, String courseId, TmcSettings settings,
-            File cacheFile, ProgressObserver observer) {
+    public DownloadExercises(
+            String path,
+            String courseId,
+            TmcSettings settings,
+            File cacheFile,
+            ProgressObserver observer) {
         this(path, courseId, settings, observer);
         this.cacheFile = cacheFile;
         this.parser = new TmcJsonParser(settings);
     }
 
-    public DownloadExercises(ExerciseDownloader downloader, String path, String courseId,
-            File cacheFile, TmcSettings settings, TmcJsonParser parser) {
+    public DownloadExercises(
+            ExerciseDownloader downloader,
+            String path,
+            String courseId,
+            File cacheFile,
+            TmcSettings settings,
+            TmcJsonParser parser) {
         super(settings);
         this.exerciseDownloader = downloader;
         this.setParameter("path", path);
@@ -80,17 +93,25 @@ public class DownloadExercises extends Command<List<Exercise>> {
         this.parser = parser;
     }
 
-    public DownloadExercises(List<Exercise> exercises, TmcSettings settings, File updateCache) throws TmcCoreException {
+    public DownloadExercises(List<Exercise> exercises, TmcSettings settings, File updateCache)
+            throws TmcCoreException {
         this(exercises, settings);
         this.cacheFile = updateCache;
     }
 
-    public DownloadExercises(List<Exercise> exercises, TmcSettings settings, ProgressObserver observer) throws TmcCoreException {
+    public DownloadExercises(
+            List<Exercise> exercises, TmcSettings settings, ProgressObserver observer)
+            throws TmcCoreException {
         this(exercises, settings);
         this.observer = observer;
     }
 
-    public DownloadExercises(List<Exercise> exercises, TmcSettings settings, File updateCache, ProgressObserver observer) throws TmcCoreException {
+    public DownloadExercises(
+            List<Exercise> exercises,
+            TmcSettings settings,
+            File updateCache,
+            ProgressObserver observer)
+            throws TmcCoreException {
         this(exercises, settings, updateCache);
         this.observer = observer;
     }
@@ -123,8 +144,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
         }
         try {
             int courseId = Integer.parseInt(this.data.get("courseID"));
-        }
-        catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             throw new TmcCoreException("Given course id is not a number");
         }
     }
@@ -139,14 +159,17 @@ public class DownloadExercises extends Command<List<Exercise>> {
     @Override
     public List<Exercise> call() throws TmcCoreException, IOException {
         checkData();
-        Optional<Course> courseResult = this.parser.getCourse(Integer.parseInt(this.data.get("courseID")));
+        Optional<Course> courseResult =
+                this.parser.getCourse(Integer.parseInt(this.data.get("courseID")));
         if (courseResult.isPresent()) {
             Course course = courseResult.get();
-            List<Exercise> downloadResult = downloadExercisesFromList(getExercisesToDownload(course), course.getName());
+            List<Exercise> downloadResult =
+                    downloadExercisesFromList(getExercisesToDownload(course), course.getName());
             return downloadResult;
         }
 
-        throw new TmcCoreException("Could not find the course. Please check your internet connection");
+        throw new TmcCoreException(
+                "Could not find the course. Please check your internet connection");
     }
 
     private List<Exercise> getExercisesToDownload(Course course) {
@@ -159,19 +182,22 @@ public class DownloadExercises extends Command<List<Exercise>> {
     /**
      * Download exercises to under the directory specified by the path in the data map.
      *
-     * @param exercises
-     * @param courseName
      * @return a list of the exercises that were downloaded successfully
      */
     public List<Exercise> downloadExercisesFromList(List<Exercise> exercises, String courseName) {
         List<Exercise> downloadedExercises = new ArrayList<>();
-        String courseFolderPath = exerciseDownloader.createCourseFolder(data.get("path"), courseName);
+        String courseFolderPath =
+                exerciseDownloader.createCourseFolder(data.get("path"), courseName);
         downloadExercises(exercises, courseName, downloadedExercises, courseFolderPath);
         cache(downloadedExercises);
         return downloadedExercises;
     }
 
-    private void downloadExercises(List<Exercise> exercises, String courseName, List<Exercise> downloadedExercises, String path) {
+    private void downloadExercises(
+            List<Exercise> exercises,
+            String courseName,
+            List<Exercise> downloadedExercises,
+            String path) {
         int exCount = 0;
         for (Exercise exercise : exercises) {
             exercise.setCourseName(courseName);
@@ -186,7 +212,8 @@ public class DownloadExercises extends Command<List<Exercise>> {
         }
     }
 
-    private void informProgressObserver(List<Exercise> exercises, int exCount, Exercise exercise, String status) {
+    private void informProgressObserver(
+            List<Exercise> exercises, int exCount, Exercise exercise, String status) {
         if (this.observer != null) {
             String message = "Downloading exercise " + exercise.getName() + " " + status;
             this.observer.progress(100.0 * exCount / exercises.size(), message);
@@ -197,8 +224,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
         if (this.cacheFile != null) {
             try {
                 cacheExercises(exercises);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -209,8 +235,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
         String json = FileUtils.readFileToString(cacheFile, Charset.forName("UTF-8"));
         Map<String, Map<String, String>> checksums = null;
         if (json != null && !json.isEmpty()) {
-            Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {
-            }.getType();
+            Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {}.getType();
             try {
                 checksums = gson.fromJson(json, typeOfHashMap);
             } catch (JsonSyntaxException ex) {

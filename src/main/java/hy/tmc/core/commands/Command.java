@@ -1,18 +1,19 @@
 package hy.tmc.core.commands;
 
+import com.google.common.collect.Maps;
+
 import hy.tmc.core.communication.UrlHelper;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.ProgressObserver;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
 public abstract class Command<E> implements Callable<E> {
 
     protected Map<String, String> data;
-    private String defaultErrorMessage = "Unexpected exception.";
     protected TmcSettings settings;
     protected ProgressObserver observer;
 
@@ -20,7 +21,7 @@ public abstract class Command<E> implements Callable<E> {
      * Command can return any type of object. For example SubmissionResult etc.
      */
     public Command() {
-        data = new HashMap<>();
+        data = Maps.newHashMap();
     }
 
     public Command(TmcSettings settings) {
@@ -64,14 +65,12 @@ public abstract class Command<E> implements Callable<E> {
     }
 
     public boolean settingsNotPresent() {
-        return this.settings == null
-                || !this.settings.userDataExists()
-                || !serverAddressIsValid();
+        return this.settings == null || !this.settings.userDataExists() || !serverAddressIsValid();
     }
 
     private boolean serverAddressIsValid() {
-        if (this.settings.getServerAddress() == null || 
-            this.settings.getServerAddress().isEmpty()) {
+        if (this.settings.getServerAddress() == null
+                || this.settings.getServerAddress().isEmpty()) {
             return false;
         }
         return new UrlHelper(settings).urlIsValid(this.settings.getServerAddress());

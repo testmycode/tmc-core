@@ -1,9 +1,3 @@
 package hy.tmc.core.testhelpers;
 
-
-public class TmcServerMock {
-    
-    
-    
-    
-}
+public class TmcServerMock {}

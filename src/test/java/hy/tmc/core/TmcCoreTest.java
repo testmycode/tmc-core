@@ -1,14 +1,24 @@
 package hy.tmc.core;
 
+// TODO(jamo) fix asset
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.google.common.util.concurrent.ListeningExecutorService;
+
 import hy.tmc.core.commands.*;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.FileWriterHelper;
+
 import org.apache.commons.io.FileUtils;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -18,11 +28,6 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 public class TmcCoreTest {
 
@@ -42,7 +47,7 @@ public class TmcCoreTest {
         Paths.get("src", "test", "resources", "cachefile").toFile().createNewFile();
         Paths.get("src", "test", "resources", "file2.cache").toFile().createNewFile();
     }
-    
+
     @After
     public void cleanUp() {
         Paths.get("src", "test", "resources", "cachefile").toFile().delete();
@@ -61,7 +66,7 @@ public class TmcCoreTest {
         emptySettings.setServerAddress(tmcServerAddress);
         tmcCore.verifyCredentials(emptySettings).get();
     }
-    
+
     @Test(expected = TmcCoreException.class)
     public void loginWithoutServerAddrees() throws Exception {
         CoreTestSettings emptySettings = new CoreTestSettings("", "");
@@ -108,13 +113,11 @@ public class TmcCoreTest {
         // using catch to verify command has not been sent
         try {
             tmcCore.getNewAndUpdatedExercises(course, settings);
-        }
-        catch (TmcCoreException ex) {
+        } catch (TmcCoreException ex) {
             verify(threadPool, times(0)).submit(any(GetExerciseUpdates.class));
             return;
         }
         fail("expected TmcCoreException");
-
     }
 
     @Test(expected = FileNotFoundException.class)
@@ -179,10 +182,10 @@ public class TmcCoreTest {
     }
 
     /*@Test
-    public void pasteTest() throws Exception {
-        tmcCore.pasteWithComment("polku/jonnekin", settings, "");
-        verify(threadPool, times(1)).submit(any(PasteWithComment.class));
-    }*/
+     public void pasteTest() throws Exception {
+     tmcCore.pasteWithComment("polku/jonnekin", settings, "");
+     verify(threadPool, times(1)).submit(any(PasteWithComment.class));
+     }*/
 
     @Test(expected = TmcCoreException.class)
     public void submitWithBadPathThrowsException() throws TmcCoreException {
@@ -198,15 +201,17 @@ public class TmcCoreTest {
     public void downloadExercisesUsesCacheIfSet() throws Exception {
         tmcCore.setCacheFile(Paths.get("src", "test", "resources", "cachefile").toFile());
         tmcCore.downloadExercises("asdf", "asdf", settings, null);
-        final ArgumentCaptor<DownloadExercises> argument = ArgumentCaptor.forClass(DownloadExercises.class);
+        final ArgumentCaptor<DownloadExercises> argument =
+                ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
         assertTrue(argument.getValue().cacheFileSet());
     }
-    
+
     @Test
     public void downloadExercisesDoesNotUseCacheIfNotSet() throws Exception {
         tmcCore.downloadExercises("asdf", "asdf", settings, null);
-        final ArgumentCaptor<DownloadExercises> argument = ArgumentCaptor.forClass(DownloadExercises.class);
+        final ArgumentCaptor<DownloadExercises> argument =
+                ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
         assertFalse(argument.getValue().cacheFileSet());
     }

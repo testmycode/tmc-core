@@ -10,36 +10,37 @@ import hy.tmc.core.configuration.TmcSettings;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.ContentBody;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.message.BasicNameValuePair;
-import java.io.IOException;
 import java.util.Map;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.content.ByteArrayBody;
-import org.apache.http.entity.mime.content.FileBody;
 
 public class UrlCommunicator {
 
-    final private String submissionKey = "submission[file]";
+    private final String submissionKey = "submission[file]";
+
     private TmcSettings settings;
     private UrlHelper urlHelper;
 
@@ -57,8 +58,9 @@ public class UrlCommunicator {
      * @return HttpResult that contains response from the server.
      * @throws java.io.IOException if file is invalid.
      */
-    public HttpResult makePostWithFile(ContentBody fileBody,
-            String destinationUrl, Map<String, String> headers) throws IOException {
+    public HttpResult makePostWithFile(
+            ContentBody fileBody, String destinationUrl, Map<String, String> headers)
+            throws IOException {
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
 
@@ -75,22 +77,22 @@ public class UrlCommunicator {
     /**
      * Adds byte-array to entity of post-request and executes it.
      */
-    public HttpResult makePostWithByteArray(String url,
-                                            byte[] data,
-                                            Map<String, String> extraHeaders,
-                                            Map<String, String> params) throws IOException {
+    public HttpResult makePostWithByteArray(
+            String url, byte[] data, Map<String, String> extraHeaders, Map<String, String> params)
+            throws IOException {
         HttpPost rawPost = makeRawPostRequest(url, data, extraHeaders, params);
         return getResponseResult(rawPost);
     }
 
-    private HttpPost makeRawPostRequest(String url, byte[] data, Map<String, String> extraHeaders, Map<String, String> params) {
+    private HttpPost makeRawPostRequest(
+            String url, byte[] data, Map<String, String> extraHeaders, Map<String, String> params) {
         HttpPost request = new HttpPost(url);
         addHeadersTo(request, extraHeaders);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder = addParamsToRequest(params, builder);
-        
+
         ByteArrayBody byteBody = new ByteArrayBody(data, "submission.zip");
         builder = addFileToRequest(byteBody, builder);
         HttpEntity entity = builder.build();
@@ -108,8 +110,12 @@ public class UrlCommunicator {
      * @return HttpResult that contains response from the server.
      * @throws java.io.IOException if file is invalid.
      */
-    public HttpResult makePostWithFileAndParams(FileBody fileBody,
-            String destinationUrl, Map<String, String> headers, Map<String, String> params) throws IOException {
+    public HttpResult makePostWithFileAndParams(
+            FileBody fileBody,
+            String destinationUrl,
+            Map<String, String> headers,
+            Map<String, String> params)
+            throws IOException {
         HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
@@ -124,14 +130,17 @@ public class UrlCommunicator {
         return getResponseResult(httppost);
     }
 
-    private MultipartEntityBuilder addFileToRequest(ContentBody fileBody, MultipartEntityBuilder builder) {
+    private MultipartEntityBuilder addFileToRequest(
+            ContentBody fileBody, MultipartEntityBuilder builder) {
         builder.addPart(submissionKey, fileBody);
         return builder;
     }
 
-    private MultipartEntityBuilder addParamsToRequest(Map<String, String> params, MultipartEntityBuilder builder) {
+    private MultipartEntityBuilder addParamsToRequest(
+            Map<String, String> params, MultipartEntityBuilder builder) {
         for (Map.Entry<String, String> e : params.entrySet()) {
-            builder.addTextBody(e.getKey(), e.getValue(), ContentType.create("text/plain", "utf-8"));
+            builder.addTextBody(
+                    e.getKey(), e.getValue(), ContentType.create("text/plain", "utf-8"));
         }
         return builder;
     }
@@ -155,7 +164,8 @@ public class UrlCommunicator {
      * @param body contains key-value -pairs.
      * @return Result which contains the result.
      */
-    public HttpResult makePutRequest(String url, Optional<Map<String, String>> body) throws IOException {
+    public HttpResult makePutRequest(String url, Optional<Map<String, String>> body)
+            throws IOException {
         url = urlHelper.withParams(url);
         HttpPut httpPut = new HttpPut(url);
         addCredentials(httpPut, this.settings.getFormattedUserData());
@@ -169,8 +179,7 @@ public class UrlCommunicator {
         return getResponseResult(httpPut);
     }
 
-    private HttpGet createGet(String url, String[] params)
-            throws IOException {
+    private HttpGet createGet(String url, String[] params) throws IOException {
         HttpGet request = new HttpGet(url);
         addCredentials(request, params[0]);
         return request;
@@ -190,8 +199,7 @@ public class UrlCommunicator {
             HttpResponse response = executeRequest(httpget);
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
             return true;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println(e.getMessage());
             return false;
         }
@@ -206,8 +214,8 @@ public class UrlCommunicator {
 
     private StringBuilder writeResponse(HttpResponse response)
             throws UnsupportedOperationException, IOException {
-        BufferedReader rd = new BufferedReader(
-                new InputStreamReader(response.getEntity().getContent()));
+        BufferedReader rd =
+                new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         StringBuilder result = new StringBuilder();
         String line;
         while ((line = rd.readLine()) != null) {
@@ -220,8 +228,7 @@ public class UrlCommunicator {
         return HttpClientBuilder.create().build();
     }
 
-    private HttpResponse executeRequest(HttpRequestBase request)
-            throws IOException {
+    private HttpResponse executeRequest(HttpRequestBase request) throws IOException {
         return createClient().execute(request);
     }
 
@@ -256,8 +263,7 @@ public class UrlCommunicator {
     /**
      * Makes a POST HTTP request.
      */
-    public HttpResult makePostWithJson(JsonObject req, String feedbackUrl)
-            throws IOException {
+    public HttpResult makePostWithJson(JsonObject req, String feedbackUrl) throws IOException {
         feedbackUrl = urlHelper.withParams(feedbackUrl);
         HttpPost httppost = new HttpPost(feedbackUrl);
         String jsonString = req.toString();

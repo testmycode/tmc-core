@@ -7,11 +7,10 @@ import com.google.gson.JsonParser;
 
 import hy.tmc.core.domain.submission.FeedbackQuestion;
 import hy.tmc.core.domain.submission.SubmissionResult;
-import static hy.tmc.core.domain.submission.SubmissionResult.Status.PROCESSING;
 import hy.tmc.core.domain.submission.SubmissionResultParser;
 import hy.tmc.core.exceptions.TmcCoreException;
-import java.io.IOException;
 
+import java.io.IOException;
 import java.util.List;
 
 public class SubmissionPoller {
@@ -25,23 +24,22 @@ public class SubmissionPoller {
      * Milliseconds to sleep between each poll attempt.
      */
     private final int pollInterval = 1000;
-    
-    private final String timeOutmessage = "Something went wrong. "
-            + "Please check your internet connection.";
 
-    
+    private final String timeOutmessage =
+            "Something went wrong. " + "Please check your internet connection.";
+
     private SubmissionResult latestResult;
     private TmcJsonParser tmcJsonParser;
     private SubmissionResultParser submissionParser;
-    
+
     /**
-     * Default constuctor. 
+     * Default constuctor.
      */
     public SubmissionPoller(TmcJsonParser jsonParser) {
         this.tmcJsonParser = jsonParser;
         this.submissionParser = new SubmissionResultParser();
     }
-    
+
     /**
      * Constructor for tests.
      */
@@ -58,7 +56,8 @@ public class SubmissionPoller {
      * @return SubmissionResult containing details of submission. Null if timed out.
      * @throws InterruptedException if thread failed to sleep
      */
-    private Optional<SubmissionResult> pollSubmissionUrl(String url) throws InterruptedException, IOException {
+    private Optional<SubmissionResult> pollSubmissionUrl(String url)
+            throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
             String json = tmcJsonParser.getRawTextFrom(url);
             if (!isProcessing(json)) {
@@ -83,9 +82,8 @@ public class SubmissionPoller {
      *
      * @param url the submission url
      */
-    public SubmissionResult getSubmissionResult(String url) throws InterruptedException,
-            TmcCoreException,
-            IOException {
+    public SubmissionResult getSubmissionResult(String url)
+            throws InterruptedException, TmcCoreException, IOException {
         Optional<SubmissionResult> result = pollSubmissionUrl(url);
         if (!result.isPresent()) {
             throw new TmcCoreException("Failed to receive response to submit.");

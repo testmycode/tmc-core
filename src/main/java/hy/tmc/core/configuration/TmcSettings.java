@@ -1,6 +1,7 @@
 package hy.tmc.core.configuration;
 
 import com.google.common.base.Optional;
+
 import hy.tmc.core.domain.Course;
 
 public interface TmcSettings {
@@ -31,5 +32,4 @@ public interface TmcSettings {
      * will be placed as follows: maindirectory/courseName/exerciseName
      */
     public String getTmcMainDirectory();
-
 }

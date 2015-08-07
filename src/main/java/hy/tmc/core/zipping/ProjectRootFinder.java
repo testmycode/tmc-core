@@ -1,11 +1,14 @@
 package hy.tmc.core.zipping;
 
 import com.google.common.base.Optional;
+
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -64,8 +67,7 @@ public class ProjectRootFinder implements RootFinder {
         String[] foldersOfWorkingDirectory = path.split("\\" + File.separator);
         try {
             checkPwd(foldersOfWorkingDirectory);
-        }
-        catch (TmcCoreException ex) {
+        } catch (TmcCoreException ex) {
             return Optional.absent();
         }
         return findCourseByPath(foldersOfWorkingDirectory);
@@ -78,7 +80,8 @@ public class ProjectRootFinder implements RootFinder {
      * @param foldersPath contains the names of the folders in path
      * @return Course
      */
-    public Optional<Course> findCourseByPath(String[] foldersPath) throws IOException, TmcCoreException {
+    public Optional<Course> findCourseByPath(String[] foldersPath)
+            throws IOException, TmcCoreException {
         List<Course> courses = tmcJsonParser.getCourses();
         for (Course course : courses) {
             for (String folderName : foldersPath) {

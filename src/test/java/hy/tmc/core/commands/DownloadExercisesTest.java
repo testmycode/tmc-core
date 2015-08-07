@@ -1,14 +1,23 @@
 package hy.tmc.core.commands;
 
+// TODO(jamo): fix * imports
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.times;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.communication.UrlHelper;
 import hy.tmc.core.communication.authorization.Authorization;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
@@ -16,11 +25,14 @@ import hy.tmc.core.domain.ProgressObserver;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.testhelpers.builders.ExerciseBuilder;
+
 import org.apache.commons.io.FileUtils;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
 import org.mockito.Mockito;
 
 import java.io.File;
@@ -33,12 +45,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import hy.tmc.core.communication.UrlHelper;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.times;
-
 public class DownloadExercisesTest {
 
     private File cache;
@@ -46,8 +52,7 @@ public class DownloadExercisesTest {
     private TmcJsonParser parser;
     private TmcCore core;
 
-    @Rule
-    public WireMockRule wireMockServer = new WireMockRule();
+    @Rule public WireMockRule wireMockServer = new WireMockRule();
 
     @Before
     public void setup() throws IOException {
@@ -75,8 +80,7 @@ public class DownloadExercisesTest {
     public void settingsWithoutCredentials() throws TmcCoreException {
         CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setCurrentCourse(
-                new TmcJsonParser(settings).getCourseFromString(ExampleJson.courseExample)
-        );
+                new TmcJsonParser(settings).getCourseFromString(ExampleJson.courseExample));
         DownloadExercises de = new DownloadExercises(new ArrayList<Exercise>(), localSettings);
         de.checkData();
     }
@@ -84,8 +88,7 @@ public class DownloadExercisesTest {
     @Test
     public void courseIdNotANumber() throws TmcCoreException {
         settings.setCurrentCourse(
-                new TmcJsonParser(settings).getCourseFromString(ExampleJson.courseExample)
-        );
+                new TmcJsonParser(settings).getCourseFromString(ExampleJson.courseExample));
         DownloadExercises de = new DownloadExercises(new ArrayList<Exercise>(), settings);
         de.checkData();
     }
@@ -103,19 +106,18 @@ public class DownloadExercisesTest {
     @Test
     public void writesChecksumsToFileIfCacheFileIsGiven() throws IOException, TmcCoreException {
         ExerciseDownloader downloader = Mockito.mock(ExerciseDownloader.class);
-        Mockito.when(downloader.createCourseFolder(anyString(), anyString()))
-                .thenReturn("");
-        Mockito.when(downloader.handleSingleExercise(
-                any(Exercise.class), anyString())
-        ).thenReturn(true);
+        Mockito.when(downloader.createCourseFolder(anyString(), anyString())).thenReturn("");
+        Mockito.when(downloader.handleSingleExercise(any(Exercise.class), anyString()))
+                .thenReturn(true);
 
         Course course = new Course();
         course.setName("test-course");
-        course.setExercises(new ExerciseBuilder()
-                .withExercise("kissa", 2, "eujwuc")
-                .withExercise("asdf", 793, "alnwnec")
-                .withExercise("ankka", 88, "abcdefg")
-                .build());
+        course.setExercises(
+                new ExerciseBuilder()
+                        .withExercise("kissa", 2, "eujwuc")
+                        .withExercise("asdf", 793, "alnwnec")
+                        .withExercise("ankka", 88, "abcdefg")
+                        .build());
 
         parser = Mockito.mock(TmcJsonParser.class);
 
@@ -126,8 +128,7 @@ public class DownloadExercisesTest {
         String json = FileUtils.readFileToString(cache);
         Gson gson = new Gson();
         Map<String, Map<String, String>> checksums;
-        Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {
-        }.getType();
+        Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {}.getType();
         checksums = gson.fromJson(json, typeOfHashMap);
 
         assertNotNull(checksums);
@@ -137,27 +138,26 @@ public class DownloadExercisesTest {
         assertEquals("eujwuc", checksums.get("test-course").get("kissa"));
         assertEquals("alnwnec", checksums.get("test-course").get("asdf"));
         assertEquals("abcdefg", checksums.get("test-course").get("ankka"));
-
     }
 
     @Test
-    public void overwritesToCacheFileIfCacheFileHasBadContents() throws IOException, TmcCoreException {
+    public void overwritesToCacheFileIfCacheFileHasBadContents()
+            throws IOException, TmcCoreException {
         new FileWriter(cache).write(" asdfjljlkasdf ");
 
         ExerciseDownloader downloader = Mockito.mock(ExerciseDownloader.class);
-        Mockito.when(downloader.createCourseFolder(anyString(), anyString()))
-                .thenReturn("");
-        Mockito.when(downloader.handleSingleExercise(
-                any(Exercise.class), anyString())
-        ).thenReturn(true);
+        Mockito.when(downloader.createCourseFolder(anyString(), anyString())).thenReturn("");
+        Mockito.when(downloader.handleSingleExercise(any(Exercise.class), anyString()))
+                .thenReturn(true);
 
         Course course = new Course();
         course.setName("test-course");
-        course.setExercises(new ExerciseBuilder()
-                .withExercise("kissa", 2, "eujwuc")
-                .withExercise("asdf", 793, "alnwnec")
-                .withExercise("ankka", 88, "abcdefg")
-                .build());
+        course.setExercises(
+                new ExerciseBuilder()
+                        .withExercise("kissa", 2, "eujwuc")
+                        .withExercise("asdf", 793, "alnwnec")
+                        .withExercise("ankka", 88, "abcdefg")
+                        .build());
 
         parser = Mockito.mock(TmcJsonParser.class);
 
@@ -168,8 +168,7 @@ public class DownloadExercisesTest {
         String json = FileUtils.readFileToString(cache);
         Gson gson = new Gson();
         Map<String, Map<String, String>> checksums;
-        Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {
-        }.getType();
+        Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {}.getType();
         checksums = gson.fromJson(json, typeOfHashMap);
 
         assertNotNull(checksums);
@@ -186,23 +185,22 @@ public class DownloadExercisesTest {
     @Test
     public void keepsOldChecksumsInTheCache() throws IOException, TmcCoreException {
         try (FileWriter writer = new FileWriter(cache)) {
-            writer.write("{\"test-course\":{\"kissa\":\"qwerty\",\"asdf2\":\"aijw9\"},\"test-course2\":{\"ankka\":\"22222\"}}");
+            writer.write(
+                    "{\"test-course\":{\"kissa\":\"qwerty\",\"asdf2\":\"aijw9\"},\"test-course2\":{\"ankka\":\"22222\"}}");
         }
 
         ExerciseDownloader mock = Mockito.mock(ExerciseDownloader.class);
-        Mockito.when(mock.createCourseFolder(anyString(), anyString()))
-                .thenReturn("");
-        Mockito.when(mock.handleSingleExercise(
-                any(Exercise.class), anyString())
-        ).thenReturn(true);
+        Mockito.when(mock.createCourseFolder(anyString(), anyString())).thenReturn("");
+        Mockito.when(mock.handleSingleExercise(any(Exercise.class), anyString())).thenReturn(true);
 
         Course course = new Course();
         course.setName("test-course");
-        course.setExercises(new ExerciseBuilder()
-                .withExercise("kissa", 2, "eujwuc")
-                .withExercise("asdf", 793, "alnwnec")
-                .withExercise("ankka", 88, "abcdefg")
-                .build());
+        course.setExercises(
+                new ExerciseBuilder()
+                        .withExercise("kissa", 2, "eujwuc")
+                        .withExercise("asdf", 793, "alnwnec")
+                        .withExercise("ankka", 88, "abcdefg")
+                        .build());
 
         parser = Mockito.mock(TmcJsonParser.class);
         Mockito.when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
@@ -210,8 +208,7 @@ public class DownloadExercisesTest {
         DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings, parser);
         dl.call();
         String json = FileUtils.readFileToString(cache);
-        Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {
-        }.getType();
+        Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {}.getType();
         Map<String, Map<String, String>> checksums = new Gson().fromJson(json, typeOfHashMap);
 
         assertNotNull(checksums);
@@ -230,9 +227,8 @@ public class DownloadExercisesTest {
     public void downloadAllExercises() throws Exception {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         String folder = System.getProperty("user.dir") + "/testResources/";
-        ListenableFuture<List<Exercise>> download = core.downloadExercises(
-                folder, "35", settings1, null
-        );
+        ListenableFuture<List<Exercise>> download =
+                core.downloadExercises(folder, "35", settings1, null);
 
         List<Exercise> exercises = download.get();
         String exercisePath = folder + "2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi";
@@ -249,9 +245,8 @@ public class DownloadExercisesTest {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         ProgressObserver observerMock = Mockito.mock(ProgressObserver.class);
         String folder = System.getProperty("user.dir") + "/testResources/";
-        ListenableFuture<List<Exercise>> download = core.downloadExercises(
-                folder, "35", settings1, observerMock
-        );
+        ListenableFuture<List<Exercise>> download =
+                core.downloadExercises(folder, "35", settings1, observerMock);
         List<Exercise> exercises = download.get();
         String exercisePath = folder + "2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi";
         assertEquals(exercises.size(), 153);
@@ -274,32 +269,43 @@ public class DownloadExercisesTest {
 
     private void wiremock(String username, String password, String courseId, String serverAddress) {
         String encodedCredentials = "Basic " + Authorization.encode(username + ":" + password);
-        wireMockServer.stubFor(get(urlEqualTo("/user"))
-                .withHeader("Authorization", equalTo(encodedCredentials))
-                .willReturn(aResponse()
-                        .withStatus(200)));
+        wireMockServer.stubFor(
+                get(urlEqualTo("/user"))
+                        .withHeader("Authorization", equalTo(encodedCredentials))
+                        .willReturn(aResponse().withStatus(200)));
 
-        wireMockServer.stubFor(get(urlEqualTo(new UrlHelper(settings).coursesExtension))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/json")
-                        .withBody(ExampleJson.allCoursesExample
-                                .replace("https://tmc.mooc.fi/staging", serverAddress))));
+        wireMockServer.stubFor(
+                get(urlEqualTo(new UrlHelper(settings).coursesExtension))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "text/json")
+                                        .withBody(
+                                                ExampleJson.allCoursesExample.replace(
+                                                        "https://tmc.mooc.fi/staging",
+                                                        serverAddress))));
 
         String mockUrl = "/courses/" + courseId + ".json";
         mockUrl = new UrlHelper(settings).withParams(mockUrl);
-        wireMockServer.stubFor(get(urlEqualTo(mockUrl))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/json")
-                        .withBody(ExampleJson.courseExample
-                                .replace("https://tmc.mooc.fi/staging", serverAddress)
-                                .replaceFirst("3", courseId))));
+        wireMockServer.stubFor(
+                get(urlEqualTo(mockUrl))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "text/json")
+                                        .withBody(
+                                                ExampleJson.courseExample
+                                                        .replace(
+                                                                "https://tmc.mooc.fi/staging",
+                                                                serverAddress)
+                                                        .replaceFirst("3", courseId))));
 
-        wireMockServer.stubFor(get(urlMatching("/exercises/[0-9]+.zip"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/json")
-                        .withBodyFile("test.zip")));
+        wireMockServer.stubFor(
+                get(urlMatching("/exercises/[0-9]+.zip"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "text/json")
+                                        .withBodyFile("test.zip")));
     }
 }

@@ -5,8 +5,8 @@ import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
-import java.util.List;
 
+import java.util.List;
 
 public class GetExerciseUpdates extends Command<List<Exercise>> {
 
@@ -30,5 +30,4 @@ public class GetExerciseUpdates extends Command<List<Exercise>> {
     public List<Exercise> call() throws Exception {
         return handler.getNewObjects(course);
     }
-
 }

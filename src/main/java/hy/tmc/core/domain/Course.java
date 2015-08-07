@@ -1,12 +1,12 @@
 package hy.tmc.core.domain;
 
 import com.google.gson.annotations.SerializedName;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Course {
-    
+
     private int id;
     private String name;
 
@@ -14,10 +14,10 @@ public class Course {
 
     @SerializedName("details_url")
     private String detailsUrl;
-    
+
     @SerializedName("unlock_url")
     private String unlockUrl;
-    
+
     @SerializedName("comet_url")
     private String cometUrl;
 
@@ -28,16 +28,16 @@ public class Course {
     public void setReviewsUrl(String reviewsUrl) {
         this.reviewsUrl = reviewsUrl;
     }
-    
+
     @SerializedName("spyware_urls")
     private List<String> spywareUrls;
 
     @SerializedName("reviews_url")
     private String reviewsUrl;
-    
+
     private List<String> unlockables;
-    
-     public Course() {
+
+    public Course() {
         this(null);
     }
 
@@ -56,7 +56,6 @@ public class Course {
         this.spywareUrls = spywareUrls;
     }
 
-    
     public List<Exercise> getExercises() {
         return exercises;
     }
@@ -141,10 +140,11 @@ public class Course {
     public void setUnlockables(List<String> unlockables) {
         this.unlockables = unlockables;
     }
-    
+
     @Override
     public String toString() {
-        //TODO: this cannot return anything else until PreferencesPanel is fixed to not use toString to present Course objects
+        //TODO: this cannot return anything else until PreferencesPanel is fixed to not use
+        //toString() to present Course objects
         return name;
     }
 }

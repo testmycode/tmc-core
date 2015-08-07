@@ -1,5 +1,8 @@
 # tmc-core
 
+[![Build Status](https://travis-ci.org/rage/tmc-core.svg?branch=master)](https://travis-ci.org/rage/tmc-core)
+[![Build status](https://ci.appveyor.com/api/projects/status/o3l71ihukd7dwgks/branch/master?svg=true)](https://ci.appveyor.com/project/rage/tmc-core/branch/master)
+
 This is a library for the core functionalities of a [TestMyCode](https://testmycode.github.io) 
 client. The tmc-core uses [tmc-langs](https://github.com/testmycode/tmc-langs) for 
 running tests locally, and supports fully the same languages as tmc-langs. Other features
@@ -146,7 +149,3 @@ The tmc-core was initially created as part of the [TMC commandline Client](https
 
 The tmc-core was later separated and is maintained by the University of Helsinki CS 
 Dept. [Agile Education Research](https://github.com/rage) group.
-
-
-[![Build Status](https://travis-ci.org/rage/tmc-core.svg?branch=master)](https://travis-ci.org/rage/tmc-core)
-[![Build status](https://ci.appveyor.com/api/projects/status/o3l71ihukd7dwgks/branch/master?svg=true)](https://ci.appveyor.com/project/rage/tmc-core/branch/master)

@@ -27,7 +27,7 @@ public class UrlHelper {
     }
     
     public String getCourseUrl(Course course) {
-        return course.getDetailsUrl() + apiParam;
+        return course.getDetailsUrl() + "?" + apiParam + "&" + clientParam;
     }
 
     public String allCoursesAddress(String serverAddress) {

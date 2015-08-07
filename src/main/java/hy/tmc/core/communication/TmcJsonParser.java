@@ -22,6 +22,7 @@ import java.util.List;
  * A Utility class for handling JSONs downloaded from the TMC-server.
  */
 public class TmcJsonParser {
+
     private UrlCommunicator urlCommunicator;
     private TmcSettings settings;
     private UrlHelper helper;
@@ -31,13 +32,13 @@ public class TmcJsonParser {
         this.helper = new UrlHelper(settings);
         this.urlCommunicator = new UrlCommunicator(settings);
     }
-    
+
     public TmcJsonParser(UrlCommunicator urlCommunicator, TmcSettings settings) {
         this.urlCommunicator = urlCommunicator;
         this.settings = settings;
         this.helper = new UrlHelper(settings);
     }
-    
+
     /**
      * Get list of all the courses on the server specified by ServerData.
      *
@@ -61,11 +62,13 @@ public class TmcJsonParser {
      */
     public JsonObject getJsonFrom(String url) throws IOException {
         HttpResult httpResult = urlCommunicator.makeGetRequestWithAuthentication(url);
-        if(httpResult == null) return null;
+        if (httpResult == null) {
+            return null;
+        }
         String data = httpResult.getData();
         return new JsonParser().parse(data).getAsJsonObject();
     }
-    
+
     /**
      * Get String from url.
      *
@@ -74,7 +77,9 @@ public class TmcJsonParser {
      */
     public String getRawTextFrom(String url) throws IOException {
         HttpResult httpResult = urlCommunicator.makeGetRequestWithAuthentication(url);
-        if(httpResult == null) return null;
+        if (httpResult == null) {
+            return null;
+        }
         return httpResult.getData();
     }
 
@@ -116,8 +121,8 @@ public class TmcJsonParser {
         }
         return asString.toString();
     }
-    
-     /**
+
+    /**
      * Reads courses from string.
      */
     public List<Course> getCoursesFromString(String jsonString) {
@@ -127,8 +132,8 @@ public class TmcJsonParser {
                 .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
         return Arrays.asList(courses);
     }
-    
-     /**
+
+    /**
      * Reads one course from string.
      */
     public Course getCourseFromString(String jsonString) {
@@ -169,7 +174,9 @@ public class TmcJsonParser {
      */
     public Optional<Course> getCourse(String courseUrl) throws IOException {
         JsonObject courseJson = getJsonFrom(courseUrl);
-        if(courseJson == null) return Optional.absent();
+        if (courseJson == null) {
+            return Optional.absent();
+        }
         Gson mapper = new Gson();
         Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
 
@@ -204,13 +211,17 @@ public class TmcJsonParser {
      * Get all exercises of a course specified by courseUrl.
      *
      * @param courseUrl url of the course we are interested in
-     * @return List of all exercises as Exercise-objects. If no course is found,
-     * empty list will be returned.
+     * @return List of all exercises as Exercise-objects. If no course is found, empty list will be
+     * returned.
      */
     public List<Exercise> getExercises(String courseUrl) throws IOException {
-        Optional<Course> course = getCourse(courseUrl);
-        if (course.isPresent()) {
-            return course.get().getExercises();
+        Optional<Course> courseOptional = getCourse(courseUrl);
+        if (courseOptional.isPresent()) {
+            Course course = courseOptional.get();
+            for (Exercise exercise : course.getExercises()) {
+                exercise.setCourseName(course.getName());
+            }
+            return course.getExercises();
         }
         return new ArrayList<>();
     }
@@ -226,8 +237,6 @@ public class TmcJsonParser {
         Gson mapper = new Gson();
         return mapper.fromJson(submission, SubmissionResult.class);
     }
-    
-    
 
     /**
      * Parses the submission result URL from a HttpResult with JSON.

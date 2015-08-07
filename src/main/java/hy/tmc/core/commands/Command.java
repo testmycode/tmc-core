@@ -4,7 +4,9 @@ import hy.tmc.core.communication.UrlHelper;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.ProgressObserver;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -70,7 +72,7 @@ public abstract class Command<E> implements Callable<E> {
     }
 
     private boolean serverAddressIsValid() {
-        if (this.settings.getServerAddress() == null || 
+        if (this.settings.getServerAddress() == null ||
             this.settings.getServerAddress().isEmpty()) {
             return false;
         }

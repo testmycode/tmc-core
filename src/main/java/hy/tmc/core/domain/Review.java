@@ -2,10 +2,13 @@ package hy.tmc.core.domain;
 
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
+
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import java.io.IOException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -167,7 +170,8 @@ public class Review {
 
     @Override
     public String toString() {
-        return exerciseName + " reviewed by " + reviewerName + ":\n" + reviewBody + "\n"
+        return exerciseName + " reviewed by " + reviewerName + ":\n"
+                + reviewBody + "\n"
                 + this.url;
     }
 }

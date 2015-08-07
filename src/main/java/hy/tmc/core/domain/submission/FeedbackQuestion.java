@@ -1,12 +1,13 @@
 package hy.tmc.core.domain.submission;
 
 public class FeedbackQuestion {
+
     private int id;
-    private String question;
-    private String kind;
     private int max = 0;
     private int min = 0;
-
+    private String question;
+    private String kind;
+    
     public int getId() {
         return id;
     }
@@ -33,20 +34,20 @@ public class FeedbackQuestion {
     public void setQuestion(String question) {
         this.question = question;
     }
-    
+
     public boolean isIntRange() {
         return this.kind.matches("intrange\\[-?[0-9]+\\.\\.-?[0-9]+\\]");
     }
-    
+
     public boolean isText() {
         return this.kind.equals("text");
     }
-    
+
     public int getIntRangeMin() {
         setRangeLimits();
         return this.min;
     }
-    
+
     public int getIntRangeMax() {
         setRangeLimits();
         return this.max;

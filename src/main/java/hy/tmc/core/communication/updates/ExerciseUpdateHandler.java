@@ -1,25 +1,27 @@
 package hy.tmc.core.communication.updates;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.io.FileUtils;
 
 public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
-    
+
     private File cache;
     private Map<String, Map<String, String>> exerciseChecksums;
 
@@ -38,7 +40,7 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
         List<Exercise> exercises = jsonParser.getExercisesFromServer(currentCourse);
         readChecksumMap();
         if (exercises == null) {
-            return new ArrayList<>();
+            return Lists.newArrayList();
         }
         return exercises;
     }
@@ -60,5 +62,5 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
         if (this.exerciseChecksums == null) {
             this.exerciseChecksums = new HashMap<>();
         }
-    }   
+    }
 }

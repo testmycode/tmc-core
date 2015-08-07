@@ -7,9 +7,9 @@ import com.google.gson.JsonParser;
 
 import hy.tmc.core.domain.submission.FeedbackQuestion;
 import hy.tmc.core.domain.submission.SubmissionResult;
-import static hy.tmc.core.domain.submission.SubmissionResult.Status.PROCESSING;
 import hy.tmc.core.domain.submission.SubmissionResultParser;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import java.io.IOException;
 
 import java.util.List;
@@ -25,23 +25,23 @@ public class SubmissionPoller {
      * Milliseconds to sleep between each poll attempt.
      */
     private final int pollInterval = 1000;
-    
+
     private final String timeOutmessage = "Something went wrong. "
             + "Please check your internet connection.";
 
-    
+
     private SubmissionResult latestResult;
     private TmcJsonParser tmcJsonParser;
     private SubmissionResultParser submissionParser;
-    
+
     /**
-     * Default constuctor. 
+     * Default constructor.
      */
     public SubmissionPoller(TmcJsonParser jsonParser) {
         this.tmcJsonParser = jsonParser;
         this.submissionParser = new SubmissionResultParser();
     }
-    
+
     /**
      * Constructor for tests.
      */
@@ -52,7 +52,8 @@ public class SubmissionPoller {
 
     /**
      * Returns a ready SubmissionResult with all fields complete after
-     * processing.
+     * processing. TODO: make the
+     * poll to back off exponentially.
      *
      * @param url url to make request to
      * @return SubmissionResult containing details of submission. Null if timed out.

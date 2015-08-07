@@ -7,25 +7,26 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class DiffSender {
+
     private TmcSettings settings;
     private UrlCommunicator urlCommunicator;
 
     public DiffSender(TmcSettings settings) {
-        this.settings = settings;
-        this.urlCommunicator = new UrlCommunicator(settings);
+        this(new UrlCommunicator(settings), settings);
     }
-    
+
     public DiffSender(UrlCommunicator urlCommunicator, TmcSettings settings) {
         this.settings = settings;
         this.urlCommunicator = urlCommunicator;
     }
-    
+
     /**
      * Sends given byte-data to all URLs specified by course.
      *
@@ -41,11 +42,11 @@ public class DiffSender {
         }
         return results;
     }
-    
+
     /**
      * Sends diff-data to url.
      *
-     * @param diffs as 
+     * @param diffs as
      * @param url of destination
      * @return HttpResult from UrlCommunicator
      */
@@ -61,7 +62,7 @@ public class DiffSender {
             return new HttpResult(ex.getMessage(), 500, false);
         }
     }
-    
+
     private Map<String, String> createHeaders() {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Tmc-Version", "1");

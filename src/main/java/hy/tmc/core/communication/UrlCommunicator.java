@@ -1,6 +1,7 @@
 package hy.tmc.core.communication;
 
 import static hy.tmc.core.communication.authorization.Authorization.encode;
+
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
 import com.google.common.base.Optional;
@@ -8,38 +9,40 @@ import com.google.gson.JsonObject;
 
 import hy.tmc.core.configuration.TmcSettings;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.mime.content.ContentBody;
-import org.apache.http.message.BasicNameValuePair;
-import java.io.IOException;
 import java.util.Map;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
+import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 public class UrlCommunicator {
 
-    final private String submissionKey = "submission[file]";
+    private final String submissionKey = "submission[file]";
+
     private TmcSettings settings;
     private UrlHelper urlHelper;
 
@@ -51,11 +54,11 @@ public class UrlCommunicator {
     /**
      * Creates and executes post-request to specified URL.
      *
-     * @param fileBody FileBody that includes data to be sended.
-     * @param destinationUrl destination of the url.
-     * @param headers Headers to be added to httprequest.
-     * @return HttpResult that contains response from the server.
-     * @throws java.io.IOException if file is invalid.
+     * @param fileBody FileBody that includes data to be sended
+     * @param destinationUrl destination of the url
+     * @param headers Headers to be added to httprequest
+     * @return HttpResult that contains response from the server
+     * @throws java.io.IOException if file is invalid
      */
     public HttpResult makePostWithFile(ContentBody fileBody,
             String destinationUrl, Map<String, String> headers) throws IOException {
@@ -90,7 +93,7 @@ public class UrlCommunicator {
 
         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         builder = addParamsToRequest(params, builder);
-        
+
         ByteArrayBody byteBody = new ByteArrayBody(data, "submission.zip");
         builder = addFileToRequest(byteBody, builder);
         HttpEntity entity = builder.build();
@@ -102,11 +105,11 @@ public class UrlCommunicator {
     /**
      * Creates and executes post-request to specified URL.
      *
-     * @param fileBody FileBody or ByteArrayBody that includes data to be sended.
-     * @param destinationUrl destination of the url.
-     * @param headers Headers to be added to httprequest.
-     * @return HttpResult that contains response from the server.
-     * @throws java.io.IOException if file is invalid.
+     * @param fileBody FileBody or ByteArrayBody that includes data to be sended
+     * @param destinationUrl destination of the url
+     * @param headers Headers to be added to httprequest
+     * @return HttpResult that contains response from the server
+     * @throws java.io.IOException if file is invalid
      */
     public HttpResult makePostWithFileAndParams(FileBody fileBody,
             String destinationUrl, Map<String, String> headers, Map<String, String> params) throws IOException {
@@ -140,7 +143,7 @@ public class UrlCommunicator {
      * Tries to make GET-request to specific url.
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request. params[0] is always username:password
+     * @param params Any amount of parameters for the request. Params[0] is always username:password
      * @return A Result-object with some data and a state of success or fail
      */
     public HttpResult makeGetRequest(String url, String... params) throws IOException {
@@ -182,7 +185,7 @@ public class UrlCommunicator {
      * @param url url of the get request
      * @param file file to write the results into
      * @param params params of the get request
-     * @return true if successful
+     * @return whether download succeeded
      */
     public boolean downloadToFile(String url, File file, String... params) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {

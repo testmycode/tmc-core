@@ -1,12 +1,12 @@
 package hy.tmc.core.domain.submission;
 
-
 public class TestException {
 
     private String className;
     private String message;
-    private StackTrace[] stackTrace;
     private String cause;
+
+    private StackTrace[] stackTrace;
 
     public String getClassName() {
         return className;

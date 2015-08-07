@@ -7,5 +7,4 @@ public class Authorization {
     public static String encode(String data) {
         return Base64.encodeBase64String(data.getBytes());
     }
-
 }

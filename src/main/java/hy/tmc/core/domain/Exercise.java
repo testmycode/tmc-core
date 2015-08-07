@@ -1,13 +1,24 @@
 package hy.tmc.core.domain;
 
 import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 
 public class Exercise implements Serializable {
+
+    public enum ValgrindStrategy {
+
+        @SerializedName("")
+        NONE,
+        @SerializedName("fail")
+        FAIL
+    }
 
     private int id; // = 284;
     private String name; //": "viikko1-Viikko1_000.Hiekkalaatikko",
@@ -27,11 +38,6 @@ public class Exercise implements Serializable {
     @SerializedName("zip_url")
     private String zipUrl; //": "https://tmc.mooc.fi/staging/exercises/284.zip",
 
-//        /**
-//     * The URL this exercise can be downloaded from.
-//     */
-//    @SerializedName("zip_url")
-//    private String downloadUrl;
     /**
      * The URL the solution can be downloaded from (admins only).
      */
@@ -66,7 +72,7 @@ public class Exercise implements Serializable {
     private boolean runTestsLocallyActionEnabled = true;
 
     @SerializedName("exercise_submissions_url")
-    private String exerciseSubmissionsUrl; 
+    private String exerciseSubmissionsUrl;
 
     public Exercise() {
     }
@@ -125,7 +131,7 @@ public class Exercise implements Serializable {
     public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
-    
+
     public Date getDeadlineDate() {
         try {
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssX");
@@ -250,13 +256,6 @@ public class Exercise implements Serializable {
     }
 
     private String courseName;
-
-    public enum ValgrindStrategy {
-        @SerializedName("")
-        NONE,
-        @SerializedName("fail")
-        FAIL
-    }
 
     public boolean hasDeadlinePassed() {
         return hasDeadlinePassedAt(new Date());

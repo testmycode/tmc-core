@@ -1,11 +1,14 @@
 package hy.tmc.core.zipping;
 
 import com.google.common.base.Optional;
+
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -14,7 +17,12 @@ import java.util.List;
 public class ProjectRootFinder implements RootFinder {
 
     private final TaskExecutor langs;
+
     private TmcJsonParser tmcJsonParser;
+
+    public ProjectRootFinder(TmcJsonParser jsonParser) {
+        this(new TaskExecutorImpl(), jsonParser);
+    }
 
     /**
      * A helper class that searches for a project root directory.
@@ -22,10 +30,6 @@ public class ProjectRootFinder implements RootFinder {
     public ProjectRootFinder(TaskExecutor langs, TmcJsonParser jsonParser) {
         this.langs = langs;
         this.tmcJsonParser = jsonParser;
-    }
-
-    public ProjectRootFinder(TmcJsonParser jsonParser) {
-        this(new TaskExecutorImpl(), jsonParser);
     }
 
     /**

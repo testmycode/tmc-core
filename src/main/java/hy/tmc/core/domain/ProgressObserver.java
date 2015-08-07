@@ -6,6 +6,7 @@ package hy.tmc.core.domain;
  * it informs UI in order that end-user will be informed about the progress.
  */
 public interface ProgressObserver {
+
     /**
      * Tells user-interface that some progress is done.
      */

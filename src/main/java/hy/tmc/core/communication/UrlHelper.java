@@ -9,9 +9,11 @@ public class UrlHelper {
     public final String clientParam;
     public final String coursesExtension;
     public final String authExtension;
+
     private final TmcSettings settings;
-    private String serverAddressPattern = "(https://)?([a-z]+\\.){2,}[a-z]+(/[a-z]+)*";
-    
+
+    private static final String SERVER_ADDRESS_PATTERN = "(https://)?([a-z]+\\.){2,}[a-z]+(/[a-z]+)*";
+
     public UrlHelper(TmcSettings settings) {
         apiParam = "api_version=" + settings.apiVersion();
         String clientVersion = "&client_version=" + settings.clientVersion();
@@ -20,12 +22,12 @@ public class UrlHelper {
         authExtension = "/user";
         this.settings = settings;
     }
-    
+
     public String getCourseUrl(int courseId) {
         String params = "?" + apiParam + "&" + clientParam;
         return settings.getServerAddress() + "/courses/" + courseId + ".json" + params;
     }
-    
+
     public String getCourseUrl(Course course) {
         return course.getDetailsUrl() + "?" + apiParam + "&" + clientParam;
     }
@@ -33,7 +35,7 @@ public class UrlHelper {
     public String allCoursesAddress(String serverAddress) {
         return serverAddress + this.coursesExtension;
     }
-    
+
     public String withParams(String url) {
         String params = "?" + apiParam + "&" + clientParam;
         if (url.endsWith("?" + apiParam)) {
@@ -43,8 +45,8 @@ public class UrlHelper {
         }
         return url;
     }
-    
+
     public boolean urlIsValid(String url) {
-        return url.matches(serverAddressPattern);
+        return url.matches(SERVER_ADDRESS_PATTERN);
     }
 }

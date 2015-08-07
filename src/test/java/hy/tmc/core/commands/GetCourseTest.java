@@ -1,17 +1,19 @@
 package hy.tmc.core.commands;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.Assert.assertEquals;
+
+import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.util.concurrent.ListenableFuture;
-import hy.tmc.core.testhelpers.ExampleJson;
+
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.TmcCore;
+import hy.tmc.core.communication.UrlHelper;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.CoreTestSettings;
-import hy.tmc.core.communication.UrlHelper;
-import static org.junit.Assert.assertEquals;
+import hy.tmc.core.testhelpers.ExampleJson;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -19,8 +21,7 @@ import org.junit.Test;
 
 public class GetCourseTest {
 
-    @Rule
-    public WireMockRule wireMock = new WireMockRule();
+    @Rule public WireMockRule wireMock = new WireMockRule();
 
     private UrlHelper urlHelper;
     private String finalUrl = "http://127.0.0.1:8080/courses/19.json";
@@ -68,10 +69,12 @@ public class GetCourseTest {
 
     @Test
     public void testCall() throws Exception {
-        wireMock.stubFor(get(urlEqualTo(mockUrl))
-                .willReturn(WireMock.aResponse()
-                        .withStatus(200)
-                        .withBody(ExampleJson.courseExample)));
+        wireMock.stubFor(
+                get(urlEqualTo(mockUrl))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(ExampleJson.courseExample)));
 
         ListenableFuture<Course> getCourse = core.getCourse(settings, finalUrl);
         Course course = getCourse.get();
@@ -81,10 +84,12 @@ public class GetCourseTest {
 
     @Test
     public void testCallWithCourseName() throws Exception {
-        wireMock.stubFor(get(urlEqualTo(mockUrl))
-                .willReturn(WireMock.aResponse()
-                        .withStatus(200)
-                        .withBody(ExampleJson.courseExample)));
+        wireMock.stubFor(
+                get(urlEqualTo(mockUrl))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(ExampleJson.courseExample)));
 
         ListenableFuture<Course> getCourse = core.getCourseByName(settings, "2013_ohpeJaOhja");
         Course course = getCourse.get();

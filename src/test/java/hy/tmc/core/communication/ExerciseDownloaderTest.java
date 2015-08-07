@@ -7,11 +7,31 @@ import static com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import com.google.common.base.Optional;
+
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
+
 import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Exercise;
+
+import net.lingala.zip4j.exception.ZipException;
+
+import org.apache.commons.io.FileUtils;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,24 +39,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import net.lingala.zip4j.exception.ZipException;
-import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import static org.mockito.Matchers.any;
-
-import org.mockito.Mockito;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 public class ExerciseDownloaderTest {
 
-    @Rule
-    public WireMockRule wireMockRule = new WireMockRule();
+    @Rule public WireMockRule wireMockRule = new WireMockRule();
 
     private ArrayList<Exercise> exercises;
     private ExerciseDownloader exDl;
@@ -53,10 +59,7 @@ public class ExerciseDownloaderTest {
     public void setup() {
         settings = new CoreTestSettings();
 
-        exDl = new ExerciseDownloader(
-                new UrlCommunicator(settings),
-                new TmcJsonParser(settings)
-        );
+        exDl = new ExerciseDownloader(new UrlCommunicator(settings), new TmcJsonParser(settings));
         exercises = new ArrayList<>();
 
         testZipPath = "testzip.zip";
@@ -78,37 +81,45 @@ public class ExerciseDownloaderTest {
         e3.setName("Exercise3");
         exercises.add(e3);
 
-        stubFor(get(urlEqualTo("/ex1.zip"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/xml")
-                        .withBodyFile(testZipPath)));
+        stubFor(
+                get(urlEqualTo("/ex1.zip"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "text/xml")
+                                        .withBodyFile(testZipPath)));
 
-        wireMockRule.stubFor(get(urlEqualTo("/ex2.zip"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/xml")
-                        .withBody("<response>Exercise 2</response>")));
-        
-        wireMockRule.stubFor(get(urlEqualTo("/ex3.zip"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "text/xml")
-                        .withBody("<response>Exercise 3</response>")));
+        wireMockRule.stubFor(
+                get(urlEqualTo("/ex2.zip"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "text/xml")
+                                        .withBody("<response>Exercise 2</response>")));
 
-        stubFor(get(urlEqualTo("/emptyCourse.json"))
-                .willReturn(aResponse()
-                        .withStatus(200)
-                        .withHeader("Content-Type", "application/json")
-                        .withBody("{\"api_version\":7,\"course\":{\"id\":21,\"name\":\"k2015-tira\","
-                                + "\"details_url\":\"https://tmc.mooc.fi/staging/courses/21.json\""
-                                + ",\"unlock_url\":\"https://tmc.mooc.fi/staging/courses/21/unlock"
-                                + ".json\",\"reviews_url\":\"https://tmc.mooc.fi/staging/courses"
-                                + "/21/reviews"
-                                + ".json\",\"comet_url\":\"https://tmc.mooc.fi:8443/"
-                                + "comet\",\"spyware_urls\":[\"http://staging.spyware."
-                                + "testmycode.net/\"],\"unlockables\":[],\"exercises\":[]}}")));
+        wireMockRule.stubFor(
+                get(urlEqualTo("/ex3.zip"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "text/xml")
+                                        .withBody("<response>Exercise 3</response>")));
 
+        stubFor(
+                get(urlEqualTo("/emptyCourse.json"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "application/json")
+                                        .withBody(
+                                                "{\"api_version\":7,\"course\":{\"id\":21,\"name\":\"k2015-tira\","
+                                                        + "\"details_url\":\"https://tmc.mooc.fi/staging/courses/21.json\""
+                                                        + ",\"unlock_url\":\"https://tmc.mooc.fi/staging/courses/21/unlock"
+                                                        + ".json\",\"reviews_url\":\"https://tmc.mooc.fi/staging/courses"
+                                                        + "/21/reviews"
+                                                        + ".json\",\"comet_url\":\"https://tmc.mooc.fi:8443/"
+                                                        + "comet\",\"spyware_urls\":[\"http://staging.spyware."
+                                                        + "testmycode.net/\"],\"unlockables\":[],\"exercises\":[]}}")));
 
         settings.setUsername("pihla");
         settings.setPassword("juuh");
@@ -130,11 +141,13 @@ public class ExerciseDownloaderTest {
     public void requestsHaveAuth() {
         exDl.downloadFiles(exercises, zipDestination);
 
-        wireMockRule.verify(getRequestedFor(urlEqualTo("/ex1.zip"))
-                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
+        wireMockRule.verify(
+                getRequestedFor(urlEqualTo("/ex1.zip"))
+                        .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
 
-        wireMockRule.verify(getRequestedFor(urlEqualTo("/ex2.zip"))
-                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
+        wireMockRule.verify(
+                getRequestedFor(urlEqualTo("/ex2.zip"))
+                        .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
     }
 
     @Test
@@ -150,10 +163,9 @@ public class ExerciseDownloaderTest {
     public void downloadedExercisesHasContent() throws IOException {
         exDl.downloadFiles(exercises, zipDestination);
 
-
-        String fileContent = FileUtils.readFileToString(
-                Paths.get("src", "test", "resources", "__files", "testfile.txt").toFile()
-        );
+        String fileContent =
+                FileUtils.readFileToString(
+                        Paths.get("src", "test", "resources", "__files", "testfile.txt").toFile());
 
         assertEquals(this.testFileContent, fileContent);
     }
@@ -173,11 +185,9 @@ public class ExerciseDownloaderTest {
     public void downloadsCorrectAmount() throws IOException, ZipException {
         TaskExecutor executor = Mockito.mock(TaskExecutor.class);
         Mockito.doNothing().when(executor).extractProject(any(Path.class), any(Path.class));
-        exDl = new ExerciseDownloader(
-                new UrlCommunicator(settings),
-                new TmcJsonParser(settings),
-                executor
-        );
+        exDl =
+                new ExerciseDownloader(
+                        new UrlCommunicator(settings), new TmcJsonParser(settings), executor);
         Optional<List<Exercise>> optionalList = exDl.downloadFiles(exercises, zipDestination);
         List<Exercise> list = optionalList.or(new ArrayList<Exercise>());
         assertEquals(3, list.size());

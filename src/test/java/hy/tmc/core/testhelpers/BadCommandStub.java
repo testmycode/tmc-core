@@ -1,23 +1,24 @@
 package hy.tmc.core.testhelpers;
 
 import com.google.common.base.Optional;
+
 import hy.tmc.core.commands.Command;
 import hy.tmc.core.exceptions.TmcCoreException;
 
+public class BadCommandStub extends Command<String> {
 
-public class BadCommandStub extends Command{
-
-    protected Optional<String> functionality() {     
+    protected Optional<String> functionality() {
         return null;
     }
 
     @Override
-    public void checkData() throws TmcCoreException {   
+    public void checkData() throws TmcCoreException {
         throw new TmcCoreException("I'm a bad command-stub :(");
-    }    
+    }
 
     @Override
-    public Object call() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String call() throws Exception {
+        throw new UnsupportedOperationException(
+                "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

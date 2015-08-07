@@ -5,16 +5,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import hy.tmc.core.configuration.TmcSettings;
 
+import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.Review;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,9 +49,17 @@ public class TmcJsonParser {
         String coursesAddress = helper.allCoursesAddress(serverAddress);
         JsonObject jsonObject = getJsonFrom(coursesAddress);
         Gson mapper = new Gson();
-        Course[] courses = mapper
-                .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
+        Course[] courses = mapper.fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
         return Arrays.asList(courses);
+    }
+
+    /**
+     * Get list of all the courses on the server specified by ServerData.
+     *
+     * @return List of Course-objects
+     */
+    public List<Course> getCourses() throws IOException, TmcCoreException {
+        return getCourses(settings.getServerAddress());
     }
 
     /**
@@ -84,15 +92,6 @@ public class TmcJsonParser {
     }
 
     /**
-     * Get list of all the courses on the server specified by ServerData.
-     *
-     * @return List of Course-objects
-     */
-    public List<Course> getCourses() throws IOException, TmcCoreException {
-        return getCourses(settings.getServerAddress());
-    }
-
-    /**
      * Maps the JSON as review-objects.
      *
      * @param reviewUrl which is found from course-object
@@ -101,8 +100,7 @@ public class TmcJsonParser {
     public List<Review> getReviews(String reviewUrl) throws IOException {
         JsonObject jsonObject = getJsonFrom(helper.withParams(reviewUrl));
         Gson mapper = new Gson();
-        Review[] reviews = mapper
-                .fromJson(jsonObject.getAsJsonArray("reviews"), Review[].class);
+        Review[] reviews = mapper.fromJson(jsonObject.getAsJsonArray("reviews"), Review[].class);
         return Arrays.asList(reviews);
     }
 
@@ -128,8 +126,7 @@ public class TmcJsonParser {
     public List<Course> getCoursesFromString(String jsonString) {
         JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
         Gson mapper = new Gson();
-        Course[] courses = mapper
-                .fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
+        Course[] courses = mapper.fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
         return Arrays.asList(courses);
     }
 
@@ -139,31 +136,19 @@ public class TmcJsonParser {
     public Course getCourseFromString(String jsonString) {
         JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
         Gson mapper = new Gson();
-        return mapper
-                .fromJson(jsonObject.get("course"), Course.class);
+        return mapper.fromJson(jsonObject.get("course"), Course.class);
     }
 
     /**
      * Get information about course specified by the course ID.
      *
-     * @param courseID
      * @return an course Object (parsed from JSON)
      */
-    public Optional<Course> getCourse(int courseID) throws IOException, TmcCoreException {
-        if (!courseExists(courseID)) {
+    public Optional<Course> getCourse(int courseId) throws IOException, TmcCoreException {
+        if (!courseExists(courseId)) {
             return Optional.absent();
         }
-        return getCourse(helper.getCourseUrl(courseID));
-    }
-
-    private boolean courseExists(int courseID) throws IOException, TmcCoreException {
-        List<Course> allCourses = getCourses();
-        for (Course course : allCourses) {
-            if (course.getId() == courseID) {
-                return true;
-            }
-        }
-        return false;
+        return getCourse(helper.getCourseUrl(courseId));
     }
 
     /**
@@ -184,7 +169,16 @@ public class TmcJsonParser {
             return Optional.absent();
         }
         return Optional.of(course);
+    }
 
+    private boolean courseExists(int courseId) throws IOException, TmcCoreException {
+        List<Course> allCourses = getCourses();
+        for (Course course : allCourses) {
+            if (course.getId() == courseId) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -212,7 +206,7 @@ public class TmcJsonParser {
      *
      * @param courseUrl url of the course we are interested in
      * @return List of all exercises as Exercise-objects. If no course is found, empty list will be
-     * returned.
+     *     returned.
      */
     public List<Exercise> getExercises(String courseUrl) throws IOException {
         Optional<Course> courseOptional = getCourse(courseUrl);

@@ -1,25 +1,24 @@
 package hy.tmc.core.updates;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.updates.ReviewHandler;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Review;
 import hy.tmc.core.testhelpers.builders.ReviewListBuilder;
-import java.io.IOException;
-import java.util.List;
+
 import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+
+import java.io.IOException;
+import java.util.List;
 
 public class ReviewHandlerTest {
 
@@ -37,13 +36,11 @@ public class ReviewHandlerTest {
                                 .withExercise(3, true)
                                 .withExercise(123, false)
                                 .withExercise(52, false)
-                                .build()
-                );
+                                .build());
     }
 
     @After
-    public void tearDown() {
-    }
+    public void tearDown() {}
 
     @Test
     public void fetchReviewReturnsEmptyListIfServerSendsNull() throws IOException {
@@ -52,7 +49,7 @@ public class ReviewHandlerTest {
         assertNotNull(handler.fetchFromServer(new Course()));
         assertEquals(0, handler.fetchFromServer(new Course()).size());
     }
-    
+
     @Test
     public void reviewsFetchedFromCorrectUrl() throws Exception {
         String url = "www.tmc.mooc.fi.duck/reviews";
@@ -61,7 +58,7 @@ public class ReviewHandlerTest {
         handler.getNewObjects(course);
         tmcJsonParser.getReviews(Mockito.eq(url));
     }
-    
+
     @Test
     public void returnsOnlyUnreadReviews() throws Exception {
         List<Review> reviews = handler.getNewObjects(new Course());

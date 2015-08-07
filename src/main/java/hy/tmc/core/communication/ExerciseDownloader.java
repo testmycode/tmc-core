@@ -1,8 +1,12 @@
 package hy.tmc.core.communication;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import com.google.common.base.Optional;
+
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
 import hy.tmc.core.domain.Exercise;
 
 import java.io.File;
@@ -12,11 +16,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 public class ExerciseDownloader {
-    
-    private File cacheFile;
+
     private UrlCommunicator urlCommunicator;
     private TmcJsonParser tmcJsonParser;
     private TaskExecutor taskExecutor;
@@ -24,20 +25,21 @@ public class ExerciseDownloader {
     /**
      * Constructor for dependency injection.
      */
-    public ExerciseDownloader(UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser,
-                              TaskExecutor taskExecutor) {
+    public ExerciseDownloader(
+            UrlCommunicator urlCommunicator,
+            TmcJsonParser tmcJsonParser,
+            TaskExecutor taskExecutor) {
         this.urlCommunicator = urlCommunicator;
         this.tmcJsonParser = tmcJsonParser;
         this.taskExecutor = taskExecutor;
     }
 
     /**
-     * Creates a new ExerciseDownloader instance
+     * Creates a new ExerciseDownloader instance.
      */
     public ExerciseDownloader(UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser) {
         this(urlCommunicator, tmcJsonParser, new TaskExecutorImpl());
     }
-
 
     /**s
      * Download exercises by course url.
@@ -71,7 +73,29 @@ public class ExerciseDownloader {
     public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, String path) {
         return downloadFiles(exercises, path, null);
     }
-    
+
+    /**
+     * Method for downloading files if path where to download is defined. Also requires separate
+     * folder name that will be created to defined path.
+     *
+     * @param exercises list of exercises which will be downloaded, list is parsed from json.
+     * @param path server path to exercises.
+     * @param folderName folder name of where exercises will be extracted (for example course name)
+     */
+    public Optional<List<Exercise>> downloadFiles(
+            List<Exercise> exercises, String path, String folderName) {
+        List<Exercise> downloadedExercises = new ArrayList<>();
+        path = createCourseFolder(path, folderName);
+        for (Exercise exercise : exercises) {
+            boolean success = handleSingleExercise(exercise, path);
+            if (success) {
+                downloadedExercises.add(exercise);
+            }
+        }
+
+        return Optional.of(downloadedExercises);
+    }
+
     public String createCourseFolder(String path, String folderName) {
         path = formatPath(path);
         if (!isNullOrEmpty(folderName)) {
@@ -82,28 +106,6 @@ public class ExerciseDownloader {
             coursePath.mkdirs();
         }
         return path;
-    }
-
-    /**
-     * Method for downloading files if path where to download is defined. Also requires separate
-     * folder name that will be created to defined path.
-     *
-     * @param exercises list of exercises which will be downloaded, list is parsed from json.
-     * @param path server path to exercises.
-     * @param folderName folder name of where exercises will be extracted (for example course name)
-     * @return
-     */
-    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, String path, String folderName) {
-        List<Exercise> downloadedExercises = new ArrayList<>();
-        path = createCourseFolder(path, folderName);
-        for (Exercise exercise : exercises) {
-            boolean success = handleSingleExercise(exercise, path);
-            if (success) {
-                downloadedExercises.add(exercise);
-            }
-        }
-        
-        return Optional.of(downloadedExercises);
     }
 
     /**

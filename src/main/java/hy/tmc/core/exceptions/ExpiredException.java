@@ -1,4 +1,3 @@
-
 package hy.tmc.core.exceptions;
 
 public class ExpiredException extends Exception {
@@ -19,7 +18,7 @@ public class ExpiredException extends Exception {
 
     /**
      * ExpiredException can have cause as parameter.
-     * 
+     *
      * @param message final string message
      * @param cause cause why exception is thrown
      */
@@ -29,7 +28,7 @@ public class ExpiredException extends Exception {
 
     /**
      * ExpiredException can only have a cause.
-     * 
+     *
      * @param cause why exception is thrown
      */
     public ExpiredException(final Throwable cause) {

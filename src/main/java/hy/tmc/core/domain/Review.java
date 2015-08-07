@@ -2,9 +2,11 @@ package hy.tmc.core.domain;
 
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
+
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -141,7 +143,8 @@ public class Review {
         this.updatedAt = updatedAt;
     }
 
-    public void markAs(boolean read, UrlCommunicator urlCommunicator) throws IOException, TmcCoreException {
+    public void markAs(boolean read, UrlCommunicator urlCommunicator)
+            throws IOException, TmcCoreException {
         Map<String, String> headers = addHeaders(read);
         HttpResult result = urlCommunicator.makePutRequest(putUrl(), Optional.of(headers));
         if (result.getData().contains("OK")) {
@@ -167,7 +170,6 @@ public class Review {
 
     @Override
     public String toString() {
-        return exerciseName + " reviewed by " + reviewerName + ":\n" + reviewBody + "\n"
-                + this.url;
+        return exerciseName + " reviewed by " + reviewerName + ":\n" + reviewBody + "\n" + this.url;
     }
 }

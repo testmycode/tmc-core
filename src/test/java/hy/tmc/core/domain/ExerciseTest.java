@@ -1,7 +1,8 @@
 package hy.tmc.core.domain;
 
-import hy.tmc.core.domain.Exercise;
 import static org.junit.Assert.assertEquals;
+
+import hy.tmc.core.domain.Exercise;
 
 import org.junit.Before;
 import org.junit.Test;

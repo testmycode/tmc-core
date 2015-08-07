@@ -9,14 +9,14 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 public class Helper {
-    
+
     private ProcessBuilder createProcessBuilder(String command, String cliPath) {
         if (cliPath == null) {
             cliPath = "scripts/frontend.sh";
         }
         return new ProcessBuilder("bash", cliPath, command);
     }
-    
+
     private Process createProcess(String command, String cliPath, boolean waitUntilFinished) {
         Process pr = null;
         try {
@@ -29,13 +29,13 @@ public class Helper {
         }
         return pr;
     }
-    
-    public Process createAndStartProcess(String...params) throws IOException {
+
+    public Process createAndStartProcess(String... params) throws IOException {
         return new ProcessBuilder(params).start();
     }
-    
-    public String printOutput(String command,
-                              String cliPath) throws InterruptedException, IOException {
+
+    public String printOutput(String command, String cliPath)
+            throws InterruptedException, IOException {
         Process pr = createProcess(command, cliPath, true);
         return readOutputFromProcess(pr);
     }
@@ -59,13 +59,13 @@ public class Helper {
         }
         return sb.toString();
     }
-    
+
     public Process startDialogWithCommand(String command, String cliPath) {
         Process process = createProcess(command, cliPath, false);
         waitMilliseconds(100);
         return process;
     }
-    
+
     private void waitMilliseconds(int milliseconds) {
         try {
             Thread.sleep(milliseconds);

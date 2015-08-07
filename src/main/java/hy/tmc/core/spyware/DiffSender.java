@@ -20,12 +20,12 @@ public class DiffSender {
         this.settings = settings;
         this.urlCommunicator = new UrlCommunicator(settings);
     }
-    
+
     public DiffSender(UrlCommunicator urlCommunicator, TmcSettings settings) {
         this.settings = settings;
         this.urlCommunicator = urlCommunicator;
     }
-    
+
     /**
      * Sends given byte-data to all URLs specified by course.
      *
@@ -33,7 +33,8 @@ public class DiffSender {
      * @param currentCourse tell all spywareUrls
      * @return all results
      */
-    public List<HttpResult> sendToSpyware(byte[] diffs, Course currentCourse) throws TmcCoreException {
+    public List<HttpResult> sendToSpyware(byte[] diffs, Course currentCourse)
+            throws TmcCoreException {
         List<String> spywareUrls = currentCourse.getSpywareUrls();
         List<HttpResult> results = new ArrayList<>();
         for (String url : spywareUrls) {
@@ -41,27 +42,26 @@ public class DiffSender {
         }
         return results;
     }
-    
+
     /**
      * Sends diff-data to url.
      *
-     * @param diffs as 
+     * @param diffs as
      * @param url of destination
      * @return HttpResult from UrlCommunicator
      */
     public HttpResult sendToUrl(byte[] diffs, String url) throws TmcCoreException {
         try {
-            HttpResult result = urlCommunicator.makePostWithByteArray(
-                    url, diffs, createHeaders(),new HashMap<String, String>()
-            );
+            HttpResult result =
+                    urlCommunicator.makePostWithByteArray(
+                            url, diffs, createHeaders(), new HashMap<String, String>());
             return result;
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             System.err.println(ex.getMessage());
             return new HttpResult(ex.getMessage(), 500, false);
         }
     }
-    
+
     private Map<String, String> createHeaders() {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Tmc-Version", "1");

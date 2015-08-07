@@ -1,6 +1,7 @@
 package hy.tmc.core.domain.submission;
 
 public class FeedbackQuestion {
+
     private int id;
     private String question;
     private String kind;
@@ -23,6 +24,9 @@ public class FeedbackQuestion {
         this.id = id;
     }
 
+    /**
+     * Sets kind and range limits if kind is integer range.
+     */
     public void setKind(String kind) {
         this.kind = kind;
         if (this.isIntRange()) {
@@ -33,20 +37,20 @@ public class FeedbackQuestion {
     public void setQuestion(String question) {
         this.question = question;
     }
-    
+
     public boolean isIntRange() {
         return this.kind.matches("intrange\\[-?[0-9]+\\.\\.-?[0-9]+\\]");
     }
-    
+
     public boolean isText() {
         return this.kind.equals("text");
     }
-    
+
     public int getIntRangeMin() {
         setRangeLimits();
         return this.min;
     }
-    
+
     public int getIntRangeMax() {
         setRangeLimits();
         return this.max;
@@ -58,7 +62,7 @@ public class FeedbackQuestion {
     private void setRangeLimits() {
         String range = kind;
         // remove "intrange[" from beginning and "]" from end
-        range = range.substring("intrange[".length(), kind.length() -1);
+        range = range.substring("intrange[".length(), kind.length() - 1);
         String[] bounds = range.split("\\.\\."); // split on ".."
         if (bounds.length != 2) {
             throw new IllegalStateException("Parsing kind failed, maybe not an intrange question?");

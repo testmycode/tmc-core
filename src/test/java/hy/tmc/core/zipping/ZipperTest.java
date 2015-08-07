@@ -1,13 +1,15 @@
 package hy.tmc.core.zipping;
 
-import hy.tmc.core.zipping.Zipper;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import hy.tmc.core.zipping.Zipper;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import net.lingala.zip4j.model.FileHeader;
 import net.lingala.zip4j.model.ZipParameters;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,5 +71,4 @@ public class ZipperTest {
         new File(newFileName).delete();
         assertEquals(newFileName, header.getFileName());
     }
-
 }

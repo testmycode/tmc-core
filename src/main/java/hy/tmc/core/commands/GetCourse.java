@@ -1,11 +1,13 @@
 package hy.tmc.core.commands;
 
 import com.google.common.base.Optional;
+
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlHelper;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
@@ -56,8 +58,11 @@ public class GetCourse extends Command<Course> {
                 return course.getDetailsUrl();
             }
         }
-        String errorMessage = "There is no course with name " + courseName
-                + " on the server " + settings.getServerAddress();
+        String errorMessage =
+                "There is no course with name "
+                        + courseName
+                        + " on the server "
+                        + settings.getServerAddress();
         throw new TmcCoreException(errorMessage);
     }
 }

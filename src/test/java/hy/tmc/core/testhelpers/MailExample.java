@@ -27,7 +27,4 @@ public class MailExample {
         review.setReviewerName(reviewer);
         return review;
     }
-
-
-
 }

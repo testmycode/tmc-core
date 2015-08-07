@@ -1,8 +1,8 @@
 package hy.tmc.core.testhelpers;
 
 import com.google.common.base.Optional;
+
 import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.zipping.RootFinder;
 
@@ -15,20 +15,20 @@ import java.util.List;
 public class ProjectRootFinderStub implements RootFinder {
 
     private String returnValue;
-    private HashMap<String, Course> courseStubs;
     private TmcJsonParser jsonParser;
+    private HashMap<String, Course> courseStubs;
 
     public ProjectRootFinderStub(TmcJsonParser jsonParser) {
         this.returnValue = "";
-        courseStubs = new HashMap<>();
         this.jsonParser = jsonParser;
+        this.courseStubs = new HashMap<>();
         fillCourseStubs();
     }
 
     private void fillCourseStubs() {
         String allCourses = ExampleJson.allCoursesExample;
         List<Course> courses = jsonParser.getCoursesFromString(allCourses);
-        for (Course c:courses) {
+        for (Course c : courses) {
             courseStubs.put(c.getName(), c);
         }
     }
@@ -49,8 +49,8 @@ public class ProjectRootFinderStub implements RootFinder {
     public Optional<Course> getCurrentCourse(String path) {
         String[] folders = path.split("\\" + File.separator);
 
-        for(String folder:folders) {
-            if(courseStubs.containsKey(folder)) {
+        for (String folder : folders) {
+            if (courseStubs.containsKey(folder)) {
                 return Optional.of(courseStubs.get(folder));
             }
         }

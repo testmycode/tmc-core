@@ -1,15 +1,17 @@
 package hy.tmc.core.commands;
 
+import static org.junit.Assert.assertEquals;
+
 import com.google.common.util.concurrent.ListenableFuture;
+
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
+
 import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.exceptions.TmcCoreException;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-
 
 public class RunTestsTest {
 
@@ -50,22 +52,23 @@ public class RunTestsTest {
 
     @Test
     public void failingRunTests() throws Exception {
-        String path = System.getProperty("user.dir") +
-                "/testResources/2014-mooc-no-deadline/viikko1/Viikko1_001.Nimi/src";
+        String path =
+                System.getProperty("user.dir")
+                        + "/testResources/2014-mooc-no-deadline/viikko1/Viikko1_001.Nimi/src";
         TmcCore core = new TmcCore();
-        ListenableFuture<RunResult> testFuture =  core.test(path, settings);
+        ListenableFuture<RunResult> testFuture = core.test(path, settings);
         RunResult result = testFuture.get();
 
         assertEquals("TESTS_FAILED", result.status.toString());
     }
 
-
     @Test
     public void successRunTests() throws Exception {
-        String path = System.getProperty("user.dir") +
-                "/testResources/successExercise/viikko1/Viikko1_001.Nimi/src";
+        String path =
+                System.getProperty("user.dir")
+                        + "/testResources/successExercise/viikko1/Viikko1_001.Nimi/src";
         TmcCore core = new TmcCore();
-        ListenableFuture<RunResult> testFuture =  core.test(path, settings);
+        ListenableFuture<RunResult> testFuture = core.test(path, settings);
         RunResult result = testFuture.get();
 
         assertEquals("PASSED", result.status.toString());

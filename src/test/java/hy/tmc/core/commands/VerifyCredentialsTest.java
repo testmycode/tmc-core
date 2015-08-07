@@ -1,19 +1,23 @@
 package hy.tmc.core.commands;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import hy.tmc.core.communication.UrlCommunicator;
+
 import hy.tmc.core.CoreTestSettings;
+import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.communication.authorization.Authorization;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
-import java.io.IOException;
+
 import org.hamcrest.CoreMatchers;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.io.IOException;
 
 public class VerifyCredentialsTest {
 
@@ -21,8 +25,7 @@ public class VerifyCredentialsTest {
     private final String testPassword = "1234";
     CoreTestSettings settings;
     UrlCommunicator comm;
-    @Rule
-    public WireMockRule wireMockServer = new WireMockRule();
+    @Rule public WireMockRule wireMockServer = new WireMockRule();
 
     @Before
     public void setUp() {
@@ -31,14 +34,11 @@ public class VerifyCredentialsTest {
         comm = new UrlCommunicator(settings);
     }
 
-
     private void wiremockGet(String auth, int status) {
-        wireMockServer.stubFor(get(urlEqualTo("/user"))
-                .withHeader("Authorization", containing("Basic " + auth))
-                .willReturn(aResponse()
-                        .withStatus(status)
-                )
-        );
+        wireMockServer.stubFor(
+                get(urlEqualTo("/user"))
+                        .withHeader("Authorization", containing("Basic " + auth))
+                        .willReturn(aResponse().withStatus(status)));
     }
 
     @Test(expected = TmcCoreException.class)
@@ -48,7 +48,7 @@ public class VerifyCredentialsTest {
 
     @Test
     public void canAuthenticateWithTestCredentials() throws TmcCoreException, IOException {
-        wiremockGet(Authorization.encode(testUsername+":"+testPassword), 200);
+        wiremockGet(Authorization.encode(testUsername + ":" + testPassword), 200);
         settings.setUsername(testUsername);
         settings.setPassword(testPassword);
         String result = executeWithSettings(settings);
@@ -59,7 +59,7 @@ public class VerifyCredentialsTest {
     public void cannotAuthenticateWithUnexistantCredentials() throws TmcCoreException, IOException {
         String wrongUsername = "samu";
         String wrongPassword = "salis";
-        wiremockGet(Authorization.encode(wrongUsername+":"+wrongPassword), 400);
+        wiremockGet(Authorization.encode(wrongUsername + ":" + wrongPassword), 400);
         settings.setUsername(wrongUsername);
         settings.setPassword(wrongPassword);
         String result = executeWithSettings(settings);

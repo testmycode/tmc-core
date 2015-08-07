@@ -1,9 +1,9 @@
 package hy.tmc.core.testhelpers.builders;
 
 import hy.tmc.core.domain.Exercise;
+
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class ExerciseBuilder {
 
@@ -12,7 +12,7 @@ public class ExerciseBuilder {
     public ExerciseBuilder() {
         this.exercises = new ArrayList<>();
     }
-    
+
     public ExerciseBuilder withExercise(String name, int id, String checksum) {
         return withExercise(name, id, checksum, null);
     }
@@ -26,7 +26,7 @@ public class ExerciseBuilder {
         exercises.add(exercise);
         return this;
     }
-    
+
     public List<Exercise> build() {
         return this.exercises;
     }

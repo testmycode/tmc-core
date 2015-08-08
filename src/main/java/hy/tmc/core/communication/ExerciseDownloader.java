@@ -2,12 +2,12 @@ package hy.tmc.core.communication;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import hy.tmc.core.domain.Exercise;
+
 import com.google.common.base.Optional;
 
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
-import hy.tmc.core.domain.Exercise;
 
 import java.io.File;
 import java.io.IOException;

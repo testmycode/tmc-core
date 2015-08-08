@@ -1,13 +1,13 @@
 package hy.tmc.core.commands;
 
-import com.google.common.base.Optional;
-
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.spyware.DiffSender;
+
+import com.google.common.base.Optional;
 
 import java.util.List;
 

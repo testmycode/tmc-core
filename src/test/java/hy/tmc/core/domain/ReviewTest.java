@@ -1,40 +1,36 @@
 package hy.tmc.core.domain;
 
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+
+import hy.tmc.core.communication.HttpResult;
+import hy.tmc.core.communication.UrlCommunicator;
+import hy.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
-import hy.tmc.core.communication.HttpResult;
-import hy.tmc.core.communication.UrlCommunicator;
-import hy.tmc.core.exceptions.TmcCoreException;
-import org.junit.After;
+
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.Test;
 
 import org.mockito.Mockito;
 
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Map;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
 public class ReviewTest {
 
-    private final String updateUrl = "http://test.mooc.duck.fi/courses/47/reviews/8";
-    private final String putUrl = this.updateUrl + ".json?api_version=7";
+    private static final String updateUrl = "http://test.mooc.duck.fi/courses/47/reviews/8";
+    private static final String putUrl = updateUrl + ".json?api_version=7";
     private Review review;
 
     @Before
@@ -56,17 +52,14 @@ public class ReviewTest {
         review.setUrl("http://localhost:8080/url");
     }
 
-    @After
-    public void tearDown() {}
-
     @Test
     public void toStringTest() {
-        Review review = new Review();
-        review.setExerciseName("viikko1_tehtava007");
-        review.setReviewerName("ilari");
-        review.setReviewBody("ihan hyvä, muista sisennys!");
+        Review newReview = new Review();
+        newReview.setExerciseName("viikko1_tehtava007");
+        newReview.setReviewerName("ilari");
+        newReview.setReviewBody("ihan hyvä, muista sisennys!");
         String expected = "viikko1_tehtava007 reviewed by ilari:\nihan hyvä, muista sisennys!";
-        assertTrue(review.toString().contains(expected));
+        assertTrue(newReview.toString().contains(expected));
     }
 
     @Test
@@ -79,7 +72,7 @@ public class ReviewTest {
 
     private UrlCommunicator mockUrlCommunicator() throws IOException {
         UrlCommunicator urlcom = Mockito.mock(UrlCommunicator.class);
-        Mockito.when(urlcom.makePutRequest(Mockito.anyString(), Mockito.any(Optional.class)))
+        when(urlcom.makePutRequest(Mockito.anyString(), Mockito.any(Optional.class)))
                 .thenReturn(new HttpResult("OK", 200, true));
         return urlcom;
     }

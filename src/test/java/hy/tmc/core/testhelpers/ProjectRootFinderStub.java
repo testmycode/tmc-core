@@ -1,10 +1,10 @@
 package hy.tmc.core.testhelpers;
 
-import com.google.common.base.Optional;
-
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.zipping.RootFinder;
+
+import com.google.common.base.Optional;
 
 import java.io.File;
 import java.nio.file.Path;

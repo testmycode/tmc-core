@@ -1,13 +1,13 @@
 package hy.tmc.core.zipping;
 
+import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.domain.Course;
+import hy.tmc.core.exceptions.TmcCoreException;
+
 import com.google.common.base.Optional;
 
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
-import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.domain.Course;
-import hy.tmc.core.exceptions.TmcCoreException;
 
 import java.io.File;
 import java.io.IOException;

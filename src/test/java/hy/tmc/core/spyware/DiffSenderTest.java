@@ -8,16 +8,15 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-
-import com.google.common.io.Files;
-
 import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.spyware.DiffSender;
 
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
+import com.google.common.io.Files;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;

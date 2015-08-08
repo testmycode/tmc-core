@@ -1,10 +1,5 @@
 package hy.tmc.core.commands;
 
-import com.google.common.base.Optional;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
-
 import hy.tmc.core.communication.ExerciseDownloader;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
@@ -13,6 +8,11 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.ProgressObserver;
 import hy.tmc.core.exceptions.TmcCoreException;
+
+import com.google.common.base.Optional;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.io.FileUtils;
 

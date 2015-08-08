@@ -1,12 +1,12 @@
 package hy.tmc.core.commands;
 
-import com.google.common.base.Optional;
-
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlHelper;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
+
+import com.google.common.base.Optional;
 
 import java.io.IOException;
 import java.net.URI;

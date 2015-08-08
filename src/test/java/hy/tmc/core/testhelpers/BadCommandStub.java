@@ -1,9 +1,9 @@
 package hy.tmc.core.testhelpers;
 
-import com.google.common.base.Optional;
-
 import hy.tmc.core.commands.Command;
 import hy.tmc.core.exceptions.TmcCoreException;
+
+import com.google.common.base.Optional;
 
 public class BadCommandStub extends Command<String> {
 

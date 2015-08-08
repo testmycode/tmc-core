@@ -3,13 +3,13 @@ package hy.tmc.core.commands;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-import com.google.common.base.Optional;
-
 import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
+
+import com.google.common.base.Optional;
 
 import org.junit.Before;
 import org.junit.Test;

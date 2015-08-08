@@ -6,13 +6,13 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertThat;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-
 import hy.tmc.core.communication.authorization.Authorization;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.exceptions.TmcCoreException;
+
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import org.hamcrest.CoreMatchers;
 

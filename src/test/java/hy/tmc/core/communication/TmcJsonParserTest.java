@@ -8,13 +8,13 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
 import static org.powermock.api.mockito.PowerMockito.mock;
 
-import com.google.common.base.Optional;
-
 import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
+
+import com.google.common.base.Optional;
 
 import org.junit.Before;
 import org.junit.Test;

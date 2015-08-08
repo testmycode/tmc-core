@@ -2,13 +2,6 @@ package hy.tmc.core;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.ListeningExecutorService;
-import com.google.common.util.concurrent.MoreExecutors;
-
-import fi.helsinki.cs.tmc.langs.domain.RunResult;
-import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
-
 import hy.tmc.core.commands.DownloadExercises;
 import hy.tmc.core.commands.GetCourse;
 import hy.tmc.core.commands.GetExerciseUpdates;
@@ -32,6 +25,13 @@ import hy.tmc.core.domain.ProgressObserver;
 import hy.tmc.core.domain.Review;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
+
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.MoreExecutors;
+
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
+import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
 
 import org.apache.commons.io.FileUtils;
 

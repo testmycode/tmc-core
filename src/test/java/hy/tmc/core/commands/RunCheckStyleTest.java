@@ -9,6 +9,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import hy.tmc.core.CoreTestSettings;
+import hy.tmc.core.exceptions.TmcCoreException;
+import hy.tmc.core.zipping.ProjectRootFinder;
+
 import com.google.common.base.Optional;
 
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
@@ -16,10 +20,6 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import fi.helsinki.cs.tmc.stylerunner.validation.Strategy;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationError;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
-
-import hy.tmc.core.CoreTestSettings;
-import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.zipping.ProjectRootFinder;
 
 import org.junit.Before;
 import org.junit.Test;

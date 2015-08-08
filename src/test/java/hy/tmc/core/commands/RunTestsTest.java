@@ -2,13 +2,13 @@ package hy.tmc.core.commands;
 
 import static org.junit.Assert.assertEquals;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
-import fi.helsinki.cs.tmc.langs.domain.RunResult;
-
 import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.TmcCore;
 import hy.tmc.core.exceptions.TmcCoreException;
+
+import com.google.common.util.concurrent.ListenableFuture;
+
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
 
 import org.junit.Before;
 import org.junit.Test;

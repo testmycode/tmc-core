@@ -1,11 +1,11 @@
 package hy.tmc.core.commands;
 
-import com.google.common.collect.Maps;
-
 import hy.tmc.core.communication.UrlHelper;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.ProgressObserver;
 import hy.tmc.core.exceptions.TmcCoreException;
+
+import com.google.common.collect.Maps;
 
 import java.io.IOException;
 import java.util.Map;

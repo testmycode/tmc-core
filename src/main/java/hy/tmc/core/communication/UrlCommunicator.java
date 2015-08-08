@@ -3,10 +3,10 @@ package hy.tmc.core.communication;
 import static hy.tmc.core.communication.authorization.Authorization.encode;
 import static org.apache.http.HttpHeaders.USER_AGENT;
 
+import hy.tmc.core.configuration.TmcSettings;
+
 import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
-
-import hy.tmc.core.configuration.TmcSettings;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

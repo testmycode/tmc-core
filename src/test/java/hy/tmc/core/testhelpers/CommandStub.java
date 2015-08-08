@@ -1,9 +1,9 @@
 package hy.tmc.core.testhelpers;
 
-import com.google.common.base.Optional;
-
 import hy.tmc.core.commands.Command;
 import hy.tmc.core.exceptions.TmcCoreException;
+
+import com.google.common.base.Optional;
 
 //To change return value of this command, change class definition
 public class CommandStub extends Command<String> {

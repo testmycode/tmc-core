@@ -1,17 +1,17 @@
 package hy.tmc.core.communication;
 
-import com.google.common.base.Optional;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.Review;
 import hy.tmc.core.domain.submission.SubmissionResult;
 import hy.tmc.core.exceptions.TmcCoreException;
+
+import com.google.common.base.Optional;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;

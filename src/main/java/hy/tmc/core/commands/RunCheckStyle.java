@@ -1,15 +1,15 @@
 package hy.tmc.core.commands;
 
+import hy.tmc.core.communication.TmcJsonParser;
+import hy.tmc.core.configuration.TmcSettings;
+import hy.tmc.core.exceptions.TmcCoreException;
+import hy.tmc.core.zipping.ProjectRootFinder;
+
 import com.google.common.base.Optional;
 
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
-
-import hy.tmc.core.communication.TmcJsonParser;
-import hy.tmc.core.configuration.TmcSettings;
-import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.zipping.ProjectRootFinder;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

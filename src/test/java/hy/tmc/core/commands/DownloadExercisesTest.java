@@ -5,6 +5,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -15,13 +16,6 @@ import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
-
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-
-import com.google.common.base.Optional;
-import com.google.common.util.concurrent.ListenableFuture;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.TmcCore;
@@ -35,6 +29,13 @@ import hy.tmc.core.domain.ProgressObserver;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.testhelpers.builders.ExerciseBuilder;
+
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
+import com.google.common.base.Optional;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.io.FileUtils;
 

@@ -1,11 +1,5 @@
 package hy.tmc.core.commands;
 
-import com.google.common.base.Optional;
-
-import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
-import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
-import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
 import hy.tmc.core.communication.ExerciseSubmitter;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
@@ -14,6 +8,12 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.zipping.ProjectRootFinder;
+
+import com.google.common.base.Optional;
+
+import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
+import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import net.lingala.zip4j.exception.ZipException;
 

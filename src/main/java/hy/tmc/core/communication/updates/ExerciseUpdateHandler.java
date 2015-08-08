@@ -1,13 +1,13 @@
 package hy.tmc.core.communication.updates;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.configuration.TmcSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.io.FileUtils;
 

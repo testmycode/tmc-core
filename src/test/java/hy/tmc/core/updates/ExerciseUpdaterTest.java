@@ -7,8 +7,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 
-import com.google.gson.Gson;
-
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.communication.UrlCommunicator;
@@ -18,6 +16,8 @@ import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.testhelpers.builders.ExerciseBuilder;
+
+import com.google.gson.Gson;
 
 import org.junit.After;
 import org.junit.Before;

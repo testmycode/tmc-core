@@ -8,8 +8,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.google.common.util.concurrent.ListeningExecutorService;
-
 import hy.tmc.core.commands.DownloadExercises;
 import hy.tmc.core.commands.GetExerciseUpdates;
 import hy.tmc.core.commands.GetUnreadReviews;
@@ -21,6 +19,8 @@ import hy.tmc.core.commands.VerifyCredentials;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.FileWriterHelper;
+
+import com.google.common.util.concurrent.ListeningExecutorService;
 
 import org.apache.commons.io.FileUtils;
 

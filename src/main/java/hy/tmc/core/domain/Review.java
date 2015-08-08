@@ -1,11 +1,11 @@
 package hy.tmc.core.domain;
 
-import com.google.common.base.Optional;
-import com.google.gson.annotations.SerializedName;
-
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.exceptions.TmcCoreException;
+
+import com.google.common.base.Optional;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
 import java.util.HashMap;

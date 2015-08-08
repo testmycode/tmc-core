@@ -4,12 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.powermock.api.mockito.PowerMockito.mock;
 
-import com.google.common.base.Optional;
-
-import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
-import fi.helsinki.cs.tmc.langs.io.zip.Zipper;
-import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
 import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.ExpiredException;
@@ -17,6 +11,12 @@ import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.testhelpers.ProjectRootFinderStub;
 import hy.tmc.core.zipping.ProjectRootFinder;
+
+import com.google.common.base.Optional;
+
+import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
+import fi.helsinki.cs.tmc.langs.io.zip.Zipper;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import net.lingala.zip4j.exception.ZipException;
 

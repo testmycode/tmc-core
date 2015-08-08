@@ -13,14 +13,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import hy.tmc.core.CoreTestSettings;
+import hy.tmc.core.domain.Exercise;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import com.google.common.base.Optional;
 
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
-
-import hy.tmc.core.CoreTestSettings;
-import hy.tmc.core.domain.Exercise;
 
 import net.lingala.zip4j.exception.ZipException;
 

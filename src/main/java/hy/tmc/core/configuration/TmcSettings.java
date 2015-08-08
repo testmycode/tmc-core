@@ -1,8 +1,8 @@
 package hy.tmc.core.configuration;
 
-import com.google.common.base.Optional;
-
 import hy.tmc.core.domain.Course;
+
+import com.google.common.base.Optional;
 
 public interface TmcSettings {
 

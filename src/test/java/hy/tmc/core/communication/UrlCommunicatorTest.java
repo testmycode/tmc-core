@@ -9,12 +9,12 @@ import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
 
+import hy.tmc.core.CoreTestSettings;
+import hy.tmc.core.exceptions.TmcCoreException;
+
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import com.google.common.base.Optional;
-
-import hy.tmc.core.CoreTestSettings;
-import hy.tmc.core.exceptions.TmcCoreException;
 
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.message.BasicNameValuePair;

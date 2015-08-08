@@ -10,6 +10,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertEquals;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import com.google.common.base.Optional;
 
 import hy.tmc.core.CoreTestSettings;
@@ -71,7 +72,7 @@ public class UrlCommunicatorTest {
     }
 
     @Test
-    public void badRequestWithoutValidURL() throws IOException, TmcCoreException {
+    public void badRequestWithoutValidUrl() throws IOException, TmcCoreException {
         HttpResult result =
                 urlCommunicator.makeGetRequest("http://127.0.0.1:8080/vaaraurl", "test:1234");
         assertEquals(400, result.getStatusCode());

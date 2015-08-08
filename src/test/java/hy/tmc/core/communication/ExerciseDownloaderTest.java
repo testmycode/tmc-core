@@ -105,21 +105,22 @@ public class ExerciseDownloaderTest {
                                         .withHeader("Content-Type", "text/xml")
                                         .withBody("<response>Exercise 3</response>")));
 
+        String response =
+                "{\"api_version\":7,\"course\":{\"id\":21,\"name\":\"k2015-tira\","
+                        + "\"details_url\":\"https://tmc.mooc.fi/staging/courses/21.json\""
+                        + ",\"unlock_url\":\"https://tmc.mooc.fi/staging/courses/21/unlock"
+                        + ".json\",\"reviews_url\":\"https://tmc.mooc.fi/staging/courses"
+                        + "/21/reviews"
+                        + ".json\",\"comet_url\":\"https://tmc.mooc.fi:8443/"
+                        + "comet\",\"spyware_urls\":[\"http://staging.spyware."
+                        + "testmycode.net/\"],\"unlockables\":[],\"exercises\":[]}}";
         stubFor(
                 get(urlEqualTo("/emptyCourse.json"))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
                                         .withHeader("Content-Type", "application/json")
-                                        .withBody(
-                                                "{\"api_version\":7,\"course\":{\"id\":21,\"name\":\"k2015-tira\","
-                                                        + "\"details_url\":\"https://tmc.mooc.fi/staging/courses/21.json\""
-                                                        + ",\"unlock_url\":\"https://tmc.mooc.fi/staging/courses/21/unlock"
-                                                        + ".json\",\"reviews_url\":\"https://tmc.mooc.fi/staging/courses"
-                                                        + "/21/reviews"
-                                                        + ".json\",\"comet_url\":\"https://tmc.mooc.fi:8443/"
-                                                        + "comet\",\"spyware_urls\":[\"http://staging.spyware."
-                                                        + "testmycode.net/\"],\"unlockables\":[],\"exercises\":[]}}")));
+                                        .withBody(response)));
 
         settings.setUsername("pihla");
         settings.setPassword("juuh");

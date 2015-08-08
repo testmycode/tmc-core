@@ -11,6 +11,11 @@ import hy.tmc.core.communication.TmcJsonParser;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 
+import org.junit.Before;
+import org.junit.Test;
+
+import org.mockito.Mockito;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -18,19 +23,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import org.mockito.Mockito;
-
 public class ProjectRootFinderTest {
 
-    ProjectRootFinder finder;
-    String fakeName = "2014-mooc-no-deadline";
-    String otherFakeName = "2013-tira";
-    CoreTestSettings settings;
-    TmcJsonParser parser;
-    String v = File.separator;
+    private ProjectRootFinder finder;
+    private String fakeName = "2014-mooc-no-deadline";
+    private String otherFakeName = "2013-tira";
+    private CoreTestSettings settings;
+    private TmcJsonParser parser;
 
     @Before
     public void setUp() throws IOException, TmcCoreException {

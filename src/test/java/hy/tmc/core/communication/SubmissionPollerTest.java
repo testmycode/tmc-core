@@ -3,10 +3,10 @@ package hy.tmc.core.communication;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import hy.tmc.core.testhelpers.ExampleJson;
-import hy.tmc.core.domain.submission.SubmissionResult;
-import hy.tmc.core.domain.submission.SubmissionResult.Status;
 import hy.tmc.core.CoreTestSettings;
+import hy.tmc.core.domain.submission.SubmissionResult.Status;
+import hy.tmc.core.domain.submission.SubmissionResult;
+import hy.tmc.core.testhelpers.ExampleJson;
 
 import org.junit.Before;
 import org.junit.Test;

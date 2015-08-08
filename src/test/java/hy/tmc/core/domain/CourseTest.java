@@ -3,8 +3,8 @@ package hy.tmc.core.domain;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import hy.tmc.core.domain.Exercise;
 import hy.tmc.core.domain.Course;
+import hy.tmc.core.domain.Exercise;
 
 import org.junit.After;
 import org.junit.AfterClass;
@@ -19,17 +19,12 @@ import java.util.Set;
 
 public class CourseTest {
 
-    private Course course;
     private final int id = 7;
     private final String name = "ankka";
+
+    private Course course;
     private List<Exercise> exercises;
     private Exercise ex;
-
-    @BeforeClass
-    public static void setUpClass() {}
-
-    @AfterClass
-    public static void tearDownClass() {}
 
     /**
      * Setups an Course object for testing.
@@ -49,9 +44,6 @@ public class CourseTest {
 
         course.setExercises(exercises);
     }
-
-    @After
-    public void tearDown() {}
 
     @Test
     public void testGetName() {

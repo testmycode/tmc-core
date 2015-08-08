@@ -114,17 +114,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void getsExercisesCorrectlyFromCourseJSON() throws IOException, TmcCoreException {
-        mockCourse(realAddress);
-        String names = tmcJsonParser.getExerciseNames(realAddress);
-
-        assertTrue(names.contains("viikko1-Viikko1_001.Nimi"));
-        assertTrue(names.contains("viikko1-Viikko1_002.HeiMaailma"));
-        assertTrue(names.contains("viikko1-Viikko1_003.Kuusi"));
-    }
-
-    @Test
-    public void getsLastExerciseOfCourseJSON() throws IOException, TmcCoreException {
+    public void getsLastExerciseOfCourseJson2() throws IOException, TmcCoreException {
         mockCourse(realAddress);
         String names = tmcJsonParser.getExerciseNames(realAddress);
 

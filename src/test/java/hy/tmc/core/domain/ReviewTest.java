@@ -11,16 +11,16 @@ import static org.mockito.Matchers.eq;
 import com.google.common.base.Optional;
 
 import edu.emory.mathcs.backport.java.util.Arrays;
-
 import hy.tmc.core.communication.HttpResult;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.exceptions.TmcCoreException;
-
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.Test;
+
 import org.mockito.Mockito;
+
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -61,12 +61,12 @@ public class ReviewTest {
 
     @Test
     public void toStringTest() {
-        Review r = new Review();
-        r.setExerciseName("viikko1_tehtava007");
-        r.setReviewerName("ilari");
-        r.setReviewBody("ihan hyvä, muista sisennys!");
+        Review review = new Review();
+        review.setExerciseName("viikko1_tehtava007");
+        review.setReviewerName("ilari");
+        review.setReviewBody("ihan hyvä, muista sisennys!");
         String expected = "viikko1_tehtava007 reviewed by ilari:\nihan hyvä, muista sisennys!";
-        assertTrue(r.toString().contains(expected));
+        assertTrue(review.toString().contains(expected));
     }
 
     @Test

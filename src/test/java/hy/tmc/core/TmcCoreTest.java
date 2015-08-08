@@ -1,14 +1,23 @@
 package hy.tmc.core;
 
-// TODO(jamo) fix asset
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
 
-import hy.tmc.core.commands.*;
+import hy.tmc.core.commands.DownloadExercises;
+import hy.tmc.core.commands.GetExerciseUpdates;
+import hy.tmc.core.commands.GetUnreadReviews;
+import hy.tmc.core.commands.ListCourses;
+import hy.tmc.core.commands.RunTests;
+import hy.tmc.core.commands.SendFeedback;
+import hy.tmc.core.commands.Submit;
+import hy.tmc.core.commands.VerifyCredentials;
 import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.FileWriterHelper;

@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -38,14 +39,14 @@ import java.util.List;
 
 public class SubmitTest {
 
+    private static final String FILE_SEPARATOR = File.separator;
+    private final String submissionUrl;
+
     private Submit submit;
     private ExerciseSubmitter submitterMock;
-    private final String submissionUrl;
     private CoreTestSettings settings;
 
     @Rule public WireMockRule wireMock = new WireMockRule();
-
-    String v = File.separator;
 
     public SubmitTest() {
         settings = new CoreTestSettings();
@@ -65,7 +66,13 @@ public class SubmitTest {
                         submitterMock,
                         new SubmissionPoller(new TmcJsonParser(settings)),
                         settings,
-                        "polku" + v + "kurssi" + v + "kansioon" + v + "src");
+                        "polku"
+                                + FILE_SEPARATOR
+                                + "kurssi"
+                                + FILE_SEPARATOR
+                                + "kansioon"
+                                + FILE_SEPARATOR
+                                + "src");
     }
 
     /**
@@ -74,7 +81,9 @@ public class SubmitTest {
     @Test
     public void testCheckDataSuccess() throws TmcCoreException, IOException {
         Submit submitCommand = new Submit(settings);
-        submitCommand.setParameter("path", v + "home" + v + "tmccli" + v + "testi");
+        submitCommand.setParameter(
+                "path",
+                FILE_SEPARATOR + "home" + FILE_SEPARATOR + "tmccli" + FILE_SEPARATOR + "testi");
         submitCommand.checkData();
     }
 
@@ -133,11 +142,11 @@ public class SubmitTest {
         ListenableFuture<SubmissionResult> submit =
                 core.submit(
                         "testResources"
-                                + v
+                                + FILE_SEPARATOR
                                 + "halfdoneExercise"
-                                + v
+                                + FILE_SEPARATOR
                                 + "viikko1"
-                                + v
+                                + FILE_SEPARATOR
                                 + "Viikko1_004.Muuttujat",
                         settings);
         final List<SubmissionResult> result = new ArrayList<SubmissionResult>();

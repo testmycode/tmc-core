@@ -19,22 +19,20 @@ import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.testhelpers.ExampleJson;
 import hy.tmc.core.testhelpers.builders.ExerciseBuilder;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import java.nio.file.Paths;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.mockito.Mockito;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ExerciseUpdaterTest {
 

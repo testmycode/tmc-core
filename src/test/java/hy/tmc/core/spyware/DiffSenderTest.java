@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import com.google.common.io.Files;
 
 import hy.tmc.core.CoreTestSettings;
@@ -17,17 +18,17 @@ import hy.tmc.core.domain.Course;
 import hy.tmc.core.exceptions.TmcCoreException;
 import hy.tmc.core.spyware.DiffSender;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DiffSenderTest {
 

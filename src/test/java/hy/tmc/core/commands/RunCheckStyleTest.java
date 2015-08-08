@@ -83,14 +83,12 @@ public class RunCheckStyleTest {
 
         @Override
         public Strategy getStrategy() {
-            throw new UnsupportedOperationException(
-                    "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
         public Map<File, List<ValidationError>> getValidationErrors() {
-            throw new UnsupportedOperationException(
-                    "Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 

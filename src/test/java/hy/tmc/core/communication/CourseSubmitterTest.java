@@ -41,7 +41,7 @@ public class CourseSubmitterTest {
     private CoreTestSettings settings;
     private Zipper zipper;
 
-    String v = File.separator;
+    private static final String FILE_SEPARATOR = File.separator;
 
     /**
      * Mocks components that use Internet.
@@ -76,17 +76,21 @@ public class CourseSubmitterTest {
                 "courses/21.json?api_version=7&client=tmc_cli&client_version=1",
                 ExampleJson.expiredCourseExample);
         mockUrlCommunicatorWithFile(
-                "https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7&client=tmc_cli&client_version=1",
+                "https://tmc.mooc.fi/staging/exercises/285/submissions.json?api_version=7&client"
+                        + "=tmc_cli&client_version=1",
                 ExampleJson.submitResponse);
         mockUrlCommunicatorWithFile(
-                "https://tmc.mooc.fi/staging/exercises/287/submissions.json?api_version=7&client=tmc_cli&client_version=1",
+                "https://tmc.mooc.fi/staging/exercises/287/submissions.json?api_version=7&client"
+                        + "=tmc_cli&client_version=1",
                 ExampleJson.pasteResponse);
 
         mockUrlCommunicatorWithFile(
-                "https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7&client=tmc_cli&client_version=1",
+                "https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7&client"
+                        + "=tmc_cli&client_version=1",
                 ExampleJson.submitResponse);
         mockUrlCommunicatorWithFile(
-                "https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7&client=tmc_cli&client_version=1",
+                "https://tmc.mooc.fi/staging/exercises/1228/submissions.json?api_version=7&client"
+                        + "=tmc_cli&client_version=1",
                 ExampleJson.pasteResponse);
 
         realFinder = new ProjectRootFinder(new TaskExecutorImpl(), jsonParser);
@@ -94,7 +98,15 @@ public class CourseSubmitterTest {
 
     @Test
     public void testGetExerciseName() {
-        final String path = v + "home" + v + "test" + v + "ohpe-test" + v + "viikko_01";
+        final String path =
+                FILE_SEPARATOR
+                        + "home"
+                        + FILE_SEPARATOR
+                        + "test"
+                        + FILE_SEPARATOR
+                        + "ohpe-test"
+                        + FILE_SEPARATOR
+                        + "viikko_01";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(path).or(new Course()));
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
@@ -106,11 +118,29 @@ public class CourseSubmitterTest {
     @Test
     public void testFindCourseByCorrectPath() throws IOException, TmcCoreException {
         final String path =
-                v + "home" + v + "kansio" + v + "toinen" + v + "c-demo" + v + "viikko_01";
+                FILE_SEPARATOR
+                        + "home"
+                        + FILE_SEPARATOR
+                        + "kansio"
+                        + FILE_SEPARATOR
+                        + "toinen"
+                        + FILE_SEPARATOR
+                        + "c-demo"
+                        + FILE_SEPARATOR
+                        + "viikko_01";
         Optional<Course> course = realFinder.findCourseByPath(path.split("\\" + File.separator));
         assertEquals(7, course.get().getId());
         final String path2 =
-                v + "home" + v + "kansio" + v + "toinen" + v + "OLEMATON" + v + "viikko_01";
+                FILE_SEPARATOR
+                        + "home"
+                        + FILE_SEPARATOR
+                        + "kansio"
+                        + FILE_SEPARATOR
+                        + "toinen"
+                        + FILE_SEPARATOR
+                        + "OLEMATON"
+                        + FILE_SEPARATOR
+                        + "viikko_01";
         Optional<Course> course2 = realFinder.findCourseByPath(path2.split("\\" + File.separator));
         assertFalse(course2.isPresent());
     }
@@ -120,15 +150,15 @@ public class CourseSubmitterTest {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     ZipException, TmcCoreException {
         String testPath =
-                v
+                FILE_SEPARATOR
                         + "home"
-                        + v
+                        + FILE_SEPARATOR
                         + "test"
-                        + v
+                        + FILE_SEPARATOR
                         + "2014-mooc-no-deadline"
-                        + v
+                        + FILE_SEPARATOR
                         + "viikko1"
-                        + v
+                        + FILE_SEPARATOR
                         + "viikko1-Viikko1_001.Nimi";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -145,7 +175,16 @@ public class CourseSubmitterTest {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     ZipException, TmcCoreException {
         String testPath =
-                v + "home" + v + "test" + v + "k2015-tira" + v + "viikko01" + v + "tira1.1";
+                FILE_SEPARATOR
+                        + "home"
+                        + FILE_SEPARATOR
+                        + "test"
+                        + FILE_SEPARATOR
+                        + "k2015-tira"
+                        + FILE_SEPARATOR
+                        + "viikko01"
+                        + FILE_SEPARATOR
+                        + "tira1.1";
 
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -161,15 +200,15 @@ public class CourseSubmitterTest {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     ZipException, TmcCoreException {
         String testPath =
-                v
+                FILE_SEPARATOR
                         + "home"
-                        + v
+                        + FILE_SEPARATOR
                         + "test"
-                        + v
+                        + FILE_SEPARATOR
                         + "2014-mooc-no-deadline"
-                        + v
+                        + FILE_SEPARATOR
                         + "viikko1"
-                        + v
+                        + FILE_SEPARATOR
                         + "viikko1-Viikko1_001.Nimi";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -185,15 +224,15 @@ public class CourseSubmitterTest {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     ZipException, TmcCoreException {
         String testPath =
-                v
+                FILE_SEPARATOR
                         + "home"
-                        + v
+                        + FILE_SEPARATOR
                         + "test"
-                        + v
+                        + FILE_SEPARATOR
                         + "2014-mooc-no-deadline"
-                        + v
+                        + FILE_SEPARATOR
                         + "viikko1"
-                        + v
+                        + FILE_SEPARATOR
                         + "viikko1-Viikko1_001.Nimi";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -209,15 +248,15 @@ public class CourseSubmitterTest {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     ZipException, TmcCoreException {
         String testPath =
-                v
+                FILE_SEPARATOR
                         + "home"
-                        + v
+                        + FILE_SEPARATOR
                         + "test"
-                        + v
+                        + FILE_SEPARATOR
                         + "2014-mooc-no-deadline"
-                        + v
+                        + FILE_SEPARATOR
                         + "viikko1"
-                        + v
+                        + FILE_SEPARATOR
                         + "feikeintehtava";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -231,15 +270,15 @@ public class CourseSubmitterTest {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     ZipException, TmcCoreException {
         String testPath =
-                v
+                FILE_SEPARATOR
                         + "home"
-                        + v
+                        + FILE_SEPARATOR
                         + "test"
-                        + v
+                        + FILE_SEPARATOR
                         + "2014-mooc-no-deadline"
-                        + v
+                        + FILE_SEPARATOR
                         + "viikko1"
-                        + v
+                        + FILE_SEPARATOR
                         + "feikkitehtava";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -253,15 +292,15 @@ public class CourseSubmitterTest {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     ZipException, TmcCoreException {
         String testPath =
-                v
+                FILE_SEPARATOR
                         + "home"
-                        + v
+                        + FILE_SEPARATOR
                         + "test"
-                        + v
+                        + FILE_SEPARATOR
                         + "2013_FEIKKIKURSSI"
-                        + v
+                        + FILE_SEPARATOR
                         + "viikko_01"
-                        + v
+                        + FILE_SEPARATOR
                         + "viikko1-Viikko1_001.Nimi";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =

@@ -3,9 +3,9 @@ package hy.tmc.core.commands;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.communication.UrlCommunicator;
 import hy.tmc.core.exceptions.TmcCoreException;
-import hy.tmc.core.CoreTestSettings;
 import hy.tmc.core.testhelpers.ExampleJson;
 
 import org.junit.Before;

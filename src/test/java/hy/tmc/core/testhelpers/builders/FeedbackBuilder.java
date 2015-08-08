@@ -66,7 +66,7 @@ public class FeedbackBuilder {
         questions.add(fbq);
     }
 
-    private String intRange(int a, int b) {
-        return "intrange[" + a + ".." + b + "]";
+    private String intRange(int start, int end) {
+        return "intrange[" + start + ".." + end + "]";
     }
 }

@@ -86,7 +86,7 @@ public class ListCoursesTest {
     @Rule public WireMockRule wireMock = new WireMockRule();
 
     @Test
-    public void ListCoursesWillThrowExceptionIfAuthFailedOnServer()
+    public void listCoursesWillThrowExceptionIfAuthFailedOnServer()
             throws ExecutionException, InterruptedException, TmcCoreException {
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(TmcServerException.class));
         wireMock.stubFor(

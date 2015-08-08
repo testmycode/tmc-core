@@ -79,9 +79,7 @@ public class SendSpywareDiffsTest {
                     public void onFailure(Throwable thrwbl) {
                         System.err.println("virhe: " + thrwbl);
                     }
-                }
-
-                );
+                });
         while (!sendFuture.isDone()) {
             Thread.sleep(100);
         }

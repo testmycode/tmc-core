@@ -1,10 +1,20 @@
 package hy.tmc.core.commands;
 
-// TODO(jamo): fix * imports
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyDouble;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
@@ -41,7 +51,6 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -121,7 +130,7 @@ public class DownloadExercisesTest {
 
         parser = Mockito.mock(TmcJsonParser.class);
 
-        Mockito.when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
+        when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
 
         DownloadExercises dl = new DownloadExercises(downloader, "", "8", cache, settings, parser);
         dl.call();
@@ -186,7 +195,8 @@ public class DownloadExercisesTest {
     public void keepsOldChecksumsInTheCache() throws IOException, TmcCoreException {
         try (FileWriter writer = new FileWriter(cache)) {
             writer.write(
-                    "{\"test-course\":{\"kissa\":\"qwerty\",\"asdf2\":\"aijw9\"},\"test-course2\":{\"ankka\":\"22222\"}}");
+                    "{\"test-course\":{\"kissa\":\"qwerty\",\"asdf2\":\"aijw9\"},"
+                            + "\"test-course2\":{\"ankka\":\"22222\"}}");
         }
 
         ExerciseDownloader mock = Mockito.mock(ExerciseDownloader.class);

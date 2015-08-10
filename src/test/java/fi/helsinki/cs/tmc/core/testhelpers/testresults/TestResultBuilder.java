@@ -1,8 +1,8 @@
 package fi.helsinki.cs.tmc.core.testhelpers.testresults;
 
-import com.google.common.collect.ImmutableList;
-
 import fi.helsinki.cs.tmc.langs.domain.TestResult;
+
+import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.List;

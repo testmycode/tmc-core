@@ -4,12 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
-import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult.Status;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult.Status;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import org.mockito.Mockito;
 
 public class SubmissionPollerTest {

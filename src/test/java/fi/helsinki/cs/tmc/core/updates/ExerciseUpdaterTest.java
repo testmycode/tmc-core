@@ -1,21 +1,21 @@
-
 package fi.helsinki.cs.tmc.core.updates;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
 import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
+import fi.helsinki.cs.tmc.core.communication.updates.ExerciseUpdateHandler;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 import fi.helsinki.cs.tmc.core.testhelpers.builders.ExerciseBuilder;
-import fi.helsinki.cs.tmc.core.communication.updates.ExerciseUpdateHandler;
-import fi.helsinki.cs.tmc.core.domain.Exercise;
 
 import com.google.gson.Gson;
 

@@ -1,9 +1,9 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
-import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.communication.updates.ReviewHandler;
+import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import java.util.List;

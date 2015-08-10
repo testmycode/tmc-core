@@ -4,12 +4,11 @@ import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
-
-import com.google.common.base.Optional;
-
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
+import com.google.common.base.Optional;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

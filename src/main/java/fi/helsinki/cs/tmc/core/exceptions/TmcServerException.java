@@ -1,4 +1,3 @@
-
 package fi.helsinki.cs.tmc.core.exceptions;
 
 import java.io.IOException;

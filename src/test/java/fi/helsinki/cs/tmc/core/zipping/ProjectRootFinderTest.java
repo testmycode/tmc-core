@@ -10,10 +10,8 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
-
 import org.junit.Before;
 import org.junit.Test;
-
 import org.mockito.Mockito;
 
 import java.io.File;

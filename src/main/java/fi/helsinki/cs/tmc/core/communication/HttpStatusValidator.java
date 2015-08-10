@@ -1,4 +1,3 @@
-
 package fi.helsinki.cs.tmc.core.communication;
 
 import fi.helsinki.cs.tmc.core.exceptions.TmcServerException;

@@ -6,10 +6,9 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.zipping.RootFinder;
+import fi.helsinki.cs.tmc.langs.io.zip.Zipper;
 
 import com.google.common.base.Optional;
-
-import fi.helsinki.cs.tmc.langs.io.zip.Zipper;
 
 import net.lingala.zip4j.exception.ZipException;
 

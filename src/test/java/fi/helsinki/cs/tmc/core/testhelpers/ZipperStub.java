@@ -1,4 +1,3 @@
-
 package fi.helsinki.cs.tmc.core.testhelpers;
 
 import fi.helsinki.cs.tmc.core.zipping.ZipMaker;

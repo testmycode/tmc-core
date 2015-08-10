@@ -3,9 +3,11 @@ package fi.helsinki.cs.tmc.core.communication;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Matchers.eq;
+
 import static org.powermock.api.mockito.PowerMockito.mock;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;

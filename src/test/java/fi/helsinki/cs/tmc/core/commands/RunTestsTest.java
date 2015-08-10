@@ -5,10 +5,9 @@ import static org.junit.Assert.assertEquals;
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
 
 import com.google.common.util.concurrent.ListenableFuture;
-
-import fi.helsinki.cs.tmc.langs.domain.RunResult;
 
 import org.junit.Before;
 import org.junit.Test;

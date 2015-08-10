@@ -11,12 +11,11 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 import fi.helsinki.cs.tmc.core.testhelpers.ProjectRootFinderStub;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
-
-import com.google.common.base.Optional;
-
 import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
 import fi.helsinki.cs.tmc.langs.io.zip.Zipper;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
+import com.google.common.base.Optional;
 
 import net.lingala.zip4j.exception.ZipException;
 

@@ -3,11 +3,10 @@ package fi.helsinki.cs.tmc.core.communication;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
-
-import com.google.common.base.Optional;
-
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
+import com.google.common.base.Optional;
 
 import java.io.File;
 import java.io.IOException;

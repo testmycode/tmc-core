@@ -5,8 +5,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
@@ -16,6 +16,7 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import com.google.common.io.Files;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

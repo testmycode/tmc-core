@@ -3,11 +3,10 @@ package fi.helsinki.cs.tmc.core.zipping;
 import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-
-import com.google.common.base.Optional;
-
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
+import com.google.common.base.Optional;
 
 import java.io.File;
 import java.io.IOException;

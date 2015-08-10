@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.domain;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
 import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
@@ -14,8 +15,8 @@ import com.google.common.base.Optional;
 import edu.emory.mathcs.backport.java.util.Arrays;
 
 import org.junit.Before;
-import org.junit.runner.RunWith;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import org.mockito.Mockito;
 

@@ -12,8 +12,6 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +23,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
@@ -44,8 +43,8 @@ public class ReviewTest {
         review.setMarkedAsRead(false);
         String[] points = new String[] {"1.1", "1.2"};
         String[] pointsNot = new String[] {"1.3", "1.4"};
-        review.setPoints(new ArrayList<String>(Arrays.<String>asList(points)));
-        review.setPointsNotAwarded(new ArrayList<String>(Arrays.<String>asList(pointsNot)));
+        review.setPoints(new ArrayList<>(Arrays.asList(points)));
+        review.setPointsNotAwarded(new ArrayList<>(Arrays.asList(pointsNot)));
         review.setReviewBody("Nice coding!");
         review.setReviewerName("Samu");
         review.setSubmissionId(2);

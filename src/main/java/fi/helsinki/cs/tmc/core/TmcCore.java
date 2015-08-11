@@ -108,7 +108,7 @@ public class TmcCore {
      * @param pool thread threadpool which to use with the core
      */
     public TmcCore(ListeningExecutorService pool) {
-        this.threadPool = pool;
+        threadPool = pool;
     }
 
     /**

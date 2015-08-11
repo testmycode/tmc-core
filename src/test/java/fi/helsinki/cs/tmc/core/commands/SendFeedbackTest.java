@@ -29,7 +29,7 @@ public class SendFeedbackTest {
     }
 
     private Map<String, String> testCaseMap() {
-        Map<String, String> answers = new TreeMap<String, String>();
+        Map<String, String> answers = new TreeMap<>();
         answers.put("4", "jee jee!");
         answers.put(
                 "13", "Oli kiva tehtävä. Opin paljon koodia, nyt tunnen osaavani paljon paremmin");

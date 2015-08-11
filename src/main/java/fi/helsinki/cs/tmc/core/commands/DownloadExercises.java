@@ -247,7 +247,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
 
         for (Exercise exercise : exercises) {
             if (!checksums.containsKey(exercise.getCourseName())) {
-                checksums.put(exercise.getCourseName(), new HashMap());
+                checksums.put(exercise.getCourseName(), new HashMap<String, String>());
             }
             checksums.get(exercise.getCourseName()).put(exercise.getName(), exercise.getChecksum());
         }

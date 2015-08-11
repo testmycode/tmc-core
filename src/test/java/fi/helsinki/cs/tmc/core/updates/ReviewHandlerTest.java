@@ -13,7 +13,6 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.testhelpers.builders.ReviewListBuilder;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,9 +39,6 @@ public class ReviewHandlerTest {
                                 .withExercise(52, false)
                                 .build());
     }
-
-    @After
-    public void tearDown() {}
 
     @Test
     public void fetchReviewReturnsEmptyListIfServerSendsNull() throws IOException {

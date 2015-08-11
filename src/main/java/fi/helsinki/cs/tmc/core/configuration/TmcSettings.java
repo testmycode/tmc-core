@@ -6,30 +6,30 @@ import com.google.common.base.Optional;
 
 public interface TmcSettings {
 
-    public String getServerAddress();
+    String getServerAddress();
 
-    public String getPassword();
+    String getPassword();
 
-    public String getUsername();
+    String getUsername();
 
     /**
      * Checks that username and password are not null.
      */
-    public boolean userDataExists();
+    boolean userDataExists();
 
-    public Optional<Course> getCurrentCourse();
+    Optional<Course> getCurrentCourse();
 
-    public String apiVersion();
+    String apiVersion();
 
-    public String clientName();
+    String clientName();
 
-    public String clientVersion();
+    String clientVersion();
 
-    public String getFormattedUserData();
+    String getFormattedUserData();
 
     /**
      * Return the directory where course directories will be located. Projects
      * will be placed as follows: maindirectory/courseName/exerciseName
      */
-    public String getTmcMainDirectory();
+    String getTmcMainDirectory();
 }

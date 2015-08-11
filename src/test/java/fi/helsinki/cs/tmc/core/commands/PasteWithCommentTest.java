@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
@@ -18,7 +17,6 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.net.URI;
-import java.text.ParseException;
 
 public class PasteWithCommentTest {
     private PasteWithComment paste;

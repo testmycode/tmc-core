@@ -2,7 +2,6 @@ package fi.helsinki.cs.tmc.core.domain;
 
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
-import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;

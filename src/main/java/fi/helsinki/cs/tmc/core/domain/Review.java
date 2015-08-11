@@ -144,7 +144,7 @@ public class Review {
     }
 
     public void markAs(boolean read, UrlCommunicator urlCommunicator)
-            throws IOException, TmcCoreException {
+            throws IOException {
         Map<String, String> headers = addHeaders(read);
         HttpResult result = urlCommunicator.makePutRequest(putUrl(), Optional.of(headers));
         if (result.getData().contains("OK")) {

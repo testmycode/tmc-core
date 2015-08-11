@@ -39,7 +39,7 @@ public class PasteWithCommentTest {
         paste = new PasteWithComment(submitterMock, settings, "Commentti");
     }
 
-    private void mock() throws ParseException, ExpiredException, IOException, TmcCoreException {
+    private void mock() {
         settings = Mockito.mock(CoreTestSettings.class);
         Mockito.when(settings.getUsername()).thenReturn("Samu");
         Mockito.when(settings.getPassword()).thenReturn("Bossman");

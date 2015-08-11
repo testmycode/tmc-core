@@ -179,7 +179,7 @@ public class UrlCommunicator {
         return getResponseResult(httpPut);
     }
 
-    private HttpGet createGet(String url, String[] params) throws IOException {
+    private HttpGet createGet(String url, String[] params) {
         HttpGet request = new HttpGet(url);
         addCredentials(request, params[0]);
         return request;

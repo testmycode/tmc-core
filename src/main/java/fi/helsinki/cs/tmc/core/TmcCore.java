@@ -78,7 +78,7 @@ public class TmcCore {
         updateCache = newCache;
     }
 
-    private void moveCacheFile(File newCache) throws IOException, TmcCoreException {
+    private void moveCacheFile(File newCache) throws IOException {
         String oldData = FileUtils.readFileToString(updateCache, Charset.forName("UTF-8"));
         FileWriter writer = new FileWriter(newCache, true);
         writer.write(oldData);

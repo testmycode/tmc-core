@@ -57,7 +57,7 @@ public class TmcJsonParserTest {
                 .thenReturn(fakeResult);
     }
 
-    private void mockSubmissionUrl() throws IOException, TmcCoreException {
+    private void mockSubmissionUrl() throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.successfulSubmission, 200, true);
         Mockito.when(urlCommunicator.makeGetRequest(anyString(), anyString()))
                 .thenReturn(fakeResult);
@@ -88,7 +88,7 @@ public class TmcJsonParserTest {
     }
 
     @Test
-    public void parsesSubmissionUrlFromJson() throws IOException, TmcCoreException {
+    public void parsesSubmissionUrlFromJson() throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.submitResponse, 200, true);
         Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(anyString()))
                 .thenReturn(fakeResult);
@@ -109,7 +109,7 @@ public class TmcJsonParserTest {
 
     String realAddress = "http://real.address.fi";
 
-    private void mockCourse(String url) throws IOException, TmcCoreException {
+    private void mockCourse(String url) throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(eq(url)))
                 .thenReturn(fakeResult);

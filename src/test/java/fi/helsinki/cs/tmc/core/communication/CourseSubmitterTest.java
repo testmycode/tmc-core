@@ -308,8 +308,7 @@ public class CourseSubmitterTest {
         String result = courseSubmitter.submit(testPath);
     }
 
-    private void mockUrlCommunicator(String pieceOfUrl, String returnValue)
-            throws IOException, TmcCoreException {
+    private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         Mockito.when(
                         urlCommunicator.makeGetRequest(
@@ -320,8 +319,7 @@ public class CourseSubmitterTest {
     }
 
     @SuppressWarnings("unchecked")
-    private void mockUrlCommunicatorWithFile(String url, String returnValue)
-            throws IOException, TmcCoreException {
+    private void mockUrlCommunicatorWithFile(String url, String returnValue) throws IOException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         Mockito.when(
                         urlCommunicator.makePostWithByteArray(

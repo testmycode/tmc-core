@@ -43,7 +43,7 @@ public class VerifyCredentials extends Command<Boolean> {
         }
     }
 
-    private int makeRequest() throws IOException, TmcCoreException {
+    private int makeRequest() throws IOException {
         String auth = settings.getUsername() + ":" + settings.getPassword();
         return communicator
                 .makeGetRequest(settings.getServerAddress() + tmcServerRoute, auth)

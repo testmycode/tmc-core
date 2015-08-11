@@ -189,9 +189,7 @@ public class CourseSubmitterTest {
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
-        String submissionPath =
-                "http://127.0.0.1:8080/submissions/1781.json?api_version=7&client=tmc_cli&client_version=1";
-        String result = courseSubmitter.submit(testPath);
+        courseSubmitter.submit(testPath);
     }
 
     @Test
@@ -261,7 +259,7 @@ public class CourseSubmitterTest {
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
-        String result = courseSubmitter.submit(testPath);
+        courseSubmitter.submit(testPath);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -283,7 +281,7 @@ public class CourseSubmitterTest {
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
-        String result = courseSubmitter.submit(testPath);
+        courseSubmitter.submit(testPath);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -305,7 +303,7 @@ public class CourseSubmitterTest {
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
         rootFinder.setReturnValue(testPath);
-        String result = courseSubmitter.submit(testPath);
+        courseSubmitter.submit(testPath);
     }
 
     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException {

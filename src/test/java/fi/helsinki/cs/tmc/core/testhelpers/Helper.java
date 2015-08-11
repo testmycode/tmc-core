@@ -48,7 +48,7 @@ public class Helper {
         InputStream inputStream = process.getInputStream();
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
-            String line = null;
+            String line;
             while ((line = br.readLine()) != null) {
                 sb.append(line).append(System.getProperty("line.separator"));
             }

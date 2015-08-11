@@ -119,8 +119,7 @@ public class UrlCommunicatorTest {
 
     @Test(expected = IOException.class)
     public void badGetRequestIsThrown() throws IOException, TmcCoreException {
-        HttpResult makeGetRequest =
-                urlCommunicator.makeGetRequest("asasdasd", "chang:/\\\\eiparas");
+        urlCommunicator.makeGetRequest("asasdasd", "chang:/\\\\eiparas");
     }
 
     @Test

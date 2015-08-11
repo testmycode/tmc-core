@@ -73,7 +73,6 @@ public class RunCheckStyleTest {
     @Test(expected = TmcCoreException.class)
     public void testThrowsErrorForAbsentExerciseDirectory()
             throws NoLanguagePluginFoundException, TmcCoreException {
-        Path path = Paths.get("a", "b", "d");
         when(finderMock.getRootDirectory(any(Path.class))).thenReturn(Optional.<Path>absent());
         command.call();
     }
@@ -166,7 +165,6 @@ public class RunCheckStyleTest {
     public void exceptionIfPathToExerciseDoesNotExists() throws Exception {
         setupTwo();
         String pathToExercise = "polku/tiedostoon";
-        String rootDirectory = "polku";
         RunCheckStyle checkStyle =
                 new RunCheckStyle(pathToExercise, settings, finderMock, executorMock);
         Optional<Path> absentPath = Optional.absent();

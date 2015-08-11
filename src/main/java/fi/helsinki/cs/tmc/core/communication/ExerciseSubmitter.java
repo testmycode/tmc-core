@@ -60,10 +60,9 @@ public class ExerciseSubmitter {
         if (currentExercise.getDeadline() == null || currentExercise.getDeadline().equals("")) {
             return false;
         }
-        Date deadlineDate = new Date();
         Date current = new Date();
         DateFormat format = new SimpleDateFormat(DATE_FORMAT);
-        deadlineDate = format.parse(currentExercise.getDeadline());
+        Date deadlineDate = format.parse(currentExercise.getDeadline());
         return deadlineGone(current, deadlineDate);
     }
 

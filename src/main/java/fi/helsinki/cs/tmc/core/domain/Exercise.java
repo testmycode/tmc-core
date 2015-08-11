@@ -267,9 +267,8 @@ public class Exercise implements Serializable {
         }
         if (deadline != null) {
             try {
-                Date deadlineDate = new Date();
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-                deadlineDate = format.parse(deadline);
+                Date deadlineDate = format.parse(deadline);
                 return deadlineDate.getTime() < time.getTime();
             } catch (ParseException ex) {
                 System.err.println(ex.getMessage());

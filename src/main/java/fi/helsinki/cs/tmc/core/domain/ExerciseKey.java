@@ -8,9 +8,8 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import org.apache.commons.lang3.ObjectUtils;
-
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 /**
  * A pair (course name, exercise name).
@@ -28,8 +27,8 @@ public final class ExerciseKey {
     public boolean equals(Object obj) {
         if (obj instanceof ExerciseKey) {
             ExerciseKey that = (ExerciseKey) obj;
-            return ObjectUtils.equals(this.courseName, that.courseName)
-                    && ObjectUtils.equals(this.exerciseName, that.exerciseName);
+            return Objects.equals(this.courseName, that.courseName)
+                    && Objects.equals(this.exerciseName, that.exerciseName);
         } else {
             return false;
         }
@@ -37,7 +36,7 @@ public final class ExerciseKey {
 
     @Override
     public int hashCode() {
-        return ObjectUtils.hashCodeMulti(courseName, exerciseName);
+        return Objects.hash(courseName, exerciseName);
     }
 
     @Override

@@ -55,10 +55,7 @@ public class VerifyCredentials extends Command<Boolean> {
     @Override
     public Boolean call() throws TmcCoreException, IOException {
         checkData();
-        if (isOk(makeRequest())) {
-            return true;
-        }
-        return false;
+        return isOk(makeRequest());
     }
 
     public Optional<String> parseData(Object data) {

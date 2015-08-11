@@ -224,8 +224,7 @@ public class ExerciseSubmitter {
         if (!currentCourse.isPresent()) {
             throw new IllegalArgumentException("Not under any course directory");
         }
-        List<Exercise> courseExercises = tmcJsonParser.getExercises(currentCourse.get().getId());
-        return courseExercises;
+        return tmcJsonParser.getExercises(currentCourse.get().getId());
     }
 
     private Optional<Exercise> findCurrentExercise(

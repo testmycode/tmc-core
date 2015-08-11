@@ -42,7 +42,6 @@ public class ListCourses extends Command<List<Course>> {
     @Override
     public List<Course> call() throws TmcCoreException, IOException {
         checkData();
-        List<Course> courses = parser.getCourses();
-        return courses;
+        return parser.getCourses();
     }
 }

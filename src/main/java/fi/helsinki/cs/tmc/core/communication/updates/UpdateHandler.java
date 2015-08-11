@@ -19,9 +19,7 @@ public abstract class UpdateHandler<T> {
     public abstract List<T> fetchFromServer(Course course) throws Exception;
 
     public List<T> getNewObjects(Course course) throws Exception {
-        List<T> objects = filterNew(fetchFromServer(course));
-
-        return objects;
+        return filterNew(fetchFromServer(course));
     }
 
     private List<T> filterNew(List<T> objects) {

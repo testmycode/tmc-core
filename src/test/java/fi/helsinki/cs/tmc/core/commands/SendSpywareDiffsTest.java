@@ -64,7 +64,7 @@ public class SendSpywareDiffsTest {
 
         CoreTestSettings settings = setupSettings();
         byte[] diffs = new byte[] {1, 4, 6};
-        final List<HttpResult> result = new ArrayList<HttpResult>();
+        final List<HttpResult> result = new ArrayList<>();
         ListenableFuture<List<HttpResult>> sendFuture = this.core.sendSpywareDiffs(diffs, settings);
         Futures.addCallback(
                 sendFuture,

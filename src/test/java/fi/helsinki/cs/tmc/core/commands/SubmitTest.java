@@ -151,7 +151,7 @@ public class SubmitTest {
                                 + FILE_SEPARATOR
                                 + "Viikko1_004.Muuttujat",
                         settings);
-        final List<SubmissionResult> result = new ArrayList<SubmissionResult>();
+        final List<SubmissionResult> result = new ArrayList<>();
         Futures.addCallback(
                 submit,
                 new FutureCallback<SubmissionResult>() {

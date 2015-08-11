@@ -43,9 +43,9 @@ public class Course {
 
     public Course(String name) {
         this.name = name;
-        this.exercises = new ArrayList<Exercise>();
-        this.unlockables = new ArrayList<String>();
-        this.spywareUrls = new ArrayList<String>();
+        this.exercises = new ArrayList<>();
+        this.unlockables = new ArrayList<>();
+        this.spywareUrls = new ArrayList<>();
     }
 
     public List<String> getSpywareUrls() {

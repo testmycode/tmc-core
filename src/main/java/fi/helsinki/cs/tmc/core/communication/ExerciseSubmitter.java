@@ -118,7 +118,7 @@ public class ExerciseSubmitter {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     ZipException, TmcCoreException {
         Exercise currentExercise = initExercise(currentPath);
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("message_for_paste", comment);
         params.put("paste", "1");
         return sendZipFileWithParams(currentPath, currentExercise, true, params);

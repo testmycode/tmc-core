@@ -1,19 +1,19 @@
 package fi.helsinki.cs.tmc.core.exceptions;
 
 /**
- * ProtocolException is thrown when something goes wrong with protocol rules.
+ * TmcCoreException is thrown when something goes wrong with protocol rules.
  */
 public class TmcCoreException extends Exception {
 
     /**
-     * ProtocolException is thrown when system gets invalid protocol.
+     * TmcCoreException is thrown when system gets invalid protocol.
      */
     public TmcCoreException() {
         super();
     }
 
     /**
-     * ProtocolException can give a message.
+     * TmcCoreException can give a message.
      * @param message is a final string.
      */
     public TmcCoreException(final String message) {
@@ -21,7 +21,7 @@ public class TmcCoreException extends Exception {
     }
 
     /**
-     * ProtocolException can have cause as parameter.
+     * TmcCoreException can have cause as parameter.
      *
      * @param message final string message
      * @param cause cause why exception is thrown
@@ -31,7 +31,7 @@ public class TmcCoreException extends Exception {
     }
 
     /**
-     * ProtocolException can only have a cause.
+     * TmcCoreException can only have a cause.
      *
      * @param cause why exception is thrown
      */

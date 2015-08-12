@@ -59,30 +59,49 @@
                     </filesets>
                 </configuration>
             </plugin>
-             <plugin>
-                 <groupId>org.apache.maven.plugins</groupId>
-                 <artifactId>maven-checkstyle-plugin</artifactId>
-                 <configuration>
-                   <configLocation>google_checks.xml</configLocation>
-                 </configuration>
-                 <version>2.16</version>
-                 <executions>
-                     <execution>
-                         <id>test</id>
-                         <phase>test</phase>
-                         <configuration>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <repoToken>5GoNMxYH9nePbjXcp1DIFuzp6GHue9QbJ</repoToken>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <format>xml</format>
+                    <maxmem>256m</maxmem>
+                    <!-- aggregated reports for multi-module projects -->
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>google_checks.xml</configLocation>
+                </configuration>
+                <version>2.16</version>
+                <executions>
+                    <execution>
+                        <id>test</id>
+                        <phase>test</phase>
+                        <configuration>
                             <configLocation>google_checks.xml</configLocation>
-                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                             <encoding>UTF-8</encoding>
-                             <consoleOutput>true</consoleOutput>
-                             <failOnViolation>true</failOnViolation>
-                         </configuration>
-                         <goals>
-                             <goal>check</goal>
-                         </goals>
-                     </execution>
-                 </executions>
-             </plugin>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                            <failOnViolation>true</failOnViolation>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -97,7 +116,7 @@
                         <configuration>
                             <transformers>
                                 <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>hy.tmc.cli.Main</mainClass>
                                 </transformer>
                             </transformers>

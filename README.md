@@ -151,3 +151,4 @@ The tmc-core was initially created as part of the [TMC commandline Client](https
 
 The tmc-core was later separated and is maintained by the University of Helsinki CS 
 Dept. [Agile Education Research](https://github.com/rage) group.
+

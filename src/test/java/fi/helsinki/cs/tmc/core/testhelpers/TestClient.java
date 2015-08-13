@@ -42,7 +42,7 @@ public class TestClient {
         return socket;
     }
 
-    public void sendMessage(String message) throws IOException {
+    public void sendMessage(String message) {
         output.println(message);
     }
 

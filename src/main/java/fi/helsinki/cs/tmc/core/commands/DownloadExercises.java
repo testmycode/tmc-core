@@ -143,7 +143,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
             throw new TmcCoreException("Course ID required");
         }
         try {
-            int courseId = Integer.parseInt(this.data.get("courseID"));
+            Integer.parseInt(this.data.get("courseID"));
         } catch (NumberFormatException e) {
             throw new TmcCoreException("Given course id is not a number");
         }
@@ -163,9 +163,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
                 this.parser.getCourse(Integer.parseInt(this.data.get("courseID")));
         if (courseResult.isPresent()) {
             Course course = courseResult.get();
-            List<Exercise> downloadResult =
-                    downloadExercisesFromList(getExercisesToDownload(course), course.getName());
-            return downloadResult;
+            return downloadExercisesFromList(getExercisesToDownload(course), course.getName());
         }
 
         throw new TmcCoreException(
@@ -249,7 +247,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
 
         for (Exercise exercise : exercises) {
             if (!checksums.containsKey(exercise.getCourseName())) {
-                checksums.put(exercise.getCourseName(), new HashMap());
+                checksums.put(exercise.getCourseName(), new HashMap<String, String>());
             }
             checksums.get(exercise.getCourseName()).put(exercise.getName(), exercise.getChecksum());
         }

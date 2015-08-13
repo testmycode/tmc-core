@@ -2,7 +2,6 @@ package fi.helsinki.cs.tmc.core.domain;
 
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
-import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
@@ -144,7 +143,7 @@ public class Review {
     }
 
     public void markAs(boolean read, UrlCommunicator urlCommunicator)
-            throws IOException, TmcCoreException {
+            throws IOException {
         Map<String, String> headers = addHeaders(read);
         HttpResult result = urlCommunicator.makePutRequest(putUrl(), Optional.of(headers));
         if (result.getData().contains("OK")) {

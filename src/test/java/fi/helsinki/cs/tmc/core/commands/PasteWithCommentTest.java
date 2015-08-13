@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
@@ -18,7 +17,6 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.net.URI;
-import java.text.ParseException;
 
 public class PasteWithCommentTest {
     private PasteWithComment paste;
@@ -39,7 +37,7 @@ public class PasteWithCommentTest {
         paste = new PasteWithComment(submitterMock, settings, "Commentti");
     }
 
-    private void mock() throws ParseException, ExpiredException, IOException, TmcCoreException {
+    private void mock() {
         settings = Mockito.mock(CoreTestSettings.class);
         Mockito.when(settings.getUsername()).thenReturn("Samu");
         Mockito.when(settings.getPassword()).thenReturn("Bossman");

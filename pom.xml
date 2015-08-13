@@ -165,14 +165,14 @@
                     <aggregate>true</aggregate>
                     <instrumentation>
                         <ignores>
-                            <ignore>hy.tmc.core.domain.Exercise*</ignore>
-                            <ignore>hy.tmc.core.domain.submission</ignore>
-                            <ignore>hy.tmc.core.exceptions</ignore>
+                            <ignore>fi.helsinki.cs.tmc.core.domain.Exercise*</ignore>
+                            <ignore>fi.helsinki.cs.tmc.core.domain.submission</ignore>
+                            <ignore>fi.helsinki.cs.tmc.core.exceptions</ignore>
                         </ignores>
                         <excludes>
-                            <exclude>hy/tmc/core/domain/Exercise*.class</exclude>
-                            <exclude>hy/tmc/core/domain/submission/*</exclude>
-                            <exclude>hy/tmc/core/exceptions/*</exclude>
+                            <exclude>fi/helsinki/cs/tmc/core/domain/Exercise*.class</exclude>
+                            <exclude>fi/helsinki/cs/tmc/core/domain/submission/*</exclude>
+                            <exclude>fi/helsinki/cs/tmc/core/exceptions/*</exclude>
                         </excludes>
                     </instrumentation>
                     <!-- <instrumentation></instrumentation>  include here if no classes being tested-->

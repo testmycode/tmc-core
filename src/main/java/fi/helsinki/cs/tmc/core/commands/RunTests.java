@@ -46,7 +46,7 @@ public class RunTests extends Command<RunResult> {
 
     @Override
     public RunResult call() throws TmcCoreException, NoLanguagePluginFoundException {
-        String path = (String) this.data.get("path");
+        String path = this.data.get("path");
         ProjectRootFinder finder =
                 new ProjectRootFinder(new TaskExecutorImpl(), new TmcJsonParser(settings));
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));

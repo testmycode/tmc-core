@@ -101,7 +101,6 @@ public class Submit extends Command<SubmissionResult> {
                     IllegalArgumentException, ZipException, InterruptedException {
         checkData();
         String returnUrl = submitter.submit(data.get("path"));
-        SubmissionResult result = interpreter.getSubmissionResult(returnUrl);
-        return result;
+        return interpreter.getSubmissionResult(returnUrl);
     }
 }

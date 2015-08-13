@@ -9,7 +9,7 @@ public interface ProgressObserver {
     /**
      * Tells user-interface that some progress is done.
      */
-    public void progress(String progressMessage);
+    void progress(String progressMessage);
 
-    public void progress(Double procentDone, String progressMessage);
+    void progress(Double procentDone, String progressMessage);
 }

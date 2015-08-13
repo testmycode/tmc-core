@@ -79,7 +79,7 @@ public class DiffSenderTest {
         final File file = new File("testResources/test.zip");
         byte[] byteArray = Files.toByteArray(file);
         Course testCourse = new Course();
-        testCourse.setSpywareUrls(Arrays.asList(new String[] {spywareUrl}));
+        testCourse.setSpywareUrls(Arrays.asList(spywareUrl));
         List<HttpResult> results = sender.sendToSpyware(byteArray, testCourse);
         for (HttpResult res : results) {
             assertEquals(200, res.getStatusCode());

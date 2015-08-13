@@ -50,12 +50,10 @@ public class DiffSender {
      * @param url of destination
      * @return HttpResult from UrlCommunicator
      */
-    public HttpResult sendToUrl(byte[] diffs, String url) throws TmcCoreException {
+    public HttpResult sendToUrl(byte[] diffs, String url) {
         try {
-            HttpResult result =
-                    urlCommunicator.makePostWithByteArray(
+            return urlCommunicator.makePostWithByteArray(
                             url, diffs, createHeaders(), new HashMap<String, String>());
-            return result;
         } catch (IOException ex) {
             System.err.println(ex.getMessage());
             return new HttpResult(ex.getMessage(), 500, false);

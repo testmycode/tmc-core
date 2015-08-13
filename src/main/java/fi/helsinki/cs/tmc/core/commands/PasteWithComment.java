@@ -88,7 +88,6 @@ public class PasteWithComment extends Command<URI> {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     ZipException, TmcCoreException {
         checkData();
-        URI uri = URI.create(submitter.submitPasteWithComment(data.get("path"), this.comment));
-        return uri;
+        return URI.create(submitter.submitPasteWithComment(data.get("path"), this.comment));
     }
 }

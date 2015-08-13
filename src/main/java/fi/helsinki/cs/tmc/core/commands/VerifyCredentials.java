@@ -43,22 +43,17 @@ public class VerifyCredentials extends Command<Boolean> {
         }
     }
 
-    private int makeRequest() throws IOException, TmcCoreException {
+    private int makeRequest() throws IOException {
         String auth = settings.getUsername() + ":" + settings.getPassword();
-        int code =
-                communicator
-                        .makeGetRequest(settings.getServerAddress() + tmcServerRoute, auth)
-                        .getStatusCode();
-        return code;
+        return communicator
+                .makeGetRequest(settings.getServerAddress() + tmcServerRoute, auth)
+                .getStatusCode();
     }
 
     @Override
     public Boolean call() throws TmcCoreException, IOException {
         checkData();
-        if (isOk(makeRequest())) {
-            return true;
-        }
-        return false;
+        return isOk(makeRequest());
     }
 
     public Optional<String> parseData(Object data) {

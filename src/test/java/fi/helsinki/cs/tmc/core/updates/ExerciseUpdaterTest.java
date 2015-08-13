@@ -70,7 +70,7 @@ public class ExerciseUpdaterTest {
     @Test
     public void getsCorrectExercises() throws IOException, Exception {
         Map<String, Map<String, String>> checksums = new HashMap<>();
-        checksums.put("test-course", new HashMap());
+        checksums.put("test-course", new HashMap<String, String>());
         checksums.get("test-course").put("old", "abcdefg");
         try (FileWriter writer = new FileWriter(this.cacheFile)) {
             writer.write(new Gson().toJson(checksums));

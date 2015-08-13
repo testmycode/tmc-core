@@ -9,13 +9,13 @@ import java.util.List;
 
 public class SubmissionResult {
 
-    public static enum TestResultStatus {
+    public enum TestResultStatus {
         ALL_FAILED,
         SOME_FAILED,
         NONE_FAILED
     }
 
-    public static enum Status {
+    public enum Status {
         OK,
         FAIL,
         ERROR,

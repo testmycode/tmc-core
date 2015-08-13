@@ -105,7 +105,7 @@ public class UrlCommunicatorTest {
         settings.setUsername("test");
         settings.setPassword("1234");
         File testFile = new File("testResources/test.zip");
-        HashMap<String, String> params = new HashMap<String, String>();
+        HashMap<String, String> params = new HashMap<>();
         params.put("paste", "Commentti");
         HttpResult result =
                 urlCommunicator.makePostWithFileAndParams(
@@ -119,8 +119,7 @@ public class UrlCommunicatorTest {
 
     @Test(expected = IOException.class)
     public void badGetRequestIsThrown() throws IOException, TmcCoreException {
-        HttpResult makeGetRequest =
-                urlCommunicator.makeGetRequest("asasdasd", "chang:/\\\\eiparas");
+        urlCommunicator.makeGetRequest("asasdasd", "chang:/\\\\eiparas");
     }
 
     @Test

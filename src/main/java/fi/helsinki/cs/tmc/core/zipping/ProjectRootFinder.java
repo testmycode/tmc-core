@@ -85,8 +85,7 @@ public class ProjectRootFinder implements RootFinder {
         for (Course course : courses) {
             for (String folderName : foldersPath) {
                 if (course.getName().equals(folderName)) {
-                    Optional<Course> courseOptional = Optional.of(course);
-                    return courseOptional;
+                    return Optional.of(course);
                 }
             }
         }

@@ -136,11 +136,11 @@ public class SubmitTest {
     public void submitWithTmcCore() throws Exception {
         mockSubmit();
 
-        TmcCore core = new TmcCore();
         CoreTestSettings settings = new CoreTestSettings("test", "1234", "http://localhost:8080");
         TmcJsonParser parser = new TmcJsonParser(settings);
         Course course = parser.getCourseFromString(ExampleJson.noDeadlineCourseExample);
         settings.setCurrentCourse(course);
+        TmcCore core = new TmcCore(settings);
         ListenableFuture<SubmissionResult> submit =
                 core.submit(
                         "testResources"
@@ -149,8 +149,7 @@ public class SubmitTest {
                                 + FILE_SEPARATOR
                                 + "viikko1"
                                 + FILE_SEPARATOR
-                                + "Viikko1_004.Muuttujat",
-                        settings);
+                                + "Viikko1_004.Muuttujat");
         final List<SubmissionResult> result = new ArrayList<>();
         Futures.addCallback(
                 submit,

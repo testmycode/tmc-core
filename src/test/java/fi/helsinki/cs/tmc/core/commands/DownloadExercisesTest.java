@@ -73,7 +73,7 @@ public class DownloadExercisesTest {
         cache = Paths.get("src", "test", "resources", "downloadtest.cache").toFile();
         cache.createNewFile();
         parser = Mockito.mock(TmcJsonParser.class);
-        this.core = new TmcCore();
+        this.core = new TmcCore(settings);
     }
 
     @After
@@ -238,9 +238,10 @@ public class DownloadExercisesTest {
     @Test
     public void downloadAllExercises() throws Exception {
         CoreTestSettings settings1 = createSettingsAndWiremock();
+        core = new TmcCore(settings1);
         String folder = System.getProperty("user.dir") + "/testResources/";
         ListenableFuture<List<Exercise>> download =
-                core.downloadExercises(folder, "35", settings1, null);
+                core.downloadExercises(folder, "35", null);
 
         List<Exercise> exercises = download.get();
         String exercisePath = folder + "2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi";
@@ -255,10 +256,11 @@ public class DownloadExercisesTest {
     @Test
     public void testDowloadingWithProgress() throws Exception {
         CoreTestSettings settings1 = createSettingsAndWiremock();
+        core = new TmcCore(settings1);
         ProgressObserver observerMock = Mockito.mock(ProgressObserver.class);
         String folder = System.getProperty("user.dir") + "/testResources/";
         ListenableFuture<List<Exercise>> download =
-                core.downloadExercises(folder, "35", settings1, observerMock);
+                core.downloadExercises(folder, "35", observerMock);
         List<Exercise> exercises = download.get();
         String exercisePath = folder + "2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi";
         assertEquals(exercises.size(), 153);

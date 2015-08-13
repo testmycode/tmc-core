@@ -35,7 +35,7 @@ public class SendSpywareDiffsTest {
 
     @Before
     public void setup() {
-        this.core = new TmcCore();
+        this.core = new TmcCore(null);
     }
 
     @Test(expected = TmcCoreException.class)
@@ -43,14 +43,16 @@ public class SendSpywareDiffsTest {
         CoreTestSettings settings = new CoreTestSettings();
         settings.setUsername("snapshotTest");
         settings.setPassword("snapshotTest");
-        this.core.sendSpywareDiffs(null, settings);
+        this.core = new TmcCore(settings);
+        this.core.sendSpywareDiffs(null);
     }
 
     @Test(expected = TmcCoreException.class)
     public void testCheckDataNoUsername() throws Exception {
         CoreTestSettings settings = new CoreTestSettings();
         settings.setPassword("snapshotTest");
-        this.core.sendSpywareDiffs(new byte[5000], settings);
+        core = new TmcCore(settings);
+        this.core.sendSpywareDiffs(new byte[5000]);
     }
 
     @Test
@@ -63,9 +65,10 @@ public class SendSpywareDiffsTest {
                                         .withBody("SPYWARE TULI PERILLE")));
 
         CoreTestSettings settings = setupSettings();
+        this.core = new TmcCore(settings);
         byte[] diffs = new byte[] {1, 4, 6};
         final List<HttpResult> result = new ArrayList<>();
-        ListenableFuture<List<HttpResult>> sendFuture = this.core.sendSpywareDiffs(diffs, settings);
+        ListenableFuture<List<HttpResult>> sendFuture = this.core.sendSpywareDiffs(diffs);
         Futures.addCallback(
                 sendFuture,
                 new FutureCallback<List<HttpResult>>() {

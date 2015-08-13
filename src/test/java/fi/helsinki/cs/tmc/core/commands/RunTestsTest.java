@@ -54,8 +54,8 @@ public class RunTestsTest {
         String path =
                 System.getProperty("user.dir")
                         + "/testResources/2014-mooc-no-deadline/viikko1/Viikko1_001.Nimi/src";
-        TmcCore core = new TmcCore();
-        ListenableFuture<RunResult> testFuture = core.test(path, settings);
+        TmcCore core = new TmcCore(settings);
+        ListenableFuture<RunResult> testFuture = core.test(path);
         RunResult result = testFuture.get();
 
         assertEquals("TESTS_FAILED", result.status.toString());
@@ -66,8 +66,8 @@ public class RunTestsTest {
         String path =
                 System.getProperty("user.dir")
                         + "/testResources/successExercise/viikko1/Viikko1_001.Nimi/src";
-        TmcCore core = new TmcCore();
-        ListenableFuture<RunResult> testFuture = core.test(path, settings);
+        TmcCore core = new TmcCore(settings);
+        ListenableFuture<RunResult> testFuture = core.test(path);
         RunResult result = testFuture.get();
 
         assertEquals("PASSED", result.status.toString());

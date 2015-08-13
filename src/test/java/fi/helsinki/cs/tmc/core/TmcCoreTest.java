@@ -22,6 +22,7 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.FileWriterHelper;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
+
 import org.apache.commons.io.FileUtils;
 
 import org.junit.After;
@@ -49,12 +50,12 @@ public class TmcCoreTest {
     @Before
     public void setUp() throws IOException {
         threadPool = Mockito.mock(ListeningExecutorService.class);
-        tmcCore = new TmcCore(threadPool);
         course = new Course();
         settings = new CoreTestSettings("test", "1234");
         settings.setServerAddress(tmcServerAddress);
         Paths.get("src", "test", "resources", "cachefile").toFile().createNewFile();
         Paths.get("src", "test", "resources", "file2.cache").toFile().createNewFile();
+        tmcCore = new TmcCore(settings, threadPool);
     }
 
     @After
@@ -65,7 +66,7 @@ public class TmcCoreTest {
 
     @Test
     public void verifyCredentials() throws Exception {
-        tmcCore.verifyCredentials(settings);
+        tmcCore.verifyCredentials();
         verify(threadPool, times(1)).submit(any(VerifyCredentials.class));
     }
 
@@ -73,25 +74,27 @@ public class TmcCoreTest {
     public void loginWithoutNumberFails() throws Exception {
         CoreTestSettings emptySettings = new CoreTestSettings("", "");
         emptySettings.setServerAddress(tmcServerAddress);
-        tmcCore.verifyCredentials(emptySettings).get();
+        tmcCore = new TmcCore(emptySettings);
+        tmcCore.verifyCredentials().get();
     }
 
     @Test(expected = TmcCoreException.class)
     public void loginWithoutServerAddrees() throws Exception {
         CoreTestSettings emptySettings = new CoreTestSettings("", "");
         emptySettings.setServerAddress("");
-        tmcCore.verifyCredentials(emptySettings).get();
+        tmcCore = new TmcCore(emptySettings);
+        tmcCore.verifyCredentials().get();
     }
 
     @Test
     public void downloadExercises() throws Exception {
-        tmcCore.downloadExercises("/polku/tiedostoille", "21", settings, null);
+        tmcCore.downloadExercises("/polku/tiedostoille", "21", null);
         verify(threadPool, times(1)).submit(any(DownloadExercises.class));
     }
 
     @Test
     public void listCourses() throws Exception {
-        tmcCore.listCourses(settings);
+        tmcCore.listCourses();
         verify(threadPool, times(1)).submit(any(ListCourses.class));
     }
 
@@ -99,20 +102,20 @@ public class TmcCoreTest {
     public void nonExistantCacheFileThrowsException() throws Exception {
         Path path = Paths.get("src", "test", "resources", "nothere.cache");
         tmcCore.setCacheFile(path.toFile());
-        tmcCore.getNewAndUpdatedExercises(course, settings);
+        tmcCore.getNewAndUpdatedExercises(course);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void nonExistantCacheFileThrowsExceptionFromConstructor() throws Exception {
         Path path = Paths.get("src", "test", "resources", "nothere.cache");
-        new TmcCore(path.toFile(), threadPool);
+        new TmcCore(settings, path.toFile(), threadPool);
     }
 
     @Test
     public void getExerciseUpdatesTest() throws Exception {
         Path path = Paths.get("src", "test", "resources", "cachefile");
         tmcCore.setCacheFile(path.toFile());
-        tmcCore.getNewAndUpdatedExercises(course, settings);
+        tmcCore.getNewAndUpdatedExercises(course);
         verify(threadPool, times(1)).submit(any(GetExerciseUpdates.class));
         assertEquals(tmcCore.getCacheFile(), path.toFile());
     }
@@ -121,7 +124,7 @@ public class TmcCoreTest {
     public void withNoCacheFileErrorIsThrownWithExerciseUpdates() throws Exception {
         // using catch to verify command has not been sent
         try {
-            tmcCore.getNewAndUpdatedExercises(course, settings);
+            tmcCore.getNewAndUpdatedExercises(course);
         } catch (TmcCoreException ex) {
             verify(threadPool, times(0)).submit(any(GetExerciseUpdates.class));
             return;
@@ -131,7 +134,7 @@ public class TmcCoreTest {
 
     @Test(expected = FileNotFoundException.class)
     public void nullCaughtTest() throws FileNotFoundException {
-        new TmcCore((File) null);
+        new TmcCore(settings, (File) null, threadPool);
     }
 
     @Test(expected = FileNotFoundException.class)
@@ -148,8 +151,8 @@ public class TmcCoreTest {
     @Test
     public void cacheFileGivenInConstructorTest() throws Exception {
         Path path = Paths.get("src", "test", "resources", "cachefile");
-        TmcCore core = new TmcCore(path.toFile(), threadPool);
-        core.getNewAndUpdatedExercises(course, settings);
+        TmcCore core = new TmcCore(settings, path.toFile(), threadPool);
+        core.getNewAndUpdatedExercises(course);
         assertEquals(core.getCacheFile(), path.toFile());
         verify(threadPool, times(1)).submit(any(GetExerciseUpdates.class));
     }
@@ -168,25 +171,25 @@ public class TmcCoreTest {
 
     @Test
     public void getNewReviewsTest() throws TmcCoreException {
-        tmcCore.getNewReviews(course, settings);
+        tmcCore.getNewReviews(course);
         verify(threadPool, times(1)).submit(any(GetUnreadReviews.class));
     }
 
     @Test
     public void test() throws Exception {
-        tmcCore.test("testi/polku", settings);
+        tmcCore.test("testi/polku");
         verify(threadPool, times(1)).submit(any(RunTests.class));
     }
 
     @Test
     public void sendFeedback() throws Exception {
-        tmcCore.sendFeedback(new HashMap<String, String>(), "internet.computer/file", settings);
+        tmcCore.sendFeedback(new HashMap<String, String>(), "internet.computer/file");
         verify(threadPool, times(1)).submit(any(SendFeedback.class));
     }
 
     @Test
     public void submit() throws Exception {
-        tmcCore.submit("polku/tiedostoon", settings);
+        tmcCore.submit("polku/tiedostoon");
         verify(threadPool, times(1)).submit(any(Submit.class));
     }
 
@@ -198,18 +201,18 @@ public class TmcCoreTest {
 
     @Test(expected = TmcCoreException.class)
     public void submitWithBadPathThrowsException() throws TmcCoreException {
-        tmcCore.submit("", settings);
+        tmcCore.submit("");
     }
 
     @Test(expected = TmcCoreException.class)
     public void downloadExercisesWithBadPathThrowsException() throws Exception {
-        tmcCore.downloadExercises(null, "2", settings, null);
+        tmcCore.downloadExercises(null, "2", null);
     }
 
     @Test
     public void downloadExercisesUsesCacheIfSet() throws Exception {
         tmcCore.setCacheFile(Paths.get("src", "test", "resources", "cachefile").toFile());
-        tmcCore.downloadExercises("asdf", "asdf", settings, null);
+        tmcCore.downloadExercises("asdf", "asdf", null);
         final ArgumentCaptor<DownloadExercises> argument =
                 ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
@@ -218,7 +221,7 @@ public class TmcCoreTest {
 
     @Test
     public void downloadExercisesDoesNotUseCacheIfNotSet() throws Exception {
-        tmcCore.downloadExercises("asdf", "asdf", settings, null);
+        tmcCore.downloadExercises("asdf", "asdf", null);
         final ArgumentCaptor<DownloadExercises> argument =
                 ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());

@@ -98,8 +98,8 @@ public class ListCoursesTest {
         localSettings.setUsername("testy");
         localSettings.setPassword("1234");
         localSettings.setServerAddress("http://localhost:8080");
-        TmcCore core = new TmcCore();
-        ListenableFuture<List<Course>> courses = core.listCourses(localSettings);
+        TmcCore core = new TmcCore(localSettings);
+        ListenableFuture<List<Course>> courses = core.listCourses();
         courses.get();
     }
 }

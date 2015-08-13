@@ -50,22 +50,26 @@ public class TmcCore {
     static ListeningExecutorService threadPool =
             MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
     private File updateCache;
+    private TmcSettings settings;
 
     /**
      * The TmcCore that can be used as a standalone businesslogic for any tmc client application.
      * The TmcCore provides all the essential backend functionalities as public methods.
      */
-    public TmcCore() {
-        threadPool = MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+    public TmcCore(TmcSettings settings) {
+        this.settings = settings;
     }
 
-    public TmcCore(File updateCache) throws FileNotFoundException {
-        this(updateCache, MoreExecutors.listeningDecorator(Executors.newCachedThreadPool()));
+    public TmcCore(TmcSettings settings, ListeningExecutorService pool) {
+        this(settings);
+
+        threadPool = pool;
     }
 
-    public TmcCore(File updateCache, ListeningExecutorService threadPool)
+    public TmcCore(TmcSettings settings, File updateCache, ListeningExecutorService threadPool)
             throws FileNotFoundException {
-        this(threadPool);
+        this(settings, threadPool);
+
         ensureCacheFileExists(updateCache);
         this.updateCache = updateCache;
     }
@@ -103,21 +107,11 @@ public class TmcCore {
     }
 
     /**
-     * For dependency injection of threadpool.
-     *
-     * @param pool thread threadpool which to use with the core
-     */
-    public TmcCore(ListeningExecutorService pool) {
-        threadPool = pool;
-    }
-
-    /**
      * Authenticates the given user on the server.
      *
-     * @param settings containing credentials and server address.
      * @return A future-object containing true or false on success or fail
      */
-    public ListenableFuture<Boolean> verifyCredentials(TmcSettings settings)
+    public ListenableFuture<Boolean> verifyCredentials()
             throws TmcCoreException {
         checkParameters(
                 settings.getUsername(), settings.getPassword(), settings.getServerAddress());
@@ -128,10 +122,9 @@ public class TmcCore {
     /**
      * Fetch one course from tmc-server.
      *
-     * @param settings containing at least credentials
      * @param url defines the url to course
      */
-    public ListenableFuture<Course> getCourse(TmcSettings settings, String url)
+    public ListenableFuture<Course> getCourse(String url)
             throws TmcCoreException {
         try {
             checkParameters(settings.getUsername(), settings.getPassword());
@@ -145,7 +138,7 @@ public class TmcCore {
     /**
      * Returns course instance with given name.
      */
-    public ListenableFuture<Course> getCourseByName(TmcSettings settings, String courseName)
+    public ListenableFuture<Course> getCourseByName(String courseName)
             throws TmcCoreException, IOException {
         checkParameters(settings.getUsername(), settings.getPassword());
         GetCourse getC = new GetCourse(settings, courseName);
@@ -164,10 +157,10 @@ public class TmcCore {
      * @throws TmcCoreException if something in the given input was wrong
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
-            String path, String courseId, TmcSettings settings, ProgressObserver observer)
+            String path, String courseId, ProgressObserver observer)
             throws TmcCoreException {
         checkParameters(path, courseId);
-        DownloadExercises downloadCommand = getDownloadCommand(path, courseId, settings, observer);
+        DownloadExercises downloadCommand = getDownloadCommand(path, courseId, observer);
         return threadPool.submit(downloadCommand);
     }
 
@@ -176,30 +169,28 @@ public class TmcCore {
      * TmcMainDirectory (field in TmcSettings).
      *
      * @param exercises to be downloaded
-     * @param settings object that implements TmcSettings-interface. Requisite fields are username,
-     *     password, serverAddress and TmcMainDirectory.
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
-            List<Exercise> exercises, TmcSettings settings) throws TmcCoreException {
-        return this.downloadExercises(exercises, settings, null);
+            List<Exercise> exercises) throws TmcCoreException {
+        return this.downloadExercises(exercises, null);
     }
 
     /**
      * Downloads exercises.
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
-            List<Exercise> exercises, TmcSettings settings, ProgressObserver observer)
+            List<Exercise> exercises, ProgressObserver observer)
             throws TmcCoreException {
         checkParameters(
                 settings.getFormattedUserData(),
                 settings.getTmcMainDirectory(),
                 settings.getServerAddress());
-        DownloadExercises downloadCommand = this.getDownloadCommand(exercises, settings, observer);
+        DownloadExercises downloadCommand = this.getDownloadCommand(exercises, observer);
         return threadPool.submit(downloadCommand);
     }
 
     private DownloadExercises getDownloadCommand(
-            String path, String courseId, TmcSettings settings, ProgressObserver observer) {
+            String path, String courseId, ProgressObserver observer) {
         if (this.updateCache == null) {
             return new DownloadExercises(path, courseId, settings, observer);
         }
@@ -207,7 +198,7 @@ public class TmcCore {
     }
 
     private DownloadExercises getDownloadCommand(
-            List<Exercise> exercises, TmcSettings settings, ProgressObserver observer)
+            List<Exercise> exercises, ProgressObserver observer)
             throws TmcCoreException {
         if (observer == null) {
             if (this.updateCache == null) {
@@ -228,8 +219,7 @@ public class TmcCore {
      * @return list containing course-objects parsed from JSON
      * @throws TmcCoreException if something went wrong
      */
-    public ListenableFuture<List<Course>> listCourses(TmcSettings settings)
-            throws TmcCoreException {
+    public ListenableFuture<List<Course>> listCourses() throws TmcCoreException {
         @SuppressWarnings("unchecked")
         ListCourses listCommand = new ListCourses(settings);
         return threadPool.submit(listCommand);
@@ -244,8 +234,7 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, no exercise in the given
      *         path, or not logged in
      */
-    public ListenableFuture<SubmissionResult> submit(String path, TmcSettings settings)
-            throws TmcCoreException {
+    public ListenableFuture<SubmissionResult> submit(String path) throws TmcCoreException {
         checkParameters(path);
         Submit submit = new Submit(path, settings);
         return threadPool.submit(submit);
@@ -260,8 +249,7 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
      *     given path
      */
-    public ListenableFuture<RunResult> test(String path, TmcSettings settings)
-            throws TmcCoreException {
+    public ListenableFuture<RunResult> test(String path) throws TmcCoreException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
         RunTests testCommand = new RunTests(path, settings);
@@ -277,8 +265,7 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
      *     given path
      */
-    public ListenableFuture<ValidationResult> runCheckstyle(String path, TmcSettings settings)
-            throws TmcCoreException {
+    public ListenableFuture<ValidationResult> runCheckstyle(String path) throws TmcCoreException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
         RunCheckStyle checkstyleCommand = new RunCheckStyle(path, settings);
@@ -291,8 +278,7 @@ public class TmcCore {
      * @param course the course whose reviews are checked
      * @return a list of unread reviews for the given course
      */
-    public ListenableFuture<List<Review>> getNewReviews(Course course, TmcSettings settings)
-            throws TmcCoreException {
+    public ListenableFuture<List<Review>> getNewReviews(Course course) throws TmcCoreException {
         ReviewHandler reviewHandler = new ReviewHandler(new TmcJsonParser(settings));
         GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler, settings);
         command.checkData();
@@ -310,8 +296,8 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
      *     given path
      */
-    public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(
-            Course course, TmcSettings settings) throws TmcCoreException {
+    public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course)
+            throws TmcCoreException {
         ExerciseUpdateHandler updater =
                 new ExerciseUpdateHandler(updateCache, new TmcJsonParser(settings));
         GetExerciseUpdates command = new GetExerciseUpdates(course, updater, settings);
@@ -327,8 +313,7 @@ public class TmcCore {
      * @return a HttpResult of the servers reply. It should contain "{status:ok}" if everything goes
      *     well
      */
-    public ListenableFuture<HttpResult> sendFeedback(
-            Map<String, String> answers, String url, TmcSettings settings)
+    public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url)
             throws TmcCoreException, IOException {
         SendFeedback feedback = new SendFeedback(answers, url, settings);
         feedback.checkData();
@@ -345,7 +330,7 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
      *     given path
      */
-    public ListenableFuture<URI> pasteWithComment(String path, TmcSettings settings, String comment)
+    public ListenableFuture<URI> pasteWithComment(String path, String comment)
             throws TmcCoreException {
         checkParameters(path);
         PasteWithComment paste = new PasteWithComment(path, settings, comment);
@@ -359,8 +344,8 @@ public class TmcCore {
      * @param spywareDiffs byte array containing information of changes to project files.
      * @return A future object containing a results from every spyware server.
      */
-    public ListenableFuture<List<HttpResult>> sendSpywareDiffs(
-            byte[] spywareDiffs, TmcSettings settings) throws TmcCoreException {
+    public ListenableFuture<List<HttpResult>> sendSpywareDiffs(byte[] spywareDiffs)
+            throws TmcCoreException {
         SendSpywareDiffs spyware = new SendSpywareDiffs(spywareDiffs, settings);
         spyware.checkData();
         return threadPool.submit(spyware);

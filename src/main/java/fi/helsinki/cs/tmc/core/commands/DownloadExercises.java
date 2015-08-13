@@ -37,43 +37,48 @@ public class DownloadExercises extends Command<List<Exercise>> {
     private TmcJsonParser parser;
     private List<Exercise> exercisesToDownload;
     private ProgressObserver observer;
+    private int courseId;
+    private String path;
 
     public DownloadExercises(List<Exercise> exercisesToDownload, TmcSettings settings)
             throws TmcCoreException {
         super(settings);
+
         this.parser = new TmcJsonParser(settings);
-        this.exerciseDownloader =
-                new ExerciseDownloader(new UrlCommunicator(settings), new TmcJsonParser(settings));
+        this.exerciseDownloader = new ExerciseDownloader(new UrlCommunicator(settings), parser);
         this.exercisesToDownload = exercisesToDownload;
+        this.path = settings.getTmcMainDirectory();
+
         Optional<Course> currentCourse = settings.getCurrentCourse();
-        String mainDirectory = settings.getTmcMainDirectory();
         if (currentCourse.isPresent()) {
-            Course course = currentCourse.get();
-            this.setParameter("courseID", "" + course.getId());
-            this.setParameter("path", mainDirectory);
+            this.courseId = currentCourse.get().getId();
         } else {
             throw new TmcCoreException("Unable to determine course, cannot download");
         }
     }
 
     public DownloadExercises(
-            String path, String courseId, TmcSettings settings, ProgressObserver observer) {
+            String path,
+            int courseId,
+            TmcSettings settings,
+            ProgressObserver observer) {
         super(settings);
-        this.setParameter("path", path);
-        this.setParameter("courseID", courseId);
+
+        this.path = path;
+        this.courseId = courseId;
         this.parser = new TmcJsonParser(settings);
-        this.exerciseDownloader =
-                new ExerciseDownloader(new UrlCommunicator(settings), new TmcJsonParser(settings));
+        this.exerciseDownloader = new ExerciseDownloader(new UrlCommunicator(settings), parser);
         this.observer = observer;
     }
 
     public DownloadExercises(
             String path,
-            String courseId,
+            int courseId,
             TmcSettings settings,
             File cacheFile,
             ProgressObserver observer) {
         this(path, courseId, settings, observer);
+
         this.cacheFile = cacheFile;
         this.parser = new TmcJsonParser(settings);
     }
@@ -81,14 +86,15 @@ public class DownloadExercises extends Command<List<Exercise>> {
     public DownloadExercises(
             ExerciseDownloader downloader,
             String path,
-            String courseId,
+            int courseId,
             File cacheFile,
             TmcSettings settings,
             TmcJsonParser parser) {
         super(settings);
+
         this.exerciseDownloader = downloader;
-        this.setParameter("path", path);
-        this.setParameter("courseID", courseId);
+        this.courseId = courseId;
+        this.path = path;
         this.cacheFile = cacheFile;
         this.parser = parser;
     }
@@ -116,40 +122,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
         this.observer = observer;
     }
 
-    /**
-     * Checks that command has required parameters courseID is the id of the course and path is the
-     * path of where files are downloaded and extracted.
-     *
-     * @throws TmcCoreException if path isn't supplied
-     */
-    @Override
-    public void checkData() throws TmcCoreException {
-        checkCourseId();
-        if (!this.data.containsKey("path")) {
-            throw new TmcCoreException("Path required");
-        }
-        if (!settings.userDataExists()) {
-            throw new TmcCoreException("You need to login first.");
-        }
-    }
-
-    /**
-     * Check that user has given also course id.
-     *
-     * @throws TmcCoreException if course id is not a number
-     */
-    private void checkCourseId() throws TmcCoreException {
-        if (!this.data.containsKey("courseID")) {
-            throw new TmcCoreException("Course ID required");
-        }
-        try {
-            Integer.parseInt(this.data.get("courseID"));
-        } catch (NumberFormatException e) {
-            throw new TmcCoreException("Given course id is not a number");
-        }
-    }
-
-    public boolean cacheFileSet() {
+    public boolean hasCacheFile() {
         return this.cacheFile != null;
     }
 
@@ -158,16 +131,19 @@ public class DownloadExercises extends Command<List<Exercise>> {
      */
     @Override
     public List<Exercise> call() throws TmcCoreException, IOException {
-        checkData();
-        Optional<Course> courseResult =
-                this.parser.getCourse(Integer.parseInt(this.data.get("courseID")));
-        if (courseResult.isPresent()) {
-            Course course = courseResult.get();
-            return downloadExercisesFromList(getExercisesToDownload(course), course.getName());
+        if (!settings.userDataExists()) {
+            throw new TmcCoreException("You need to login first.");
         }
 
-        throw new TmcCoreException(
-                "Could not find the course. Please check your internet connection");
+        Optional<Course> courseResult = this.parser.getCourse(this.courseId);
+
+        if (!courseResult.isPresent()) {
+            throw new TmcCoreException(
+                    "Could not find the course. Please check your internet connection");
+        }
+
+        Course course = courseResult.get();
+        return downloadExercisesFromList(getExercisesToDownload(course), course.getName());
     }
 
     private List<Exercise> getExercisesToDownload(Course course) {
@@ -184,8 +160,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
      */
     public List<Exercise> downloadExercisesFromList(List<Exercise> exercises, String courseName) {
         List<Exercise> downloadedExercises = new ArrayList<>();
-        String courseFolderPath =
-                exerciseDownloader.createCourseFolder(data.get("path"), courseName);
+        String courseFolderPath = exerciseDownloader.createCourseFolder(this.path, courseName);
         downloadExercises(exercises, courseName, downloadedExercises, courseFolderPath);
         cache(downloadedExercises);
         return downloadedExercises;

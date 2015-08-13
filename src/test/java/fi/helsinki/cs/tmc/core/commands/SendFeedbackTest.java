@@ -1,31 +1,41 @@
 package fi.helsinki.cs.tmc.core.commands;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.matching;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.verify;
+
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
-import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.domain.Course;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
-import org.mockito.Mockito;
-
-import java.io.IOException;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class SendFeedbackTest {
 
+    private static final String URL = "http://localhost:8080/feedback";
+
     private SendFeedback command;
-    private String url = "www.example.tmc";
-    CoreTestSettings settings;
-    UrlCommunicator communicator;
+    private CoreTestSettings settings;
+
+    @Rule
+    public WireMockRule wireMock = new WireMockRule();
 
     @Before
     public void setUp() {
         settings = new CoreTestSettings();
-        communicator = Mockito.mock(UrlCommunicator.class);
-        command = new SendFeedback(testCaseMap(), url, settings);
+
+        command = new SendFeedback(testCaseMap(), URL, settings);
     }
 
     private Map<String, String> testCaseMap() {
@@ -38,24 +48,28 @@ public class SendFeedbackTest {
         return answers;
     }
 
-    @Test(expected = TmcCoreException.class)
-    public void ensureParamsNotNull() throws TmcCoreException, IOException {
-        settings = new CoreTestSettings();
-        Command command = new SendFeedback(null, "chewbac.ca", settings);
-        command.checkData();
-    }
+    @Test
+    public void testCallSendsFeedbackToServer() throws Exception {
+        String expected = "[{\"question_id\":\"4\", \"answer\":\"jee jee!\"},"
+                + "{\"question_id\":\"13\", \"answer\":\"Oli kiva tehtävä. Opin paljon koodia, "
+                + "nyt tunnen osaavani paljon paremmin\"},{\"question_id\":\"88\", "
+                + "\"answer\":\"<(^)\n (___)\n lorem ipsum, sit dolor amet\"}]";
 
-    @Test(expected = TmcCoreException.class)
-    public void ensureParamsNotNull2() throws TmcCoreException, IOException {
-        settings = new CoreTestSettings();
-        Command command = new SendFeedback(new HashMap<String, String>(), null, settings);
-        command.checkData();
-    }
+        wireMock.stubFor(
+                post(urlMatching("/feedback.*"))
+                        .withRequestBody(matching(expected))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)));
 
-    @Test(expected = TmcCoreException.class)
-    public void ensureParamsNotNull3() throws TmcCoreException, IOException {
-        settings = new CoreTestSettings();
-        Command command = new SendFeedback(null, null, settings);
-        command.checkData();
+        Course currentCourse = new Course();
+        currentCourse.setSpywareUrls(Arrays.asList("http://localhost:8080/spyware"));
+        settings.setCurrentCourse(currentCourse);
+
+        command = new SendFeedback(testCaseMap(), URL, settings);
+
+        command.call();
+
+        verify(postRequestedFor(urlMatching("/feedback.*")));
     }
 }

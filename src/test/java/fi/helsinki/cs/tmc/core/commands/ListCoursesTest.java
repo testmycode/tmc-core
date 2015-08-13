@@ -40,10 +40,6 @@ public class ListCoursesTest {
 
     @Rule public ExpectedException expectedException = ExpectedException.none();
 
-    /**
-     * Set up FrontendStub, ListCourses command, power mockito and fake http
-     * result.
-     */
     @Before
     public void setUp() throws IOException, TmcCoreException {
         communicator = Mockito.mock(UrlCommunicator.class);
@@ -58,24 +54,18 @@ public class ListCoursesTest {
     }
 
     @Test
-    public void testCheckDataSuccess() throws TmcCoreException {
+    public void testCheckDataSuccess() throws TmcCoreException, IOException {
         ListCourses ls = new ListCourses(settings, communicator);
         settings.setUsername("asdf");
         settings.setPassword("bsdf");
-        ls.checkData();
+        ls.call();
     }
 
     @Test(expected = TmcCoreException.class)
     public void testNoAuthThrowsException() throws TmcCoreException, Exception {
         settings.setUsername("");
         settings.setPassword("");
-        list.checkData();
         list.call();
-    }
-
-    @Test
-    public void checkDataTest() throws TmcCoreException {
-        list.checkData();
     }
 
     @Test

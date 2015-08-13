@@ -73,7 +73,6 @@ public class GetCourseTest {
 
     @Test
     public void testCall() throws Exception {
-        core = new TmcCore(settings);
         wireMock.stubFor(
                 get(urlEqualTo(mockUrl))
                         .willReturn(
@@ -89,7 +88,6 @@ public class GetCourseTest {
 
     @Test
     public void testCallWithCourseName() throws Exception {
-        core = new TmcCore(settings);
         wireMock.stubFor(
                 get(urlEqualTo(mockUrl))
                         .willReturn(

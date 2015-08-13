@@ -6,10 +6,12 @@ import static org.mockito.Mockito.when;
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
 
+import net.lingala.zip4j.exception.ZipException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,16 +19,14 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.net.URI;
+import java.text.ParseException;
 
 public class PasteWithCommentTest {
     private PasteWithComment paste;
     private ExerciseSubmitter submitterMock;
     private String pasteUrl = "http://legit.paste.url.fi";
-    CoreTestSettings settings = new CoreTestSettings();
+    private CoreTestSettings settings = new CoreTestSettings();
 
-    /**
-     * Mocks CourseSubmitter and injects it into Paste command.
-     */
     @Before
     public void setup() throws Exception {
         mock();
@@ -34,7 +34,6 @@ public class PasteWithCommentTest {
         submitterMock = Mockito.mock(ExerciseSubmitter.class);
         when(submitterMock.submitPasteWithComment(Mockito.anyString(), Mockito.anyString()))
                 .thenReturn(pasteUrl);
-        paste = new PasteWithComment(submitterMock, settings, "Commentti");
     }
 
     private void mock() {
@@ -45,56 +44,37 @@ public class PasteWithCommentTest {
         Mockito.when(settings.getFormattedUserData()).thenReturn("Bossman:Samu");
     }
 
-    /**
-     * Check that data checking success.
-     */
     @Test
-    public void testCheckDataSuccess() throws TmcCoreException, IOException {
+    public void testCheckDataSuccess()
+            throws TmcCoreException, IOException, ParseException, ExpiredException, ZipException {
         Mockito.when(settings.userDataExists()).thenReturn(true);
-        paste.setParameter("path", "/home/tmccli/uolevipuistossa");
-        paste.checkData();
+
+        new PasteWithComment(submitterMock, settings, "path", "comment").call();
     }
 
     @Test
     public void pasteSuccess() throws Exception {
         Mockito.when(settings.userDataExists()).thenReturn(true);
-        paste.data.put("path", "asdsad");
-        URI uri = paste.call();
+
+        URI uri = new PasteWithComment(submitterMock, settings, "path", "comment").call();
         assertEquals(uri.toString(), "http://legit.paste.url.fi");
     }
 
-    /**
-     * Check that if user didn't give correct data, data checking fails.
-     */
     @Test(expected = TmcCoreException.class)
-    public void testCheckDataFail() throws Exception {
-        paste.checkData();
+    public void testThrowsExceptionWithoutPath() throws Exception {
+        new PasteWithComment(submitterMock, settings, null, "comment").call();
     }
 
     @Test(expected = TmcCoreException.class)
-    public void checkDataFailIfNoAuth() throws Exception {
+    public void testThrowsExceptionIfAuthFails() throws Exception {
         settings = new CoreTestSettings();
-        paste.checkData();
-    }
-
-    @Test(expected = TmcCoreException.class)
-    public void throwsErrorIfNoCredentialsPresent() throws Exception {
-        paste.data.put("path", "asdsad");
-        settings = new CoreTestSettings();
-        paste.checkData();
-    }
-
-    @Test(expected = TmcCoreException.class)
-    public void throwsErrorIfNoPath() throws Exception {
-        Mockito.when(settings.userDataExists()).thenReturn(true);
-        paste.checkData();
+        new PasteWithComment(submitterMock, settings, "path", "comment").call();
     }
 
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfCourseCantBeRetrieved() throws Exception {
         Mockito.when(settings.userDataExists()).thenReturn(true);
         Mockito.when(settings.getCurrentCourse()).thenReturn(Optional.<Course>absent());
-        paste.data.put("path", "asdsad");
-        paste.checkData();
+        new PasteWithComment(submitterMock, settings, "path", "comment").call();
     }
 }

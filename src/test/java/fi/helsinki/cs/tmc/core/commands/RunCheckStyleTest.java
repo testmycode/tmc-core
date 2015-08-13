@@ -52,13 +52,16 @@ public class RunCheckStyleTest {
     @Test
     public void testRunCheckStyle() throws Exception {
         Path path = Paths.get("asdf", "asdf", "qwerty", "kj283u-dkjda93");
-        command.runCheckStyle(path);
+        when(finderMock.getRootDirectory(any(Path.class))).thenReturn(Optional.of(path));
+
+        command.call();
+
         verify(executorMock, times(1)).runCheckCodeStyle(eq(path));
     }
 
     @Test(expected = TmcCoreException.class)
-    public void testCheckDataEmptyPath() throws Exception {
-        new RunCheckStyle("", settings).checkData();
+    public void testRunCheckStyleThrowsExceptionOnInvalidPath() throws Exception {
+        new RunCheckStyle("", settings).call();
     }
 
     @Test
@@ -99,37 +102,31 @@ public class RunCheckStyleTest {
         this.executorMock = Mockito.mock(TaskExecutorImpl.class);
     }
 
-    private void createAndCheckdata() throws TmcCoreException {
-        RunCheckStyle newCheckStyle = new RunCheckStyle("polku", settings);
-        newCheckStyle.checkData();
-    }
-
     @Test(expected = TmcCoreException.class)
     public void exceptionIfnoPath() throws Exception {
         setupTwo();
-        RunCheckStyle newCheckStyle = new RunCheckStyle("", settings);
-        newCheckStyle.checkData();
+        new RunCheckStyle("", settings).call();
     }
 
     @Test(expected = TmcCoreException.class)
     public void exceptionIfPasswordIsNotPresent() throws Exception {
         setupTwo();
         this.settings.setPassword("");
-        createAndCheckdata();
+        new RunCheckStyle("polku", settings).call();
     }
 
     @Test(expected = TmcCoreException.class)
     public void exceptionIfUsernameIsNotPresent() throws Exception {
         setupTwo();
         this.settings.setUsername("");
-        createAndCheckdata();
+        new RunCheckStyle("polku", settings).call();
     }
 
     @Test(expected = TmcCoreException.class)
     public void exceptionIfServerAddressIsNotPresent() throws Exception {
         setupTwo();
         this.settings.setServerAddress("");
-        createAndCheckdata();
+        new RunCheckStyle("polku", settings).call();
     }
 
     @Test

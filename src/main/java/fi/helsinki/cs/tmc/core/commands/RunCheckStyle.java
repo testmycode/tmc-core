@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
@@ -17,7 +18,7 @@ public class RunCheckStyle extends Command<ValidationResult> {
 
     private ProjectRootFinder finder;
     private TaskExecutorImpl taskExecutor;
-    private ProjectRootFinder rootfinder;
+    private String path;
 
     /**
      * Default constructor.
@@ -42,40 +43,19 @@ public class RunCheckStyle extends Command<ValidationResult> {
             ProjectRootFinder finder,
             TaskExecutorImpl executor) {
         super(settings);
-        this.setParameter("path", path);
+        this.path = path;
         this.finder = finder;
         this.taskExecutor = executor;
     }
 
-    /**
-     * Runs checkstyle for exercise.
-     *
-     * @param exercise Path object
-     * @return String contaning results
-     * @throws NoLanguagePluginFoundException if path doesn't contain exercise
-     */
-    public ValidationResult runCheckStyle(Path exercise) throws NoLanguagePluginFoundException {
-        return taskExecutor.runCheckCodeStyle(exercise);
-    }
-
-    @Override
-    public void checkData() throws TmcCoreException {
-        if (!this.data.containsKey("path") || this.data.get("path").isEmpty()) {
-            throw new TmcCoreException("File path to exercise required.");
-        }
-        if (this.settingsNotPresent()) {
-            throw new TmcCoreException(
-                    "Credentials and serverAddress are required " + "for server communication.");
-        }
-    }
-
     @Override
     public ValidationResult call() throws TmcCoreException, NoLanguagePluginFoundException {
-        String path = this.data.get("path");
-        Optional<Path> rootDirectory = finder.getRootDirectory(Paths.get(path));
+        Optional<Path> rootDirectory = finder.getRootDirectory(Paths.get(this.path));
+
         if (!rootDirectory.isPresent()) {
-            throw new TmcCoreException("Not an exercise. (null)");
+            throw new TmcCoreException("Attempted to check code style for a non-project directory");
         }
-        return runCheckStyle(rootDirectory.get());
+
+        return taskExecutor.runCheckCodeStyle(rootDirectory.get());
     }
 }

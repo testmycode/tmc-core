@@ -14,8 +14,11 @@ import fi.helsinki.cs.tmc.core.commands.SendFeedback;
 import fi.helsinki.cs.tmc.core.commands.SendSpywareDiffs;
 import fi.helsinki.cs.tmc.core.commands.Submit;
 import fi.helsinki.cs.tmc.core.commands.VerifyCredentials;
+import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
+import fi.helsinki.cs.tmc.core.communication.SubmissionPoller;
 import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.communication.updates.ExerciseUpdateHandler;
 import fi.helsinki.cs.tmc.core.communication.updates.ReviewHandler;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
@@ -25,7 +28,11 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.spyware.DiffSender;
+import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
+import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
+import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -111,11 +118,10 @@ public class TmcCore {
      *
      * @return A future-object containing true or false on success or fail
      */
-    public ListenableFuture<Boolean> verifyCredentials()
-            throws TmcCoreException {
+    public ListenableFuture<Boolean> verifyCredentials() throws TmcCoreException {
         checkParameters(
                 settings.getUsername(), settings.getPassword(), settings.getServerAddress());
-        VerifyCredentials login = new VerifyCredentials(settings);
+        VerifyCredentials login = new VerifyCredentials(settings, new UrlCommunicator(settings));
         return threadPool.submit(login);
     }
 
@@ -124,8 +130,7 @@ public class TmcCore {
      *
      * @param url defines the url to course
      */
-    public ListenableFuture<Course> getCourse(String url)
-            throws TmcCoreException {
+    public ListenableFuture<Course> getCourse(String url) throws TmcCoreException {
         try {
             checkParameters(settings.getUsername(), settings.getPassword());
             GetCourse getter = new GetCourse(settings, new URI(url));
@@ -157,9 +162,8 @@ public class TmcCore {
      * @throws TmcCoreException if something in the given input was wrong
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
-            String path, String courseId, ProgressObserver observer)
+            String path, int courseId, ProgressObserver observer)
             throws TmcCoreException {
-        checkParameters(path, courseId);
         DownloadExercises downloadCommand = getDownloadCommand(path, courseId, observer);
         return threadPool.submit(downloadCommand);
     }
@@ -170,8 +174,8 @@ public class TmcCore {
      *
      * @param exercises to be downloaded
      */
-    public ListenableFuture<List<Exercise>> downloadExercises(
-            List<Exercise> exercises) throws TmcCoreException {
+    public ListenableFuture<List<Exercise>> downloadExercises(List<Exercise> exercises)
+            throws TmcCoreException {
         return this.downloadExercises(exercises, null);
     }
 
@@ -190,7 +194,7 @@ public class TmcCore {
     }
 
     private DownloadExercises getDownloadCommand(
-            String path, String courseId, ProgressObserver observer) {
+            String path, int courseId, ProgressObserver observer) {
         if (this.updateCache == null) {
             return new DownloadExercises(path, courseId, settings, observer);
         }
@@ -236,7 +240,21 @@ public class TmcCore {
      */
     public ListenableFuture<SubmissionResult> submit(String path) throws TmcCoreException {
         checkParameters(path);
-        Submit submit = new Submit(path, settings);
+
+        UrlCommunicator communicator = new UrlCommunicator(settings);
+        TmcJsonParser parser = new TmcJsonParser(communicator, settings);
+
+        Submit submit = new Submit(
+                new ExerciseSubmitter(
+                        new ProjectRootFinder(parser),
+                        new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
+                        communicator,
+                        parser,
+                        settings),
+                new SubmissionPoller(parser),
+                settings,
+                path);
+
         return threadPool.submit(submit);
     }
 
@@ -281,7 +299,6 @@ public class TmcCore {
     public ListenableFuture<List<Review>> getNewReviews(Course course) throws TmcCoreException {
         ReviewHandler reviewHandler = new ReviewHandler(new TmcJsonParser(settings));
         GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler, settings);
-        command.checkData();
         return threadPool.submit(command);
     }
 
@@ -301,7 +318,6 @@ public class TmcCore {
         ExerciseUpdateHandler updater =
                 new ExerciseUpdateHandler(updateCache, new TmcJsonParser(settings));
         GetExerciseUpdates command = new GetExerciseUpdates(course, updater, settings);
-        command.checkData();
         return threadPool.submit(command);
     }
 
@@ -316,7 +332,6 @@ public class TmcCore {
     public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url)
             throws TmcCoreException, IOException {
         SendFeedback feedback = new SendFeedback(answers, url, settings);
-        feedback.checkData();
         return threadPool.submit(feedback);
     }
 
@@ -333,7 +348,7 @@ public class TmcCore {
     public ListenableFuture<URI> pasteWithComment(String path, String comment)
             throws TmcCoreException {
         checkParameters(path);
-        PasteWithComment paste = new PasteWithComment(path, settings, comment);
+        PasteWithComment paste = new PasteWithComment(settings, path, comment);
         return threadPool.submit(paste);
     }
 
@@ -346,8 +361,8 @@ public class TmcCore {
      */
     public ListenableFuture<List<HttpResult>> sendSpywareDiffs(byte[] spywareDiffs)
             throws TmcCoreException {
-        SendSpywareDiffs spyware = new SendSpywareDiffs(spywareDiffs, settings);
-        spyware.checkData();
+        SendSpywareDiffs spyware =
+                new SendSpywareDiffs(spywareDiffs, new DiffSender(settings), settings);
         return threadPool.submit(spyware);
     }
 

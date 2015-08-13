@@ -16,39 +16,30 @@ public class SendSpywareDiffs extends Command<List<HttpResult>> {
     private byte[] spywareDiffs;
     private Course currentCourse;
     private DiffSender sender;
-    private TmcJsonParser jsonParser;
 
-    /**
-     * Standard constructor.
-     */
-    public SendSpywareDiffs(byte[] spywereDiffs, TmcSettings settings) {
-        this(spywereDiffs, new DiffSender(settings), new TmcJsonParser(settings), settings);
-    }
-
-    /**
-     * Dependecy injection for tests.
-     */
     public SendSpywareDiffs(
             byte[] spywareDiffs,
             DiffSender sender,
-            TmcJsonParser jsonParser,
             TmcSettings settings) {
         super(settings);
+
         this.spywareDiffs = spywareDiffs;
         this.sender = sender;
-        this.jsonParser = jsonParser;
     }
 
-    @Override
-    public void checkData() throws TmcCoreException {
-        if (this.spywareDiffs == null) {
-            throw new TmcCoreException("No spyware-diff given.");
+    private void assertHasRequiredData() throws TmcCoreException {
+        String username = settings.getUsername();
+        if (username == null || username.isEmpty()) {
+            throw new TmcCoreException("username must be set!");
         }
-        if (this.settings.getUsername() == null || this.settings.getPassword() == null) {
-            throw new TmcCoreException("No username/password defined.");
+
+        String password = settings.getPassword();
+        if (password == null || password.isEmpty()) {
+            throw new TmcCoreException("password must be set!");
         }
+
         Optional<Course> course = this.settings.getCurrentCourse();
-        if (course.isPresent()) {
+        if (course != null && course.isPresent()) {
             this.currentCourse = course.get();
         } else {
             throw new TmcCoreException("No current course found from settings.");
@@ -57,7 +48,7 @@ public class SendSpywareDiffs extends Command<List<HttpResult>> {
 
     @Override
     public List<HttpResult> call() throws Exception {
-        checkData();
+        assertHasRequiredData();
         return this.sender.sendToSpyware(spywareDiffs, currentCourse);
     }
 }

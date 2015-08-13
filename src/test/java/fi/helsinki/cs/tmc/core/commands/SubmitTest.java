@@ -5,6 +5,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Matchers.anyString;
@@ -35,33 +36,32 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SubmitTest {
 
     private static final String FILE_SEPARATOR = File.separator;
-    private final String submissionUrl;
-
+    
     private Submit submit;
     private ExerciseSubmitter submitterMock;
     private CoreTestSettings settings;
+    private String submissionUrl;
 
     @Rule public WireMockRule wireMock = new WireMockRule();
 
-    public SubmitTest() {
+    @Before
+    public void setup() throws Exception {
         settings = new CoreTestSettings();
         settings.setUsername("Samu");
         settings.setPassword("Bossman");
         settings.setCurrentCourse(new Course());
         settings.setApiVersion("7");
+        
         submissionUrl = new UrlHelper(settings).withParams("/submissions/1781.json");
-    }
-
-    @Before
-    public void setup() throws Exception {
+        
         submitterMock = Mockito.mock(ExerciseSubmitter.class);
+        
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         submit =
                 new Submit(
@@ -77,35 +77,20 @@ public class SubmitTest {
                                 + "src");
     }
 
-    /**
-     * Check that data checking success.
-     */
-    @Test
-    public void testCheckDataSuccess() throws TmcCoreException, IOException {
-        Submit submitCommand = new Submit(settings);
-        submitCommand.setParameter(
-                "path",
-                FILE_SEPARATOR + "home" + FILE_SEPARATOR + "tmccli" + FILE_SEPARATOR + "testi");
-        submitCommand.checkData();
-    }
-
-    /**
-     * Check that if user didn't give correct data, data checking fails.
-     */
     @Test(expected = TmcCoreException.class)
-    public void testCheckDataFail() throws Exception {
-        Submit submitCommand = new Submit(settings);
-        submitCommand.checkData();
+    public void testThrowsExceptionIfNoUsername() throws Exception {
+        settings.setUsername(null);
+        new Submit(null, null, settings, "").call();
     }
 
     @Test(expected = TmcCoreException.class)
-    public void checkDataFailIfNoAuth() throws Exception {
-        Submit submitCommand = new Submit(new CoreTestSettings());
-        submitCommand.checkData();
+    public void testThrowsExceptionIfNoPassword() throws Exception {
+        settings.setPassword(null);
+        new Submit(null, null, settings, "").call();
     }
 
     @Test
-    public void submitReturnsSuccesfulResponse() throws Exception {
+    public void testHandlesSuccessfulTestRunResponseCorrectly() throws Exception {
         wireMock.stubFor(
                 get(urlEqualTo(submissionUrl))
                         .willReturn(
@@ -114,12 +99,12 @@ public class SubmitTest {
                                         .withBody(ExampleJson.successfulSubmission)));
 
         SubmissionResult submissionResult = submit.call();
-        assertFalse(submissionResult == null);
+        assertNotNull(submissionResult);
         assertTrue(submissionResult.isAllTestsPassed());
     }
 
     @Test
-    public void submitReturnsUnsuccesfulResponse() throws Exception {
+    public void testHandlesUnsuccessfulTestRunResponseCorrectly() throws Exception {
         wireMock.stubFor(
                 get(urlEqualTo(submissionUrl))
                         .willReturn(
@@ -128,19 +113,21 @@ public class SubmitTest {
                                         .withBody(ExampleJson.failedSubmission)));
 
         SubmissionResult submissionResult = submit.call();
-        assertFalse(submissionResult == null);
+        assertNotNull(submissionResult);
         assertFalse(submissionResult.isAllTestsPassed());
     }
 
+    //TODO: Move to TmcCoreTest or delete
     @Test
     public void submitWithTmcCore() throws Exception {
-        mockSubmit();
+        buildWireMock();
 
         CoreTestSettings settings = new CoreTestSettings("test", "1234", "http://localhost:8080");
         TmcJsonParser parser = new TmcJsonParser(settings);
         Course course = parser.getCourseFromString(ExampleJson.noDeadlineCourseExample);
         settings.setCurrentCourse(course);
         TmcCore core = new TmcCore(settings);
+
         ListenableFuture<SubmissionResult> submit =
                 core.submit(
                         "testResources"
@@ -151,6 +138,7 @@ public class SubmitTest {
                                 + FILE_SEPARATOR
                                 + "Viikko1_004.Muuttujat");
         final List<SubmissionResult> result = new ArrayList<>();
+
         Futures.addCallback(
                 submit,
                 new FutureCallback<SubmissionResult>() {
@@ -173,10 +161,9 @@ public class SubmitTest {
         assertFalse(result.get(0).isAllTestsPassed());
     }
 
-    private void mockSubmit() {
+    private void buildWireMock() {
         UrlHelper helper = new UrlHelper(settings);
         String urlToMock = helper.withParams("/exercises/1231/submissions.json");
-        System.out.println(urlToMock);
         wireMock.stubFor(
                 post(urlEqualTo(urlToMock))
                         .willReturn(
@@ -188,7 +175,6 @@ public class SubmitTest {
                                                         "http://localhost:8080"))));
 
         urlToMock = helper.withParams("/submissions/7777.json");
-        System.out.println(urlToMock);
         wireMock.stubFor(
                 get(urlEqualTo(urlToMock))
                         .willReturn(
@@ -200,7 +186,6 @@ public class SubmitTest {
                                                         "http://localhost:8080"))));
 
         urlToMock = helper.withParams("/courses/19.json");
-        System.out.println(urlToMock);
         wireMock.stubFor(
                 get(urlEqualTo(urlToMock))
                         .willReturn(

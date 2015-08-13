@@ -3,12 +3,10 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
-import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -24,18 +22,10 @@ public class SendFeedback extends Command<HttpResult> {
     }
 
     @Override
-    public void checkData() throws TmcCoreException, IOException {
-        if (answers == null || url == null) {
-            throw new TmcCoreException("must give answers and feedback url");
-        }
-    }
-
-    @Override
     public HttpResult call() throws Exception {
         JsonArray feedbackAnswers = new JsonArray();
 
         for (Entry<String, String> e : answers.entrySet()) {
-
             JsonObject jsonAnswer = new JsonObject();
             jsonAnswer.addProperty("question_id", e.getKey());
             jsonAnswer.addProperty("answer", e.getValue());

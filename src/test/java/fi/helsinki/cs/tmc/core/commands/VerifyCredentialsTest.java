@@ -5,7 +5,8 @@ import static com.github.tomakehurst.wiremock.client.WireMock.containing;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
@@ -14,8 +15,6 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-
-import org.hamcrest.CoreMatchers;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,8 +26,10 @@ public class VerifyCredentialsTest {
 
     private final String testUsername = "test";
     private final String testPassword = "1234";
+    private final String authString = Authorization.encode(testUsername + ":" + testPassword);
     CoreTestSettings settings;
     UrlCommunicator comm;
+
     @Rule public WireMockRule wireMockServer = new WireMockRule();
 
     @Before
@@ -38,41 +39,37 @@ public class VerifyCredentialsTest {
         comm = new UrlCommunicator(settings);
     }
 
-    private void wiremockGet(String auth, int status) {
-        wireMockServer.stubFor(
-                get(urlEqualTo("/user"))
-                        .withHeader("Authorization", containing("Basic " + auth))
-                        .willReturn(aResponse().withStatus(status)));
+    @Test(expected = TmcCoreException.class)
+    public void callThrowsExceptionWhenNoUsername() throws Exception {
+        settings.setPassword(testPassword);
+        new VerifyCredentials(settings, new UrlCommunicator(settings)).call();
     }
 
     @Test(expected = TmcCoreException.class)
-    public void checkData() throws Exception {
-        new VerifyCredentials(new CoreTestSettings()).call();
+    public void callThrowsExceptionWhenNoPassword() throws Exception {
+        settings.setPassword(testPassword);
+        new VerifyCredentials(settings, new UrlCommunicator(settings)).call();
     }
 
     @Test
     public void canAuthenticateWithTestCredentials() throws TmcCoreException, IOException {
-        wiremockGet(Authorization.encode(testUsername + ":" + testPassword), 200);
+        wireMockServer.stubFor(
+                get(urlEqualTo("/user"))
+                        .withHeader("Authorization", containing("Basic " + authString))
+                        .willReturn(aResponse().withStatus(200)));
         settings.setUsername(testUsername);
         settings.setPassword(testPassword);
-        String result = executeWithSettings(settings);
-        assertThat(result, CoreMatchers.containsString("Auth successful."));
+        assertTrue(new VerifyCredentials(settings, comm).call());
     }
 
     @Test
     public void cannotAuthenticateWithUnexistantCredentials() throws TmcCoreException, IOException {
-        String wrongUsername = "samu";
-        String wrongPassword = "salis";
-        wiremockGet(Authorization.encode(wrongUsername + ":" + wrongPassword), 400);
-        settings.setUsername(wrongUsername);
-        settings.setPassword(wrongPassword);
-        String result = executeWithSettings(settings);
-        assertThat(result, CoreMatchers.containsString("Auth unsuccessful."));
-    }
-
-    private String executeWithSettings(TmcSettings settings) throws TmcCoreException, IOException {
-        VerifyCredentials auth = new VerifyCredentials(settings, comm);
-        auth.checkData();
-        return auth.parseData(auth.call()).get();
+        wireMockServer.stubFor(
+                get(urlEqualTo("/user"))
+                        .withHeader("Authorization", containing("Basic " + authString))
+                        .willReturn(aResponse().withStatus(400)));
+        settings.setUsername(testUsername);
+        settings.setPassword(testUsername);
+        assertFalse(new VerifyCredentials(settings, comm).call());
     }
 }

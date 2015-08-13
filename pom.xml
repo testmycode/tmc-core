@@ -213,6 +213,11 @@
         </dependency>
         <dependency>
             <groupId>fi.helsinki.cs.tmc</groupId>
+            <artifactId>tmc-langs-util</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>fi.helsinki.cs.tmc</groupId>
             <artifactId>tmc-langs-make</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -223,9 +228,10 @@
         </dependency>
         <dependency>
             <groupId>fi.helsinki.cs.tmc</groupId>
-            <artifactId>tmc-langs-util</artifactId>
+            <artifactId>tmc-langs-python3</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.yaml</groupId>

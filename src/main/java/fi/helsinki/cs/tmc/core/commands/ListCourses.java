@@ -27,21 +27,12 @@ public class ListCourses extends Command<List<Course>> {
         super(settings);
         this.parser = new TmcJsonParser(communicator, settings);
     }
-    /**
-     * Checks that the user has authenticated, by verifying ClientData.
-     *
-     * @throws TmcCoreException if ClientData is empty
-     */
-    @Override
-    public void checkData() throws TmcCoreException {
-        if (!settings.userDataExists()) {
-            throw new TmcCoreException("User must be authorized first");
-        }
-    }
 
     @Override
     public List<Course> call() throws TmcCoreException, IOException {
-        checkData();
+        if (!settings.userDataExists()) {
+            throw new TmcCoreException("User must be authorized first");
+        }
         return parser.getCourses();
     }
 }

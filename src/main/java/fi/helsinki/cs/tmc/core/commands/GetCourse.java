@@ -29,12 +29,6 @@ public class GetCourse extends Command<Course> {
         this.url = courseUri.toString();
     }
 
-    @Override
-    public void checkData() throws TmcCoreException, IOException {
-        validate(this.settings.getUsername(), "username must be set!");
-        validate(this.settings.getPassword(), "password must be set!");
-    }
-
     private void validate(String field, String message) throws TmcCoreException {
         if (field == null || field.isEmpty()) {
             throw new TmcCoreException(message);
@@ -43,11 +37,16 @@ public class GetCourse extends Command<Course> {
 
     @Override
     public Course call() throws Exception {
+        validate(this.settings.getUsername(), "username must be set!");
+        validate(this.settings.getPassword(), "password must be set!");
+
         String urlWithApiVersion = new UrlHelper(settings).withParams(this.url);
         Optional<Course> course = jsonParser.getCourse(urlWithApiVersion);
+
         if (!course.isPresent()) {
             throw new TmcCoreException("No course found by specified url: " + urlWithApiVersion);
         }
+
         return course.get();
     }
 

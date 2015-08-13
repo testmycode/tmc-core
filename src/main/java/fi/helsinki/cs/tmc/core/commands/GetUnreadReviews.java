@@ -20,13 +20,6 @@ public class GetUnreadReviews extends Command<List<Review>> {
     }
 
     @Override
-    public void checkData() throws TmcCoreException {
-        if (handler == null) {
-            throw new TmcCoreException("reviewHandler not given");
-        }
-    }
-
-    @Override
     public List<Review> call() throws Exception {
         return handler.getNewObjects(course);
     }

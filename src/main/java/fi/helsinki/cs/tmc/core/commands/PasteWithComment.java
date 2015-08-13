@@ -25,12 +25,13 @@ public class PasteWithComment extends Command<URI> {
     private ExerciseSubmitter submitter;
     private Course course;
     private String comment;
+    private String path;
 
     /**
      * Submit paste with comment. Used in tmc-netbeans plugin.
      * @param comment paste comment given by user
      */
-    public PasteWithComment(TmcSettings settings, String comment) {
+    public PasteWithComment(TmcSettings settings, String path, String comment) {
         this(
                 new ExerciseSubmitter(
                         new ProjectRootFinder(new TaskExecutorImpl(), new TmcJsonParser(settings)),
@@ -39,6 +40,7 @@ public class PasteWithComment extends Command<URI> {
                         new TmcJsonParser(settings),
                         settings),
                 settings,
+                path,
                 comment);
     }
 
@@ -47,36 +49,12 @@ public class PasteWithComment extends Command<URI> {
      *
      * @param submitter can inject submitter mock.
      */
-    public PasteWithComment(ExerciseSubmitter submitter, TmcSettings settings, String comment) {
+    public PasteWithComment(
+            ExerciseSubmitter submitter, TmcSettings settings, String path, String comment) {
         this.submitter = submitter;
         this.settings = settings;
+        this.path = path;
         this.comment = comment;
-    }
-
-    public PasteWithComment(String path, TmcSettings settings, String comment) {
-        this(settings, comment);
-        this.setParameter("path", path);
-    }
-
-    /**
-     * Requires auth and pwd in "path" parameter.
-     *
-     * @throws TmcCoreException if no auth or no path supplied.
-     */
-    @Override
-    public void checkData() throws TmcCoreException, IOException {
-        if (!settings.userDataExists()) {
-            throw new TmcCoreException("User must be authorized first");
-        }
-        if (!this.data.containsKey("path")) {
-            throw new TmcCoreException("path not supplied");
-        }
-        Optional<Course> currentCourse = settings.getCurrentCourse();
-        if (currentCourse.isPresent()) {
-            course = currentCourse.get();
-        } else {
-            throw new TmcCoreException("Unable to determine course");
-        }
     }
 
     /**
@@ -85,9 +63,18 @@ public class PasteWithComment extends Command<URI> {
      */
     @Override
     public URI call()
-            throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException {
-        checkData();
-        return URI.create(submitter.submitPasteWithComment(data.get("path"), this.comment));
+            throws IOException, ParseException, ExpiredException, ZipException, TmcCoreException {
+        if (!settings.userDataExists()) {
+            throw new TmcCoreException("User must be authenticated");
+        }
+
+        Optional<Course> currentCourse = settings.getCurrentCourse();
+        if (currentCourse.isPresent()) {
+            course = currentCourse.get();
+        } else {
+            throw new TmcCoreException("Unable to determine course");
+        }
+
+        return URI.create(submitter.submitPasteWithComment(this.path, this.comment));
     }
 }

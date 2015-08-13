@@ -82,36 +82,16 @@ public class DownloadExercisesTest {
     }
 
     @Test(expected = TmcCoreException.class)
-    public void settingsWithoutCurrentCourse() throws TmcCoreException {
-        DownloadExercises de = new DownloadExercises(new ArrayList<Exercise>(), settings);
-        de.checkData();
+    public void settingsWithoutCurrentCourse() throws TmcCoreException, IOException {
+        new DownloadExercises(new ArrayList<Exercise>(), settings).call();
     }
 
     @Test(expected = TmcCoreException.class)
-    public void settingsWithoutCredentials() throws TmcCoreException {
+    public void settingsWithoutCredentials() throws TmcCoreException, IOException {
         CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setCurrentCourse(
                 new TmcJsonParser(settings).getCourseFromString(ExampleJson.courseExample));
-        DownloadExercises de = new DownloadExercises(new ArrayList<Exercise>(), localSettings);
-        de.checkData();
-    }
-
-    @Test
-    public void courseIdNotANumber() throws TmcCoreException {
-        settings.setCurrentCourse(
-                new TmcJsonParser(settings).getCourseFromString(ExampleJson.courseExample));
-        DownloadExercises de = new DownloadExercises(new ArrayList<Exercise>(), settings);
-        de.checkData();
-    }
-
-    @Test
-    public void constructorWithoutPathUsesTmcSettings() throws TmcCoreException {
-        String path = "pentti/tmc/java";
-        settings.setCurrentCourse(new Course());
-        settings.setTmcMainDirectory(path);
-        DownloadExercises de = new DownloadExercises(new ArrayList<Exercise>(), settings);
-        assertTrue(de.data.containsKey("path"));
-        assertEquals(path, de.data.get("path"));
+        new DownloadExercises(new ArrayList<Exercise>(), localSettings).call();
     }
 
     @Test
@@ -134,7 +114,7 @@ public class DownloadExercisesTest {
 
         when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
 
-        DownloadExercises dl = new DownloadExercises(downloader, "", "8", cache, settings, parser);
+        DownloadExercises dl = new DownloadExercises(downloader, "", 8, cache, settings, parser);
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Gson gson = new Gson();
@@ -174,7 +154,7 @@ public class DownloadExercisesTest {
 
         Mockito.when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
 
-        DownloadExercises dl = new DownloadExercises(downloader, "", "8", cache, settings, parser);
+        DownloadExercises dl = new DownloadExercises(downloader, "", 8, cache, settings, parser);
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Gson gson = new Gson();
@@ -217,7 +197,7 @@ public class DownloadExercisesTest {
         parser = Mockito.mock(TmcJsonParser.class);
         Mockito.when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
 
-        DownloadExercises dl = new DownloadExercises(mock, "", "8", cache, settings, parser);
+        DownloadExercises dl = new DownloadExercises(mock, "", 8, cache, settings, parser);
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {}.getType();
@@ -241,7 +221,7 @@ public class DownloadExercisesTest {
         core = new TmcCore(settings1);
         String folder = System.getProperty("user.dir") + "/testResources/";
         ListenableFuture<List<Exercise>> download =
-                core.downloadExercises(folder, "35", null);
+                core.downloadExercises(folder, 35, null);
 
         List<Exercise> exercises = download.get();
         String exercisePath = folder + "2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi";
@@ -260,7 +240,7 @@ public class DownloadExercisesTest {
         ProgressObserver observerMock = Mockito.mock(ProgressObserver.class);
         String folder = System.getProperty("user.dir") + "/testResources/";
         ListenableFuture<List<Exercise>> download =
-                core.downloadExercises(folder, "35", observerMock);
+                core.downloadExercises(folder, 35, observerMock);
         List<Exercise> exercises = download.get();
         String exercisePath = folder + "2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi";
         assertEquals(exercises.size(), 153);

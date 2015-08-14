@@ -331,7 +331,7 @@ public class TmcCore {
      */
     public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url)
             throws TmcCoreException, IOException {
-        SendFeedback feedback = new SendFeedback(answers, url, settings);
+        SendFeedback feedback = new SendFeedback(settings, answers, url);
         return threadPool.submit(feedback);
     }
 

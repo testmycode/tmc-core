@@ -3,16 +3,15 @@ package fi.helsinki.cs.tmc.core.commands;
 import static com.github.tomakehurst.wiremock.client.WireMock.matching;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
-import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.domain.Course;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -35,7 +34,7 @@ public class SendFeedbackTest {
     public void setUp() {
         settings = new CoreTestSettings();
 
-        command = new SendFeedback(testCaseMap(), URL, settings);
+        command = new SendFeedback(settings, testCaseMap(), URL);
     }
 
     private Map<String, String> testCaseMap() {
@@ -66,7 +65,7 @@ public class SendFeedbackTest {
         currentCourse.setSpywareUrls(Arrays.asList("http://localhost:8080/spyware"));
         settings.setCurrentCourse(currentCourse);
 
-        command = new SendFeedback(testCaseMap(), URL, settings);
+        command = new SendFeedback(settings, testCaseMap(), URL);
 
         command.call();
 

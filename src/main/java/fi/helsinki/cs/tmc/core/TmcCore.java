@@ -285,8 +285,7 @@ public class TmcCore {
      */
     public ListenableFuture<ValidationResult> runCheckstyle(String path) throws TmcCoreException {
         checkParameters(path);
-        @SuppressWarnings("unchecked")
-        RunCheckStyle checkstyleCommand = new RunCheckStyle(path, settings);
+        RunCheckStyle checkstyleCommand = new RunCheckStyle(path);
         return threadPool.submit(checkstyleCommand);
     }
 

@@ -24,18 +24,4 @@ public abstract class Command<E> implements Callable<E> {
         this(settings);
         this.observer = observer;
     }
-
-    /*
-    public boolean settingsNotPresent() {
-        return this.settings == null || !this.settings.userDataExists() || !serverAddressIsValid();
-    }
-
-    private boolean serverAddressIsValid() {
-        if (this.settings.getServerAddress() == null
-                || this.settings.getServerAddress().isEmpty()) {
-            return false;
-        }
-        return new UrlHelper(settings).urlIsValid(this.settings.getServerAddress());
-    }
-    */
 }

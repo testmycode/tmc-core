@@ -245,14 +245,14 @@ public class TmcCore {
         TmcApi tmcApi = new TmcApi(communicator, settings);
 
         Submit submit = new Submit(
-                new ExerciseSubmitter(
+                        settings,
+                        new ExerciseSubmitter(
                         new ProjectRootFinder(tmcApi),
                         new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
                         communicator,
                         tmcApi,
                         settings),
                 new SubmissionPoller(tmcApi),
-                settings,
                 path);
 
         return threadPool.submit(submit);

@@ -65,9 +65,9 @@ public class SubmitTest {
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         submit =
                 new Submit(
+                        settings,
                         submitterMock,
                         new SubmissionPoller(new TmcApi(settings)),
-                        settings,
                         "polku"
                                 + FILE_SEPARATOR
                                 + "kurssi"
@@ -80,13 +80,13 @@ public class SubmitTest {
     @Test(expected = TmcCoreException.class)
     public void testThrowsExceptionIfNoUsername() throws Exception {
         settings.setUsername(null);
-        new Submit(null, null, settings, "").call();
+        new Submit(settings, null, null, "").call();
     }
 
     @Test(expected = TmcCoreException.class)
     public void testThrowsExceptionIfNoPassword() throws Exception {
         settings.setPassword(null);
-        new Submit(null, null, settings, "").call();
+        new Submit(settings, null, null, "").call();
     }
 
     @Test

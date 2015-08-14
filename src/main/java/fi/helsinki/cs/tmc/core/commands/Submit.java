@@ -12,16 +12,23 @@ import net.lingala.zip4j.exception.ZipException;
 import java.io.IOException;
 import java.text.ParseException;
 
+/**
+ * A {@link Command} for submitting an exercise to the server.
+ */
 public class Submit extends Command<SubmissionResult> {
 
     private ExerciseSubmitter submitter;
     private SubmissionPoller submissionPoller;
     private String path;
 
+    /**
+     * Creates a new submit command with {@code settings}, {@code submitter} and
+     * {@code submissionPoller} for submitting the exercise located at {@code path}.
+     */
     public Submit(
+            TmcSettings settings,
             ExerciseSubmitter submitter,
             SubmissionPoller submissionPoller,
-            TmcSettings settings,
             String path) {
         super(settings);
 
@@ -35,12 +42,16 @@ public class Submit extends Command<SubmissionResult> {
         if (username == null || username.isEmpty()) {
             throw new TmcCoreException("username must be set!");
         }
+
         String password = settings.getPassword();
         if (password == null || password.isEmpty()) {
             throw new TmcCoreException("password must be set!");
         }
     }
 
+    /**
+     * Entry point for launching this command.
+     */
     @Override
     public SubmissionResult call()
             throws TmcCoreException, IOException, ParseException, ExpiredException,

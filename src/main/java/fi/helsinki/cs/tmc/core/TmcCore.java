@@ -224,7 +224,6 @@ public class TmcCore {
      * @throws TmcCoreException if something went wrong
      */
     public ListenableFuture<List<Course>> listCourses() throws TmcCoreException {
-        @SuppressWarnings("unchecked")
         ListCourses listCommand = new ListCourses(settings);
         return threadPool.submit(listCommand);
     }
@@ -269,7 +268,6 @@ public class TmcCore {
      */
     public ListenableFuture<RunResult> test(String path) throws TmcCoreException {
         checkParameters(path);
-        @SuppressWarnings("unchecked")
         RunTests testCommand = new RunTests(settings, path);
         return threadPool.submit(testCommand);
     }

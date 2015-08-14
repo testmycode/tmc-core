@@ -4,13 +4,10 @@ import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
-import com.google.common.base.Optional;
-
 import java.io.IOException;
 
 /**
- * Polls tmc-server (defined in settings) route "/user" with credentials.
- * Tmc-server returns 200, if success and otherwise 401.
+ * A {@link Command} for authenticating the user details saved in {@link TmcSettings}.
  */
 public class VerifyCredentials extends Command<Boolean> {
 
@@ -20,6 +17,10 @@ public class VerifyCredentials extends Command<Boolean> {
 
     private UrlCommunicator communicator;
 
+    /**
+     * Constructs a new verify credentials command that authenticates user credentials specified
+     * in {@code settings} using {@code communicator}.
+     */
     public VerifyCredentials(TmcSettings settings, UrlCommunicator communicator) {
         super(settings);
         this.communicator = communicator;
@@ -28,14 +29,18 @@ public class VerifyCredentials extends Command<Boolean> {
     private void assertHasRequiredData() throws TmcCoreException {
         String username = settings.getUsername();
         if (username == null || username.isEmpty()) {
-            throw new TmcCoreException("username must be set!");
+            throw new TmcCoreException("Cannot verify credentials when no username is set.");
         }
+
         String password = settings.getPassword();
         if (password == null || password.isEmpty()) {
-            throw new TmcCoreException("password must be set!");
+            throw new TmcCoreException("Cannot verify credentials when no password is set.");
         }
     }
 
+    /**
+     * Entry point for launching this command.
+     */
     @Override
     public Boolean call() throws TmcCoreException, IOException {
         assertHasRequiredData();

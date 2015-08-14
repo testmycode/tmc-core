@@ -1,7 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -34,10 +34,10 @@ public class PasteWithComment extends Command<URI> {
     public PasteWithComment(TmcSettings settings, String path, String comment) {
         this(
                 new ExerciseSubmitter(
-                        new ProjectRootFinder(new TaskExecutorImpl(), new TmcJsonParser(settings)),
+                        new ProjectRootFinder(new TaskExecutorImpl(), new TmcApi(settings)),
                         new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
                         new UrlCommunicator(settings),
-                        new TmcJsonParser(settings),
+                        new TmcApi(settings),
                         settings),
                 settings,
                 path,

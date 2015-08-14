@@ -21,19 +21,19 @@ import java.util.List;
 /**
  * A Utility class for handling JSONs downloaded from the TMC-server.
  */
-public class TmcJsonParser {
+public class TmcApi {
 
     private UrlCommunicator urlCommunicator;
     private TmcSettings settings;
     private UrlHelper helper;
 
-    public TmcJsonParser(TmcSettings settings) {
+    public TmcApi(TmcSettings settings) {
         this.settings = settings;
         this.helper = new UrlHelper(settings);
         this.urlCommunicator = new UrlCommunicator(settings);
     }
 
-    public TmcJsonParser(UrlCommunicator urlCommunicator, TmcSettings settings) {
+    public TmcApi(UrlCommunicator urlCommunicator, TmcSettings settings) {
         this.urlCommunicator = urlCommunicator;
         this.settings = settings;
         this.helper = new UrlHelper(settings);

@@ -1,6 +1,6 @@
 package fi.helsinki.cs.tmc.core.testhelpers;
 
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.zipping.RootFinder;
 
@@ -15,19 +15,19 @@ import java.util.List;
 public class ProjectRootFinderStub implements RootFinder {
 
     private String returnValue;
-    private TmcJsonParser jsonParser;
+    private TmcApi tmcApi;
     private HashMap<String, Course> courseStubs;
 
-    public ProjectRootFinderStub(TmcJsonParser jsonParser) {
+    public ProjectRootFinderStub(TmcApi tmcApi) {
         this.returnValue = "";
-        this.jsonParser = jsonParser;
+        this.tmcApi = tmcApi;
         this.courseStubs = new HashMap<>();
         fillCourseStubs();
     }
 
     private void fillCourseStubs() {
         String allCourses = ExampleJson.allCoursesExample;
-        List<Course> courses = jsonParser.getCoursesFromString(allCourses);
+        List<Course> courses = tmcApi.getCoursesFromString(allCourses);
         for (Course c : courses) {
             courseStubs.put(c.getName(), c);
         }

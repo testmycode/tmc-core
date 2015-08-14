@@ -28,7 +28,7 @@ public class ExerciseSubmitter {
 
     private RootFinder rootFinder;
     private final UrlCommunicator urlCommunicator;
-    private final TmcJsonParser tmcJsonParser;
+    private final TmcApi tmcApi;
     private final Zipper langsZipper;
     private TmcSettings settings;
     private UrlHelper urlHelper;
@@ -40,10 +40,10 @@ public class ExerciseSubmitter {
             RootFinder rootFinder,
             Zipper zipper,
             UrlCommunicator urlCommunicator,
-            TmcJsonParser jsonParser,
+            TmcApi jsonParser,
             TmcSettings settings) {
         this.urlCommunicator = urlCommunicator;
-        this.tmcJsonParser = jsonParser;
+        this.tmcApi = jsonParser;
         this.rootFinder = rootFinder;
         this.langsZipper = zipper;
         this.settings = settings;
@@ -153,7 +153,7 @@ public class ExerciseSubmitter {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), new HashMap<String, String>());
-        return tmcJsonParser.getPasteUrl(result);
+        return tmcApi.getPasteUrl(result);
     }
 
     private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste)
@@ -192,7 +192,7 @@ public class ExerciseSubmitter {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), new HashMap<String, String>());
-        return tmcJsonParser.getSubmissionUrl(result);
+        return tmcApi.getSubmissionUrl(result);
     }
 
     private String sendSubmissionToServerWithParams(
@@ -200,7 +200,7 @@ public class ExerciseSubmitter {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), params);
-        return tmcJsonParser.getSubmissionUrl(result);
+        return tmcApi.getSubmissionUrl(result);
     }
 
     private String sendSubmissionToServerWithPasteAndParams(
@@ -209,7 +209,7 @@ public class ExerciseSubmitter {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), params);
-        return tmcJsonParser.getPasteUrl(result);
+        return tmcApi.getPasteUrl(result);
     }
 
     private Optional<Exercise> findExercise(String currentPath)
@@ -223,7 +223,7 @@ public class ExerciseSubmitter {
         if (!currentCourse.isPresent()) {
             throw new IllegalArgumentException("Not under any course directory");
         }
-        return tmcJsonParser.getExercises(currentCourse.get().getId());
+        return tmcApi.getExercises(currentCourse.get().getId());
     }
 
     private Optional<Exercise> findCurrentExercise(

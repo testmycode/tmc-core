@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;

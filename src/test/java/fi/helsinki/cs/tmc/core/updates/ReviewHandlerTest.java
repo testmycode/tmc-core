@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Matchers.anyString;
 
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.updates.ReviewHandler;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Review;
@@ -24,14 +24,14 @@ import java.util.List;
 public class ReviewHandlerTest {
 
     private ReviewHandler handler;
-    private TmcJsonParser tmcJsonParser;
+    private TmcApi tmcApi;
 
     @Before
     public void setUp() throws IOException {
 
-        tmcJsonParser = Mockito.mock(TmcJsonParser.class);
-        handler = new ReviewHandler(tmcJsonParser);
-        Mockito.when(tmcJsonParser.getReviews(anyString()))
+        tmcApi = Mockito.mock(TmcApi.class);
+        handler = new ReviewHandler(tmcApi);
+        Mockito.when(tmcApi.getReviews(anyString()))
                 .thenReturn(
                         new ReviewListBuilder()
                                 .withExercise(3, true)
@@ -43,7 +43,7 @@ public class ReviewHandlerTest {
     @Test
     public void fetchReviewReturnsEmptyListIfServerSendsNull() throws IOException {
 
-        Mockito.when(tmcJsonParser.getReviews(anyString())).thenReturn(null);
+        Mockito.when(tmcApi.getReviews(anyString())).thenReturn(null);
         assertNotNull(handler.fetchFromServer(new Course()));
         assertEquals(0, handler.fetchFromServer(new Course()).size());
     }
@@ -54,7 +54,7 @@ public class ReviewHandlerTest {
         Course course = new Course();
         course.setReviewsUrl(url);
         handler.getNewObjects(course);
-        tmcJsonParser.getReviews(Mockito.eq(url));
+        tmcApi.getReviews(Mockito.eq(url));
     }
 
     @Test

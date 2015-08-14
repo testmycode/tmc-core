@@ -1,6 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
@@ -26,8 +26,8 @@ public class RunTests extends Command<RunResult> {
     @Override
     public RunResult call() throws TmcCoreException, NoLanguagePluginFoundException {
         TaskExecutor tmcLangs = new TaskExecutorImpl();
-        TmcJsonParser parser = new TmcJsonParser(settings);
-        ProjectRootFinder finder = new ProjectRootFinder(tmcLangs, parser);
+        TmcApi tmcApi = new TmcApi(settings);
+        ProjectRootFinder finder = new ProjectRootFinder(tmcLangs, tmcApi);
 
         Optional<Path> exercise = finder.getRootDirectory(Paths.get(this.path));
 

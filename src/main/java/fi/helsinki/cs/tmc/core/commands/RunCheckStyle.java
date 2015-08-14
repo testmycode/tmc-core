@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
-import fi.helsinki.cs.tmc.core.communication.UrlHelper;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
@@ -30,7 +29,7 @@ public class RunCheckStyle extends Command<ValidationResult> {
         this(
                 path,
                 settings,
-                new ProjectRootFinder(new TaskExecutorImpl(), new TmcJsonParser(settings)),
+                new ProjectRootFinder(new TaskExecutorImpl(), new TmcApi(settings)),
                 new TaskExecutorImpl());
     }
 

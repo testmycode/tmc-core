@@ -1,6 +1,6 @@
 package fi.helsinki.cs.tmc.core.communication.updates;
 
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
@@ -25,8 +25,8 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
     private File cache;
     private Map<String, Map<String, String>> exerciseChecksums;
 
-    public ExerciseUpdateHandler(File cacheFile, TmcJsonParser jsonParser) throws TmcCoreException {
-        super(jsonParser);
+    public ExerciseUpdateHandler(File cacheFile, TmcApi tmcApi) throws TmcCoreException {
+        super(tmcApi);
         exerciseChecksums = new HashMap<>();
         if (cacheFile == null) {
             String errorMessage = "ExerciseUpdateHandler requires non-null cacheFile to function";
@@ -37,7 +37,7 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
 
     @Override
     public List<Exercise> fetchFromServer(Course currentCourse) throws IOException {
-        List<Exercise> exercises = jsonParser.getExercisesFromServer(currentCourse);
+        List<Exercise> exercises = tmcApi.getExercisesFromServer(currentCourse);
         readChecksumMap();
         if (exercises == null) {
             return new ArrayList<>();

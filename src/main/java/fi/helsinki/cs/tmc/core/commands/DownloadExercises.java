@@ -1,7 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.ExerciseDownloader;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -34,7 +34,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
     private ExerciseDownloader exerciseDownloader;
 
     private File cacheFile;
-    private TmcJsonParser parser;
+    private TmcApi tmcApi;
     private List<Exercise> exercisesToDownload;
     private ProgressObserver observer;
     private int courseId;
@@ -44,8 +44,8 @@ public class DownloadExercises extends Command<List<Exercise>> {
             throws TmcCoreException {
         super(settings);
 
-        this.parser = new TmcJsonParser(settings);
-        this.exerciseDownloader = new ExerciseDownloader(new UrlCommunicator(settings), parser);
+        this.tmcApi = new TmcApi(settings);
+        this.exerciseDownloader = new ExerciseDownloader(new UrlCommunicator(settings), tmcApi);
         this.exercisesToDownload = exercisesToDownload;
         this.path = settings.getTmcMainDirectory();
 
@@ -66,8 +66,8 @@ public class DownloadExercises extends Command<List<Exercise>> {
 
         this.path = path;
         this.courseId = courseId;
-        this.parser = new TmcJsonParser(settings);
-        this.exerciseDownloader = new ExerciseDownloader(new UrlCommunicator(settings), parser);
+        this.tmcApi = new TmcApi(settings);
+        this.exerciseDownloader = new ExerciseDownloader(new UrlCommunicator(settings), tmcApi);
         this.observer = observer;
     }
 
@@ -80,7 +80,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
         this(path, courseId, settings, observer);
 
         this.cacheFile = cacheFile;
-        this.parser = new TmcJsonParser(settings);
+        this.tmcApi = new TmcApi(settings);
     }
 
     public DownloadExercises(
@@ -89,14 +89,14 @@ public class DownloadExercises extends Command<List<Exercise>> {
             int courseId,
             File cacheFile,
             TmcSettings settings,
-            TmcJsonParser parser) {
+            TmcApi tmcApi) {
         super(settings);
 
         this.exerciseDownloader = downloader;
         this.courseId = courseId;
         this.path = path;
         this.cacheFile = cacheFile;
-        this.parser = parser;
+        this.tmcApi = tmcApi;
     }
 
     public DownloadExercises(List<Exercise> exercises, TmcSettings settings, File updateCache)
@@ -135,7 +135,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
             throw new TmcCoreException("You need to login first.");
         }
 
-        Optional<Course> courseResult = this.parser.getCourse(this.courseId);
+        Optional<Course> courseResult = this.tmcApi.getCourse(this.courseId);
 
         if (!courseResult.isPresent()) {
             throw new TmcCoreException(

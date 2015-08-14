@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.ExerciseDownloader;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.communication.authorization.Authorization;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -60,7 +60,7 @@ public class DownloadExercisesTest {
 
     private File cache;
     private CoreTestSettings settings;
-    private TmcJsonParser parser;
+    private TmcApi tmcApi;
     private TmcCore core;
 
     @Rule public WireMockRule wireMockServer = new WireMockRule();
@@ -72,7 +72,7 @@ public class DownloadExercisesTest {
         settings.setPassword("Samu");
         cache = Paths.get("src", "test", "resources", "downloadtest.cache").toFile();
         cache.createNewFile();
-        parser = Mockito.mock(TmcJsonParser.class);
+        tmcApi = Mockito.mock(TmcApi.class);
         this.core = new TmcCore(settings);
     }
 
@@ -90,7 +90,7 @@ public class DownloadExercisesTest {
     public void settingsWithoutCredentials() throws TmcCoreException, IOException {
         CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setCurrentCourse(
-                new TmcJsonParser(settings).getCourseFromString(ExampleJson.courseExample));
+                new TmcApi(settings).getCourseFromString(ExampleJson.courseExample));
         new DownloadExercises(new ArrayList<Exercise>(), localSettings).call();
     }
 
@@ -110,11 +110,11 @@ public class DownloadExercisesTest {
                         .withExercise("ankka", 88, "abcdefg")
                         .build());
 
-        parser = Mockito.mock(TmcJsonParser.class);
+        tmcApi = Mockito.mock(TmcApi.class);
 
-        when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
+        when(tmcApi.getCourse(anyInt())).thenReturn(Optional.of(course));
 
-        DownloadExercises dl = new DownloadExercises(downloader, "", 8, cache, settings, parser);
+        DownloadExercises dl = new DownloadExercises(downloader, "", 8, cache, settings, tmcApi);
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Gson gson = new Gson();
@@ -150,11 +150,11 @@ public class DownloadExercisesTest {
                         .withExercise("ankka", 88, "abcdefg")
                         .build());
 
-        parser = Mockito.mock(TmcJsonParser.class);
+        tmcApi = Mockito.mock(TmcApi.class);
 
-        Mockito.when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
+        Mockito.when(tmcApi.getCourse(anyInt())).thenReturn(Optional.of(course));
 
-        DownloadExercises dl = new DownloadExercises(downloader, "", 8, cache, settings, parser);
+        DownloadExercises dl = new DownloadExercises(downloader, "", 8, cache, settings, tmcApi);
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Gson gson = new Gson();
@@ -194,10 +194,10 @@ public class DownloadExercisesTest {
                         .withExercise("ankka", 88, "abcdefg")
                         .build());
 
-        parser = Mockito.mock(TmcJsonParser.class);
-        Mockito.when(parser.getCourse(anyInt())).thenReturn(Optional.of(course));
+        tmcApi = Mockito.mock(TmcApi.class);
+        Mockito.when(tmcApi.getCourse(anyInt())).thenReturn(Optional.of(course));
 
-        DownloadExercises dl = new DownloadExercises(mock, "", 8, cache, settings, parser);
+        DownloadExercises dl = new DownloadExercises(mock, "", 8, cache, settings, tmcApi);
         dl.call();
         String json = FileUtils.readFileToString(cache);
         Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {}.getType();

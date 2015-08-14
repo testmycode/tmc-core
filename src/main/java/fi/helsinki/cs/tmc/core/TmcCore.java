@@ -17,7 +17,7 @@ import fi.helsinki.cs.tmc.core.commands.VerifyCredentials;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
 import fi.helsinki.cs.tmc.core.communication.SubmissionPoller;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.communication.updates.ExerciseUpdateHandler;
 import fi.helsinki.cs.tmc.core.communication.updates.ReviewHandler;
@@ -242,16 +242,16 @@ public class TmcCore {
         checkParameters(path);
 
         UrlCommunicator communicator = new UrlCommunicator(settings);
-        TmcJsonParser parser = new TmcJsonParser(communicator, settings);
+        TmcApi tmcApi = new TmcApi(communicator, settings);
 
         Submit submit = new Submit(
                 new ExerciseSubmitter(
-                        new ProjectRootFinder(parser),
+                        new ProjectRootFinder(tmcApi),
                         new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
                         communicator,
-                        parser,
+                        tmcApi,
                         settings),
-                new SubmissionPoller(parser),
+                new SubmissionPoller(tmcApi),
                 settings,
                 path);
 
@@ -297,7 +297,7 @@ public class TmcCore {
      * @return a list of unread reviews for the given course
      */
     public ListenableFuture<List<Review>> getNewReviews(Course course) throws TmcCoreException {
-        ReviewHandler reviewHandler = new ReviewHandler(new TmcJsonParser(settings));
+        ReviewHandler reviewHandler = new ReviewHandler(new TmcApi(settings));
         GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler, settings);
         return threadPool.submit(command);
     }
@@ -316,7 +316,7 @@ public class TmcCore {
     public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course)
             throws TmcCoreException {
         ExerciseUpdateHandler updater =
-                new ExerciseUpdateHandler(updateCache, new TmcJsonParser(settings));
+                new ExerciseUpdateHandler(updateCache, new TmcApi(settings));
         GetExerciseUpdates command = new GetExerciseUpdates(course, updater, settings);
         return threadPool.submit(command);
     }

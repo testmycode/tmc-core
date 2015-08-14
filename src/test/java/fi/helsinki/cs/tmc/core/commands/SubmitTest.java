@@ -15,7 +15,7 @@ import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.core.communication.SubmissionPoller;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
@@ -66,7 +66,7 @@ public class SubmitTest {
         submit =
                 new Submit(
                         submitterMock,
-                        new SubmissionPoller(new TmcJsonParser(settings)),
+                        new SubmissionPoller(new TmcApi(settings)),
                         settings,
                         "polku"
                                 + FILE_SEPARATOR
@@ -123,8 +123,8 @@ public class SubmitTest {
         buildWireMock();
 
         CoreTestSettings settings = new CoreTestSettings("test", "1234", "http://localhost:8080");
-        TmcJsonParser parser = new TmcJsonParser(settings);
-        Course course = parser.getCourseFromString(ExampleJson.noDeadlineCourseExample);
+        TmcApi tmcApi = new TmcApi(settings);
+        Course course = tmcApi.getCourseFromString(ExampleJson.noDeadlineCourseExample);
         settings.setCurrentCourse(course);
         TmcCore core = new TmcCore(settings);
 

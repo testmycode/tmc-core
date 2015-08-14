@@ -8,7 +8,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.communication.updates.ExerciseUpdateHandler;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -59,10 +59,10 @@ public class ExerciseUpdaterTest {
     @Test
     public void getsCorrectExercisesFromServer() throws Exception {
         int numberOfExercises = 153;
-        TmcJsonParser tmcJsonParser = Mockito.mock(TmcJsonParser.class);
-        Mockito.when(tmcJsonParser.getExercisesFromServer(any(Course.class)))
+        TmcApi tmcApi = Mockito.mock(TmcApi.class);
+        Mockito.when(tmcApi.getExercisesFromServer(any(Course.class)))
                 .thenReturn(makeExerciseList(numberOfExercises));
-        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcJsonParser);
+        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcApi);
         List<Exercise> exercises = handler.fetchFromServer(new Course());
         assertEquals(numberOfExercises, exercises.size());
     }
@@ -76,8 +76,8 @@ public class ExerciseUpdaterTest {
             writer.write(new Gson().toJson(checksums));
         }
 
-        TmcJsonParser tmcJsonParser = mockTmcJsonParser();
-        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcJsonParser);
+        TmcApi tmcApi = mockTmcApi();
+        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcApi);
 
         List<Exercise> exercises = handler.getNewObjects(new Course());
 
@@ -90,8 +90,8 @@ public class ExerciseUpdaterTest {
     @Test
     public void getsCorrectExercisesWithEmptyCache() throws IOException, Exception {
 
-        TmcJsonParser tmcJsonParser = mockTmcJsonParser();
-        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcJsonParser);
+        TmcApi tmcApi = mockTmcApi();
+        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcApi);
 
         List<Exercise> exercises = handler.getNewObjects(new Course());
         assertEquals(4, exercises.size());
@@ -99,8 +99,8 @@ public class ExerciseUpdaterTest {
         assertTrue(listHasExerciseWithName(exercises, "duck"));
     }
 
-    private TmcJsonParser mockTmcJsonParser() throws IOException {
-        TmcJsonParser tmcJsonParser = Mockito.mock(TmcJsonParser.class);
+    private TmcApi mockTmcApi() throws IOException {
+        TmcApi tmcApi = Mockito.mock(TmcApi.class);
         List<Exercise> serverExercises =
                 builder
                         .withExercise("old", 5, "abcdefg", "test-course")
@@ -108,9 +108,9 @@ public class ExerciseUpdaterTest {
                         .withExercise("new", 8, "woksirjd", "test-course")
                         .withExercise("duck", 9, "asdfsdf", "test-course")
                         .build();
-        Mockito.when(tmcJsonParser.getExercisesFromServer(any(Course.class)))
+        Mockito.when(tmcApi.getExercisesFromServer(any(Course.class)))
                 .thenReturn(serverExercises);
-        return tmcJsonParser;
+        return tmcApi;
     }
 
     private boolean listHasExerciseWithName(List<Exercise> list, String name) {

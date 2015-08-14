@@ -32,11 +32,11 @@ import java.io.IOException;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
-public class TmcJsonParserTest {
+public class TmcApiTest {
 
     private CoreTestSettings settings;
     private UrlCommunicator urlCommunicator;
-    private TmcJsonParser tmcJsonParser;
+    private TmcApi tmcApi;
     /**
      * Mocks UrlCommunicator.
      */
@@ -46,7 +46,7 @@ public class TmcJsonParserTest {
         settings = new CoreTestSettings();
         settings.setUsername("chang");
         settings.setPassword("rajani");
-        tmcJsonParser = new TmcJsonParser(urlCommunicator, settings);
+        tmcApi = new TmcApi(urlCommunicator, settings);
         PowerMockito.mockStatic(UrlCommunicator.class);
 
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
@@ -70,7 +70,7 @@ public class TmcJsonParserTest {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(eq("ankka")))
                 .thenReturn(fakeResult);
-        String names = tmcJsonParser.getExerciseNames("ankka");
+        String names = tmcApi.getExerciseNames("ankka");
 
         assertTrue(names.contains("viikko1-Viikko1_001.Nimi"));
         assertTrue(names.contains("viikko1-Viikko1_002.HeiMaailma"));
@@ -82,7 +82,7 @@ public class TmcJsonParserTest {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(eq("ankka")))
                 .thenReturn(fakeResult);
-        String names = tmcJsonParser.getExerciseNames("ankka");
+        String names = tmcApi.getExerciseNames("ankka");
 
         assertTrue(names.contains("viikko11-Viikko11_147.Laskin"));
     }
@@ -94,7 +94,7 @@ public class TmcJsonParserTest {
                 .thenReturn(fakeResult);
         assertEquals(
                 "http://127.0.0.1:8080/submissions/1781.json?api_version=7",
-                tmcJsonParser.getSubmissionUrl(fakeResult));
+                tmcApi.getSubmissionUrl(fakeResult));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class TmcJsonParserTest {
                 .thenReturn(fakeResult);
         assertEquals(
                 "https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ",
-                tmcJsonParser.getPasteUrl(fakeResult));
+                tmcApi.getPasteUrl(fakeResult));
     }
 
     String realAddress = "http://real.address.fi";
@@ -118,7 +118,7 @@ public class TmcJsonParserTest {
     @Test
     public void getsLastExerciseOfCourseJson2() throws IOException, TmcCoreException {
         mockCourse(realAddress);
-        String names = tmcJsonParser.getExerciseNames(realAddress);
+        String names = tmcApi.getExerciseNames(realAddress);
 
         assertTrue(names.contains("viikko11-Viikko11_147.Laskin"));
     }
@@ -129,7 +129,7 @@ public class TmcJsonParserTest {
         Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(contains("/courses/3")))
                 .thenReturn(fakeResult);
 
-        Optional<Course> course = tmcJsonParser.getCourse(3);
+        Optional<Course> course = tmcApi.getCourse(3);
         assertTrue(course.isPresent());
         assertEquals("2013_ohpeJaOhja", course.get().getName());
     }
@@ -137,7 +137,7 @@ public class TmcJsonParserTest {
     @Test
     public void canFetchSubmissionData() throws IOException, TmcCoreException {
         mockSubmissionUrl();
-        SubmissionResult result = tmcJsonParser.getSubmissionResult("http://real.address.fi");
+        SubmissionResult result = tmcApi.getSubmissionResult("http://real.address.fi");
         assertNotNull(result);
         assertEquals("2014-mooc-no-deadline", result.getCourse());
     }

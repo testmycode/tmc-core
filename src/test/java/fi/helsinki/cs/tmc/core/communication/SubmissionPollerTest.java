@@ -19,20 +19,20 @@ public class SubmissionPollerTest {
     private String url =
             "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7&client=tmc_cli&client_version=1";
     private CoreTestSettings settings;
-    private TmcJsonParser jsonParser;
+    private TmcApi tmcApi;
 
     @Before
     public void setup() {
         settings = new CoreTestSettings();
         settings.setUsername("chang");
         settings.setPassword("rajani");
-        jsonParser = Mockito.mock(TmcJsonParser.class);
-        submissionPoller = new SubmissionPoller(jsonParser, 30);
+        tmcApi = Mockito.mock(TmcApi.class);
+        submissionPoller = new SubmissionPoller(tmcApi, 30);
     }
 
     @Test
     public void successfulSubmission() throws Exception {
-        Mockito.when(jsonParser.getRawTextFrom(Mockito.anyString()))
+        Mockito.when(tmcApi.getRawTextFrom(Mockito.anyString()))
                 .thenReturn(ExampleJson.successfulSubmission);
         SubmissionResult output = submissionPoller.getSubmissionResult(url);
         assertFalse(output == null);
@@ -42,7 +42,7 @@ public class SubmissionPollerTest {
 
     @Test
     public void unsuccessfulSubmission() throws Exception {
-        Mockito.when(jsonParser.getRawTextFrom(Mockito.anyString()))
+        Mockito.when(tmcApi.getRawTextFrom(Mockito.anyString()))
                 .thenReturn(ExampleJson.failedSubmission);
         SubmissionResult output = submissionPoller.getSubmissionResult(url);
         assertFalse(output == null);

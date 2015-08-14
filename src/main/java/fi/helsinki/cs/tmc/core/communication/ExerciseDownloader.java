@@ -18,7 +18,7 @@ import java.util.List;
 public class ExerciseDownloader {
 
     private UrlCommunicator urlCommunicator;
-    private TmcJsonParser tmcJsonParser;
+    private TmcApi tmcApi;
     private TaskExecutor taskExecutor;
 
     /**
@@ -26,18 +26,18 @@ public class ExerciseDownloader {
      */
     public ExerciseDownloader(
             UrlCommunicator urlCommunicator,
-            TmcJsonParser tmcJsonParser,
+            TmcApi tmcApi,
             TaskExecutor taskExecutor) {
         this.urlCommunicator = urlCommunicator;
-        this.tmcJsonParser = tmcJsonParser;
+        this.tmcApi = tmcApi;
         this.taskExecutor = taskExecutor;
     }
 
     /**
      * Creates a new ExerciseDownloader instance.
      */
-    public ExerciseDownloader(UrlCommunicator urlCommunicator, TmcJsonParser tmcJsonParser) {
-        this(urlCommunicator, tmcJsonParser, new TaskExecutorImpl());
+    public ExerciseDownloader(UrlCommunicator urlCommunicator, TmcApi tmcApi) {
+        this(urlCommunicator, tmcApi, new TaskExecutorImpl());
     }
 
     /**s
@@ -47,7 +47,7 @@ public class ExerciseDownloader {
      * @return info about downloading.
      */
     public Optional<List<Exercise>> downloadExercises(String courseUrl) throws IOException {
-        List<Exercise> exercises = tmcJsonParser.getExercises(courseUrl);
+        List<Exercise> exercises = tmcApi.getExercises(courseUrl);
         if (exercises.isEmpty()) {
             return Optional.absent();
         }

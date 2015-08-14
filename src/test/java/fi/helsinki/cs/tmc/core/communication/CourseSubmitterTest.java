@@ -34,7 +34,7 @@ public class CourseSubmitterTest {
 
     private ExerciseSubmitter courseSubmitter;
     private UrlCommunicator urlCommunicator;
-    private TmcJsonParser jsonParser;
+    private TmcApi tmcApi;
     private ProjectRootFinderStub rootFinder;
     private ProjectRootFinder realFinder;
     private CoreTestSettings settings;
@@ -53,14 +53,14 @@ public class CourseSubmitterTest {
         settings.setPassword("rajani");
 
         urlCommunicator = mock(UrlCommunicator.class);
-        jsonParser = new TmcJsonParser(urlCommunicator, settings);
-        rootFinder = new ProjectRootFinderStub(jsonParser);
+        tmcApi = new TmcApi(urlCommunicator, settings);
+        rootFinder = new ProjectRootFinderStub(tmcApi);
         zipper = Mockito.mock(StudentFileAwareZipper.class);
 
         Mockito.when(zipper.zip(Mockito.any(Path.class))).thenReturn(new byte[100]);
 
         this.courseSubmitter =
-                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
+                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, tmcApi, settings);
 
         mockUrlCommunicator(
                 "/courses.json?api_version=7&client=tmc_cli&client_version=1",
@@ -92,7 +92,7 @@ public class CourseSubmitterTest {
                         + "=tmc_cli&client_version=1",
                 ExampleJson.pasteResponse);
 
-        realFinder = new ProjectRootFinder(new TaskExecutorImpl(), jsonParser);
+        realFinder = new ProjectRootFinder(new TaskExecutorImpl(), tmcApi);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class CourseSubmitterTest {
                         + "viikko_01";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(path).or(new Course()));
         this.courseSubmitter =
-                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
+                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(path);
         String[] names = courseSubmitter.getExerciseName(path);
         assertEquals("viikko_01", names[names.length - 1]);
@@ -161,7 +161,7 @@ public class CourseSubmitterTest {
                         + "viikko1-Viikko1_001.Nimi";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
-                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
+                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         String submissionPath =
                 "http://127.0.0.1:8080/submissions/1781.json?api_version=7&client=tmc_cli&client_version=1";
@@ -187,7 +187,7 @@ public class CourseSubmitterTest {
 
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
-                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
+                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         courseSubmitter.submit(testPath);
     }
@@ -209,7 +209,7 @@ public class CourseSubmitterTest {
                         + "viikko1-Viikko1_001.Nimi";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
-                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
+                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         String pastePath = "https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ";
         String result = courseSubmitter.submitPaste(testPath);
@@ -233,7 +233,7 @@ public class CourseSubmitterTest {
                         + "viikko1-Viikko1_001.Nimi";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
-                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
+                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         String pastePath = "https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ";
         String result = courseSubmitter.submitPasteWithComment(testPath, "Commentti");
@@ -257,7 +257,7 @@ public class CourseSubmitterTest {
                         + "feikeintehtava";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
-                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
+                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         courseSubmitter.submit(testPath);
     }
@@ -279,7 +279,7 @@ public class CourseSubmitterTest {
                         + "feikkitehtava";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
-                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
+                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         courseSubmitter.submit(testPath);
     }
@@ -301,7 +301,7 @@ public class CourseSubmitterTest {
                         + "viikko1-Viikko1_001.Nimi";
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
-                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, jsonParser, settings);
+                new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         courseSubmitter.submit(testPath);
     }

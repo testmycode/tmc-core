@@ -41,7 +41,7 @@ public class SendSpywareDiffsTest {
 
         this.bytes = new byte[] {0x01, 0x02, 0x03};
 
-        this.command = new SendSpywareDiffs(bytes, sender, settings);
+        this.command = new SendSpywareDiffs(settings, sender, bytes);
     }
 
     @Test(expected = TmcCoreException.class)
@@ -76,7 +76,7 @@ public class SendSpywareDiffsTest {
         currentCourse.setSpywareUrls(Arrays.asList("http://localhost:8080/spyware"));
         settings.setCurrentCourse(currentCourse);
 
-        command = new SendSpywareDiffs(bytes, sender, settings);
+        command = new SendSpywareDiffs(settings, sender, bytes);
 
         command.call();
 

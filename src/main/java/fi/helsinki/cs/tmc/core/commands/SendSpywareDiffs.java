@@ -10,16 +10,19 @@ import com.google.common.base.Optional;
 
 import java.util.List;
 
+/**
+ * A {@link Command} for sending spyware data to the server.
+ */
 public class SendSpywareDiffs extends Command<List<HttpResult>> {
 
     private byte[] spywareDiffs;
-    private Course currentCourse;
     private DiffSender sender;
 
-    public SendSpywareDiffs(
-            byte[] spywareDiffs,
-            DiffSender sender,
-            TmcSettings settings) {
+    /**
+     * Constructs a send spyware diffs command using {@code settings} and {@code sender} for sending
+     * {@code spywareDiffs} to the server.
+     */
+    public SendSpywareDiffs(TmcSettings settings, DiffSender sender, byte[] spywareDiffs) {
         super(settings);
 
         this.spywareDiffs = spywareDiffs;
@@ -38,16 +41,17 @@ public class SendSpywareDiffs extends Command<List<HttpResult>> {
         }
 
         Optional<Course> course = this.settings.getCurrentCourse();
-        if (course != null && course.isPresent()) {
-            this.currentCourse = course.get();
-        } else {
+        if (course == null || !course.isPresent()) {
             throw new TmcCoreException("No current course found from settings.");
         }
     }
 
+    /**
+     * Entry point for launching this command.
+     */
     @Override
-    public List<HttpResult> call() throws Exception {
+    public List<HttpResult> call() throws TmcCoreException {
         assertHasRequiredData();
-        return this.sender.sendToSpyware(spywareDiffs, currentCourse);
+        return this.sender.sendToSpyware(spywareDiffs, settings.getCurrentCourse().get());
     }
 }

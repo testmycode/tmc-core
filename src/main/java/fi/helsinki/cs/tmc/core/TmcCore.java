@@ -362,7 +362,7 @@ public class TmcCore {
     public ListenableFuture<List<HttpResult>> sendSpywareDiffs(byte[] spywareDiffs)
             throws TmcCoreException {
         SendSpywareDiffs spyware =
-                new SendSpywareDiffs(spywareDiffs, new DiffSender(settings), settings);
+                new SendSpywareDiffs(settings, new DiffSender(settings), spywareDiffs);
         return threadPool.submit(spyware);
     }
 

@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import static org.junit.Assert.assertEquals;
+
 import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;

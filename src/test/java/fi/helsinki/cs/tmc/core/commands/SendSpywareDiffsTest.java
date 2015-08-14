@@ -4,7 +4,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.matching;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-
 import static com.github.tomakehurst.wiremock.client.WireMock.verify;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;

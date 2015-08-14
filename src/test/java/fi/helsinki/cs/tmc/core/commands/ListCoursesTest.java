@@ -17,6 +17,7 @@ import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.hamcrest.core.IsInstanceOf;
@@ -35,8 +36,8 @@ import java.util.concurrent.ExecutionException;
 public class ListCoursesTest {
 
     private ListCourses list;
-    CoreTestSettings settings = new CoreTestSettings();
-    UrlCommunicator communicator;
+    private CoreTestSettings settings = new CoreTestSettings();
+    private UrlCommunicator communicator;
 
     @Rule public ExpectedException expectedException = ExpectedException.none();
 

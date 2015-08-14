@@ -9,8 +9,6 @@ import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.nio.file.Paths;
-
 public class RunTestsTest {
 
     private CoreTestSettings settings;

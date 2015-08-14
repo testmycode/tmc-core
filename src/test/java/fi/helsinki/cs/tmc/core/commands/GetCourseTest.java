@@ -14,6 +14,7 @@ import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.junit.Before;

@@ -11,7 +11,6 @@ import static org.junit.Assert.assertTrue;
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.communication.authorization.Authorization;
-import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -27,8 +26,8 @@ public class VerifyCredentialsTest {
     private final String testUsername = "test";
     private final String testPassword = "1234";
     private final String authString = Authorization.encode(testUsername + ":" + testPassword);
-    CoreTestSettings settings;
-    UrlCommunicator comm;
+    private CoreTestSettings settings;
+    private UrlCommunicator comm;
 
     @Rule public WireMockRule wireMockServer = new WireMockRule();
 

@@ -270,7 +270,7 @@ public class TmcCore {
     public ListenableFuture<RunResult> test(String path) throws TmcCoreException {
         checkParameters(path);
         @SuppressWarnings("unchecked")
-        RunTests testCommand = new RunTests(path, settings);
+        RunTests testCommand = new RunTests(settings, path);
         return threadPool.submit(testCommand);
     }
 

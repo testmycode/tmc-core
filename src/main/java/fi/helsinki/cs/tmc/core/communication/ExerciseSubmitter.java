@@ -5,8 +5,12 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.core.zipping.RootFinder;
+import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
+import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
 import fi.helsinki.cs.tmc.langs.io.zip.Zipper;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import com.google.common.base.Optional;
 
@@ -35,6 +39,15 @@ public class ExerciseSubmitter {
 
     /** Exercise deadline is checked with this date format. */
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
+
+    public ExerciseSubmitter(TmcSettings settings) {
+        this(
+                new ProjectRootFinder(new TaskExecutorImpl(), new TmcApi(settings)),
+                new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
+                new UrlCommunicator(settings),
+                new TmcApi(settings),
+                settings);
+    }
 
     public ExerciseSubmitter(
             RootFinder rootFinder,

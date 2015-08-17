@@ -14,6 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -97,7 +98,7 @@ public class TmcApi {
      * @param reviewUrl which is found from course-object
      * @return List of reviews
      */
-    public List<Review> getReviews(String reviewUrl) throws IOException {
+    public List<Review> getReviews(String reviewUrl) throws IOException, URISyntaxException {
         JsonObject jsonObject = getJsonFrom(helper.withParams(reviewUrl));
         Gson mapper = new Gson();
         Review[] reviews = mapper.fromJson(jsonObject.getAsJsonArray("reviews"), Review[].class);
@@ -144,7 +145,7 @@ public class TmcApi {
      *
      * @return an course Object (parsed from JSON)
      */
-    public Optional<Course> getCourse(int courseId) throws IOException, TmcCoreException {
+    public Optional<Course> getCourse(int courseId) throws IOException, TmcCoreException, URISyntaxException {
         if (!courseExists(courseId)) {
             return Optional.absent();
         }
@@ -187,7 +188,7 @@ public class TmcApi {
      * @param course Course that we are interested in
      * @return List of all exercises as Exercise-objects
      */
-    public List<Exercise> getExercisesFromServer(Course course) throws IOException {
+    public List<Exercise> getExercisesFromServer(Course course) throws IOException, URISyntaxException {
         return getExercises(course.getId());
     }
 
@@ -197,7 +198,7 @@ public class TmcApi {
      * @param id id of the course we are interested in
      * @return List of a all exercises as Exercise-objects
      */
-    public List<Exercise> getExercises(int id) throws IOException {
+    public List<Exercise> getExercises(int id) throws IOException, URISyntaxException {
         return getExercises(helper.getCourseUrl(id));
     }
 

@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
+import com.github.tomakehurst.wiremock.client.UrlMatchingStrategy;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
@@ -13,9 +14,11 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import com.google.common.util.concurrent.ListenableFuture;
+import java.net.URISyntaxException;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -27,18 +30,18 @@ public class GetCourseTest {
 
     private UrlHelper urlHelper;
     private String finalUrl = "http://127.0.0.1:8080/courses/19.json";
-    private String mockUrl;
+    private UrlMatchingStrategy mockUrl;
     private TmcCore core;
     private CoreTestSettings settings;
 
-    public GetCourseTest() {
+    public GetCourseTest() throws URISyntaxException {
         settings = new CoreTestSettings();
         settings.setCredentials("test", "1234");
         settings.setCurrentCourse(new Course());
         settings.setServerAddress("https://tmc.mooc.fi/staging");
         settings.setApiVersion("7");
         urlHelper = new UrlHelper(settings);
-        mockUrl = urlHelper.withParams("/courses/19.json");
+        mockUrl = urlPathEqualTo("/courses/19.json");
     }
 
     @Before
@@ -75,7 +78,7 @@ public class GetCourseTest {
     @Test
     public void testCall() throws Exception {
         wireMock.stubFor(
-                get(urlEqualTo(mockUrl))
+                get(mockUrl)
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)
@@ -90,7 +93,7 @@ public class GetCourseTest {
     @Test
     public void testCallWithCourseName() throws Exception {
         wireMock.stubFor(
-                get(urlEqualTo(mockUrl))
+                get(mockUrl)
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)

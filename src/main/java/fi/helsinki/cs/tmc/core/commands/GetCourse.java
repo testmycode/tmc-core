@@ -10,6 +10,7 @@ import com.google.common.base.Optional;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 /**
@@ -46,7 +47,7 @@ public class GetCourse extends Command<Course> {
      * Entry point for launching this command.
      */
     @Override
-    public Course call() throws TmcCoreException {
+    public Course call() throws TmcCoreException, URISyntaxException {
         validate(this.settings.getUsername(), "Username must be set!");
         validate(this.settings.getPassword(), "Password must be set!");
 

@@ -21,6 +21,7 @@ import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 
 public class PasteWithCommentTest {
@@ -47,7 +48,7 @@ public class PasteWithCommentTest {
 
     @Test
     public void testCheckDataSuccess()
-            throws TmcCoreException, IOException, ParseException, ExpiredException, ZipException {
+            throws TmcCoreException, IOException, ParseException, ExpiredException, ZipException, URISyntaxException {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 
         new PasteWithComment(settings, "path", "comment", submitterMock).call();

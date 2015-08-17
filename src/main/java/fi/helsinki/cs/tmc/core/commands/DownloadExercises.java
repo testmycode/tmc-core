@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -130,7 +131,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
      * Parses the course JSON and executes downloading of the course exercises.
      */
     @Override
-    public List<Exercise> call() throws TmcCoreException, IOException {
+    public List<Exercise> call() throws TmcCoreException, IOException, URISyntaxException {
         if (!settings.userDataExists()) {
             throw new TmcCoreException("You need to login first.");
         }

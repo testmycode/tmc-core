@@ -29,6 +29,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
@@ -124,7 +125,7 @@ public class TmcApiTest {
     }
 
     @Test
-    public void canFetchOneCourse() throws IOException, TmcCoreException {
+    public void canFetchOneCourse() throws IOException, TmcCoreException, URISyntaxException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(contains("/courses/3")))
                 .thenReturn(fakeResult);

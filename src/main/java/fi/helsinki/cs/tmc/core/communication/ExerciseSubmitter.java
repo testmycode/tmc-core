@@ -18,6 +18,7 @@ import net.lingala.zip4j.exception.ZipException;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
@@ -96,7 +97,8 @@ public class ExerciseSubmitter {
      */
     public String submit(String currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException {
+                    ZipException, TmcCoreException,
+                    URISyntaxException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
@@ -112,7 +114,8 @@ public class ExerciseSubmitter {
      */
     public String submitPaste(String currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException {
+                    ZipException, TmcCoreException,
+                    URISyntaxException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, true);
     }
@@ -128,7 +131,8 @@ public class ExerciseSubmitter {
      */
     public String submitPasteWithComment(String currentPath, String comment)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException {
+                    ZipException, TmcCoreException,
+                    URISyntaxException {
         Exercise currentExercise = initExercise(currentPath);
         HashMap<String, String> params = new HashMap<>();
         params.put("message_for_paste", comment);
@@ -145,7 +149,8 @@ public class ExerciseSubmitter {
      */
     private Exercise initExercise(String currentPath)
             throws ParseException, ExpiredException, IllegalArgumentException, IOException,
-                    TmcCoreException {
+                    TmcCoreException,
+                    URISyntaxException {
         Exercise currentExercise = searchExercise(currentPath);
         if (isExpired(currentExercise) || !currentExercise.isReturnable()) {
             throw new ExpiredException("Exercise is expired.");
@@ -154,7 +159,7 @@ public class ExerciseSubmitter {
     }
 
     private Exercise searchExercise(String currentPath)
-            throws IllegalArgumentException, IOException, TmcCoreException {
+            throws IllegalArgumentException, IOException, TmcCoreException, URISyntaxException {
         Optional<Exercise> currentExercise = findExercise(currentPath);
         if (!currentExercise.isPresent()) {
             throw new IllegalArgumentException("Could not find exercise in this directory");
@@ -170,7 +175,7 @@ public class ExerciseSubmitter {
     }
 
     private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste)
-            throws IOException {
+            throws IOException, URISyntaxException {
         String returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
 
         byte[] zippedExercise = langsZipper.zip(Paths.get(currentPath));
@@ -178,14 +183,14 @@ public class ExerciseSubmitter {
         if (paste) {
             resultUrl = sendSubmissionToServerWithPaste(zippedExercise, returnUrl);
         } else {
-            resultUrl = urlHelper.withParams(sendSubmissionToServer(zippedExercise, returnUrl));
+            resultUrl = sendSubmissionToServer(zippedExercise, returnUrl);
         }
         return resultUrl;
     }
 
     private String sendZipFileWithParams(
             String currentPath, Exercise currentExercise, boolean paste, Map<String, String> params)
-            throws IOException {
+            throws IOException, URISyntaxException {
         String returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
         byte[] zippedExercise = langsZipper.zip(Paths.get(currentPath));
         String resultUrl;
@@ -226,12 +231,12 @@ public class ExerciseSubmitter {
     }
 
     private Optional<Exercise> findExercise(String currentPath)
-            throws IllegalArgumentException, IOException, TmcCoreException {
+            throws IllegalArgumentException, IOException, TmcCoreException, URISyntaxException {
         return findCurrentExercise(findCourseExercises(currentPath), currentPath);
     }
 
     private List<Exercise> findCourseExercises(String currentPath)
-            throws IllegalArgumentException, IOException {
+            throws IllegalArgumentException, IOException, URISyntaxException {
         Optional<Course> currentCourse = this.settings.getCurrentCourse();
         if (!currentCourse.isPresent()) {
             throw new IllegalArgumentException("Not under any course directory");

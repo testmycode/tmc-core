@@ -23,6 +23,7 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import com.google.common.util.concurrent.FutureCallback;
@@ -36,13 +37,14 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SubmitTest {
 
     private static final String FILE_SEPARATOR = File.separator;
-    
+
     private Submit submit;
     private ExerciseSubmitter submitterMock;
     private CoreTestSettings settings;
@@ -57,11 +59,11 @@ public class SubmitTest {
         settings.setPassword("Bossman");
         settings.setCurrentCourse(new Course());
         settings.setApiVersion("7");
-        
+
         submissionUrl = new UrlHelper(settings).withParams("/submissions/1781.json");
-        
+
         submitterMock = Mockito.mock(ExerciseSubmitter.class);
-        
+
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         submit =
                 new Submit(
@@ -138,7 +140,6 @@ public class SubmitTest {
                                 + FILE_SEPARATOR
                                 + "Viikko1_004.Muuttujat");
         final List<SubmissionResult> result = new ArrayList<>();
-
         Futures.addCallback(
                 submit,
                 new FutureCallback<SubmissionResult>() {
@@ -161,11 +162,9 @@ public class SubmitTest {
         assertFalse(result.get(0).isAllTestsPassed());
     }
 
-    private void buildWireMock() {
-        UrlHelper helper = new UrlHelper(settings);
-        String urlToMock = helper.withParams("/exercises/1231/submissions.json");
+    private void buildWireMock() throws URISyntaxException {
         wireMock.stubFor(
-                post(urlEqualTo(urlToMock))
+                post(urlPathEqualTo("/exercises/1231/submissions.json"))
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)
@@ -174,9 +173,8 @@ public class SubmitTest {
                                                         "https://tmc.mooc.fi/staging",
                                                         "http://localhost:8080"))));
 
-        urlToMock = helper.withParams("/submissions/7777.json");
         wireMock.stubFor(
-                get(urlEqualTo(urlToMock))
+                get(urlPathEqualTo("/submissions/7777.json"))
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)
@@ -185,9 +183,8 @@ public class SubmitTest {
                                                         "https://tmc.mooc.fi/staging",
                                                         "http://localhost:8080"))));
 
-        urlToMock = helper.withParams("/courses/19.json");
         wireMock.stubFor(
-                get(urlEqualTo(urlToMock))
+                get(urlPathEqualTo("/courses/19.json"))
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)

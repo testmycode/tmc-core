@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +37,7 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
     }
 
     @Override
-    public List<Exercise> fetchFromServer(Course currentCourse) throws IOException {
+    public List<Exercise> fetchFromServer(Course currentCourse) throws IOException, URISyntaxException {
         List<Exercise> exercises = tmcApi.getExercisesFromServer(currentCourse);
         readChecksumMap();
         if (exercises == null) {

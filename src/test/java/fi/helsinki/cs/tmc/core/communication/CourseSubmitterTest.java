@@ -26,6 +26,7 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.text.ParseException;
 import java.util.Map;
@@ -147,7 +148,8 @@ public class CourseSubmitterTest {
     @Test
     public void testSubmitWithOneParam()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException {
+                    ZipException, TmcCoreException,
+                    URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"
@@ -164,7 +166,7 @@ public class CourseSubmitterTest {
                 new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         String submissionPath =
-                "http://127.0.0.1:8080/submissions/1781.json?api_version=7&client=tmc_cli&client_version=1";
+                "http://127.0.0.1:8080/submissions/1781.json?api_version=7";
         String result = courseSubmitter.submit(testPath);
         assertEquals(submissionPath, result);
     }
@@ -172,7 +174,8 @@ public class CourseSubmitterTest {
     @Test(expected = ExpiredException.class)
     public void testSubmitWithExpiredExercise()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException {
+                    ZipException, TmcCoreException,
+                    URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"
@@ -195,7 +198,8 @@ public class CourseSubmitterTest {
     @Test
     public void submitWithPasteReturnsPasteUrl()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException {
+                    ZipException, TmcCoreException,
+                    URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"
@@ -219,7 +223,8 @@ public class CourseSubmitterTest {
     @Test
     public void submitWithPasteAndCommentReturnsPasteUrl()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException {
+                    ZipException, TmcCoreException,
+                    URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"
@@ -243,7 +248,8 @@ public class CourseSubmitterTest {
     @Test(expected = IllegalArgumentException.class)
     public void submitWithPasteFromBadPathThrowsException()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException {
+                    ZipException, TmcCoreException,
+                    URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"
@@ -265,7 +271,8 @@ public class CourseSubmitterTest {
     @Test(expected = IllegalArgumentException.class)
     public void testSubmitWithNonexistentExercise()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException {
+                    ZipException, TmcCoreException,
+                    URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"
@@ -287,7 +294,8 @@ public class CourseSubmitterTest {
     @Test(expected = IllegalArgumentException.class)
     public void submitWithNonExistentCourseThrowsException()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException {
+                    ZipException, TmcCoreException,
+                    URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"

@@ -19,6 +19,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 public class ReviewHandlerTest {
@@ -27,7 +28,7 @@ public class ReviewHandlerTest {
     private TmcApi tmcApi;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, URISyntaxException {
 
         tmcApi = Mockito.mock(TmcApi.class);
         handler = new ReviewHandler(tmcApi);
@@ -41,7 +42,7 @@ public class ReviewHandlerTest {
     }
 
     @Test
-    public void fetchReviewReturnsEmptyListIfServerSendsNull() throws IOException {
+    public void fetchReviewReturnsEmptyListIfServerSendsNull() throws IOException, URISyntaxException {
 
         Mockito.when(tmcApi.getReviews(anyString())).thenReturn(null);
         assertNotNull(handler.fetchFromServer(new Course()));

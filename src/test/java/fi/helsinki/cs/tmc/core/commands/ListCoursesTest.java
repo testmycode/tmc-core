@@ -29,6 +29,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -78,10 +79,10 @@ public class ListCoursesTest {
 
     @Test
     public void listCoursesWillThrowExceptionIfAuthFailedOnServer()
-            throws ExecutionException, InterruptedException, TmcCoreException {
+            throws ExecutionException, InterruptedException, TmcCoreException, URISyntaxException {
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(TmcServerException.class));
         wireMock.stubFor(
-                get(urlEqualTo(new UrlHelper(settings).withParams("/courses.json")))
+                get(WireMock.urlPathEqualTo("/courses.json"))
                         .willReturn(WireMock.aResponse().withStatus(401)));
 
         CoreTestSettings localSettings = new CoreTestSettings();

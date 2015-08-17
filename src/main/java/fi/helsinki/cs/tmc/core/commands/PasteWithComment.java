@@ -18,6 +18,7 @@ import net.lingala.zip4j.exception.ZipException;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 
 public class PasteWithComment extends Command<URI> {
@@ -63,7 +64,7 @@ public class PasteWithComment extends Command<URI> {
      */
     @Override
     public URI call()
-            throws IOException, ParseException, ExpiredException, ZipException, TmcCoreException {
+            throws IOException, ParseException, ExpiredException, ZipException, TmcCoreException, URISyntaxException {
         if (!settings.userDataExists()) {
             throw new TmcCoreException("User must be authenticated");
         }

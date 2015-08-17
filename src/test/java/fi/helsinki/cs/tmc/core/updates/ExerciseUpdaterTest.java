@@ -28,6 +28,7 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +48,7 @@ public class ExerciseUpdaterTest {
 
         builder = new ExerciseBuilder();
         urlCommunicator = Mockito.mock(UrlCommunicator.class);
-        Mockito.when(urlCommunicator.makeGetRequest(anyString(), any(String[].class)))
+        Mockito.when(urlCommunicator.makeGetRequest(anyString(), any(String.class)))
                 .thenReturn(new HttpResult(ExampleJson.courseExample, 200, true));
     }
 
@@ -99,7 +100,7 @@ public class ExerciseUpdaterTest {
         assertTrue(listHasExerciseWithName(exercises, "duck"));
     }
 
-    private TmcApi mockTmcApi() throws IOException {
+    private TmcApi mockTmcApi() throws IOException, URISyntaxException {
         TmcApi tmcApi = Mockito.mock(TmcApi.class);
         List<Exercise> serverExercises =
                 builder

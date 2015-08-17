@@ -5,6 +5,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -51,6 +52,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,12 +84,12 @@ public class DownloadExercisesTest {
     }
 
     @Test(expected = TmcCoreException.class)
-    public void settingsWithoutCurrentCourse() throws TmcCoreException, IOException {
+    public void settingsWithoutCurrentCourse() throws TmcCoreException, IOException, URISyntaxException {
         new DownloadExercises(new ArrayList<Exercise>(), settings).call();
     }
 
     @Test(expected = TmcCoreException.class)
-    public void settingsWithoutCredentials() throws TmcCoreException, IOException {
+    public void settingsWithoutCredentials() throws TmcCoreException, IOException, URISyntaxException {
         CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setCurrentCourse(
                 new TmcApi(settings).getCourseFromString(ExampleJson.courseExample));
@@ -95,7 +97,7 @@ public class DownloadExercisesTest {
     }
 
     @Test
-    public void writesChecksumsToFileIfCacheFileIsGiven() throws IOException, TmcCoreException {
+    public void writesChecksumsToFileIfCacheFileIsGiven() throws IOException, TmcCoreException, URISyntaxException {
         ExerciseDownloader downloader = Mockito.mock(ExerciseDownloader.class);
         Mockito.when(downloader.createCourseFolder(anyString(), anyString())).thenReturn("");
         Mockito.when(downloader.handleSingleExercise(any(Exercise.class), anyString()))
@@ -133,7 +135,7 @@ public class DownloadExercisesTest {
 
     @Test
     public void overwritesToCacheFileIfCacheFileHasBadContents()
-            throws IOException, TmcCoreException {
+            throws IOException, TmcCoreException, URISyntaxException {
         new FileWriter(cache).write(" asdfjljlkasdf ");
 
         ExerciseDownloader downloader = Mockito.mock(ExerciseDownloader.class);
@@ -174,7 +176,7 @@ public class DownloadExercisesTest {
     }
 
     @Test
-    public void keepsOldChecksumsInTheCache() throws IOException, TmcCoreException {
+    public void keepsOldChecksumsInTheCache() throws IOException, TmcCoreException, URISyntaxException {
         try (FileWriter writer = new FileWriter(cache)) {
             writer.write(
                     "{\"test-course\":{\"kissa\":\"qwerty\",\"asdf2\":\"aijw9\"},"
@@ -251,7 +253,7 @@ public class DownloadExercisesTest {
         Mockito.verify(observerMock, times(153)).progress(anyDouble(), anyString());
     }
 
-    private CoreTestSettings createSettingsAndWiremock() {
+    private CoreTestSettings createSettingsAndWiremock() throws URISyntaxException {
         CoreTestSettings settings1 = new CoreTestSettings();
         String serverAddress = "http://127.0.0.1:8080";
         settings1.setServerAddress(serverAddress);
@@ -261,15 +263,15 @@ public class DownloadExercisesTest {
         return settings1;
     }
 
-    private void wiremock(String username, String password, String courseId, String serverAddress) {
+    private void wiremock(String username, String password, String courseId, String serverAddress) throws URISyntaxException {
         String encodedCredentials = "Basic " + Authorization.encode(username + ":" + password);
         wireMockServer.stubFor(
-                get(urlEqualTo("/user"))
+                get(urlPathEqualTo("/user"))
                         .withHeader("Authorization", equalTo(encodedCredentials))
                         .willReturn(aResponse().withStatus(200)));
 
         wireMockServer.stubFor(
-                get(urlEqualTo(new UrlHelper(settings).coursesExtension))
+                get(urlPathEqualTo(new UrlHelper(settings).coursesExtension))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
@@ -279,10 +281,8 @@ public class DownloadExercisesTest {
                                                         "https://tmc.mooc.fi/staging",
                                                         serverAddress))));
 
-        String mockUrl = "/courses/" + courseId + ".json";
-        mockUrl = new UrlHelper(settings).withParams(mockUrl);
         wireMockServer.stubFor(
-                get(urlEqualTo(mockUrl))
+                get(urlPathEqualTo("/courses/" + courseId + ".json"))
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)

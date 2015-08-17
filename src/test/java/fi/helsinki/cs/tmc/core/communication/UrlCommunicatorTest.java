@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -123,7 +124,7 @@ public class UrlCommunicatorTest {
     }
 
     @Test
-    public void makePutRequestSendsPut() throws IOException, TmcCoreException {
+    public void makePutRequestSendsPut() throws IOException, TmcCoreException, URISyntaxException {
         settings.setUsername("test");
         settings.setPassword("1234");
         Map<String, String> body = new HashMap<>();
@@ -134,7 +135,7 @@ public class UrlCommunicatorTest {
     }
 
     @Test
-    public void makePutRequestHasCorrectHeaders() throws IOException, TmcCoreException {
+    public void makePutRequestHasCorrectHeaders() throws IOException, TmcCoreException, URISyntaxException {
         settings.setUsername("test");
         settings.setPassword("1234");
         Map<String, String> body = new HashMap<>();

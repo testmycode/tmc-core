@@ -22,6 +22,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -63,14 +64,14 @@ public class ReviewTest {
     }
 
     @Test
-    public void markAsReadTest() throws IOException, TmcCoreException {
+    public void markAsReadTest() throws IOException, TmcCoreException, URISyntaxException {
         UrlCommunicator urlcom = mockUrlCommunicator();
         review.setMarkedAsRead(false);
         review.markAs(true, urlcom);
         assertTrue(review.isMarkedAsRead());
     }
 
-    private UrlCommunicator mockUrlCommunicator() throws IOException {
+    private UrlCommunicator mockUrlCommunicator() throws IOException, URISyntaxException {
         UrlCommunicator urlcom = Mockito.mock(UrlCommunicator.class);
         when(urlcom.makePutRequest(Mockito.anyString(), Mockito.any(Optional.class)))
                 .thenReturn(new HttpResult("OK", 200, true));
@@ -78,7 +79,7 @@ public class ReviewTest {
     }
 
     @Test
-    public void markAsUnreadTest() throws IOException, TmcCoreException {
+    public void markAsUnreadTest() throws IOException, TmcCoreException, URISyntaxException {
         UrlCommunicator urlcom = mockUrlCommunicator();
         review.setMarkedAsRead(true);
         review.markAs(false, urlcom);

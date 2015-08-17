@@ -38,7 +38,7 @@ public class GetCourseTest {
         settings = new CoreTestSettings();
         settings.setCredentials("test", "1234");
         settings.setCurrentCourse(new Course());
-        settings.setServerAddress("https://tmc.mooc.fi/staging");
+        settings.setServerAddress("http://localhost:8080/");
         settings.setApiVersion("7");
         urlHelper = new UrlHelper(settings);
         mockUrl = urlPathEqualTo("/courses/19.json");
@@ -92,8 +92,9 @@ public class GetCourseTest {
 
     @Test
     public void testCallWithCourseName() throws Exception {
+        wireMock.stubFor(get(urlPathEqualTo("/courses.json")).willReturn(WireMock.aResponse().withBody(ExampleJson.allCoursesExample)));
         wireMock.stubFor(
-                get(mockUrl)
+                get(urlPathEqualTo("/courses/3.json"))
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)

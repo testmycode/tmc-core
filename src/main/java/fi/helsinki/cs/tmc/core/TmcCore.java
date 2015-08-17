@@ -54,8 +54,7 @@ import java.util.concurrent.Executors;
 
 public class TmcCore {
 
-    static ListeningExecutorService threadPool =
-            MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
+    private ListeningExecutorService threadPool;
     private File updateCache;
     private TmcSettings settings;
 
@@ -64,13 +63,12 @@ public class TmcCore {
      * The TmcCore provides all the essential backend functionalities as public methods.
      */
     public TmcCore(TmcSettings settings) {
-        this.settings = settings;
+        this(settings, MoreExecutors.listeningDecorator(Executors.newCachedThreadPool()));
     }
 
     public TmcCore(TmcSettings settings, ListeningExecutorService pool) {
-        this(settings);
-
-        threadPool = pool;
+        this.settings = settings;
+        this.threadPool = pool;
     }
 
     public TmcCore(TmcSettings settings, File updateCache, ListeningExecutorService threadPool)

@@ -32,7 +32,7 @@ public class PasteWithComment extends Command<URI> {
     }
 
     /**
-     * Constructs a new paste with comment command for using {@submitter} to send a paste of
+     * Constructs a new paste with comment command for using {@code submitter} to send a paste of
      * the exercise at {@code path} with an accompanying {@code comment} to the server.
      */
     public PasteWithComment(

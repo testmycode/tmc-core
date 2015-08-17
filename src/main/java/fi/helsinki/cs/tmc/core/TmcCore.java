@@ -295,7 +295,7 @@ public class TmcCore {
      */
     public ListenableFuture<List<Review>> getNewReviews(Course course) throws TmcCoreException {
         ReviewHandler reviewHandler = new ReviewHandler(new TmcApi(settings));
-        GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler, settings);
+        GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler);
         return threadPool.submit(command);
     }
 

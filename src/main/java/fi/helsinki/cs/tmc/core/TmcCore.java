@@ -314,7 +314,7 @@ public class TmcCore {
             throws TmcCoreException {
         ExerciseUpdateHandler updater =
                 new ExerciseUpdateHandler(updateCache, new TmcApi(settings));
-        GetExerciseUpdates command = new GetExerciseUpdates(course, updater, settings);
+        GetExerciseUpdates command = new GetExerciseUpdates(course, updater);
         return threadPool.submit(command);
     }
 

@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumFileCache;
 import fi.helsinki.cs.tmc.core.commands.DownloadExercises;
 import fi.helsinki.cs.tmc.core.commands.GetCourse;
 import fi.helsinki.cs.tmc.core.commands.GetExerciseUpdates;
@@ -39,15 +40,12 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -55,7 +53,7 @@ import java.util.concurrent.Executors;
 public class TmcCore {
 
     private ListeningExecutorService threadPool;
-    private File updateCache;
+    private ExerciseChecksumFileCache updateCache;
     private TmcSettings settings;
 
     /**
@@ -75,40 +73,22 @@ public class TmcCore {
             throws FileNotFoundException {
         this(settings, threadPool);
 
-        ensureCacheFileExists(updateCache);
-        this.updateCache = updateCache;
+        this.updateCache = new ExerciseChecksumFileCache(Paths.get(updateCache.toString()));
     }
 
     public void setCacheFile(File newCache) throws IOException, TmcCoreException {
-        ensureCacheFileExists(newCache);
-        if (this.updateCache != null && this.updateCache.exists()) {
-            moveCacheFile(newCache);
+        if (newCache == null || !newCache.exists()) {
+            throw new FileNotFoundException("Attempted to set non-existent cache file");
         }
-        updateCache = newCache;
-    }
-
-    private void moveCacheFile(File newCache) throws IOException {
-        String oldData = FileUtils.readFileToString(updateCache, Charset.forName("UTF-8"));
-        FileWriter writer = new FileWriter(newCache, true);
-        writer.write(oldData);
-        writer.close();
-        File old = updateCache;
-        updateCache = newCache;
-        old.delete();
+        if (updateCache == null) {
+            updateCache = new ExerciseChecksumFileCache(Paths.get(newCache.toString()));
+        } else {
+            updateCache.moveCache(Paths.get(newCache.toString()));
+        }
     }
 
     public File getCacheFile() {
-        return this.updateCache;
-    }
-
-    private void ensureCacheFileExists(File cacheFile) throws FileNotFoundException {
-        if (cacheFile == null) {
-            throw new FileNotFoundException("Cannot find file: null");
-        }
-        if (!cacheFile.exists()) {
-            String errorMessage = "cache file " + cacheFile.getAbsolutePath() + " does not exist";
-            throw new FileNotFoundException(errorMessage);
-        }
+        return this.updateCache.getCacheFile().toFile();
     }
 
     /**
@@ -162,7 +142,8 @@ public class TmcCore {
     public ListenableFuture<List<Exercise>> downloadExercises(
             String path, int courseId, ProgressObserver observer)
             throws TmcCoreException {
-        DownloadExercises downloadCommand = getDownloadCommand(path, courseId, observer);
+        DownloadExercises downloadCommand
+                = new DownloadExercises(settings, path, courseId, observer, updateCache);
         return threadPool.submit(downloadCommand);
     }
 
@@ -183,35 +164,9 @@ public class TmcCore {
     public ListenableFuture<List<Exercise>> downloadExercises(
             List<Exercise> exercises, ProgressObserver observer)
             throws TmcCoreException {
-        checkParameters(
-                settings.getFormattedUserData(),
-                settings.getTmcMainDirectory(),
-                settings.getServerAddress());
-        DownloadExercises downloadCommand = this.getDownloadCommand(exercises, observer);
+        DownloadExercises downloadCommand
+                = new DownloadExercises(settings, exercises, observer, updateCache);
         return threadPool.submit(downloadCommand);
-    }
-
-    private DownloadExercises getDownloadCommand(
-            String path, int courseId, ProgressObserver observer) {
-        if (this.updateCache == null) {
-            return new DownloadExercises(path, courseId, settings, observer);
-        }
-        return new DownloadExercises(path, courseId, settings, this.updateCache, observer);
-    }
-
-    private DownloadExercises getDownloadCommand(
-            List<Exercise> exercises, ProgressObserver observer)
-            throws TmcCoreException {
-        if (observer == null) {
-            if (this.updateCache == null) {
-                return new DownloadExercises(exercises, settings);
-            }
-            return new DownloadExercises(exercises, settings, this.updateCache);
-        }
-        if (this.updateCache == null) {
-            return new DownloadExercises(exercises, settings, observer);
-        }
-        return new DownloadExercises(exercises, settings, this.updateCache, observer);
     }
 
     /**

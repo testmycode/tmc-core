@@ -3,24 +3,25 @@ package fi.helsinki.cs.tmc.core.commands;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyDouble;
 import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.TmcCore;
+import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumCache;
 import fi.helsinki.cs.tmc.core.communication.ExerciseDownloader;
 import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
@@ -36,8 +37,6 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import com.google.common.base.Optional;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.apache.commons.io.FileUtils;
 
@@ -49,18 +48,14 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class DownloadExercisesTest {
 
-    private File cache;
+    private ExerciseChecksumCache cache;
     private CoreTestSettings settings;
     private TmcApi tmcApi;
     private TmcCore core;
@@ -72,20 +67,14 @@ public class DownloadExercisesTest {
         settings = new CoreTestSettings();
         settings.setUsername("Bossman");
         settings.setPassword("Samu");
-        cache = Paths.get("src", "test", "resources", "downloadtest.cache").toFile();
-        cache.createNewFile();
-        tmcApi = Mockito.mock(TmcApi.class);
+        cache = mock(ExerciseChecksumCache.class);
+        tmcApi = mock(TmcApi.class);
         this.core = new TmcCore(settings);
     }
 
-    @After
-    public void tearDown() {
-        cache.delete();
-    }
-
     @Test(expected = TmcCoreException.class)
-    public void settingsWithoutCurrentCourse() throws TmcCoreException, IOException, URISyntaxException {
-        new DownloadExercises(new ArrayList<Exercise>(), settings).call();
+    public void settingsWithoutCurrentCourse() throws TmcCoreException, IOException {
+        new DownloadExercises(settings, new ArrayList<Exercise>(), null, null).call();
     }
 
     @Test(expected = TmcCoreException.class)
@@ -93,12 +82,12 @@ public class DownloadExercisesTest {
         CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setCurrentCourse(
                 new TmcApi(settings).getCourseFromString(ExampleJson.courseExample));
-        new DownloadExercises(new ArrayList<Exercise>(), localSettings).call();
+        new DownloadExercises(localSettings, new ArrayList<Exercise>(), null, null).call();
     }
 
     @Test
-    public void writesChecksumsToFileIfCacheFileIsGiven() throws IOException, TmcCoreException, URISyntaxException {
-        ExerciseDownloader downloader = Mockito.mock(ExerciseDownloader.class);
+    public void writesChecksumsToCacheIfCacheFileIsGiven() throws IOException, TmcCoreException, URISyntaxException {
+        ExerciseDownloader downloader = mock(ExerciseDownloader.class);
         Mockito.when(downloader.createCourseFolder(anyString(), anyString())).thenReturn("");
         Mockito.when(downloader.handleSingleExercise(any(Exercise.class), anyString()))
                 .thenReturn(true);
@@ -112,112 +101,15 @@ public class DownloadExercisesTest {
                         .withExercise("ankka", 88, "abcdefg")
                         .build());
 
-        tmcApi = Mockito.mock(TmcApi.class);
+        tmcApi = mock(TmcApi.class);
 
         when(tmcApi.getCourse(anyInt())).thenReturn(Optional.of(course));
 
-        DownloadExercises dl = new DownloadExercises(downloader, "", 8, cache, settings, tmcApi);
-        dl.call();
-        String json = FileUtils.readFileToString(cache);
-        Gson gson = new Gson();
-        Map<String, Map<String, String>> checksums;
-        Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {}.getType();
-        checksums = gson.fromJson(json, typeOfHashMap);
-
-        assertNotNull(checksums);
-        assertTrue(checksums.containsKey("test-course"));
-        assertTrue(checksums.get("test-course").containsKey("kissa"));
-        assertTrue(checksums.get("test-course").containsKey("asdf"));
-        assertEquals("eujwuc", checksums.get("test-course").get("kissa"));
-        assertEquals("alnwnec", checksums.get("test-course").get("asdf"));
-        assertEquals("abcdefg", checksums.get("test-course").get("ankka"));
+        new DownloadExercises(settings, "", 8, cache, null, downloader, tmcApi).call();
+        verify(cache, times(1)).write(course.getExercises());
     }
 
-    @Test
-    public void overwritesToCacheFileIfCacheFileHasBadContents()
-            throws IOException, TmcCoreException, URISyntaxException {
-        new FileWriter(cache).write(" asdfjljlkasdf ");
-
-        ExerciseDownloader downloader = Mockito.mock(ExerciseDownloader.class);
-        Mockito.when(downloader.createCourseFolder(anyString(), anyString())).thenReturn("");
-        Mockito.when(downloader.handleSingleExercise(any(Exercise.class), anyString()))
-                .thenReturn(true);
-
-        Course course = new Course();
-        course.setName("test-course");
-        course.setExercises(
-                new ExerciseBuilder()
-                        .withExercise("kissa", 2, "eujwuc")
-                        .withExercise("asdf", 793, "alnwnec")
-                        .withExercise("ankka", 88, "abcdefg")
-                        .build());
-
-        tmcApi = Mockito.mock(TmcApi.class);
-
-        Mockito.when(tmcApi.getCourse(anyInt())).thenReturn(Optional.of(course));
-
-        DownloadExercises dl = new DownloadExercises(downloader, "", 8, cache, settings, tmcApi);
-        dl.call();
-        String json = FileUtils.readFileToString(cache);
-        Gson gson = new Gson();
-        Map<String, Map<String, String>> checksums;
-        Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {}.getType();
-        checksums = gson.fromJson(json, typeOfHashMap);
-
-        assertNotNull(checksums);
-        assertTrue(checksums.containsKey("test-course"));
-        assertTrue(checksums.get("test-course").containsKey("kissa"));
-        assertTrue(checksums.get("test-course").containsKey("asdf"));
-        assertTrue(checksums.get("test-course").containsKey("ankka"));
-
-        assertEquals("eujwuc", checksums.get("test-course").get("kissa"));
-        assertEquals("alnwnec", checksums.get("test-course").get("asdf"));
-        assertEquals("abcdefg", checksums.get("test-course").get("ankka"));
-    }
-
-    @Test
-    public void keepsOldChecksumsInTheCache() throws IOException, TmcCoreException, URISyntaxException {
-        try (FileWriter writer = new FileWriter(cache)) {
-            writer.write(
-                    "{\"test-course\":{\"kissa\":\"qwerty\",\"asdf2\":\"aijw9\"},"
-                            + "\"test-course2\":{\"ankka\":\"22222\"}}");
-        }
-
-        ExerciseDownloader mock = Mockito.mock(ExerciseDownloader.class);
-        Mockito.when(mock.createCourseFolder(anyString(), anyString())).thenReturn("");
-        Mockito.when(mock.handleSingleExercise(any(Exercise.class), anyString())).thenReturn(true);
-
-        Course course = new Course();
-        course.setName("test-course");
-        course.setExercises(
-                new ExerciseBuilder()
-                        .withExercise("kissa", 2, "eujwuc")
-                        .withExercise("asdf", 793, "alnwnec")
-                        .withExercise("ankka", 88, "abcdefg")
-                        .build());
-
-        tmcApi = Mockito.mock(TmcApi.class);
-        Mockito.when(tmcApi.getCourse(anyInt())).thenReturn(Optional.of(course));
-
-        DownloadExercises dl = new DownloadExercises(mock, "", 8, cache, settings, tmcApi);
-        dl.call();
-        String json = FileUtils.readFileToString(cache);
-        Type typeOfHashMap = new TypeToken<Map<String, Map<String, String>>>() {}.getType();
-        Map<String, Map<String, String>> checksums = new Gson().fromJson(json, typeOfHashMap);
-
-        assertNotNull(checksums);
-        assertTrue(checksums.containsKey("test-course"));
-        assertTrue(checksums.containsKey("test-course2"));
-        assertTrue(checksums.get("test-course").containsKey("kissa"));
-        assertTrue(checksums.get("test-course").containsKey("asdf"));
-        assertTrue(checksums.get("test-course").containsKey("ankka"));
-        assertEquals("eujwuc", checksums.get("test-course").get("kissa"));
-        assertEquals("alnwnec", checksums.get("test-course").get("asdf"));
-        assertEquals("aijw9", checksums.get("test-course").get("asdf2"));
-        assertEquals("22222", checksums.get("test-course2").get("ankka"));
-    }
-
-    @Test
+        @Test
     public void downloadAllExercises() throws Exception {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         core = new TmcCore(settings1);
@@ -236,10 +128,10 @@ public class DownloadExercisesTest {
     }
 
     @Test
-    public void testDowloadingWithProgress() throws Exception {
+    public void testDownloadingWithProgress() throws Exception {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         core = new TmcCore(settings1);
-        ProgressObserver observerMock = Mockito.mock(ProgressObserver.class);
+        ProgressObserver observerMock = mock(ProgressObserver.class);
         String folder = System.getProperty("user.dir") + "/testResources/";
         ListenableFuture<List<Exercise>> download =
                 core.downloadExercises(folder, 35, observerMock);
@@ -250,7 +142,7 @@ public class DownloadExercisesTest {
         FileUtils.deleteDirectory(new File(exercisePath));
         assertFalse(new File(exercisePath).exists());
 
-        Mockito.verify(observerMock, times(153)).progress(anyDouble(), anyString());
+        verify(observerMock, times(153)).progress(anyDouble(), anyString());
     }
 
     private CoreTestSettings createSettingsAndWiremock() throws URISyntaxException {

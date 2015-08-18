@@ -118,7 +118,6 @@ public class TmcCoreTest {
         tmcCore.setCacheFile(path.toFile());
         tmcCore.getNewAndUpdatedExercises(course);
         verify(threadPool, times(1)).submit(any(GetExerciseUpdates.class));
-        assertEquals(tmcCore.getCacheFile(), path.toFile());
     }
 
     @Test
@@ -131,11 +130,6 @@ public class TmcCoreTest {
             return;
         }
         fail("expected TmcCoreException");
-    }
-
-    @Test(expected = FileNotFoundException.class)
-    public void nullCaughtTest() throws FileNotFoundException {
-        new TmcCore(settings, (File) null, threadPool);
     }
 
     @Test(expected = FileNotFoundException.class)
@@ -212,7 +206,6 @@ public class TmcCoreTest {
         final ArgumentCaptor<DownloadExercises> argument =
                 ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
-        assertTrue(argument.getValue().hasCacheFile());
     }
 
     @Test
@@ -221,6 +214,5 @@ public class TmcCoreTest {
         final ArgumentCaptor<DownloadExercises> argument =
                 ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
-        assertFalse(argument.getValue().hasCacheFile());
     }
 }

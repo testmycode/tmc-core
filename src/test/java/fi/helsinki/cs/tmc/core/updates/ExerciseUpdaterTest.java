@@ -6,7 +6,10 @@ import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumCache;
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
 import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
@@ -37,33 +40,27 @@ import java.util.Map;
 
 public class ExerciseUpdaterTest {
 
-    private File cacheFile;
+    private ExerciseChecksumCache cache;
     private ExerciseBuilder builder;
     private UrlCommunicator urlCommunicator;
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
-        cacheFile = Paths.get("src", "test", "resources", "exercisetest.cache").toFile();
-        cacheFile.createNewFile();
+        cache = mock(ExerciseChecksumCache.class);
 
         builder = new ExerciseBuilder();
-        urlCommunicator = Mockito.mock(UrlCommunicator.class);
-        Mockito.when(urlCommunicator.makeGetRequest(anyString(), any(String.class)))
+        urlCommunicator = mock(UrlCommunicator.class);
+        when(urlCommunicator.makeGetRequest(anyString(), any(String.class)))
                 .thenReturn(new HttpResult(ExampleJson.courseExample, 200, true));
-    }
-
-    @After
-    public void tearDown() {
-        cacheFile.delete();
     }
 
     @Test
     public void getsCorrectExercisesFromServer() throws Exception {
         int numberOfExercises = 153;
-        TmcApi tmcApi = Mockito.mock(TmcApi.class);
-        Mockito.when(tmcApi.getExercisesFromServer(any(Course.class)))
+        TmcApi tmcApi = mock(TmcApi.class);
+        when(tmcApi.getExercisesFromServer(any(Course.class)))
                 .thenReturn(makeExerciseList(numberOfExercises));
-        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcApi);
+        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cache, tmcApi);
         List<Exercise> exercises = handler.fetchFromServer(new Course());
         assertEquals(numberOfExercises, exercises.size());
     }
@@ -73,12 +70,10 @@ public class ExerciseUpdaterTest {
         Map<String, Map<String, String>> checksums = new HashMap<>();
         checksums.put("test-course", new HashMap<String, String>());
         checksums.get("test-course").put("old", "abcdefg");
-        try (FileWriter writer = new FileWriter(this.cacheFile)) {
-            writer.write(new Gson().toJson(checksums));
-        }
+        when(cache.read()).thenReturn(checksums);
 
         TmcApi tmcApi = mockTmcApi();
-        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcApi);
+        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cache, tmcApi);
 
         List<Exercise> exercises = handler.getNewObjects(new Course());
 
@@ -92,7 +87,7 @@ public class ExerciseUpdaterTest {
     public void getsCorrectExercisesWithEmptyCache() throws IOException, Exception {
 
         TmcApi tmcApi = mockTmcApi();
-        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cacheFile, tmcApi);
+        ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cache, tmcApi);
 
         List<Exercise> exercises = handler.getNewObjects(new Course());
         assertEquals(4, exercises.size());
@@ -101,7 +96,7 @@ public class ExerciseUpdaterTest {
     }
 
     private TmcApi mockTmcApi() throws IOException, URISyntaxException {
-        TmcApi tmcApi = Mockito.mock(TmcApi.class);
+        TmcApi tmcApi = mock(TmcApi.class);
         List<Exercise> serverExercises =
                 builder
                         .withExercise("old", 5, "abcdefg", "test-course")
@@ -109,7 +104,7 @@ public class ExerciseUpdaterTest {
                         .withExercise("new", 8, "woksirjd", "test-course")
                         .withExercise("duck", 9, "asdfsdf", "test-course")
                         .build();
-        Mockito.when(tmcApi.getExercisesFromServer(any(Course.class)))
+        when(tmcApi.getExercisesFromServer(any(Course.class)))
                 .thenReturn(serverExercises);
         return tmcApi;
     }

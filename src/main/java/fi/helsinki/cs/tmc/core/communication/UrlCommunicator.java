@@ -1,6 +1,5 @@
 package fi.helsinki.cs.tmc.core.communication;
 
-
 import fi.helsinki.cs.tmc.core.communication.authorization.Authorization;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 
@@ -8,6 +7,7 @@ import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -36,8 +36,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.apache.http.HttpHeaders;
-import org.apache.http.client.utils.URIBuilder;
 
 public class UrlCommunicator {
 
@@ -151,7 +149,6 @@ public class UrlCommunicator {
      * Tries to make GET-request to specific url.
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request. params[0] is always username:password
      * @return A Result-object with some data and a state of success or fail
      */
     public HttpResult makeGetRequest(String url, String credentials) throws IOException {
@@ -192,7 +189,6 @@ public class UrlCommunicator {
      *
      * @param url url of the get request
      * @param file file to write the results into
-     * @param params params of the get request
      * @return true if successful
      */
     public boolean downloadToFile(String url, File file, String credentials) {
@@ -236,7 +232,9 @@ public class UrlCommunicator {
 
 
     private void addCredentials(HttpRequestBase httpRequest, String credentials) {
-        httpRequest.setHeader(HttpHeaders.AUTHORIZATION, "Basic " + Authorization.encode(credentials));
+        httpRequest.setHeader(
+                HttpHeaders.AUTHORIZATION,
+                "Basic " + Authorization.encode(credentials));
     }
 
     /**
@@ -265,7 +263,8 @@ public class UrlCommunicator {
     /**
      * Makes a POST HTTP request.
      */
-    public HttpResult makePostWithJson(JsonObject req, String feedbackUrl) throws IOException, URISyntaxException {
+    public HttpResult makePostWithJson(JsonObject req, String feedbackUrl)
+            throws IOException, URISyntaxException {
         feedbackUrl = urlHelper.withParams(feedbackUrl);
         HttpPost httppost = new HttpPost(feedbackUrl);
         String jsonString = req.toString();

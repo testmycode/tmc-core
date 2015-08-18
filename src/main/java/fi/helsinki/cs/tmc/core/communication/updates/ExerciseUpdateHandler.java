@@ -6,16 +6,8 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.apache.commons.io.FileUtils;
-
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +18,8 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
     private ExerciseChecksumCache cache;
     private Map<String, Map<String, String>> exerciseChecksums;
 
-    public ExerciseUpdateHandler(ExerciseChecksumCache cache, TmcApi tmcApi) throws TmcCoreException {
+    public ExerciseUpdateHandler(ExerciseChecksumCache cache, TmcApi tmcApi)
+            throws TmcCoreException {
         super(tmcApi);
         exerciseChecksums = new HashMap<>();
         if (cache == null) {

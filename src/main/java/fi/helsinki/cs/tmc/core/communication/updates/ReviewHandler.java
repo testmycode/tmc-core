@@ -16,7 +16,8 @@ public class ReviewHandler extends UpdateHandler<Review> {
     }
 
     @Override
-    public List<Review> fetchFromServer(Course currentCourse) throws IOException, URISyntaxException {
+    public List<Review> fetchFromServer(Course currentCourse)
+            throws IOException, URISyntaxException {
         List<Review> currentReviews = tmcApi.getReviews(currentCourse.getReviewsUrl());
         if (currentReviews == null) {
             return new ArrayList<>();

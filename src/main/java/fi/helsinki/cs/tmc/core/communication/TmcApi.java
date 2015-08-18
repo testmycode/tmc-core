@@ -145,7 +145,8 @@ public class TmcApi {
      *
      * @return an course Object (parsed from JSON)
      */
-    public Optional<Course> getCourse(int courseId) throws IOException, TmcCoreException, URISyntaxException {
+    public Optional<Course> getCourse(int courseId)
+            throws IOException, TmcCoreException, URISyntaxException {
         if (!courseExists(courseId)) {
             return Optional.absent();
         }
@@ -192,7 +193,8 @@ public class TmcApi {
      * @param course Course that we are interested in
      * @return List of all exercises as Exercise-objects
      */
-    public List<Exercise> getExercisesFromServer(Course course) throws IOException, URISyntaxException {
+    public List<Exercise> getExercisesFromServer(Course course)
+            throws IOException, URISyntaxException {
         return getExercises(course.getId());
     }
 

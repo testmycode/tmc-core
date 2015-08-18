@@ -223,7 +223,6 @@ public class ExerciseSubmitter {
 
     private String sendSubmissionToServerWithPasteAndParams(
             byte[] file, String url, Map<String, String> params) throws IOException {
-        System.err.println("Paste url: " + url);
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), params);

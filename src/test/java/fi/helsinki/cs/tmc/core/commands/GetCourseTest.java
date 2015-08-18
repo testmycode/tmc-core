@@ -1,8 +1,8 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import com.github.tomakehurst.wiremock.client.UrlMatchingStrategy;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,16 +13,16 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
+import com.github.tomakehurst.wiremock.client.UrlMatchingStrategy;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import java.net.URISyntaxException;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.net.URISyntaxException;
 
 public class GetCourseTest {
 
@@ -80,7 +80,7 @@ public class GetCourseTest {
         wireMock.stubFor(
                 get(mockUrl)
                         .willReturn(
-                                WireMock.aResponse()
+                                aResponse()
                                         .withStatus(200)
                                         .withBody(ExampleJson.courseExample)));
 
@@ -92,11 +92,15 @@ public class GetCourseTest {
 
     @Test
     public void testCallWithCourseName() throws Exception {
-        wireMock.stubFor(get(urlPathEqualTo("/courses.json")).willReturn(WireMock.aResponse().withBody(ExampleJson.allCoursesExample)));
+        wireMock.stubFor(
+                get(urlPathEqualTo("/courses.json"))
+                        .willReturn(
+                                aResponse()
+                                        .withBody(ExampleJson.allCoursesExample)));
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses/3.json"))
                         .willReturn(
-                                WireMock.aResponse()
+                                aResponse()
                                         .withStatus(200)
                                         .withBody(ExampleJson.courseExample)));
 

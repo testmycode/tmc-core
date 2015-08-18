@@ -48,7 +48,8 @@ public class PasteWithCommentTest {
 
     @Test
     public void testCheckDataSuccess()
-            throws TmcCoreException, IOException, ParseException, ExpiredException, ZipException, URISyntaxException {
+            throws TmcCoreException, IOException, ParseException, ExpiredException, ZipException,
+            URISyntaxException {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 
         new PasteWithComment(settings, "path", "comment", submitterMock).call();

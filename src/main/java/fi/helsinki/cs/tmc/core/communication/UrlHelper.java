@@ -2,8 +2,10 @@ package fi.helsinki.cs.tmc.core.communication;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
-import java.net.URISyntaxException;
+
 import org.apache.http.client.utils.URIBuilder;
+
+import java.net.URISyntaxException;
 
 public class UrlHelper {
 

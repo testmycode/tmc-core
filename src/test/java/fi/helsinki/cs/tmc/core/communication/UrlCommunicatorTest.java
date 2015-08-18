@@ -135,7 +135,8 @@ public class UrlCommunicatorTest {
     }
 
     @Test
-    public void makePutRequestHasCorrectHeaders() throws IOException, TmcCoreException, URISyntaxException {
+    public void makePutRequestHasCorrectHeaders()
+            throws IOException, TmcCoreException, URISyntaxException {
         settings.setUsername("test");
         settings.setPassword("1234");
         Map<String, String> body = new HashMap<>();

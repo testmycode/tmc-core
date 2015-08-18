@@ -42,8 +42,8 @@ public class ReviewHandlerTest {
     }
 
     @Test
-    public void fetchReviewReturnsEmptyListIfServerSendsNull() throws IOException, URISyntaxException {
-
+    public void fetchReviewReturnsEmptyListIfServerSendsNull()
+            throws IOException, URISyntaxException {
         Mockito.when(tmcApi.getReviews(anyString())).thenReturn(null);
         assertNotNull(handler.fetchFromServer(new Course()));
         assertEquals(0, handler.fetchFromServer(new Course()).size());

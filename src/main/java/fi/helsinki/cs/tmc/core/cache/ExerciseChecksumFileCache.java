@@ -74,7 +74,8 @@ public class ExerciseChecksumFileCache implements ExerciseChecksumCache {
         return this.cacheFile;
     }
 
-    private void writeCache(Map<String, Map<String, String>> checksums, Path file) throws TmcCoreException {
+    private void writeCache(Map<String, Map<String, String>> checksums, Path file)
+            throws TmcCoreException {
         byte[] bytes = parser.toJson(checksums, Map.class).getBytes();
         try {
             Files.write(file, bytes, StandardOpenOption.WRITE);

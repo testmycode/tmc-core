@@ -39,7 +39,6 @@ public class RunTestsTest {
         String path =
                 System.getProperty("user.dir")
                         + "/testResources/successExercise/viikko1/Viikko1_001.Nimi";
-        System.out.println(path);
 
         RunResult result = new RunTests(settings, path).call();
 

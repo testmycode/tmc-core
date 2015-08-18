@@ -40,7 +40,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import org.apache.commons.io.FileUtils;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -78,7 +77,8 @@ public class DownloadExercisesTest {
     }
 
     @Test(expected = TmcCoreException.class)
-    public void settingsWithoutCredentials() throws TmcCoreException, IOException, URISyntaxException {
+    public void settingsWithoutCredentials()
+            throws TmcCoreException, IOException, URISyntaxException {
         CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setCurrentCourse(
                 new TmcApi(settings).getCourseFromString(ExampleJson.courseExample));
@@ -86,7 +86,8 @@ public class DownloadExercisesTest {
     }
 
     @Test
-    public void writesChecksumsToCacheIfCacheFileIsGiven() throws IOException, TmcCoreException, URISyntaxException {
+    public void writesChecksumsToCacheIfCacheFileIsGiven()
+            throws IOException, TmcCoreException, URISyntaxException {
         ExerciseDownloader downloader = mock(ExerciseDownloader.class);
         Mockito.when(downloader.createCourseFolder(anyString(), anyString())).thenReturn("");
         Mockito.when(downloader.handleSingleExercise(any(Exercise.class), anyString()))
@@ -109,7 +110,7 @@ public class DownloadExercisesTest {
         verify(cache, times(1)).write(course.getExercises());
     }
 
-        @Test
+    @Test
     public void downloadAllExercises() throws Exception {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         core = new TmcCore(settings1);
@@ -155,7 +156,8 @@ public class DownloadExercisesTest {
         return settings1;
     }
 
-    private void wiremock(String username, String password, String courseId, String serverAddress) throws URISyntaxException {
+    private void wiremock(String username, String password, String courseId, String serverAddress)
+            throws URISyntaxException {
         String encodedCredentials = "Basic " + Authorization.encode(username + ":" + password);
         wireMockServer.stubFor(
                 get(urlPathEqualTo("/user"))

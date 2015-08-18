@@ -55,7 +55,6 @@ public class DiffSender {
             return urlCommunicator.makePostWithByteArray(
                             url, diffs, createHeaders(), new HashMap<String, String>());
         } catch (IOException ex) {
-            System.err.println(ex.getMessage());
             return new HttpResult(ex.getMessage(), 500, false);
         }
     }

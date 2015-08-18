@@ -166,6 +166,10 @@ public class TmcApi {
         Gson mapper = new Gson();
         Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
 
+        for (Exercise e : course.getExercises()) {
+            e.setCourseName(course.getName());
+        }
+
         if (course == null) {
             return Optional.absent();
         }

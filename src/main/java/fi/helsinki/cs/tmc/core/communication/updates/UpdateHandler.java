@@ -1,6 +1,6 @@
 package fi.helsinki.cs.tmc.core.communication.updates;
 
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.domain.Course;
 
 import java.util.ArrayList;
@@ -8,10 +8,10 @@ import java.util.List;
 
 public abstract class UpdateHandler<T> {
 
-    protected TmcJsonParser jsonParser;
+    protected TmcApi tmcApi;
 
-    public UpdateHandler(TmcJsonParser jsonParser) {
-        this.jsonParser = jsonParser;
+    public UpdateHandler(TmcApi tmcApi) {
+        this.tmcApi = tmcApi;
     }
 
     protected abstract boolean isNew(T object);

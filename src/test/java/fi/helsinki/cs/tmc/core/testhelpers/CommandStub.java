@@ -13,9 +13,6 @@ public class CommandStub extends Command<String> {
     }
 
     @Override
-    public void checkData() throws TmcCoreException {}
-
-    @Override
     public String call() throws Exception {
         return "OK";
     }

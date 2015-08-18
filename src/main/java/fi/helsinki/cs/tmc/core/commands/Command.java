@@ -1,78 +1,63 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
-import com.google.common.collect.Maps;
-
-import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
+/**
+ * A task that can be completed by the TMC-Core.
+ *
+ * <p>Third parties should use these via {@link fi.helsinki.cs.tmc.core.TmcCore}.
+ */
 public abstract class Command<E> implements Callable<E> {
 
-    protected Map<String, String> data;
     protected TmcSettings settings;
     protected ProgressObserver observer;
 
     /**
-     * Command can return any type of object. For example SubmissionResult etc.
+     * Constructs a Command object.
      */
-    public Command() {
-        data = Maps.newHashMap();
-    }
+    public Command() { }
 
+
+    /**
+     * Constructs a Command object with an associated {@link TmcSettings}.
+     */
     public Command(TmcSettings settings) {
         this();
         this.settings = settings;
     }
 
-    public Command(ProgressObserver observer, TmcSettings settings) {
+    /**
+     * Constructs a Command object with an associated {@link TmcSettings} and
+     * {@link ProgressObserver}.
+     */
+    public Command(TmcSettings settings, ProgressObserver observer) {
         this(settings);
         this.observer = observer;
     }
 
-    public Map<String, String> getData() {
-        return data;
-    }
-
     /**
-     * setParameter sets parameter data for command.
+     * Informs an associated {@link ProgressObserver} about the current status of the command.
      *
-     * @param key name of the datum
-     * @param value value of the datum
+     * <p>If no progress observer is assigned, nothing happens.
      */
-    public void setParameter(String key, String value) {
-        data.put(key, value);
-    }
-
-    /**
-     * Command must have checkData method which throws ProtocolException if it doesn't have all data
-     * needed.
-     *
-     * @throws TmcCoreException if the command lacks some necessary data
-     */
-    public abstract void checkData() throws TmcCoreException, IOException;
-
-    public void cleanData() {
-        data.clear();
-    }
-
-    public void setObserver(ProgressObserver observer) {
-        this.observer = observer;
-    }
-
-    public boolean settingsNotPresent() {
-        return this.settings == null || !this.settings.userDataExists() || !serverAddressIsValid();
-    }
-
-    private boolean serverAddressIsValid() {
-        if (this.settings.getServerAddress() == null
-                || this.settings.getServerAddress().isEmpty()) {
-            return false;
+    protected void informObserver(double percentageDone, String message) {
+        if (observer != null) {
+            observer.progress(percentageDone, message);
         }
-        return new UrlHelper(settings).urlIsValid(this.settings.getServerAddress());
+    }
+
+    /**
+     * Informs an associated {@link ProgressObserver} about the current status of the command.
+     *
+     * <p>The provided values are converted into a percentage before passing to the observer.
+     *
+     * <p>If no progress observer is assigned, nothing happens.
+     */
+    protected void informObserver(int currentProgress, int maxProgress, String message) {
+        double percent = ((double) currentProgress) * 100 / maxProgress;
+        informObserver(percent, message);
     }
 }

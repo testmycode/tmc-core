@@ -1,6 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -11,37 +11,28 @@ import java.util.List;
 
 public class ListCourses extends Command<List<Course>> {
 
-    private TmcJsonParser parser;
+    private TmcApi tmcApi;
 
     public ListCourses(TmcSettings settings) {
         super(settings);
-        this.parser = new TmcJsonParser(settings);
+        this.tmcApi = new TmcApi(settings);
     }
 
-    public ListCourses(TmcSettings settings, TmcJsonParser parser) {
+    public ListCourses(TmcSettings settings, TmcApi tmcApi) {
         super(settings);
-        this.parser = parser;
+        this.tmcApi = tmcApi;
     }
 
     public ListCourses(TmcSettings settings, UrlCommunicator communicator) {
         super(settings);
-        this.parser = new TmcJsonParser(communicator, settings);
-    }
-    /**
-     * Checks that the user has authenticated, by verifying ClientData.
-     *
-     * @throws TmcCoreException if ClientData is empty
-     */
-    @Override
-    public void checkData() throws TmcCoreException {
-        if (!settings.userDataExists()) {
-            throw new TmcCoreException("User must be authorized first");
-        }
+        this.tmcApi = new TmcApi(communicator, settings);
     }
 
     @Override
     public List<Course> call() throws TmcCoreException, IOException {
-        checkData();
-        return parser.getCourses();
+        if (!settings.userDataExists()) {
+            throw new TmcCoreException("User must be authorized first");
+        }
+        return tmcApi.getCourses();
     }
 }

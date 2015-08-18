@@ -2,105 +2,66 @@ package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.core.communication.SubmissionPoller;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
-import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
-import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
-import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
-import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
-import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
-import com.google.common.base.Optional;
 
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 
 /**
- * Submit command for submitting exercises to TMC.
+ * A {@link Command} for submitting an exercise to the server.
  */
 public class Submit extends Command<SubmissionResult> {
 
     private ExerciseSubmitter submitter;
-    private SubmissionPoller interpreter;
-    private Course course;
+    private SubmissionPoller submissionPoller;
+    private String path;
 
     /**
-     * Constructor for Submit command, creates the courseSubmitter.
-     */
-    public Submit(TmcSettings settings) {
-        super(settings);
-        UrlCommunicator urlComms = new UrlCommunicator(settings);
-        TmcJsonParser jsonParser = new TmcJsonParser(urlComms, settings);
-        interpreter = new SubmissionPoller(jsonParser);
-        submitter =
-                new ExerciseSubmitter(
-                        new ProjectRootFinder(new TaskExecutorImpl(), new TmcJsonParser(settings)),
-                        new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
-                        new UrlCommunicator(settings),
-                        new TmcJsonParser(settings),
-                        settings);
-    }
-
-    /**
-     * Constructor for Submit command, creates the courseSubmitter.
-     * @param path path which to submit
-     */
-    public Submit(String path, TmcSettings settings) {
-        this(settings);
-        this.setParameter("path", path);
-    }
-
-    /**
-     * Constructor for mocking.
-     *
-     * @param submitter   can inject submitter mock.
-     * @param interpreter can inject interpreter mock.
+     * Creates a new submit command with {@code settings}, {@code submitter} and
+     * {@code submissionPoller} for submitting the exercise located at {@code path}.
      */
     public Submit(
-            ExerciseSubmitter submitter,
-            SubmissionPoller interpreter,
             TmcSettings settings,
+            ExerciseSubmitter submitter,
+            SubmissionPoller submissionPoller,
             String path) {
         super(settings);
-        this.setParameter("path", path);
-        this.interpreter = interpreter;
+
+        this.path = path;
+        this.submissionPoller = submissionPoller;
         this.submitter = submitter;
     }
 
-    /**
-     * Requires auth and pwd in "path" parameter.
-     *
-     * @throws TmcCoreException if no auth or no path supplied.
-     */
-    @Override
-    public void checkData() throws TmcCoreException, IOException {
-        if (!settings.userDataExists()) {
-            throw new TmcCoreException("User must be authorized first");
-        }
-        if (!this.data.containsKey("path")) {
-            throw new TmcCoreException("path not supplied");
+    private void assertHasRequiredData() throws TmcCoreException {
+        String username = settings.getUsername();
+        if (username == null || username.isEmpty()) {
+            throw new TmcCoreException("username must be set!");
         }
 
-        Optional<Course> currentCourse = settings.getCurrentCourse();
-        if (currentCourse.isPresent()) {
-            course = currentCourse.get();
-        } else {
-            throw new TmcCoreException("Unable to determine course");
+        String password = settings.getPassword();
+        if (password == null || password.isEmpty()) {
+            throw new TmcCoreException("password must be set!");
         }
     }
 
+    /**
+     * Entry point for launching this command.
+     */
     @Override
     public SubmissionResult call()
             throws TmcCoreException, IOException, ParseException, ExpiredException,
-                    IllegalArgumentException, ZipException, InterruptedException {
-        checkData();
-        String returnUrl = submitter.submit(data.get("path"));
-        return interpreter.getSubmissionResult(returnUrl);
+                    IllegalArgumentException, ZipException, InterruptedException,
+                    URISyntaxException {
+
+        assertHasRequiredData();
+
+        String returnUrl = submitter.submit(this.path);
+        return submissionPoller.getSubmissionResult(returnUrl);
     }
 }

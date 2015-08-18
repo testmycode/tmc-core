@@ -5,7 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
@@ -27,7 +27,7 @@ public class ProjectRootFinderTest {
     private String fakeName = "2014-mooc-no-deadline";
     private String otherFakeName = "2013-tira";
     private CoreTestSettings settings;
-    private TmcJsonParser parser;
+    private TmcApi parser;
 
     @Before
     public void setUp() throws IOException, TmcCoreException {
@@ -35,7 +35,7 @@ public class ProjectRootFinderTest {
         settings.setUsername("chang");
         settings.setPassword("paras");
 
-        parser = Mockito.mock(TmcJsonParser.class);
+        parser = Mockito.mock(TmcApi.class);
         Mockito.when(parser.getCourses()).thenReturn(setupFakeCourses());
         finder = new ProjectRootFinder(parser);
     }

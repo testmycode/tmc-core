@@ -29,6 +29,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -40,10 +41,6 @@ public class ListCoursesTest {
 
     @Rule public ExpectedException expectedException = ExpectedException.none();
 
-    /**
-     * Set up FrontendStub, ListCourses command, power mockito and fake http
-     * result.
-     */
     @Before
     public void setUp() throws IOException, TmcCoreException {
         communicator = Mockito.mock(UrlCommunicator.class);
@@ -58,24 +55,18 @@ public class ListCoursesTest {
     }
 
     @Test
-    public void testCheckDataSuccess() throws TmcCoreException {
+    public void testCheckDataSuccess() throws TmcCoreException, IOException {
         ListCourses ls = new ListCourses(settings, communicator);
         settings.setUsername("asdf");
         settings.setPassword("bsdf");
-        ls.checkData();
+        ls.call();
     }
 
     @Test(expected = TmcCoreException.class)
     public void testNoAuthThrowsException() throws TmcCoreException, Exception {
         settings.setUsername("");
         settings.setPassword("");
-        list.checkData();
         list.call();
-    }
-
-    @Test
-    public void checkDataTest() throws TmcCoreException {
-        list.checkData();
     }
 
     @Test
@@ -88,10 +79,10 @@ public class ListCoursesTest {
 
     @Test
     public void listCoursesWillThrowExceptionIfAuthFailedOnServer()
-            throws ExecutionException, InterruptedException, TmcCoreException {
+            throws ExecutionException, InterruptedException, TmcCoreException, URISyntaxException {
         expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(TmcServerException.class));
         wireMock.stubFor(
-                get(urlEqualTo(new UrlHelper(settings).withParams("/courses.json")))
+                get(WireMock.urlPathEqualTo("/courses.json"))
                         .willReturn(WireMock.aResponse().withStatus(401)));
 
         CoreTestSettings localSettings = new CoreTestSettings();

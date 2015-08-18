@@ -1,7 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -18,6 +18,7 @@ import net.lingala.zip4j.exception.ZipException;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 
 public class PasteWithComment extends Command<URI> {
@@ -25,20 +26,22 @@ public class PasteWithComment extends Command<URI> {
     private ExerciseSubmitter submitter;
     private Course course;
     private String comment;
+    private String path;
 
     /**
      * Submit paste with comment. Used in tmc-netbeans plugin.
      * @param comment paste comment given by user
      */
-    public PasteWithComment(TmcSettings settings, String comment) {
+    public PasteWithComment(TmcSettings settings, String path, String comment) {
         this(
                 new ExerciseSubmitter(
-                        new ProjectRootFinder(new TaskExecutorImpl(), new TmcJsonParser(settings)),
+                        new ProjectRootFinder(new TaskExecutorImpl(), new TmcApi(settings)),
                         new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
                         new UrlCommunicator(settings),
-                        new TmcJsonParser(settings),
+                        new TmcApi(settings),
                         settings),
                 settings,
+                path,
                 comment);
     }
 
@@ -47,36 +50,12 @@ public class PasteWithComment extends Command<URI> {
      *
      * @param submitter can inject submitter mock.
      */
-    public PasteWithComment(ExerciseSubmitter submitter, TmcSettings settings, String comment) {
+    public PasteWithComment(
+            ExerciseSubmitter submitter, TmcSettings settings, String path, String comment) {
         this.submitter = submitter;
         this.settings = settings;
+        this.path = path;
         this.comment = comment;
-    }
-
-    public PasteWithComment(String path, TmcSettings settings, String comment) {
-        this(settings, comment);
-        this.setParameter("path", path);
-    }
-
-    /**
-     * Requires auth and pwd in "path" parameter.
-     *
-     * @throws TmcCoreException if no auth or no path supplied.
-     */
-    @Override
-    public void checkData() throws TmcCoreException, IOException {
-        if (!settings.userDataExists()) {
-            throw new TmcCoreException("User must be authorized first");
-        }
-        if (!this.data.containsKey("path")) {
-            throw new TmcCoreException("path not supplied");
-        }
-        Optional<Course> currentCourse = settings.getCurrentCourse();
-        if (currentCourse.isPresent()) {
-            course = currentCourse.get();
-        } else {
-            throw new TmcCoreException("Unable to determine course");
-        }
     }
 
     /**
@@ -85,9 +64,18 @@ public class PasteWithComment extends Command<URI> {
      */
     @Override
     public URI call()
-            throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException {
-        checkData();
-        return URI.create(submitter.submitPasteWithComment(data.get("path"), this.comment));
+            throws IOException, ParseException, ExpiredException, ZipException, TmcCoreException, URISyntaxException {
+        if (!settings.userDataExists()) {
+            throw new TmcCoreException("User must be authenticated");
+        }
+
+        Optional<Course> currentCourse = settings.getCurrentCourse();
+        if (currentCourse.isPresent()) {
+            course = currentCourse.get();
+        } else {
+            throw new TmcCoreException("Unable to determine course");
+        }
+
+        return URI.create(submitter.submitPasteWithComment(this.path, this.comment));
     }
 }

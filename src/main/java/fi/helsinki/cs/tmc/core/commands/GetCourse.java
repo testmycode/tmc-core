@@ -1,6 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -14,25 +14,19 @@ import java.util.List;
 
 public class GetCourse extends Command<Course> {
 
-    private TmcJsonParser jsonParser;
+    private TmcApi tmcApi;
     private String url;
 
     public GetCourse(TmcSettings settings, String courseName) throws IOException, TmcCoreException {
         super(settings);
-        this.jsonParser = new TmcJsonParser(settings);
+        this.tmcApi = new TmcApi(settings);
         url = getCourseUrlFromName(courseName);
     }
 
     public GetCourse(TmcSettings settings, URI courseUri) {
         super(settings);
-        this.jsonParser = new TmcJsonParser(settings);
+        this.tmcApi = new TmcApi(settings);
         this.url = courseUri.toString();
-    }
-
-    @Override
-    public void checkData() throws TmcCoreException, IOException {
-        validate(this.settings.getUsername(), "username must be set!");
-        validate(this.settings.getPassword(), "password must be set!");
     }
 
     private void validate(String field, String message) throws TmcCoreException {
@@ -43,16 +37,21 @@ public class GetCourse extends Command<Course> {
 
     @Override
     public Course call() throws Exception {
+        validate(this.settings.getUsername(), "username must be set!");
+        validate(this.settings.getPassword(), "password must be set!");
+
         String urlWithApiVersion = new UrlHelper(settings).withParams(this.url);
-        Optional<Course> course = jsonParser.getCourse(urlWithApiVersion);
+        Optional<Course> course = tmcApi.getCourse(urlWithApiVersion);
+
         if (!course.isPresent()) {
             throw new TmcCoreException("No course found by specified url: " + urlWithApiVersion);
         }
+
         return course.get();
     }
 
     private String getCourseUrlFromName(String courseName) throws IOException, TmcCoreException {
-        List<Course> courses = jsonParser.getCourses();
+        List<Course> courses = tmcApi.getCourses();
         for (Course course : courses) {
             if (course.getName().equals(courseName)) {
                 return course.getDetailsUrl();

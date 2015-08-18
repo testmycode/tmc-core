@@ -1,58 +1,41 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
-import com.google.common.base.Optional;
-
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * A {@link Command} for running test for an exercise.
+ */
 public class RunTests extends Command<RunResult> {
 
-    public RunTests(String path, TmcSettings settings) {
-        super(settings);
-        this.setParameter("path", path);
-    }
+    private String path;
 
-    public RunTests(TmcSettings settings) {
+    /**
+     * Constructs a run tests command with {@code settings} for running test on the project
+     * located at {@code path}.
+     */
+    public RunTests(TmcSettings settings, String path) {
         super(settings);
+        this.path  = path;
     }
 
     /**
-     * Runs tests for exercise.
-     *
-     * @param exercise Path object
-     * @return String contaning results
-     * @throws NoLanguagePluginFoundException if path doesn't contain exercise
+     * Entry point for launching this command.
      */
-    public RunResult runTests(Path exercise) throws NoLanguagePluginFoundException {
-        System.err.println("Path: " + exercise.toString());
-        TaskExecutorImpl taskExecutor = new TaskExecutorImpl();
-        return taskExecutor.runTests(exercise);
-    }
-
     @Override
-    public void checkData() throws TmcCoreException {
-        if (!this.data.containsKey("path") || this.data.get("path").isEmpty()) {
-            throw new TmcCoreException("File path to exercise required.");
-        }
-    }
+    public RunResult call() throws TmcCoreException {
+        TaskExecutor tmcLangs = new TaskExecutorImpl();
 
-    @Override
-    public RunResult call() throws TmcCoreException, NoLanguagePluginFoundException {
-        String path = this.data.get("path");
-        ProjectRootFinder finder =
-                new ProjectRootFinder(new TaskExecutorImpl(), new TmcJsonParser(settings));
-        Optional<Path> exercise = finder.getRootDirectory(Paths.get(path));
-        if (!exercise.isPresent()) {
-            throw new TmcCoreException("Not an exercise. (null)");
+        try {
+            return tmcLangs.runTests(Paths.get(path));
+        } catch (NoLanguagePluginFoundException ex) {
+            throw new TmcCoreException("Failed to run tests for project", ex);
         }
-        return runTests(exercise.get());
     }
 }

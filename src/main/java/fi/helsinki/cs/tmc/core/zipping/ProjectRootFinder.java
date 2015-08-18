@@ -1,6 +1,6 @@
 package fi.helsinki.cs.tmc.core.zipping;
 
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
@@ -15,19 +15,19 @@ import java.util.List;
 
 public class ProjectRootFinder implements RootFinder {
 
-    private final TaskExecutor langs;
-    private TmcJsonParser tmcJsonParser;
+    private final TaskExecutor tmcLangs;
+    private TmcApi tmcApi;
 
     /**
      * A helper class that searches for a project root directory.
      */
-    public ProjectRootFinder(TaskExecutor langs, TmcJsonParser jsonParser) {
-        this.langs = langs;
-        this.tmcJsonParser = jsonParser;
+    public ProjectRootFinder(TaskExecutor tmcLangs, TmcApi tmcApi) {
+        this.tmcLangs = tmcLangs;
+        this.tmcApi = tmcApi;
     }
 
-    public ProjectRootFinder(TmcJsonParser jsonParser) {
-        this(new TaskExecutorImpl(), jsonParser);
+    public ProjectRootFinder(TmcApi tmcApi) {
+        this(new TaskExecutorImpl(), tmcApi);
     }
 
     /**
@@ -47,7 +47,7 @@ public class ProjectRootFinder implements RootFinder {
                 path = path.getParent();
                 continue;
             }
-            if (langs.isExerciseRootDirectory(path)) {
+            if (tmcLangs.isExerciseRootDirectory(path)) {
                 return Optional.of(path);
             }
             path = path.getParent();
@@ -81,7 +81,7 @@ public class ProjectRootFinder implements RootFinder {
      */
     public Optional<Course> findCourseByPath(String[] foldersPath)
             throws IOException, TmcCoreException {
-        List<Course> courses = tmcJsonParser.getCourses();
+        List<Course> courses = tmcApi.getCourses();
         for (Course course : courses) {
             for (String folderName : foldersPath) {
                 if (course.getName().equals(folderName)) {

@@ -59,7 +59,7 @@ public class ExerciseDownloaderTest {
     public void setup() {
         settings = new CoreTestSettings();
 
-        exDl = new ExerciseDownloader(new UrlCommunicator(settings), new TmcJsonParser(settings));
+        exDl = new ExerciseDownloader(new UrlCommunicator(settings), new TmcApi(settings));
         exercises = new ArrayList<>();
 
         testZipPath = "testzip.zip";
@@ -188,7 +188,7 @@ public class ExerciseDownloaderTest {
         Mockito.doNothing().when(executor).extractProject(any(Path.class), any(Path.class));
         exDl =
                 new ExerciseDownloader(
-                        new UrlCommunicator(settings), new TmcJsonParser(settings), executor);
+                        new UrlCommunicator(settings), new TmcApi(settings), executor);
         Optional<List<Exercise>> optionalList = exDl.downloadFiles(exercises, zipDestination);
         List<Exercise> list = optionalList.or(new ArrayList<Exercise>());
         assertEquals(3, list.size());

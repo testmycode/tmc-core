@@ -5,6 +5,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Matchers.anyString;
@@ -14,7 +15,7 @@ import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.core.communication.SubmissionPoller;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
@@ -22,6 +23,7 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import com.google.common.util.concurrent.FutureCallback;
@@ -35,39 +37,39 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.File;
-import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SubmitTest {
 
     private static final String FILE_SEPARATOR = File.separator;
-    private final String submissionUrl;
 
     private Submit submit;
     private ExerciseSubmitter submitterMock;
     private CoreTestSettings settings;
+    private String submissionUrl;
 
     @Rule public WireMockRule wireMock = new WireMockRule();
 
-    public SubmitTest() {
+    @Before
+    public void setup() throws Exception {
         settings = new CoreTestSettings();
         settings.setUsername("Samu");
         settings.setPassword("Bossman");
         settings.setCurrentCourse(new Course());
         settings.setApiVersion("7");
-        submissionUrl = new UrlHelper(settings).withParams("/submissions/1781.json");
-    }
 
-    @Before
-    public void setup() throws Exception {
+        submissionUrl = new UrlHelper(settings).withParams("/submissions/1781.json");
+
         submitterMock = Mockito.mock(ExerciseSubmitter.class);
+
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         submit =
                 new Submit(
-                        submitterMock,
-                        new SubmissionPoller(new TmcJsonParser(settings)),
                         settings,
+                        submitterMock,
+                        new SubmissionPoller(new TmcApi(settings)),
                         "polku"
                                 + FILE_SEPARATOR
                                 + "kurssi"
@@ -77,35 +79,20 @@ public class SubmitTest {
                                 + "src");
     }
 
-    /**
-     * Check that data checking success.
-     */
-    @Test
-    public void testCheckDataSuccess() throws TmcCoreException, IOException {
-        Submit submitCommand = new Submit(settings);
-        submitCommand.setParameter(
-                "path",
-                FILE_SEPARATOR + "home" + FILE_SEPARATOR + "tmccli" + FILE_SEPARATOR + "testi");
-        submitCommand.checkData();
-    }
-
-    /**
-     * Check that if user didn't give correct data, data checking fails.
-     */
     @Test(expected = TmcCoreException.class)
-    public void testCheckDataFail() throws Exception {
-        Submit submitCommand = new Submit(settings);
-        submitCommand.checkData();
+    public void testThrowsExceptionIfNoUsername() throws Exception {
+        settings.setUsername(null);
+        new Submit(settings, null, null, "").call();
     }
 
     @Test(expected = TmcCoreException.class)
-    public void checkDataFailIfNoAuth() throws Exception {
-        Submit submitCommand = new Submit(new CoreTestSettings());
-        submitCommand.checkData();
+    public void testThrowsExceptionIfNoPassword() throws Exception {
+        settings.setPassword(null);
+        new Submit(settings, null, null, "").call();
     }
 
     @Test
-    public void submitReturnsSuccesfulResponse() throws Exception {
+    public void testHandlesSuccessfulTestRunResponseCorrectly() throws Exception {
         wireMock.stubFor(
                 get(urlEqualTo(submissionUrl))
                         .willReturn(
@@ -114,12 +101,12 @@ public class SubmitTest {
                                         .withBody(ExampleJson.successfulSubmission)));
 
         SubmissionResult submissionResult = submit.call();
-        assertFalse(submissionResult == null);
+        assertNotNull(submissionResult);
         assertTrue(submissionResult.isAllTestsPassed());
     }
 
     @Test
-    public void submitReturnsUnsuccesfulResponse() throws Exception {
+    public void testHandlesUnsuccessfulTestRunResponseCorrectly() throws Exception {
         wireMock.stubFor(
                 get(urlEqualTo(submissionUrl))
                         .willReturn(
@@ -128,19 +115,21 @@ public class SubmitTest {
                                         .withBody(ExampleJson.failedSubmission)));
 
         SubmissionResult submissionResult = submit.call();
-        assertFalse(submissionResult == null);
+        assertNotNull(submissionResult);
         assertFalse(submissionResult.isAllTestsPassed());
     }
 
+    //TODO: Move to TmcCoreTest or delete
     @Test
     public void submitWithTmcCore() throws Exception {
-        mockSubmit();
+        buildWireMock();
 
         CoreTestSettings settings = new CoreTestSettings("test", "1234", "http://localhost:8080");
-        TmcJsonParser parser = new TmcJsonParser(settings);
-        Course course = parser.getCourseFromString(ExampleJson.noDeadlineCourseExample);
+        TmcApi tmcApi = new TmcApi(settings);
+        Course course = tmcApi.getCourseFromString(ExampleJson.noDeadlineCourseExample);
         settings.setCurrentCourse(course);
         TmcCore core = new TmcCore(settings);
+
         ListenableFuture<SubmissionResult> submit =
                 core.submit(
                         "testResources"
@@ -173,12 +162,9 @@ public class SubmitTest {
         assertFalse(result.get(0).isAllTestsPassed());
     }
 
-    private void mockSubmit() {
-        UrlHelper helper = new UrlHelper(settings);
-        String urlToMock = helper.withParams("/exercises/1231/submissions.json");
-        System.out.println(urlToMock);
+    private void buildWireMock() throws URISyntaxException {
         wireMock.stubFor(
-                post(urlEqualTo(urlToMock))
+                post(urlPathEqualTo("/exercises/1231/submissions.json"))
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)
@@ -187,10 +173,8 @@ public class SubmitTest {
                                                         "https://tmc.mooc.fi/staging",
                                                         "http://localhost:8080"))));
 
-        urlToMock = helper.withParams("/submissions/7777.json");
-        System.out.println(urlToMock);
         wireMock.stubFor(
-                get(urlEqualTo(urlToMock))
+                get(urlPathEqualTo("/submissions/7777.json"))
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)
@@ -199,10 +183,8 @@ public class SubmitTest {
                                                         "https://tmc.mooc.fi/staging",
                                                         "http://localhost:8080"))));
 
-        urlToMock = helper.withParams("/courses/19.json");
-        System.out.println(urlToMock);
         wireMock.stubFor(
-                get(urlEqualTo(urlToMock))
+                get(urlPathEqualTo("/courses/19.json"))
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)

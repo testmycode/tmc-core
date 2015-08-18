@@ -20,13 +20,6 @@ public class GetExerciseUpdates extends Command<List<Exercise>> {
     }
 
     @Override
-    public void checkData() throws TmcCoreException {
-        if (handler == null) {
-            throw new TmcCoreException("updatehandler must be given");
-        }
-    }
-
-    @Override
     public List<Exercise> call() throws Exception {
         return handler.getNewObjects(course);
     }

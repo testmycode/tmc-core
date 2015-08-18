@@ -49,6 +49,9 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,18 +117,18 @@ public class DownloadExercisesTest {
     public void downloadAllExercises() throws Exception {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         core = new TmcCore(settings1);
-        String folder = System.getProperty("user.dir") + "/testResources/";
+        Path folder = Paths.get(System.getProperty("user.dir") + "/testResources/");
         ListenableFuture<List<Exercise>> download =
                 core.downloadExercises(folder, 35, null);
 
         List<Exercise> exercises = download.get();
-        String exercisePath = folder + "2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi";
+        Path exercisePath = folder.resolve("2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi");
 
         assertEquals(exercises.size(), 153);
-        assertTrue(new File(exercisePath).exists());
+        assertTrue(Files.exists(exercisePath));
 
-        FileUtils.deleteDirectory(new File(exercisePath));
-        assertFalse(new File(exercisePath).exists());
+        FileUtils.deleteDirectory(exercisePath.toFile());
+        assertFalse(Files.exists(exercisePath));
     }
 
     @Test
@@ -133,15 +136,15 @@ public class DownloadExercisesTest {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         core = new TmcCore(settings1);
         ProgressObserver observerMock = mock(ProgressObserver.class);
-        String folder = System.getProperty("user.dir") + "/testResources/";
+        Path folder = Paths.get(System.getProperty("user.dir") + "/testResources/");
         ListenableFuture<List<Exercise>> download =
                 core.downloadExercises(folder, 35, observerMock);
         List<Exercise> exercises = download.get();
-        String exercisePath = folder + "2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi";
+        Path exercisePath = folder.resolve("2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi");
         assertEquals(exercises.size(), 153);
-        assertTrue(new File(exercisePath).exists());
-        FileUtils.deleteDirectory(new File(exercisePath));
-        assertFalse(new File(exercisePath).exists());
+        assertTrue(Files.exists(exercisePath));
+        FileUtils.deleteDirectory(exercisePath.toFile());
+        assertFalse(Files.exists(exercisePath));
 
         verify(observerMock, times(153)).progress(anyDouble(), anyString());
     }

@@ -34,7 +34,7 @@ public class ExerciseChecksumFileCache implements ExerciseChecksumCache {
     }
 
     @Override
-    public void write(List<Exercise> exercises) throws TmcCoreException {
+    public void write(List<Exercise> exercises) throws IOException {
         Map<String, Map<String, String>> checksums = readCacheFile(cacheFile);
 
         for (Exercise exercise : exercises) {
@@ -45,7 +45,7 @@ public class ExerciseChecksumFileCache implements ExerciseChecksumCache {
     }
 
     @Override
-    public Map<String, Map<String, String>> read() throws TmcCoreException {
+    public Map<String, Map<String, String>> read() throws IOException {
         Map<String, Map<String, String>> checksums = readCacheFile(cacheFile);
 
         if (checksums == null) {
@@ -56,15 +56,11 @@ public class ExerciseChecksumFileCache implements ExerciseChecksumCache {
     }
 
     @Override
-    public void moveCache(Path newCache) throws TmcCoreException {
+    public void moveCache(Path newCache) throws IOException {
         Map<String, Map<String, String>> checksums = readCacheFile(cacheFile);
         writeCache(checksums, newCache);
 
-        try {
-            Files.delete(cacheFile);
-        } catch (IOException ex) {
-            throw new TmcCoreException("Unable to delete cache at " + cacheFile, ex);
-        }
+        Files.delete(cacheFile);
 
         this.cacheFile = newCache;
     }
@@ -75,13 +71,9 @@ public class ExerciseChecksumFileCache implements ExerciseChecksumCache {
     }
 
     private void writeCache(Map<String, Map<String, String>> checksums, Path file)
-            throws TmcCoreException {
+            throws IOException {
         byte[] bytes = parser.toJson(checksums, Map.class).getBytes();
-        try {
-            Files.write(file, bytes, StandardOpenOption.WRITE);
-        } catch (IOException ex) {
-            throw new TmcCoreException("Unable to cache exercises: Can not write file", ex);
-        }
+        Files.write(file, bytes, StandardOpenOption.WRITE);
     }
 
     private void updateExerciseChecksum(
@@ -92,7 +84,7 @@ public class ExerciseChecksumFileCache implements ExerciseChecksumCache {
         checksums.get(exercise.getCourseName()).put(exercise.getName(), exercise.getChecksum());
     }
 
-    private Map<String, Map<String, String>> readCacheFile(Path file) throws TmcCoreException {
+    private Map<String, Map<String, String>> readCacheFile(Path file) throws IOException {
         String oldCacheData = readCacheData(file);
         Map<String, Map<String, String>> checksums = new HashMap<>();
         if (oldCacheData != null && !oldCacheData.isEmpty()) {
@@ -108,11 +100,7 @@ public class ExerciseChecksumFileCache implements ExerciseChecksumCache {
         return checksums;
     }
 
-    private String readCacheData(Path file) throws TmcCoreException {
-        try {
-            return new String(Files.readAllBytes(file), "UTF-8");
-        } catch (IOException ex) {
-            throw new TmcCoreException("Unable to cache exercises: Can not read file", ex);
-        }
+    private String readCacheData(Path file) throws IOException {
+        return new String(Files.readAllBytes(file), "UTF-8");
     }
 }

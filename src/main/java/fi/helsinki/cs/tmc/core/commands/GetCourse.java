@@ -25,7 +25,7 @@ public class GetCourse extends Command<Course> {
      * Constructs a new get course command with {@code settings} for fetching course details for
      * {@code courseName}.
      */
-    public GetCourse(TmcSettings settings, String courseName) throws IOException, TmcCoreException {
+    public GetCourse(TmcSettings settings, String courseName) throws TmcCoreException {
         super(settings);
 
         this.tmcApi = new TmcApi(settings);
@@ -67,8 +67,13 @@ public class GetCourse extends Command<Course> {
         return course.get();
     }
 
-    private String pollServerForCourseUrl(String courseName) throws IOException, TmcCoreException {
-        List<Course> courses = tmcApi.getCourses();
+    private String pollServerForCourseUrl(String courseName) throws TmcCoreException {
+        List<Course> courses = null;
+        try {
+            courses = tmcApi.getCourses();
+        } catch (IOException e) {
+            throw new TmcCoreException("Failed to fetch courses from server:", e);
+        }
         for (Course course : courses) {
             if (course.getName().equals(courseName)) {
                 return course.getDetailsUrl();

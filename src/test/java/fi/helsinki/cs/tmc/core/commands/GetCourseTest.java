@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
 public class GetCourseTest {
@@ -29,7 +30,7 @@ public class GetCourseTest {
     @Rule public WireMockRule wireMock = new WireMockRule();
 
     private UrlHelper urlHelper;
-    private String finalUrl = "http://127.0.0.1:8080/courses/19.json";
+    private URI finalUrl = new URI("http://127.0.0.1:8080/courses/19.json");
     private UrlMatchingStrategy mockUrl;
     private TmcCore core;
     private CoreTestSettings settings;

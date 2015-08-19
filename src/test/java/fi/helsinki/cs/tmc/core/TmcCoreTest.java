@@ -36,6 +36,7 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -89,7 +90,7 @@ public class TmcCoreTest {
 
     @Test
     public void downloadExercises() throws Exception {
-        tmcCore.downloadExercises("/polku/tiedostoille", 21, null);
+        tmcCore.downloadExercises(Paths.get("/polku/tiedostoille"), 21, null);
         verify(threadPool, times(1)).submit(any(DownloadExercises.class));
     }
 
@@ -102,20 +103,20 @@ public class TmcCoreTest {
     @Test(expected = FileNotFoundException.class)
     public void nonExistantCacheFileThrowsException() throws Exception {
         Path path = Paths.get("src", "test", "resources", "nothere.cache");
-        tmcCore.setCacheFile(path.toFile());
+        tmcCore.setExerciseChecksumCacheLocation(path);
         tmcCore.getNewAndUpdatedExercises(course);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void nonExistantCacheFileThrowsExceptionFromConstructor() throws Exception {
         Path path = Paths.get("src", "test", "resources", "nothere.cache");
-        new TmcCore(settings, path.toFile(), threadPool);
+        new TmcCore(settings, path, threadPool);
     }
 
     @Test
     public void getExerciseUpdatesTest() throws Exception {
         Path path = Paths.get("src", "test", "resources", "cachefile");
-        tmcCore.setCacheFile(path.toFile());
+        tmcCore.setExerciseChecksumCacheLocation(path);
         tmcCore.getNewAndUpdatedExercises(course);
         verify(threadPool, times(1)).submit(any(GetExerciseUpdates.class));
     }
@@ -134,21 +135,21 @@ public class TmcCoreTest {
 
     @Test(expected = FileNotFoundException.class)
     public void nullCaughtInSetTest() throws Exception {
-        tmcCore.setCacheFile(null);
+        tmcCore.setExerciseChecksumCacheLocation(null);
     }
 
     @Test(expected = FileNotFoundException.class)
     public void nonExistentFileInSetTest() throws Exception {
-        File fake = Paths.get("src", "test", "resources", "fakeFile.cache").toFile();
-        tmcCore.setCacheFile(fake);
+        Path fake = Paths.get("src", "test", "resources", "fakeFile.cache");
+        tmcCore.setExerciseChecksumCacheLocation(fake);
     }
 
     @Test
     public void cacheFileGivenInConstructorTest() throws Exception {
         Path path = Paths.get("src", "test", "resources", "cachefile");
-        TmcCore core = new TmcCore(settings, path.toFile(), threadPool);
+        TmcCore core = new TmcCore(settings, path, threadPool);
         core.getNewAndUpdatedExercises(course);
-        assertEquals(core.getCacheFile(), path.toFile());
+        assertEquals(core.getExerciseChecksumCacheLocation(), path);
         verify(threadPool, times(1)).submit(any(GetExerciseUpdates.class));
     }
 
@@ -156,12 +157,12 @@ public class TmcCoreTest {
     public void migratingCacheFileKeepsOldCacheData() throws Exception {
         Path firstPath = Paths.get("src", "test", "resources", "cachefile");
         Path secondPath = Paths.get("src", "test", "resources", "file2.cache");
-        tmcCore.setCacheFile(firstPath.toFile());
+        tmcCore.setExerciseChecksumCacheLocation(firstPath);
         new FileWriterHelper().writeStuffToFile(firstPath.toString());
-        tmcCore.setCacheFile(secondPath.toFile());
+        tmcCore.setExerciseChecksumCacheLocation(secondPath);
         assertFalse(FileUtils.readFileToString(secondPath.toFile()).isEmpty());
         assertFalse(firstPath.toFile().exists());
-        assertEquals(tmcCore.getCacheFile(), secondPath.toFile());
+        assertEquals(tmcCore.getExerciseChecksumCacheLocation(), secondPath);
     }
 
     @Test
@@ -172,37 +173,33 @@ public class TmcCoreTest {
 
     @Test
     public void test() throws Exception {
-        tmcCore.test("testi/polku");
+        tmcCore.test(Paths.get("testi/polku"));
         verify(threadPool, times(1)).submit(any(RunTests.class));
     }
 
     @Test
     public void sendFeedback() throws Exception {
-        tmcCore.sendFeedback(new HashMap<String, String>(), "internet.computer/file");
+        tmcCore.sendFeedback(new HashMap<String, String>(), new URI("internet.computer/file"));
         verify(threadPool, times(1)).submit(any(SendFeedback.class));
     }
 
     @Test
     public void submit() throws Exception {
-        tmcCore.submit("polku/tiedostoon");
+        tmcCore.submit(Paths.get("polku/tiedostoon"));
         verify(threadPool, times(1)).submit(any(Submit.class));
     }
 
     @Test
     public void pasteTest() throws Exception {
-        tmcCore.pasteWithComment("polku/jonnekin", "");
+        tmcCore.pasteWithComment(Paths.get("polku/jonnekin"), "");
         verify(threadPool, times(1)).submit(any(PasteWithComment.class));
-    }
-
-    @Test(expected = TmcCoreException.class)
-    public void submitWithBadPathThrowsException() throws TmcCoreException {
-        tmcCore.submit("");
     }
 
     @Test
     public void downloadExercisesUsesCacheIfSet() throws Exception {
-        tmcCore.setCacheFile(Paths.get("src", "test", "resources", "cachefile").toFile());
-        tmcCore.downloadExercises("asdf", -1, null);
+        tmcCore.setExerciseChecksumCacheLocation(
+                Paths.get("src", "test", "resources", "cachefile"));
+        tmcCore.downloadExercises(Paths.get("asdf"), -1, null);
         final ArgumentCaptor<DownloadExercises> argument =
                 ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
@@ -210,7 +207,7 @@ public class TmcCoreTest {
 
     @Test
     public void downloadExercisesDoesNotUseCacheIfNotSet() throws Exception {
-        tmcCore.downloadExercises("asdf", -1, null);
+        tmcCore.downloadExercises(Paths.get("asdf"), -1, null);
         final ArgumentCaptor<DownloadExercises> argument =
                 ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());

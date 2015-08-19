@@ -135,7 +135,11 @@ public class DownloadExercises extends Command<List<Exercise>> {
 
         List<Exercise> downloadedExercises = downloadExercises(course);
         if (cache != null) {
-            cache.write(exercises);
+            try {
+                cache.write(exercises);
+            } catch (IOException e) {
+                throw new TmcCoreException("Unable to write exercise checksums to cache", e);
+            }
         }
 
         return downloadedExercises;

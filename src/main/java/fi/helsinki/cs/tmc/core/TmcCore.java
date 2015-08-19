@@ -45,6 +45,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -69,15 +71,17 @@ public class TmcCore {
         this.threadPool = pool;
     }
 
-    public TmcCore(TmcSettings settings, File updateCache, ListeningExecutorService threadPool)
+    public TmcCore(TmcSettings settings,
+                   Path exerciseChecksumCacheLocation,
+                   ListeningExecutorService threadPool)
             throws FileNotFoundException {
         this(settings, threadPool);
 
-        this.updateCache = new ExerciseChecksumFileCache(Paths.get(updateCache.toString()));
+        this.updateCache = new ExerciseChecksumFileCache(exerciseChecksumCacheLocation);
     }
 
-    public void setCacheFile(File newCache) throws IOException, TmcCoreException {
-        if (newCache == null || !newCache.exists()) {
+    public void setExerciseChecksumCacheLocation(Path newCache) throws IOException {
+        if (newCache == null || Files.notExists(newCache)) {
             throw new FileNotFoundException("Attempted to set non-existent cache file");
         }
         if (updateCache == null) {
@@ -87,8 +91,8 @@ public class TmcCore {
         }
     }
 
-    public File getCacheFile() {
-        return this.updateCache.getCacheFile().toFile();
+    public Path getExerciseChecksumCacheLocation() {
+        return this.updateCache.getCacheFile();
     }
 
     /**
@@ -108,21 +112,17 @@ public class TmcCore {
      *
      * @param url defines the url to course
      */
-    public ListenableFuture<Course> getCourse(String url) throws TmcCoreException {
-        try {
-            checkParameters(settings.getUsername(), settings.getPassword());
-            GetCourse getter = new GetCourse(settings, new URI(url));
-            return threadPool.submit(getter);
-        } catch (URISyntaxException ex) {
-            throw new TmcCoreException("Invalid url", ex);
-        }
+    public ListenableFuture<Course> getCourse(URI url) throws TmcCoreException {
+        checkParameters(settings.getUsername(), settings.getPassword());
+        GetCourse getter = new GetCourse(settings, url);
+        return threadPool.submit(getter);
     }
 
     /**
      * Returns course instance with given name.
      */
     public ListenableFuture<Course> getCourseByName(String courseName)
-            throws TmcCoreException, IOException {
+            throws TmcCoreException {
         checkParameters(settings.getUsername(), settings.getPassword());
         GetCourse getC = new GetCourse(settings, courseName);
         return threadPool.submit(getC);
@@ -140,10 +140,10 @@ public class TmcCore {
      * @throws TmcCoreException if something in the given input was wrong
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
-            String path, int courseId, ProgressObserver observer)
+            Path path, int courseId, ProgressObserver observer)
             throws TmcCoreException {
         DownloadExercises downloadCommand
-                = new DownloadExercises(settings, path, courseId, observer, updateCache);
+                = new DownloadExercises(settings, path.toString(), courseId, observer, updateCache);
         return threadPool.submit(downloadCommand);
     }
 
@@ -190,9 +190,7 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, no exercise in the given
      *         path, or not logged in
      */
-    public ListenableFuture<SubmissionResult> submit(String path) throws TmcCoreException {
-        checkParameters(path);
-
+    public ListenableFuture<SubmissionResult> submit(Path path) throws TmcCoreException {
         UrlCommunicator communicator = new UrlCommunicator(settings);
         TmcApi tmcApi = new TmcApi(communicator, settings);
 
@@ -205,7 +203,7 @@ public class TmcCore {
                         tmcApi,
                         settings),
                 new SubmissionPoller(tmcApi),
-                path);
+                path.toString());
 
         return threadPool.submit(submit);
     }
@@ -219,9 +217,8 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
      *     given path
      */
-    public ListenableFuture<RunResult> test(String path) throws TmcCoreException {
-        checkParameters(path);
-        RunTests testCommand = new RunTests(settings, path);
+    public ListenableFuture<RunResult> test(Path path) throws TmcCoreException {
+        RunTests testCommand = new RunTests(settings, path.toString());
         return threadPool.submit(testCommand);
     }
 
@@ -234,9 +231,9 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
      *     given path
      */
-    public ListenableFuture<ValidationResult> runCheckstyle(String path) throws TmcCoreException {
-        checkParameters(path);
-        RunCheckStyle checkstyleCommand = new RunCheckStyle(path);
+    public ListenableFuture<ValidationResult> runCheckstyle(Path path) throws TmcCoreException {
+
+        RunCheckStyle checkstyleCommand = new RunCheckStyle(path.toString());
         return threadPool.submit(checkstyleCommand);
     }
 
@@ -279,9 +276,9 @@ public class TmcCore {
      * @return a HttpResult of the servers reply. It should contain "{status:ok}" if everything goes
      *     well
      */
-    public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url)
-            throws TmcCoreException, IOException {
-        SendFeedback feedback = new SendFeedback(settings, answers, url);
+    public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, URI url)
+            throws TmcCoreException {
+        SendFeedback feedback = new SendFeedback(settings, answers, url.toString());
         return threadPool.submit(feedback);
     }
 
@@ -295,10 +292,10 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
      *     given path
      */
-    public ListenableFuture<URI> pasteWithComment(String path, String comment)
+    public ListenableFuture<URI> pasteWithComment(Path path, String comment)
             throws TmcCoreException {
-        checkParameters(path);
-        PasteWithComment paste = new PasteWithComment(settings, path, comment);
+        //checkParameters(path);
+        PasteWithComment paste = new PasteWithComment(settings, path.toString(), comment);
         return threadPool.submit(paste);
     }
 

@@ -38,6 +38,8 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -130,15 +132,9 @@ public class SubmitTest {
         settings.setCurrentCourse(course);
         TmcCore core = new TmcCore(settings);
 
-        ListenableFuture<SubmissionResult> submit =
-                core.submit(
-                        "testResources"
-                                + FILE_SEPARATOR
-                                + "halfdoneExercise"
-                                + FILE_SEPARATOR
-                                + "viikko1"
-                                + FILE_SEPARATOR
-                                + "Viikko1_004.Muuttujat");
+        Path path = Paths.get(
+                "testResources", "halfdoneExercise", "viikko1", "Viikko1_004.Muuttujat");
+        ListenableFuture<SubmissionResult> submit = core.submit(path);
         final List<SubmissionResult> result = new ArrayList<>();
         Futures.addCallback(
                 submit,

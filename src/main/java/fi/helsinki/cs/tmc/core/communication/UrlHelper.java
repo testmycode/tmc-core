@@ -41,9 +41,9 @@ public class UrlHelper {
 
     public String withParams(String url) throws URISyntaxException {
         return new URIBuilder(url)
-                .addParameter(API_VERSION_PARAM, settings.apiVersion())
-                .addParameter(CLIENT_NAME_PARAM, settings.clientName())
-                .addParameter(CLIENT_VERSION_PARAM, settings.clientVersion())
+                .setParameter(API_VERSION_PARAM, settings.apiVersion())
+                .setParameter(CLIENT_NAME_PARAM, settings.clientName())
+                .setParameter(CLIENT_VERSION_PARAM, settings.clientVersion())
                 .build().toString();
     }
 }

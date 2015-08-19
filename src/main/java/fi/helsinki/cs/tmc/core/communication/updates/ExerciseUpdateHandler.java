@@ -23,8 +23,8 @@ public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
         super(tmcApi);
         exerciseChecksums = new HashMap<>();
         if (cache == null) {
-            String errorMessage = "ExerciseUpdateHandler requires non-null cacheFile to function";
-            throw new TmcCoreException(errorMessage);
+            throw new TmcCoreException(
+                    "ExerciseUpdateHandler requires non-null cacheFile to function");
         }
         this.cache = cache;
     }

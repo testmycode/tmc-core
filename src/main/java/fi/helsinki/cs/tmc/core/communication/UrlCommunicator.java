@@ -146,9 +146,11 @@ public class UrlCommunicator {
     }
 
     /**
-     * Tries to make GET-request to specific url.
+     * Tries to make a GET-request to {@code url} with {@code credentials} and returns an object
+     * representing the result.
      *
      * @param url URL to make request to
+     * @param credentials to add to the request
      * @return A Result-object with some data and a state of success or fail
      */
     public HttpResult makeGetRequest(String url, String credentials) throws IOException {

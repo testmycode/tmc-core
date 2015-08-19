@@ -39,7 +39,7 @@ public class RunCheckStyleTest {
     public void testCommandDelegatesToTmcLangs() throws Exception {
         new RunCheckStyle("somePath", tmcLangsMock).call();
 
-        verify(tmcLangsMock, times(1)).runCheckCodeStyle(eq(Paths.get("somePath")));
+        verify(tmcLangsMock).runCheckCodeStyle(eq(Paths.get("somePath")));
     }
 
     @Test(expected = TmcCoreException.class)

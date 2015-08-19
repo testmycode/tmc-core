@@ -71,7 +71,9 @@ public class TmcCore {
         this.threadPool = pool;
     }
 
-    public TmcCore(TmcSettings settings, Path exerciseChecksumCacheLocation, ListeningExecutorService threadPool)
+    public TmcCore(TmcSettings settings,
+                   Path exerciseChecksumCacheLocation,
+                   ListeningExecutorService threadPool)
             throws FileNotFoundException {
         this(settings, threadPool);
 

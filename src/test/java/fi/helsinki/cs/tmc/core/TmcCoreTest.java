@@ -197,7 +197,8 @@ public class TmcCoreTest {
 
     @Test
     public void downloadExercisesUsesCacheIfSet() throws Exception {
-        tmcCore.setExerciseChecksumCacheLocation(Paths.get("src", "test", "resources", "cachefile"));
+        tmcCore.setExerciseChecksumCacheLocation(
+                Paths.get("src", "test", "resources", "cachefile"));
         tmcCore.downloadExercises(Paths.get("asdf"), -1, null);
         final ArgumentCaptor<DownloadExercises> argument =
                 ArgumentCaptor.forClass(DownloadExercises.class);

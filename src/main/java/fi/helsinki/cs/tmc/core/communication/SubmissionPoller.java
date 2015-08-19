@@ -29,22 +29,22 @@ public class SubmissionPoller {
             "Something went wrong. " + "Please check your internet connection.";
 
     private SubmissionResult latestResult;
-    private TmcJsonParser tmcJsonParser;
+    private TmcApi tmcApi;
     private SubmissionResultParser submissionParser;
 
     /**
      * Default constuctor.
      */
-    public SubmissionPoller(TmcJsonParser jsonParser) {
-        this.tmcJsonParser = jsonParser;
+    public SubmissionPoller(TmcApi tmcApi) {
+        this.tmcApi = tmcApi;
         this.submissionParser = new SubmissionResultParser();
     }
 
     /**
      * Constructor for tests.
      */
-    public SubmissionPoller(TmcJsonParser jsonParser, int timeout) {
-        this(jsonParser);
+    public SubmissionPoller(TmcApi tmcApi, int timeout) {
+        this(tmcApi);
         this.timeOut = timeout;
     }
 
@@ -59,7 +59,7 @@ public class SubmissionPoller {
     private Optional<SubmissionResult> pollSubmissionUrl(String url)
             throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
-            String json = tmcJsonParser.getRawTextFrom(url);
+            String json = tmcApi.getRawTextFrom(url);
             if (!isProcessing(json)) {
                 SubmissionResult result = submissionParser.parseFromJson(json);
                 return Optional.of(result);

@@ -4,10 +4,10 @@
         {
             "id": 3,
             "name": "2013_ohpeJaOhja",
-            "details_url": "https://tmc.mooc.fi/staging/courses/3.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/3/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/3/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/3.json",
+            "unlock_url": "http://localhost:8080/courses/3/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/3/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -15,10 +15,10 @@
         {
             "id": 13,
             "name": "2013-OOProgrammingWithJava-PART1",
-            "details_url": "https://tmc.mooc.fi/staging/courses/13.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/13/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/13/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/13.json",
+            "unlock_url": "http://localhost:8080/courses/13/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/13/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -26,10 +26,10 @@
         {
             "id": 19,
             "name": "2014-mooc-no-deadline",
-            "details_url": "https://tmc.mooc.fi/staging/courses/19.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/19/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/19/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/19.json",
+            "unlock_url": "http://localhost:8080/courses/19/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/19/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -37,10 +37,10 @@
         {
             "id": 7,
             "name": "c-demo",
-            "details_url": "https://tmc.mooc.fi/staging/courses/7.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/7/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/7/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/7.json",
+            "unlock_url": "http://localhost:8080/courses/7/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/7/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -48,10 +48,10 @@
         {
             "id": 34,
             "name": "cert-test",
-            "details_url": "https://tmc.mooc.fi/staging/courses/34.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/34/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/34/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/34.json",
+            "unlock_url": "http://localhost:8080/courses/34/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/34/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -59,10 +59,10 @@
         {
             "id": 14,
             "name": "checkstyle-demo",
-            "details_url": "https://tmc.mooc.fi/staging/courses/14.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/14/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/14/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/14.json",
+            "unlock_url": "http://localhost:8080/courses/14/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/14/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -70,10 +70,10 @@
         {
             "id": 31,
             "name": "c-testi",
-            "details_url": "https://tmc.mooc.fi/staging/courses/31.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/31/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/31/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/31.json",
+            "unlock_url": "http://localhost:8080/courses/31/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/31/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -81,10 +81,10 @@
         {
             "id": 1,
             "name": "demo",
-            "details_url": "https://tmc.mooc.fi/staging/courses/1.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/1/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/1/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/1.json",
+            "unlock_url": "http://localhost:8080/courses/1/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/1/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -92,10 +92,10 @@
         {
             "id": 28,
             "name": "disable-local-tests",
-            "details_url": "https://tmc.mooc.fi/staging/courses/28.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/28/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/28/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/28.json",
+            "unlock_url": "http://localhost:8080/courses/28/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/28/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -103,10 +103,10 @@
         {
             "id": 9,
             "name": "eclipseAntTest",
-            "details_url": "https://tmc.mooc.fi/staging/courses/9.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/9/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/9/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/9.json",
+            "unlock_url": "http://localhost:8080/courses/9/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/9/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -114,10 +114,10 @@
         {
             "id": 10,
             "name": "jamo_demo",
-            "details_url": "https://tmc.mooc.fi/staging/courses/10.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/10/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/10/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/10.json",
+            "unlock_url": "http://localhost:8080/courses/10/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/10/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -125,10 +125,10 @@
         {
             "id": 8,
             "name": "k14-ohpe",
-            "details_url": "https://tmc.mooc.fi/staging/courses/8.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/8/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/8/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/8.json",
+            "unlock_url": "http://localhost:8080/courses/8/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/8/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -136,10 +136,10 @@
         {
             "id": 32,
             "name": "k2015-c-ohjelmointi",
-            "details_url": "https://tmc.mooc.fi/staging/courses/32.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/32/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/32/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/32.json",
+            "unlock_url": "http://localhost:8080/courses/32/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/32/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -147,10 +147,10 @@
         {
             "id": 29,
             "name": "k2015-ohpe",
-            "details_url": "https://tmc.mooc.fi/staging/courses/29.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/29/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/29/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/29.json",
+            "unlock_url": "http://localhost:8080/courses/29/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/29/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -158,10 +158,10 @@
         {
             "id": 21,
             "name": "k2015-tira",
-            "details_url": "https://tmc.mooc.fi/staging/courses/21.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/21/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/21/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/21.json",
+            "unlock_url": "http://localhost:8080/courses/21/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/21/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -169,10 +169,10 @@
         {
             "id": 4,
             "name": "mooc-part2-english",
-            "details_url": "https://tmc.mooc.fi/staging/courses/4.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/4/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/4/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/4.json",
+            "unlock_url": "http://localhost:8080/courses/4/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/4/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -180,10 +180,10 @@
         {
             "id": 35,
             "name": "pihlantesti",
-            "details_url": "https://tmc.mooc.fi/staging/courses/35.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/35/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/35/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/35.json",
+            "unlock_url": "http://localhost:8080/courses/35/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/35/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -191,10 +191,10 @@
         {
             "id": 33,
             "name": "rage-testcourse",
-            "details_url": "https://tmc.mooc.fi/staging/courses/33.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/33/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/33/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/33.json",
+            "unlock_url": "http://localhost:8080/courses/33/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/33/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -202,10 +202,10 @@
         {
             "id": 22,
             "name": "rails4-test",
-            "details_url": "https://tmc.mooc.fi/staging/courses/22.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/22/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/22/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/22.json",
+            "unlock_url": "http://localhost:8080/courses/22/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/22/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -213,10 +213,10 @@
         {
             "id": 23,
             "name": "rails4-test2",
-            "details_url": "https://tmc.mooc.fi/staging/courses/23.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/23/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/23/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/23.json",
+            "unlock_url": "http://localhost:8080/courses/23/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/23/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -224,10 +224,10 @@
         {
             "id": 25,
             "name": "review_request",
-            "details_url": "https://tmc.mooc.fi/staging/courses/25.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/25/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/25/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/25.json",
+            "unlock_url": "http://localhost:8080/courses/25/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/25/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -235,10 +235,10 @@
         {
             "id": 17,
             "name": "s2014-cee",
-            "details_url": "https://tmc.mooc.fi/staging/courses/17.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/17/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/17/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/17.json",
+            "unlock_url": "http://localhost:8080/courses/17/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/17/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -246,10 +246,10 @@
         {
             "id": 15,
             "name": "s2014-tira",
-            "details_url": "https://tmc.mooc.fi/staging/courses/15.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/15/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/15/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/15.json",
+            "unlock_url": "http://localhost:8080/courses/15/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/15/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -257,10 +257,10 @@
         {
             "id": 12,
             "name": "tmc-eclipse",
-            "details_url": "https://tmc.mooc.fi/staging/courses/12.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/12/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/12/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/12.json",
+            "unlock_url": "http://localhost:8080/courses/12/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/12/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -268,10 +268,10 @@
         {
             "id": 27,
             "name": "tmc-testcourse",
-            "details_url": "https://tmc.mooc.fi/staging/courses/27.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/27/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/27/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/27.json",
+            "unlock_url": "http://localhost:8080/courses/27/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/27/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -279,10 +279,10 @@
         {
             "id": 18,
             "name": "WEPAMOOC-STAGE",
-            "details_url": "https://tmc.mooc.fi/staging/courses/18.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/18/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/18/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/18.json",
+            "unlock_url": "http://localhost:8080/courses/18/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/18/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -290,10 +290,10 @@
         {
             "id": 5,
             "name": "WEPATEST",
-            "details_url": "https://tmc.mooc.fi/staging/courses/5.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/5/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/5/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/5.json",
+            "unlock_url": "http://localhost:8080/courses/5/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/5/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -301,10 +301,10 @@
         {
             "id": 26,
             "name": "weso-stage",
-            "details_url": "https://tmc.mooc.fi/staging/courses/26.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/26/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/26/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/26.json",
+            "unlock_url": "http://localhost:8080/courses/26/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/26/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -312,10 +312,10 @@
         {
             "id": 24,
             "name": "weso-test",
-            "details_url": "https://tmc.mooc.fi/staging/courses/24.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/24/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/24/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/24.json",
+            "unlock_url": "http://localhost:8080/courses/24/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/24/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -323,10 +323,10 @@
         {
             "id": 2,
             "name": "2013-ohpe-ja-ohja",
-            "details_url": "https://tmc.mooc.fi/staging/courses/2.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/2/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/2/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/2.json",
+            "unlock_url": "http://localhost:8080/courses/2/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/2/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -334,10 +334,10 @@
         {
             "id": 30,
             "name": "ceetesti",
-            "details_url": "https://tmc.mooc.fi/staging/courses/30.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/30/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/30/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/30.json",
+            "unlock_url": "http://localhost:8080/courses/30/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/30/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -345,10 +345,10 @@
         {
             "id": 6,
             "name": "cpro",
-            "details_url": "https://tmc.mooc.fi/staging/courses/6.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/6/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/6/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/6.json",
+            "unlock_url": "http://localhost:8080/courses/6/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/6/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -356,10 +356,10 @@
         {
             "id": 20,
             "name": "exploit",
-            "details_url": "https://tmc.mooc.fi/staging/courses/20.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/20/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/20/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/20.json",
+            "unlock_url": "http://localhost:8080/courses/20/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/20/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]
@@ -367,10 +367,10 @@
         {
             "id": 11,
             "name": "WEPA_ECLIPSE_TEST",
-            "details_url": "https://tmc.mooc.fi/staging/courses/11.json",
-            "unlock_url": "https://tmc.mooc.fi/staging/courses/11/unlock.json",
-            "reviews_url": "https://tmc.mooc.fi/staging/courses/11/reviews.json",
-            "comet_url": "https://tmc.mooc.fi:8443/comet",
+            "details_url": "http://localhost:8080/courses/11.json",
+            "unlock_url": "http://localhost:8080/courses/11/unlock.json",
+            "reviews_url": "http://localhost:8080/courses/11/reviews.json",
+            "comet_url": "http://localhost:8443/comet",
             "spyware_urls": [
                 "http://staging.spyware.testmycode.net/"
             ]

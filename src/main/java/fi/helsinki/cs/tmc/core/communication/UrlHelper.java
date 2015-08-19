@@ -1,50 +1,49 @@
 package fi.helsinki.cs.tmc.core.communication;
 
+import static fi.helsinki.cs.tmc.core.communication.TmcConstants.API_VERSION_PARAM;
+import static fi.helsinki.cs.tmc.core.communication.TmcConstants.CLIENT_NAME_PARAM;
+import static fi.helsinki.cs.tmc.core.communication.TmcConstants.CLIENT_VERSION_PARAM;
+
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
+
+import org.apache.http.client.utils.URIBuilder;
+
+import java.net.URISyntaxException;
 
 public class UrlHelper {
 
     public final String apiParam;
     public final String clientParam;
     public final String coursesExtension;
-    public final String authExtension;
+
     private final TmcSettings settings;
-    private String serverAddressPattern = "(https://)?([a-z]+\\.){2,}[a-z]+(/[a-z]+)*";
 
     public UrlHelper(TmcSettings settings) {
         apiParam = "api_version=" + settings.apiVersion();
         String clientVersion = "&client_version=" + settings.clientVersion();
         clientParam = "client=" + settings.clientName() + clientVersion;
         coursesExtension = "/courses.json?" + apiParam + "&" + clientParam;
-        authExtension = "/user";
         this.settings = settings;
     }
 
-    public String getCourseUrl(int courseId) {
-        String params = "?" + apiParam + "&" + clientParam;
-        return settings.getServerAddress() + "/courses/" + courseId + ".json" + params;
+    public String getCourseUrl(int courseId) throws URISyntaxException {
+        return withParams(settings.getServerAddress() + "/courses/" + courseId + ".json");
     }
 
-    public String getCourseUrl(Course course) {
-        return course.getDetailsUrl() + "?" + apiParam + "&" + clientParam;
+    public String getCourseUrl(Course course) throws URISyntaxException {
+        return withParams(course.getDetailsUrl());
     }
 
     public String allCoursesAddress(String serverAddress) {
         return serverAddress + this.coursesExtension;
     }
 
-    public String withParams(String url) {
-        String params = "?" + apiParam + "&" + clientParam;
-        if (url.endsWith("?" + apiParam)) {
-            url = url.substring(0, url.indexOf("?" + apiParam)) + params;
-        } else if (!url.endsWith(params)) {
-            url += params;
-        }
-        return url;
-    }
-
-    public boolean urlIsValid(String url) {
-        return url.matches(serverAddressPattern);
+    public String withParams(String url) throws URISyntaxException {
+        return new URIBuilder(url)
+                .addParameter(API_VERSION_PARAM, settings.apiVersion())
+                .addParameter(CLIENT_NAME_PARAM, settings.clientName())
+                .addParameter(CLIENT_VERSION_PARAM, settings.clientVersion())
+                .build().toString();
     }
 }

@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumFileCache;
 import fi.helsinki.cs.tmc.core.commands.DownloadExercises;
 import fi.helsinki.cs.tmc.core.commands.GetCourse;
 import fi.helsinki.cs.tmc.core.commands.GetExerciseUpdates;
@@ -14,8 +15,11 @@ import fi.helsinki.cs.tmc.core.commands.SendFeedback;
 import fi.helsinki.cs.tmc.core.commands.SendSpywareDiffs;
 import fi.helsinki.cs.tmc.core.commands.Submit;
 import fi.helsinki.cs.tmc.core.commands.VerifyCredentials;
+import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.SubmissionPoller;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
+import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.communication.updates.ExerciseUpdateHandler;
 import fi.helsinki.cs.tmc.core.communication.updates.ReviewHandler;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
@@ -25,31 +29,31 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.spyware.DiffSender;
+import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
+import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
+import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
 import fi.helsinki.cs.tmc.stylerunner.validation.ValidationResult;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
 public class TmcCore {
 
-    static ListeningExecutorService threadPool =
-            MoreExecutors.listeningDecorator(Executors.newCachedThreadPool());
-    private File updateCache;
+    private ListeningExecutorService threadPool;
+    private ExerciseChecksumFileCache updateCache;
     private TmcSettings settings;
 
     /**
@@ -57,53 +61,34 @@ public class TmcCore {
      * The TmcCore provides all the essential backend functionalities as public methods.
      */
     public TmcCore(TmcSettings settings) {
-        this.settings = settings;
+        this(settings, MoreExecutors.listeningDecorator(Executors.newCachedThreadPool()));
     }
 
     public TmcCore(TmcSettings settings, ListeningExecutorService pool) {
-        this(settings);
-
-        threadPool = pool;
+        this.settings = settings;
+        this.threadPool = pool;
     }
 
     public TmcCore(TmcSettings settings, File updateCache, ListeningExecutorService threadPool)
             throws FileNotFoundException {
         this(settings, threadPool);
 
-        ensureCacheFileExists(updateCache);
-        this.updateCache = updateCache;
+        this.updateCache = new ExerciseChecksumFileCache(Paths.get(updateCache.toString()));
     }
 
     public void setCacheFile(File newCache) throws IOException, TmcCoreException {
-        ensureCacheFileExists(newCache);
-        if (this.updateCache != null && this.updateCache.exists()) {
-            moveCacheFile(newCache);
+        if (newCache == null || !newCache.exists()) {
+            throw new FileNotFoundException("Attempted to set non-existent cache file");
         }
-        updateCache = newCache;
-    }
-
-    private void moveCacheFile(File newCache) throws IOException {
-        String oldData = FileUtils.readFileToString(updateCache, Charset.forName("UTF-8"));
-        FileWriter writer = new FileWriter(newCache, true);
-        writer.write(oldData);
-        writer.close();
-        File old = updateCache;
-        updateCache = newCache;
-        old.delete();
+        if (updateCache == null) {
+            updateCache = new ExerciseChecksumFileCache(Paths.get(newCache.toString()));
+        } else {
+            updateCache.moveCache(Paths.get(newCache.toString()));
+        }
     }
 
     public File getCacheFile() {
-        return this.updateCache;
-    }
-
-    private void ensureCacheFileExists(File cacheFile) throws FileNotFoundException {
-        if (cacheFile == null) {
-            throw new FileNotFoundException("Cannot find file: null");
-        }
-        if (!cacheFile.exists()) {
-            String errorMessage = "cache file " + cacheFile.getAbsolutePath() + " does not exist";
-            throw new FileNotFoundException(errorMessage);
-        }
+        return this.updateCache.getCacheFile().toFile();
     }
 
     /**
@@ -111,11 +96,10 @@ public class TmcCore {
      *
      * @return A future-object containing true or false on success or fail
      */
-    public ListenableFuture<Boolean> verifyCredentials()
-            throws TmcCoreException {
+    public ListenableFuture<Boolean> verifyCredentials() throws TmcCoreException {
         checkParameters(
                 settings.getUsername(), settings.getPassword(), settings.getServerAddress());
-        VerifyCredentials login = new VerifyCredentials(settings);
+        VerifyCredentials login = new VerifyCredentials(settings, new UrlCommunicator(settings));
         return threadPool.submit(login);
     }
 
@@ -124,8 +108,7 @@ public class TmcCore {
      *
      * @param url defines the url to course
      */
-    public ListenableFuture<Course> getCourse(String url)
-            throws TmcCoreException {
+    public ListenableFuture<Course> getCourse(String url) throws TmcCoreException {
         try {
             checkParameters(settings.getUsername(), settings.getPassword());
             GetCourse getter = new GetCourse(settings, new URI(url));
@@ -157,10 +140,10 @@ public class TmcCore {
      * @throws TmcCoreException if something in the given input was wrong
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
-            String path, String courseId, ProgressObserver observer)
+            String path, int courseId, ProgressObserver observer)
             throws TmcCoreException {
-        checkParameters(path, courseId);
-        DownloadExercises downloadCommand = getDownloadCommand(path, courseId, observer);
+        DownloadExercises downloadCommand
+                = new DownloadExercises(settings, path, courseId, observer, updateCache);
         return threadPool.submit(downloadCommand);
     }
 
@@ -170,8 +153,8 @@ public class TmcCore {
      *
      * @param exercises to be downloaded
      */
-    public ListenableFuture<List<Exercise>> downloadExercises(
-            List<Exercise> exercises) throws TmcCoreException {
+    public ListenableFuture<List<Exercise>> downloadExercises(List<Exercise> exercises)
+            throws TmcCoreException {
         return this.downloadExercises(exercises, null);
     }
 
@@ -181,35 +164,9 @@ public class TmcCore {
     public ListenableFuture<List<Exercise>> downloadExercises(
             List<Exercise> exercises, ProgressObserver observer)
             throws TmcCoreException {
-        checkParameters(
-                settings.getFormattedUserData(),
-                settings.getTmcMainDirectory(),
-                settings.getServerAddress());
-        DownloadExercises downloadCommand = this.getDownloadCommand(exercises, observer);
+        DownloadExercises downloadCommand
+                = new DownloadExercises(settings, exercises, observer, updateCache);
         return threadPool.submit(downloadCommand);
-    }
-
-    private DownloadExercises getDownloadCommand(
-            String path, String courseId, ProgressObserver observer) {
-        if (this.updateCache == null) {
-            return new DownloadExercises(path, courseId, settings, observer);
-        }
-        return new DownloadExercises(path, courseId, settings, this.updateCache, observer);
-    }
-
-    private DownloadExercises getDownloadCommand(
-            List<Exercise> exercises, ProgressObserver observer)
-            throws TmcCoreException {
-        if (observer == null) {
-            if (this.updateCache == null) {
-                return new DownloadExercises(exercises, settings);
-            }
-            return new DownloadExercises(exercises, settings, this.updateCache);
-        }
-        if (this.updateCache == null) {
-            return new DownloadExercises(exercises, settings, observer);
-        }
-        return new DownloadExercises(exercises, settings, this.updateCache, observer);
     }
 
     /**
@@ -220,7 +177,6 @@ public class TmcCore {
      * @throws TmcCoreException if something went wrong
      */
     public ListenableFuture<List<Course>> listCourses() throws TmcCoreException {
-        @SuppressWarnings("unchecked")
         ListCourses listCommand = new ListCourses(settings);
         return threadPool.submit(listCommand);
     }
@@ -236,7 +192,21 @@ public class TmcCore {
      */
     public ListenableFuture<SubmissionResult> submit(String path) throws TmcCoreException {
         checkParameters(path);
-        Submit submit = new Submit(path, settings);
+
+        UrlCommunicator communicator = new UrlCommunicator(settings);
+        TmcApi tmcApi = new TmcApi(communicator, settings);
+
+        Submit submit = new Submit(
+                        settings,
+                        new ExerciseSubmitter(
+                        new ProjectRootFinder(tmcApi),
+                        new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
+                        communicator,
+                        tmcApi,
+                        settings),
+                new SubmissionPoller(tmcApi),
+                path);
+
         return threadPool.submit(submit);
     }
 
@@ -251,8 +221,7 @@ public class TmcCore {
      */
     public ListenableFuture<RunResult> test(String path) throws TmcCoreException {
         checkParameters(path);
-        @SuppressWarnings("unchecked")
-        RunTests testCommand = new RunTests(path, settings);
+        RunTests testCommand = new RunTests(settings, path);
         return threadPool.submit(testCommand);
     }
 
@@ -267,8 +236,7 @@ public class TmcCore {
      */
     public ListenableFuture<ValidationResult> runCheckstyle(String path) throws TmcCoreException {
         checkParameters(path);
-        @SuppressWarnings("unchecked")
-        RunCheckStyle checkstyleCommand = new RunCheckStyle(path, settings);
+        RunCheckStyle checkstyleCommand = new RunCheckStyle(path);
         return threadPool.submit(checkstyleCommand);
     }
 
@@ -279,9 +247,8 @@ public class TmcCore {
      * @return a list of unread reviews for the given course
      */
     public ListenableFuture<List<Review>> getNewReviews(Course course) throws TmcCoreException {
-        ReviewHandler reviewHandler = new ReviewHandler(new TmcJsonParser(settings));
-        GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler, settings);
-        command.checkData();
+        ReviewHandler reviewHandler = new ReviewHandler(new TmcApi(settings));
+        GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler);
         return threadPool.submit(command);
     }
 
@@ -299,9 +266,8 @@ public class TmcCore {
     public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course)
             throws TmcCoreException {
         ExerciseUpdateHandler updater =
-                new ExerciseUpdateHandler(updateCache, new TmcJsonParser(settings));
-        GetExerciseUpdates command = new GetExerciseUpdates(course, updater, settings);
-        command.checkData();
+                new ExerciseUpdateHandler(updateCache, new TmcApi(settings));
+        GetExerciseUpdates command = new GetExerciseUpdates(course, updater);
         return threadPool.submit(command);
     }
 
@@ -315,8 +281,7 @@ public class TmcCore {
      */
     public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, String url)
             throws TmcCoreException, IOException {
-        SendFeedback feedback = new SendFeedback(answers, url, settings);
-        feedback.checkData();
+        SendFeedback feedback = new SendFeedback(settings, answers, url);
         return threadPool.submit(feedback);
     }
 
@@ -333,7 +298,7 @@ public class TmcCore {
     public ListenableFuture<URI> pasteWithComment(String path, String comment)
             throws TmcCoreException {
         checkParameters(path);
-        PasteWithComment paste = new PasteWithComment(path, settings, comment);
+        PasteWithComment paste = new PasteWithComment(settings, path, comment);
         return threadPool.submit(paste);
     }
 
@@ -346,8 +311,8 @@ public class TmcCore {
      */
     public ListenableFuture<List<HttpResult>> sendSpywareDiffs(byte[] spywareDiffs)
             throws TmcCoreException {
-        SendSpywareDiffs spyware = new SendSpywareDiffs(spywareDiffs, settings);
-        spyware.checkData();
+        SendSpywareDiffs spyware =
+                new SendSpywareDiffs(settings, new DiffSender(settings), spywareDiffs);
         return threadPool.submit(spyware);
     }
 

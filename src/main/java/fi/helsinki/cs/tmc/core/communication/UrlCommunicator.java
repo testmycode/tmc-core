@@ -1,7 +1,5 @@
 package fi.helsinki.cs.tmc.core.communication;
 
-import static org.apache.http.HttpHeaders.USER_AGENT;
-
 import fi.helsinki.cs.tmc.core.communication.authorization.Authorization;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 
@@ -9,6 +7,7 @@ import com.google.common.base.Optional;
 import com.google.gson.JsonObject;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -33,6 +32,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -146,14 +146,15 @@ public class UrlCommunicator {
     }
 
     /**
-     * Tries to make GET-request to specific url.
+     * Tries to make a GET-request to {@code url} with {@code credentials} and returns an object
+     * representing the result.
      *
      * @param url URL to make request to
-     * @param params Any amount of parameters for the request. params[0] is always username:password
+     * @param credentials to add to the request
      * @return A Result-object with some data and a state of success or fail
      */
-    public HttpResult makeGetRequest(String url, String... params) throws IOException {
-        HttpGet httpGet = createGet(url, params);
+    public HttpResult makeGetRequest(String url, String credentials) throws IOException {
+        HttpGet httpGet = createGet(url, credentials);
         return getResponseResult(httpGet);
     }
 
@@ -165,7 +166,7 @@ public class UrlCommunicator {
      * @return Result which contains the result.
      */
     public HttpResult makePutRequest(String url, Optional<Map<String, String>> body)
-            throws IOException {
+            throws IOException, URISyntaxException {
         url = urlHelper.withParams(url);
         HttpPut httpPut = new HttpPut(url);
         addCredentials(httpPut, this.settings.getFormattedUserData());
@@ -179,9 +180,9 @@ public class UrlCommunicator {
         return getResponseResult(httpPut);
     }
 
-    private HttpGet createGet(String url, String[] params) {
+    private HttpGet createGet(String url, String credentials) {
         HttpGet request = new HttpGet(url);
-        addCredentials(request, params[0]);
+        addCredentials(request, credentials);
         return request;
     }
 
@@ -190,12 +191,11 @@ public class UrlCommunicator {
      *
      * @param url url of the get request
      * @param file file to write the results into
-     * @param params params of the get request
      * @return true if successful
      */
-    public boolean downloadToFile(String url, File file, String... params) {
+    public boolean downloadToFile(String url, File file, String credentials) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
-            HttpGet httpget = createGet(url, params);
+            HttpGet httpget = createGet(url, credentials);
             HttpResponse response = executeRequest(httpget);
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
             return true;
@@ -232,9 +232,11 @@ public class UrlCommunicator {
         return createClient().execute(request);
     }
 
+
     private void addCredentials(HttpRequestBase httpRequest, String credentials) {
-        httpRequest.setHeader("Authorization", "Basic " + Authorization.encode(credentials));
-        httpRequest.setHeader("User-Agent", USER_AGENT);
+        httpRequest.setHeader(
+                HttpHeaders.AUTHORIZATION,
+                "Basic " + Authorization.encode(credentials));
     }
 
     /**
@@ -263,7 +265,8 @@ public class UrlCommunicator {
     /**
      * Makes a POST HTTP request.
      */
-    public HttpResult makePostWithJson(JsonObject req, String feedbackUrl) throws IOException {
+    public HttpResult makePostWithJson(JsonObject req, String feedbackUrl)
+            throws IOException, URISyntaxException {
         feedbackUrl = urlHelper.withParams(feedbackUrl);
         HttpPost httppost = new HttpPost(feedbackUrl);
         String jsonString = req.toString();

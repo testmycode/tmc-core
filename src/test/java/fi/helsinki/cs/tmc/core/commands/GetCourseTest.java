@@ -1,7 +1,8 @@
 package fi.helsinki.cs.tmc.core.commands;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,13 +13,16 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.client.UrlMatchingStrategy;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import java.net.URISyntaxException;
 
 public class GetCourseTest {
 
@@ -26,18 +30,18 @@ public class GetCourseTest {
 
     private UrlHelper urlHelper;
     private String finalUrl = "http://127.0.0.1:8080/courses/19.json";
-    private String mockUrl;
+    private UrlMatchingStrategy mockUrl;
     private TmcCore core;
     private CoreTestSettings settings;
 
-    public GetCourseTest() {
+    public GetCourseTest() throws URISyntaxException {
         settings = new CoreTestSettings();
         settings.setCredentials("test", "1234");
         settings.setCurrentCourse(new Course());
-        settings.setServerAddress("https://tmc.mooc.fi/staging");
+        settings.setServerAddress("http://localhost:8080/");
         settings.setApiVersion("7");
         urlHelper = new UrlHelper(settings);
-        mockUrl = urlHelper.withParams("/courses/19.json");
+        mockUrl = urlPathEqualTo("/courses/19.json");
     }
 
     @Before
@@ -73,11 +77,10 @@ public class GetCourseTest {
 
     @Test
     public void testCall() throws Exception {
-        core = new TmcCore(settings);
         wireMock.stubFor(
-                get(urlEqualTo(mockUrl))
+                get(mockUrl)
                         .willReturn(
-                                WireMock.aResponse()
+                                aResponse()
                                         .withStatus(200)
                                         .withBody(ExampleJson.courseExample)));
 
@@ -89,11 +92,15 @@ public class GetCourseTest {
 
     @Test
     public void testCallWithCourseName() throws Exception {
-        core = new TmcCore(settings);
         wireMock.stubFor(
-                get(urlEqualTo(mockUrl))
+                get(urlPathEqualTo("/courses.json"))
                         .willReturn(
-                                WireMock.aResponse()
+                                aResponse()
+                                        .withBody(ExampleJson.allCoursesExample)));
+        wireMock.stubFor(
+                get(urlPathEqualTo("/courses/3.json"))
+                        .willReturn(
+                                aResponse()
                                         .withStatus(200)
                                         .withBody(ExampleJson.courseExample)));
 

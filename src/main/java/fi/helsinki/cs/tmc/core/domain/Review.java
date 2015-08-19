@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,7 +144,7 @@ public class Review {
     }
 
     public void markAs(boolean read, UrlCommunicator urlCommunicator)
-            throws IOException {
+            throws IOException, URISyntaxException {
         Map<String, String> headers = addHeaders(read);
         HttpResult result = urlCommunicator.makePutRequest(putUrl(), Optional.of(headers));
         if (result.getData().contains("OK")) {

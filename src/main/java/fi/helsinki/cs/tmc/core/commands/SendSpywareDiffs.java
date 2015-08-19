@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
@@ -11,53 +10,48 @@ import com.google.common.base.Optional;
 
 import java.util.List;
 
+/**
+ * A {@link Command} for sending spyware data to the server.
+ */
 public class SendSpywareDiffs extends Command<List<HttpResult>> {
 
     private byte[] spywareDiffs;
-    private Course currentCourse;
     private DiffSender sender;
-    private TmcJsonParser jsonParser;
 
     /**
-     * Standard constructor.
+     * Constructs a send spyware diffs command using {@code settings} and {@code sender} for sending
+     * {@code spywareDiffs} to the server.
      */
-    public SendSpywareDiffs(byte[] spywereDiffs, TmcSettings settings) {
-        this(spywereDiffs, new DiffSender(settings), new TmcJsonParser(settings), settings);
-    }
-
-    /**
-     * Dependecy injection for tests.
-     */
-    public SendSpywareDiffs(
-            byte[] spywareDiffs,
-            DiffSender sender,
-            TmcJsonParser jsonParser,
-            TmcSettings settings) {
+    public SendSpywareDiffs(TmcSettings settings, DiffSender sender, byte[] spywareDiffs) {
         super(settings);
+
         this.spywareDiffs = spywareDiffs;
         this.sender = sender;
-        this.jsonParser = jsonParser;
     }
 
-    @Override
-    public void checkData() throws TmcCoreException {
-        if (this.spywareDiffs == null) {
-            throw new TmcCoreException("No spyware-diff given.");
+    private void assertHasRequiredData() throws TmcCoreException {
+        String username = settings.getUsername();
+        if (username == null || username.isEmpty()) {
+            throw new TmcCoreException("username must be set!");
         }
-        if (this.settings.getUsername() == null || this.settings.getPassword() == null) {
-            throw new TmcCoreException("No username/password defined.");
+
+        String password = settings.getPassword();
+        if (password == null || password.isEmpty()) {
+            throw new TmcCoreException("password must be set!");
         }
+
         Optional<Course> course = this.settings.getCurrentCourse();
-        if (course.isPresent()) {
-            this.currentCourse = course.get();
-        } else {
+        if (course == null || !course.isPresent()) {
             throw new TmcCoreException("No current course found from settings.");
         }
     }
 
+    /**
+     * Entry point for launching this command.
+     */
     @Override
-    public List<HttpResult> call() throws Exception {
-        checkData();
-        return this.sender.sendToSpyware(spywareDiffs, currentCourse);
+    public List<HttpResult> call() throws TmcCoreException {
+        assertHasRequiredData();
+        return this.sender.sendToSpyware(spywareDiffs, settings.getCurrentCourse().get());
     }
 }

@@ -1,6 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -10,49 +10,65 @@ import com.google.common.base.Optional;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
+/**
+ * A {@link Command} for retrieving course details from TMC server.
+ */
 public class GetCourse extends Command<Course> {
 
-    private TmcJsonParser jsonParser;
+    private TmcApi tmcApi;
     private String url;
 
+    /**
+     * Constructs a new get course command with {@code settings} for fetching course details for
+     * {@code courseName}.
+     */
     public GetCourse(TmcSettings settings, String courseName) throws IOException, TmcCoreException {
         super(settings);
-        this.jsonParser = new TmcJsonParser(settings);
-        url = getCourseUrlFromName(courseName);
+
+        this.tmcApi = new TmcApi(settings);
+        this.url = pollServerForCourseUrl(courseName);
     }
 
+    /**
+     * Constructs a new get course command with {@code settings} for fetching course details from
+     * {@code courseUri}.
+     */
     public GetCourse(TmcSettings settings, URI courseUri) {
         super(settings);
-        this.jsonParser = new TmcJsonParser(settings);
+
+        this.tmcApi = new TmcApi(settings);
         this.url = courseUri.toString();
     }
 
+    /**
+     * Entry point for launching this command.
+     */
     @Override
-    public void checkData() throws TmcCoreException, IOException {
-        validate(this.settings.getUsername(), "username must be set!");
-        validate(this.settings.getPassword(), "password must be set!");
-    }
+    public Course call() throws TmcCoreException, URISyntaxException {
+        validate(this.settings.getUsername(), "Username must be set!");
+        validate(this.settings.getPassword(), "Password must be set!");
 
-    private void validate(String field, String message) throws TmcCoreException {
-        if (field == null || field.isEmpty()) {
-            throw new TmcCoreException(message);
-        }
-    }
-
-    @Override
-    public Course call() throws Exception {
         String urlWithApiVersion = new UrlHelper(settings).withParams(this.url);
-        Optional<Course> course = jsonParser.getCourse(urlWithApiVersion);
-        if (!course.isPresent()) {
-            throw new TmcCoreException("No course found by specified url: " + urlWithApiVersion);
+        Optional<Course> course;
+        try {
+            course = tmcApi.getCourse(urlWithApiVersion);
+        } catch (IOException ex) {
+            throw new TmcCoreException("Failed to fetch course details", ex);
         }
+
+        if (!course.isPresent()) {
+            throw new TmcCoreException("Attempted to fetch nonexistent course "
+                    + urlWithApiVersion);
+        }
+
         return course.get();
     }
 
-    private String getCourseUrlFromName(String courseName) throws IOException, TmcCoreException {
-        List<Course> courses = jsonParser.getCourses();
+    private String pollServerForCourseUrl(String courseName) throws IOException, TmcCoreException {
+        List<Course> courses = tmcApi.getCourses();
         for (Course course : courses) {
             if (course.getName().equals(courseName)) {
                 return course.getDetailsUrl();
@@ -64,5 +80,11 @@ public class GetCourse extends Command<Course> {
                         + " on the server "
                         + settings.getServerAddress();
         throw new TmcCoreException(errorMessage);
+    }
+
+    private void validate(String field, String message) throws TmcCoreException {
+        if (field == null || field.isEmpty()) {
+            throw new TmcCoreException("Failed to fetch course details:" + message);
+        }
     }
 }

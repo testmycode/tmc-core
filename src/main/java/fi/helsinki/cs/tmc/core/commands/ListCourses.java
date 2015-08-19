@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.communication.TmcJsonParser;
-import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
@@ -9,39 +8,42 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * A {@link Command} for retrieving the course list from the server.
+ */
 public class ListCourses extends Command<List<Course>> {
 
-    private TmcJsonParser parser;
+    private TmcApi tmcApi;
 
-    public ListCourses(TmcSettings settings) {
-        super(settings);
-        this.parser = new TmcJsonParser(settings);
-    }
-
-    public ListCourses(TmcSettings settings, TmcJsonParser parser) {
-        super(settings);
-        this.parser = parser;
-    }
-
-    public ListCourses(TmcSettings settings, UrlCommunicator communicator) {
-        super(settings);
-        this.parser = new TmcJsonParser(communicator, settings);
-    }
     /**
-     * Checks that the user has authenticated, by verifying ClientData.
-     *
-     * @throws TmcCoreException if ClientData is empty
+     * Constructs a new list courses command with {@code settings}.
+     */
+    public ListCourses(TmcSettings settings) {
+        this(settings, new TmcApi(settings));
+    }
+
+    /**
+     * Constructs a new list courses command with {@code settings} that uses {@code tmcApi} to
+     * communicate with the server.
+     */
+    public ListCourses(TmcSettings settings, TmcApi tmcApi) {
+        super(settings);
+        this.tmcApi = tmcApi;
+    }
+
+    /**
+     * Entry point for launching this command.
      */
     @Override
-    public void checkData() throws TmcCoreException {
+    public List<Course> call() throws TmcCoreException {
         if (!settings.userDataExists()) {
             throw new TmcCoreException("User must be authorized first");
         }
-    }
 
-    @Override
-    public List<Course> call() throws TmcCoreException, IOException {
-        checkData();
-        return parser.getCourses();
+        try {
+            return tmcApi.getCourses();
+        } catch (IOException ex) {
+            throw new TmcCoreException("Failed to fetch courses from server", ex);
+        }
     }
 }

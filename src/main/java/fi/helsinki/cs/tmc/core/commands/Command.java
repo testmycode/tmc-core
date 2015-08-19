@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.exceptions.TmcInterruptionException;
 
 import java.util.concurrent.Callable;
 
@@ -59,5 +60,11 @@ public abstract class Command<E> implements Callable<E> {
     protected void informObserver(int currentProgress, int maxProgress, String message) {
         double percent = ((double) currentProgress) * 100 / maxProgress;
         informObserver(percent, message);
+    }
+
+    protected void checkInterrupt() throws TmcInterruptionException {
+        if (Thread.currentThread().isInterrupted()) {
+            throw new TmcInterruptionException();
+        }
     }
 }

@@ -9,6 +9,7 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.exceptions.TmcInterruptionException;
 
 import com.google.common.base.Optional;
 
@@ -127,6 +128,8 @@ public class DownloadExercises extends Command<List<Exercise>> {
             throw new TmcCoreException("Unable to download exercises: missing username/password");
         }
 
+        checkInterrupt();
+
         Course course = getCourse();
 
         if (exercises == null) {
@@ -134,6 +137,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
         }
 
         List<Exercise> downloadedExercises = downloadExercises(course);
+
         if (cache != null) {
             try {
                 cache.write(exercises);
@@ -146,11 +150,13 @@ public class DownloadExercises extends Command<List<Exercise>> {
     }
 
 
-    private List<Exercise> downloadExercises(Course course) {
+    private List<Exercise> downloadExercises(Course course) throws TmcInterruptionException {
         Path target = Paths.get(exerciseDownloader.createCourseFolder(this.path, course.getName()));
         List<Exercise> downloaded = new ArrayList<>();
 
         for (int i = 0; i < exercises.size(); i++) {
+            checkInterrupt();
+
             Exercise exercise = exercises.get(i);
             exercise.setCourseName(course.getName());
 

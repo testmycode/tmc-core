@@ -12,4 +12,7 @@ jdk:
 matrix:
   allow_failures:
     - jdk: openjdk6
+os:
+  - linux
+  - osx
 

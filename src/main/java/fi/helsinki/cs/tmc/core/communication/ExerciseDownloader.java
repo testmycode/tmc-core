@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.communication;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.util.Folders;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
@@ -11,6 +12,7 @@ import com.google.common.base.Optional;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,10 +119,10 @@ public class ExerciseDownloader {
         if (exercise.isLocked()) {
             return false;
         }
-        String filePath = path + exercise.getName() + ".zip";
-        downloadExerciseZip(exercise.getZipUrl(), filePath);
+        Path filePath = Folders.tempFolder().resolve(exercise.getName() + ".zip");
+        downloadExerciseZip(exercise.getZipUrl(), filePath.toString());
         try {
-            taskExecutor.extractProject(Paths.get(filePath), Paths.get(path));
+            taskExecutor.extractProject(filePath, Paths.get(path));
         } catch (IOException e) {
             System.err.println(e.getMessage());
             return false;
@@ -135,9 +137,9 @@ public class ExerciseDownloader {
      *
      * @param filePath path to delete
      */
-    private void deleteZip(String filePath) {
+    private void deleteZip(Path filePath) {
         try {
-            Files.delete(Paths.get(filePath));
+            Files.delete(filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }

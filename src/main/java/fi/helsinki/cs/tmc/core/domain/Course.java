@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URI;
 
 public class Course {
 
@@ -83,6 +84,11 @@ public class Course {
     public String getDetailsUrl() {
         return detailsUrl;
     }
+
+    public URI getDetailsUrlAsUri() {
+        return URI.create(detailsUrl);
+    }
+
 
     public void setDetailsUrl(String detailsUrl) {
         this.detailsUrl = detailsUrl;

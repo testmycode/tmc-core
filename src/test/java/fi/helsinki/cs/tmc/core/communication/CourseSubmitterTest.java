@@ -17,8 +17,6 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import com.google.common.base.Optional;
 
-import net.lingala.zip4j.exception.ZipException;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -148,8 +146,7 @@ public class CourseSubmitterTest {
     @Test
     public void testSubmitWithOneParam()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException,
-                    URISyntaxException {
+                    TmcCoreException, URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"
@@ -174,8 +171,7 @@ public class CourseSubmitterTest {
     @Test(expected = ExpiredException.class)
     public void testSubmitWithExpiredExercise()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException,
-                    URISyntaxException {
+                    TmcCoreException, URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"
@@ -198,8 +194,7 @@ public class CourseSubmitterTest {
     @Test
     public void submitWithPasteReturnsPasteUrl()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException,
-                    URISyntaxException {
+                    TmcCoreException, URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"
@@ -223,8 +218,7 @@ public class CourseSubmitterTest {
     @Test
     public void submitWithPasteAndCommentReturnsPasteUrl()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException,
-                    URISyntaxException {
+                    TmcCoreException, URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"
@@ -248,8 +242,7 @@ public class CourseSubmitterTest {
     @Test(expected = IllegalArgumentException.class)
     public void submitWithPasteFromBadPathThrowsException()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException,
-                    URISyntaxException {
+                    TmcCoreException, URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"
@@ -271,8 +264,7 @@ public class CourseSubmitterTest {
     @Test(expected = IllegalArgumentException.class)
     public void testSubmitWithNonexistentExercise()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException,
-                    URISyntaxException {
+                    TmcCoreException, URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"
@@ -294,8 +286,7 @@ public class CourseSubmitterTest {
     @Test(expected = IllegalArgumentException.class)
     public void submitWithNonExistentCourseThrowsException()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException,
-                    URISyntaxException {
+                    TmcCoreException, URISyntaxException {
         String testPath =
                 FILE_SEPARATOR
                         + "home"

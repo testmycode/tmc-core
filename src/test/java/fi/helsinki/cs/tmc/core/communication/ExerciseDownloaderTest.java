@@ -22,8 +22,6 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
 import com.google.common.base.Optional;
 
-import net.lingala.zip4j.exception.ZipException;
-
 import org.apache.commons.io.FileUtils;
 
 import org.junit.After;
@@ -183,7 +181,7 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void downloadsCorrectAmount() throws IOException, ZipException {
+    public void downloadsCorrectAmount() throws IOException {
         TaskExecutor executor = Mockito.mock(TaskExecutor.class);
         Mockito.doNothing().when(executor).extractProject(any(Path.class), any(Path.class));
         exDl =

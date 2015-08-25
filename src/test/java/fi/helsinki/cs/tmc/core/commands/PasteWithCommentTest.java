@@ -12,8 +12,6 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
 
-import net.lingala.zip4j.exception.ZipException;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,7 +46,7 @@ public class PasteWithCommentTest {
 
     @Test
     public void testCheckDataSuccess()
-            throws TmcCoreException, IOException, ParseException, ExpiredException, ZipException,
+            throws TmcCoreException, IOException, ParseException, ExpiredException,
             URISyntaxException {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 

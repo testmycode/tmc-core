@@ -7,8 +7,6 @@ import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
-import net.lingala.zip4j.exception.ZipException;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
@@ -56,8 +54,7 @@ public class Submit extends Command<SubmissionResult> {
     @Override
     public SubmissionResult call()
             throws TmcCoreException, IOException, ParseException, ExpiredException,
-                    IllegalArgumentException, ZipException, InterruptedException,
-                    URISyntaxException {
+                    IllegalArgumentException, InterruptedException, URISyntaxException {
 
         assertHasRequiredData();
 

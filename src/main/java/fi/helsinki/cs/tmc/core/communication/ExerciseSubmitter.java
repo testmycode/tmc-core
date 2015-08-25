@@ -14,8 +14,6 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import com.google.common.base.Optional;
 
-import net.lingala.zip4j.exception.ZipException;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -97,8 +95,7 @@ public class ExerciseSubmitter {
      */
     public String submit(String currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException,
-                    URISyntaxException {
+                    TmcCoreException, URISyntaxException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
@@ -114,8 +111,7 @@ public class ExerciseSubmitter {
      */
     public String submitPaste(String currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException,
-                    URISyntaxException {
+                    TmcCoreException, URISyntaxException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, true);
     }
@@ -131,8 +127,7 @@ public class ExerciseSubmitter {
      */
     public String submitPasteWithComment(String currentPath, String comment)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    ZipException, TmcCoreException,
-                    URISyntaxException {
+                    TmcCoreException, URISyntaxException {
         Exercise currentExercise = initExercise(currentPath);
         HashMap<String, String> params = new HashMap<>();
         params.put("message_for_paste", comment);

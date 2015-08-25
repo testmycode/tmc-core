@@ -66,24 +66,9 @@ public class ListCoursesTest {
         List<Course> courses = new ListCourses(settings, tmcApi).call();
         assertEquals("2013_ohpeJaOhja", courses.get(0).getName());
     }
-
-    /*@Test
-    public void listCoursesWillThrowExceptionIfAuthFailedOnServer() throws TmcCoreException {
-        expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(TmcServerException.class));
-        wireMock.stubFor(
-                get(WireMock.urlPathEqualTo("/courses.json"))
-                        .willReturn(WireMock.aResponse().withStatus(401)));
-
-        CoreTestSettings localSettings = new CoreTestSettings();
-        localSettings.setUsername("username");
-        localSettings.setPassword("password");
-        localSettings.setServerAddress("http://localhost:8080");
-
-        new ListCourses(localSettings, new TmcApi(localSettings)).call();
-    }*/
     
+    @Test(expected=TmcCoreException.class)
     public void listCoursesWillThrowExceptionIfAuthFailedOnServer() throws TmcCoreException {
-        expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(TmcCoreException.class));
         wireMock.stubFor(
                 get(WireMock.urlPathEqualTo("/courses.json"))
                         .willReturn(WireMock.aResponse().withStatus(401)));

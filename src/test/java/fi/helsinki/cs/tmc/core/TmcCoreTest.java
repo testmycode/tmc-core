@@ -13,6 +13,7 @@ import fi.helsinki.cs.tmc.core.commands.GetExerciseUpdates;
 import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
 import fi.helsinki.cs.tmc.core.commands.ListCourses;
 import fi.helsinki.cs.tmc.core.commands.PasteWithComment;
+import fi.helsinki.cs.tmc.core.commands.RequestCodeReview;
 import fi.helsinki.cs.tmc.core.commands.RunTests;
 import fi.helsinki.cs.tmc.core.commands.SendFeedback;
 import fi.helsinki.cs.tmc.core.commands.Submit;
@@ -200,6 +201,12 @@ public class TmcCoreTest {
     public void pasteTest() throws Exception {
         tmcCore.pasteWithComment(Paths.get("polku/jonnekin"), "");
         verify(threadPool, times(1)).submit(any(PasteWithComment.class));
+    }
+
+    @Test
+    public void requestReview() throws Exception {
+        tmcCore.requestCodeReview(Paths.get("polku/jonnekin"), "PLEASE HELP!!!");
+        verify(threadPool, times(1)).submit(any(RequestCodeReview.class));
     }
 
     @Test

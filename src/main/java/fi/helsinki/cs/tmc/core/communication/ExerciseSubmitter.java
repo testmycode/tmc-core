@@ -8,6 +8,7 @@ import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.core.zipping.RootFinder;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
 import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
 import fi.helsinki.cs.tmc.langs.io.zip.Zipper;
@@ -213,9 +214,8 @@ public class ExerciseSubmitter {
         return resultUrl;
     }
 
-    private String sendZipFile(
-            String currentPath, Exercise currentExercise, ProgressObserver observer, boolean paste)
-            throws IOException, URISyntaxException, NoLanguagePluginFoundException {
+    private String sendZipFile(String currentPath, Exercise currentExercise,
+            ProgressObserver observer, boolean paste) throws IOException, URISyntaxException, NoLanguagePluginFoundException {
         String returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
         observer.progress("zipping exercise");
         byte[] zippedExercise = langs.compressProject(Paths.get(currentPath));

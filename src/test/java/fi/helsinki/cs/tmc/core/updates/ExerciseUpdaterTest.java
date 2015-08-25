@@ -16,27 +16,20 @@ import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.communication.updates.ExerciseUpdateHandler;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.ExerciseIdentifier;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 import fi.helsinki.cs.tmc.core.testhelpers.builders.ExerciseBuilder;
 
-import com.google.gson.Gson;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.mockito.Mockito;
-
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class ExerciseUpdaterTest {
 
@@ -67,9 +60,8 @@ public class ExerciseUpdaterTest {
 
     @Test
     public void getsCorrectExercises() throws IOException, Exception {
-        Map<String, Map<String, String>> checksums = new HashMap<>();
-        checksums.put("test-course", new HashMap<String, String>());
-        checksums.get("test-course").put("old", "abcdefg");
+        ConcurrentMap<ExerciseIdentifier, String> checksums = new ConcurrentHashMap<>();
+        checksums.put(new ExerciseIdentifier("test-course", "old"), "abcdefg");
         when(cache.read()).thenReturn(checksums);
 
         TmcApi tmcApi = mockTmcApi();

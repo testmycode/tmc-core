@@ -117,7 +117,7 @@ public class TmcCoreTest {
     @Test(expected = FileNotFoundException.class)
     public void nonExistantCacheFileThrowsExceptionFromConstructor() throws Exception {
         Path path = Paths.get("src", "test", "resources", "nothere.cache");
-        new TmcCore(settings, path, threadPool);
+        new TmcCore(settings, path, null, threadPool);
     }
 
     @Test
@@ -154,7 +154,7 @@ public class TmcCoreTest {
     @Test
     public void cacheFileGivenInConstructorTest() throws Exception {
         Path path = Paths.get("src", "test", "resources", "cachefile");
-        TmcCore core = new TmcCore(settings, path, threadPool);
+        TmcCore core = new TmcCore(settings, path, null, threadPool);
         core.getNewAndUpdatedExercises(course);
         assertEquals(core.getExerciseChecksumCacheLocation(), path);
         verify(threadPool, times(1)).submit(any(GetExerciseUpdates.class));

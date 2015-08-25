@@ -2,7 +2,14 @@ package fi.helsinki.cs.tmc.core;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
-import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumFileCache;
+import fi.helsinki.cs.tmc.core.cache.Cache;
+import fi.helsinki.cs.tmc.core.cache.CourseCache;
+import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumCache;
+import fi.helsinki.cs.tmc.core.cache.filebased.FileBasedCourseCache;
+import fi.helsinki.cs.tmc.core.cache.filebased.FileBasedExerciseChecksumCache;
+import fi.helsinki.cs.tmc.core.cache.helper.CourseByNameCacheHelper;
+import fi.helsinki.cs.tmc.core.cache.inmemory.InMemoryCourseCache;
+import fi.helsinki.cs.tmc.core.cache.inmemory.InMemoryExerciseChecksumCache;
 import fi.helsinki.cs.tmc.core.commands.DownloadExercises;
 import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
 import fi.helsinki.cs.tmc.core.commands.GetCourse;
@@ -31,6 +38,7 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.cache.helper.CourseByIdCacheHelper;
 import fi.helsinki.cs.tmc.core.spyware.DiffSender;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
@@ -44,9 +52,7 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -54,45 +60,75 @@ import java.util.concurrent.Executors;
 public class TmcCore {
 
     private ListeningExecutorService threadPool;
-    private ExerciseChecksumFileCache updateCache;
+    private ExerciseChecksumCache exerciseChecksumCache;
+    private CourseCache courseCache;
     private TmcSettings settings;
+    private Cache.QueryStrategy cacheQueryStrategy;
 
     /**
      * The TmcCore that can be used as a standalone businesslogic for any tmc client application.
      * The TmcCore provides all the essential backend functionalities as public methods.
      */
     public TmcCore(TmcSettings settings) {
-        this(settings, MoreExecutors.listeningDecorator(Executors.newCachedThreadPool()));
+        this(
+                settings,
+                MoreExecutors.listeningDecorator(Executors.newCachedThreadPool()));
     }
 
     public TmcCore(TmcSettings settings, ListeningExecutorService pool) {
-        this.settings = settings;
-        this.threadPool = pool;
+        this(
+                settings,
+                pool,
+                new InMemoryExerciseChecksumCache(),
+                new InMemoryCourseCache());
     }
 
-    public TmcCore(
-            TmcSettings settings,
-            Path exerciseChecksumCacheLocation,
-            ListeningExecutorService threadPool)
+    public TmcCore(TmcSettings settings,
+                   Path exerciseChecksumCacheLocation,
+                   Path courseCacheLocation,
+                   ListeningExecutorService threadPool)
             throws FileNotFoundException {
-        this(settings, threadPool);
+        this(
+                settings,
+                threadPool,
+                new FileBasedExerciseChecksumCache(exerciseChecksumCacheLocation),
+                new FileBasedCourseCache(courseCacheLocation));
+    }
 
-        this.updateCache = new ExerciseChecksumFileCache(exerciseChecksumCacheLocation);
+    public TmcCore(TmcSettings settings,
+                   ListeningExecutorService threadPool,
+                   ExerciseChecksumCache exerciseChecksumCache,
+                   CourseCache courseCache) {
+        this.settings = settings;
+        this.threadPool = threadPool;
+        this.exerciseChecksumCache = exerciseChecksumCache;
+        this.courseCache = courseCache;
     }
 
     public void setExerciseChecksumCacheLocation(Path newCache) throws IOException {
-        if (newCache == null || Files.notExists(newCache)) {
-            throw new FileNotFoundException("Attempted to set non-existent cache file");
-        }
-        if (updateCache == null) {
-            updateCache = new ExerciseChecksumFileCache(Paths.get(newCache.toString()));
-        } else {
-            updateCache.moveCache(Paths.get(newCache.toString()));
-        }
+        //TODO
     }
 
     public Path getExerciseChecksumCacheLocation() {
-        return this.updateCache.getCacheFile();
+        //TODO
+        return null;
+    }
+
+    public void setCourseCacheLocation(Path newCache) throws IOException {
+        //TODO
+    }
+
+    public Path getCourseCacheLocation() {
+        //TODO
+        return null;
+    }
+
+    public void setCacheQueryStrategy(Cache.QueryStrategy cacheQueryStrategy) {
+        this.cacheQueryStrategy = cacheQueryStrategy;
+    }
+
+    public Cache.QueryStrategy getCacheQueryStrategy() {
+        return this.cacheQueryStrategy;
     }
 
     /**
@@ -108,36 +144,12 @@ public class TmcCore {
     }
 
     /**
-     * Fetch one course from tmc-server.
-     *
-     * @param url defines the url to course
-     *
-     * @deprecated Use {@link #getCourse(String)} instead.
-     */
-    @Deprecated
-    public ListenableFuture<Course> getCourse(URI url) throws TmcCoreException {
-        checkParameters(settings.getUsername(), settings.getPassword());
-        GetCourse getter = new GetCourse(settings, url);
-        return threadPool.submit(getter);
-    }
-
-    /**
      * Returns course instance with given name.
      */
     public ListenableFuture<Course> getCourse(String courseName) throws TmcCoreException {
         checkParameters(settings.getUsername(), settings.getPassword());
-        GetCourse getC = new GetCourse(settings, courseName);
+        GetCourse getC = new GetCourse(courseName, new CourseByNameCacheHelper(cacheQueryStrategy, courseCache, new TmcApi(settings)));
         return threadPool.submit(getC);
-    }
-
-    /**
-     * Returns course instance with given name.
-     *
-     * @deprecated Use {@link #getCourse(String)} instead.
-     */
-    @Deprecated
-    public ListenableFuture<Course> getCourseByName(String courseName) throws TmcCoreException {
-        return getCourse(courseName);
     }
 
     /**
@@ -152,9 +164,10 @@ public class TmcCore {
      * @throws TmcCoreException if something in the given input was wrong
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
-            Path path, int courseId, ProgressObserver observer) throws TmcCoreException {
-        DownloadExercises downloadCommand =
-                new DownloadExercises(settings, path.toString(), courseId, observer, updateCache);
+            Path path, int courseId, ProgressObserver observer)
+            throws TmcCoreException {
+        DownloadExercises downloadCommand
+                = new DownloadExercises(settings, path, courseId, observer, exerciseChecksumCache,  new CourseByIdCacheHelper(cacheQueryStrategy, courseCache, new TmcApi(settings)));
         return threadPool.submit(downloadCommand);
     }
 
@@ -172,10 +185,10 @@ public class TmcCore {
     /**
      * Downloads exercises.
      */
-    public ListenableFuture<List<Exercise>> downloadExercises(
-            List<Exercise> exercises, ProgressObserver observer) throws TmcCoreException {
-        DownloadExercises downloadCommand =
-                new DownloadExercises(settings, exercises, observer, updateCache);
+    public ListenableFuture<List<Exercise>> downloadExercises(List<Exercise> exercises, ProgressObserver observer)
+            throws TmcCoreException {
+        DownloadExercises downloadCommand
+                = new DownloadExercises(settings, exercises, observer, exerciseChecksumCache, new CourseByIdCacheHelper(cacheQueryStrategy, courseCache, new TmcApi(settings)));
         return threadPool.submit(downloadCommand);
     }
 
@@ -193,7 +206,7 @@ public class TmcCore {
      * @throws TmcCoreException if something went wrong
      */
     public ListenableFuture<List<Course>> listCourses() throws TmcCoreException {
-        ListCourses listCommand = new ListCourses(settings);
+        ListCourses listCommand = new ListCourses(settings, courseCache, cacheQueryStrategy);
         return threadPool.submit(listCommand);
     }
 
@@ -299,7 +312,7 @@ public class TmcCore {
     public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course)
             throws TmcCoreException {
         ExerciseUpdateHandler updater =
-                new ExerciseUpdateHandler(updateCache, new TmcApi(settings));
+                new ExerciseUpdateHandler(exerciseChecksumCache, new TmcApi(settings));
         GetExerciseUpdates command = new GetExerciseUpdates(course, updater);
         return threadPool.submit(command);
     }

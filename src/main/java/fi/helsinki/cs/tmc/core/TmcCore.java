@@ -4,6 +4,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumFileCache;
 import fi.helsinki.cs.tmc.core.commands.DownloadExercises;
+import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
 import fi.helsinki.cs.tmc.core.commands.GetCourse;
 import fi.helsinki.cs.tmc.core.commands.GetExerciseUpdates;
 import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
@@ -40,11 +41,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -72,8 +71,8 @@ public class TmcCore {
     }
 
     public TmcCore(TmcSettings settings,
-                   Path exerciseChecksumCacheLocation,
-                   ListeningExecutorService threadPool)
+            Path exerciseChecksumCacheLocation,
+            ListeningExecutorService threadPool)
             throws FileNotFoundException {
         this(settings, threadPool);
 
@@ -136,7 +135,7 @@ public class TmcCore {
      * @param path where it downloads the exercises
      * @param courseId ID of course to download
      * @param observer ProgressObserver will be informed about the progress of downloading
-     *     exercises. Observer can print progress status to end-user.
+     * exercises. Observer can print progress status to end-user.
      * @throws TmcCoreException if something in the given input was wrong
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
@@ -169,6 +168,11 @@ public class TmcCore {
         return threadPool.submit(downloadCommand);
     }
 
+    public ListenableFuture<Boolean> downloadModelSolution(Exercise exercise) throws TmcCoreException {
+        DownloadModelSolution downloadCommand = new DownloadModelSolution(settings, exercise);
+        return threadPool.submit(downloadCommand);
+    }
+
     /**
      * Gives a list of all the courses on the current server, to which the current user has access.
      * Doesn't require login.
@@ -188,15 +192,15 @@ public class TmcCore {
      * @param path inside any exercise directory
      * @return SubmissionResult object containing details of the tests run on server
      * @throws TmcCoreException if there was no course in the given path, no exercise in the given
-     *         path, or not logged in
+     * path, or not logged in
      */
     public ListenableFuture<SubmissionResult> submit(Path path) throws TmcCoreException {
         UrlCommunicator communicator = new UrlCommunicator(settings);
         TmcApi tmcApi = new TmcApi(communicator, settings);
 
         Submit submit = new Submit(
-                        settings,
-                        new ExerciseSubmitter(
+                settings,
+                new ExerciseSubmitter(
                         new ProjectRootFinder(tmcApi),
                         new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
                         communicator,
@@ -215,7 +219,7 @@ public class TmcCore {
      * @param path inside any exercise directory
      * @return RunResult object containing details of the tests run
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     *     given path
+     * given path
      */
     public ListenableFuture<RunResult> test(Path path) throws TmcCoreException {
         RunTests testCommand = new RunTests(settings, path.toString());
@@ -229,7 +233,7 @@ public class TmcCore {
      * @param path inside any exercise directory
      * @return ValidationResult object containing details of the checkstyle validation
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     *     given path
+     * given path
      */
     public ListenableFuture<ValidationResult> runCheckstyle(Path path) throws TmcCoreException {
 
@@ -258,12 +262,12 @@ public class TmcCore {
      * @param course the course whose exercises are checked
      * @return a list of exercises that are new or have updates
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     *     given path
+     * given path
      */
     public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course)
             throws TmcCoreException {
-        ExerciseUpdateHandler updater =
-                new ExerciseUpdateHandler(updateCache, new TmcApi(settings));
+        ExerciseUpdateHandler updater
+                = new ExerciseUpdateHandler(updateCache, new TmcApi(settings));
         GetExerciseUpdates command = new GetExerciseUpdates(course, updater);
         return threadPool.submit(command);
     }
@@ -274,7 +278,7 @@ public class TmcCore {
      * @param answers map of question_id -> answer
      * @param url url that the answers will be sent to
      * @return a HttpResult of the servers reply. It should contain "{status:ok}" if everything goes
-     *     well
+     * well
      */
     public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, URI url)
             throws TmcCoreException {
@@ -290,7 +294,7 @@ public class TmcCore {
      * @param comment comment given by user
      * @return URI object containing location of the paste
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     *     given path
+     * given path
      */
     public ListenableFuture<URI> pasteWithComment(Path path, String comment)
             throws TmcCoreException {
@@ -308,8 +312,8 @@ public class TmcCore {
      */
     public ListenableFuture<List<HttpResult>> sendSpywareDiffs(byte[] spywareDiffs)
             throws TmcCoreException {
-        SendSpywareDiffs spyware =
-                new SendSpywareDiffs(settings, new DiffSender(settings), spywareDiffs);
+        SendSpywareDiffs spyware
+                = new SendSpywareDiffs(settings, new DiffSender(settings), spywareDiffs);
         return threadPool.submit(spyware);
     }
 

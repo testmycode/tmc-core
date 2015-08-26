@@ -9,9 +9,11 @@ import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 
 import java.io.IOException;
 import java.util.List;
+import org.apache.log4j.Logger;
 
 public class SubmissionPoller {
 
@@ -25,8 +27,8 @@ public class SubmissionPoller {
      */
     private final int pollInterval = 1000;
 
-    private final String timeOutmessage =
-            "Something went wrong. " + "Please check your internet connection.";
+    private final String timeOutmessage
+            = "Something went wrong. " + "Please check your internet connection.";
 
     private SubmissionResult latestResult;
     private TmcApi tmcApi;
@@ -49,8 +51,7 @@ public class SubmissionPoller {
     }
 
     /**
-     * Returns a ready SubmissionResult with all fields complete after
-     * processing.
+     * Returns a ready SubmissionResult with all fields complete after processing.
      *
      * @param url url to make request to
      * @return SubmissionResult containing details of submission. Null if timed out.
@@ -70,6 +71,27 @@ public class SubmissionPoller {
     }
 
     /**
+     * Returns a ready SubmissionResult with all fields complete after processing.
+     *
+     * @param url url to make request to
+     * @param observer {@link ProgressObserver} that is informed of the polling status
+     * @return SubmissionResult containing details of submission. Null if timed out.
+     * @throws InterruptedException if thread failed to sleep
+     */
+    private Optional<SubmissionResult> pollSubmissionUrl(String url, ProgressObserver observer)
+            throws InterruptedException, IOException {
+        for (int i = 0; i < timeOut; i++) {
+            String json = tmcApi.getRawTextFrom(url);
+            if (!isProcessing(json, observer)) {
+                SubmissionResult result = submissionParser.parseFromJson(json);
+                return Optional.of(result);
+            }
+            Thread.sleep(pollInterval);
+        }
+        return Optional.absent();
+    }
+
+    /**
      * Returns feedback questions from the latest submission result.
      */
     public List<FeedbackQuestion> getFeedbackQuestions() {
@@ -77,14 +99,30 @@ public class SubmissionPoller {
     }
 
     /**
-     * Get a new submissionResult. This will update the classes state so that calls to methods
-     * like resultSummary will be based on the submissionResult fetched by this method.
+     * Get a new submissionResult. This will update the classes state so that calls to methods like
+     * resultSummary will be based on the submissionResult fetched by this method.
      *
      * @param url the submission url
      */
     public SubmissionResult getSubmissionResult(String url)
             throws InterruptedException, TmcCoreException, IOException {
         Optional<SubmissionResult> result = pollSubmissionUrl(url);
+        if (!result.isPresent()) {
+            throw new TmcCoreException("Failed to receive response to submit.");
+        }
+        return result.get();
+    }
+
+    /**
+     * Get a new submissionResult. This will update the classes state so that calls to methods like
+     * resultSummary will be based on the submissionResult fetched by this method.
+     *
+     * @param url the submission url
+     * @param observer {@link ProgressObserver} that is informed of the polling status
+     */
+    public SubmissionResult getSubmissionResult(String url, ProgressObserver observer)
+            throws InterruptedException, TmcCoreException, IOException {
+        Optional<SubmissionResult> result = pollSubmissionUrl(url, observer);
         if (!result.isPresent()) {
             throw new TmcCoreException("Failed to receive response to submit.");
         }
@@ -99,5 +137,34 @@ public class SubmissionPoller {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         String status = jsonObject.get("status").getAsString();
         return status.equals("processing");
+    }
+
+    private boolean isProcessing(String jsonResult, ProgressObserver observer) {
+        if (jsonResult == null || jsonResult.trim().isEmpty()) {
+            return false;
+        }
+        JsonElement jsonElement = new JsonParser().parse(jsonResult);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+        String status = jsonObject.get("status").getAsString();
+        if (status.equals("processing")) {
+            String progressInfo = getProgressInfoMessage(jsonObject);
+            observer.progress(progressInfo);
+            return true;
+        }
+        return false;
+    }
+
+    private String getProgressInfoMessage(JsonObject jsonObject) {
+        String message = "waiting for server.";
+        try {
+            int yourPlace = jsonObject.get("").getAsInt() + 1;
+            int queueSize = jsonObject.get("").getAsInt();
+            message += " " + yourPlace + "/" + queueSize;
+        }
+        catch (ClassCastException | NullPointerException ex) {
+            System.err.println(ex);
+        }
+        return message;
     }
 }

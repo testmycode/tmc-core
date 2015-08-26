@@ -209,19 +209,30 @@ public class TmcCore {
      * path, or not logged in
      */
     public ListenableFuture<SubmissionResult> submit(Path path) throws TmcCoreException {
+        return submit(path, null);
+    }
+
+    /**
+     * Submits an exercise in the given path to the TMC-server. Looks for a build.xml or equivalent
+     * file upwards in the path to determine exercise folder. Requires login.
+     *
+     * @param path inside any exercise directory
+     * @param observer a {@link ProgressObserver} which will be informed of the submits progress
+     * @return SubmissionResult object containing details of the tests run on server
+     * @throws TmcCoreException if there was no course in the given path, no exercise in the given
+     * path, or not logged in
+     */
+    public ListenableFuture<SubmissionResult> submit(Path path, ProgressObserver observer) throws TmcCoreException {
         UrlCommunicator communicator = new UrlCommunicator(settings);
         TmcApi tmcApi = new TmcApi(communicator, settings);
 
+        ExerciseSubmitter exerciseSubmitter = new ExerciseSubmitter(
+                new ProjectRootFinder(tmcApi),
+                new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
+                communicator, tmcApi, settings);
+
         Submit submit = new Submit(
-                settings,
-                new ExerciseSubmitter(
-                        new ProjectRootFinder(tmcApi),
-                        new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
-                        communicator,
-                        tmcApi,
-                        settings),
-                new SubmissionPoller(tmcApi),
-                path.toString());
+                settings, exerciseSubmitter, new SubmissionPoller(tmcApi), path.toString(), observer);
 
         return threadPool.submit(submit);
     }

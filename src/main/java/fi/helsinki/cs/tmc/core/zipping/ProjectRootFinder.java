@@ -43,10 +43,6 @@ public class ProjectRootFinder implements RootFinder {
 
     private Optional<Path> search(Path path) {
         while (path.getParent() != null) {
-            if (path.endsWith("tmc-core")) {
-                path = path.getParent();
-                continue;
-            }
             if (tmcLangs.isExerciseRootDirectory(path)) {
                 return Optional.of(path);
             }

@@ -157,6 +157,13 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>testmycode.net</id>
+            <url>http://maven.testmycode.net/nexus/content/repositories/releases/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

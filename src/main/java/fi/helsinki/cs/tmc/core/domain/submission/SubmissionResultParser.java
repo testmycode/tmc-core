@@ -1,7 +1,7 @@
 package fi.helsinki.cs.tmc.core.domain.submission;
 
 import fi.helsinki.cs.tmc.langs.java.testrunner.StackTraceSerializer;
-import fi.helsinki.cs.tmc.stylerunner.validation.CheckstyleResult;
+import fi.helsinki.cs.tmc.langs.abstraction.CheckstyleResult;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

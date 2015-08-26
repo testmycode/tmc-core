@@ -36,7 +36,9 @@ public class PushEventListener {
     }
     
     private static PushEventListener instance;
-    public static void start() {
+    private TmcSettings settings;
+    
+    public static void start(TmcSettings settings) {
         if (instance == null) {
             instance = new PushEventListener();
         } else {
@@ -44,7 +46,6 @@ public class PushEventListener {
         }
     }
     
-    private TmcSettings settings;
     //private CourseDb courseDb;
     private TmcEventBus eventBus;
     private BayeuxClient client;

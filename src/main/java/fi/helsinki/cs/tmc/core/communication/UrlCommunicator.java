@@ -27,6 +27,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,6 +41,8 @@ import java.util.List;
 import java.util.Map;
 
 public class UrlCommunicator {
+
+    private static final Logger log = LoggerFactory.getLogger(UrlCommunicator.class);
 
     private final String submissionKey = "submission[file]";
 
@@ -200,7 +205,7 @@ public class UrlCommunicator {
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
             return true;
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            log.error("Download error: {}", e);
             return false;
         }
     }

@@ -1,5 +1,8 @@
 package fi.helsinki.cs.tmc.core.testhelpers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStream;
@@ -9,6 +12,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 public class Helper {
+
+    private static final Logger log = LoggerFactory.getLogger(Helper.class);
 
     private ProcessBuilder createProcessBuilder(String command, String cliPath) {
         if (cliPath == null) {
@@ -25,7 +30,7 @@ public class Helper {
                 pr.waitFor();
             }
         } catch (IOException | InterruptedException e) {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage());
         }
         return pr;
     }
@@ -81,7 +86,7 @@ public class Helper {
             writer.write(input);
             writer.newLine();
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+            log.error(e.getMessage());
         } finally {
             writer.flush();
             writer.close(); // this could cause IOException BEWARE

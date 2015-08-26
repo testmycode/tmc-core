@@ -2,6 +2,9 @@ package fi.helsinki.cs.tmc.core.domain;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -9,6 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Exercise implements Serializable {
+
+    private static final Logger log = LoggerFactory.getLogger(Exercise.class);
 
     private int id; // = 284;
     private String name; //": "viikko1-Viikko1_000.Hiekkalaatikko",
@@ -270,8 +275,8 @@ public class Exercise implements Serializable {
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
                 Date deadlineDate = format.parse(deadline);
                 return deadlineDate.getTime() < time.getTime();
-            } catch (ParseException ex) {
-                System.err.println(ex.getMessage());
+            } catch (ParseException e) {
+                log.error("Could not parse date: {}", e);
                 return false;
             }
         } else {

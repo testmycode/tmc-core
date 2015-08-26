@@ -1,5 +1,8 @@
 package fi.helsinki.cs.tmc.core.testhelpers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
@@ -7,6 +10,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class TestClient {
+
+    private static final Logger log = LoggerFactory.getLogger(TestClient.class);
 
     private final int portnumber;
 
@@ -76,8 +81,8 @@ public class TestClient {
                 return input.readLine();
             }
             return reply;
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
+        } catch (IOException e) {
+            log.error(e.toString());
             return "fail";
         }
     }

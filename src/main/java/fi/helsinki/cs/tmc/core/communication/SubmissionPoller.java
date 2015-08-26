@@ -158,13 +158,14 @@ public class SubmissionPoller {
     private String getProgressInfoMessage(JsonObject jsonObject) {
         String message = "waiting for server.";
         try {
-            int yourPlace = jsonObject.get("").getAsInt() + 1;
-            int queueSize = jsonObject.get("").getAsInt();
-            message += " " + yourPlace + "/" + queueSize;
+            int yourPlace = jsonObject.get("submissions_before_this").getAsInt() + 1;
+            int queueSize = jsonObject.get("total_unprocessed").getAsInt();
+            message += " Place in queue: " + yourPlace + "/" + queueSize;
         }
         catch (ClassCastException | NullPointerException ex) {
             System.err.println(ex);
         }
+        System.out.println(message);
         return message;
     }
 }

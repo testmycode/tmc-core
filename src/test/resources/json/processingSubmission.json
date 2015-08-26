@@ -1,0 +1,26 @@
+{
+    "api_version": 7,
+    "all_tests_passed": false,
+    "user_id": 52,
+    "course": "2013_ohpeJaOhja",
+    "exercise_name": "viikko1-Viikko1_002.HeiMaailma",
+    "status": "processing",
+    "points": [],
+    "validations":
+            {
+                "strategy": "DISABLED",
+                "validationErrors": {}
+            },
+    "valgrind": "",
+    "solution_url": "https://127.0.0.1:8080/exercises/286/solution",
+    "submitted_at": "2015-08-26T14:09:51.542+03:00",
+    "processing_time": null,
+    "reviewed": false,
+    "requests_review": false,
+    "paste_url": null,
+    "message_for_paste": null,
+    "missing_review_points": [],
+    "submissions_before_this":0,
+    "total_unprocessed":1
+
+}

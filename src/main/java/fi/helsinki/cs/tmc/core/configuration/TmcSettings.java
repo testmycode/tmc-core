@@ -32,4 +32,10 @@ public interface TmcSettings {
      * will be placed as follows: maindirectory/courseName/exerciseName
      */
     String getTmcMainDirectory();
+
+    public static class SavedEvent {
+
+        public SavedEvent() {
+        }
+    }
 }

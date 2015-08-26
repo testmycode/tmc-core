@@ -7,7 +7,7 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.listeners.TmcEvent;
 import fi.helsinki.cs.tmc.core.listeners.TmcEventBus;
 import fi.helsinki.cs.tmc.core.domain.ExerciseKey;
-import fi.helsinki.cs.tmc.model.ConfigFile;
+import fi.helsinki.cs.tmc.core.configuration.ConfigFile;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;

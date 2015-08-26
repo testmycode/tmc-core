@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core.listeners;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.CourseDb;
 import fi.helsinki.cs.tmc.core.listeners.TmcEvent;
 import fi.helsinki.cs.tmc.core.listeners.TmcEventBus;
 import fi.helsinki.cs.tmc.core.listeners.TmcEventListener;

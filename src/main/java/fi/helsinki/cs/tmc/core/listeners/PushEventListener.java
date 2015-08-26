@@ -38,9 +38,9 @@ public class PushEventListener {
     private static PushEventListener instance;
     private TmcSettings settings;
     
-    public static void start(TmcSettings settings) {
+    public static void start(TmcSettings settings, Course currentCourse) {
         if (instance == null) {
-            instance = new PushEventListener();
+            instance = new PushEventListener(settings, currentCourse);
         } else {
             log.warning("PushEventListener.start() was called more than once");
         }
@@ -50,22 +50,24 @@ public class PushEventListener {
     private TmcEventBus eventBus;
     private BayeuxClient client;
     private boolean shouldReconnect;
+    private Course currentCourse;
 
-    PushEventListener() {
-        //this.settings = NbTmcSettings.getDefault();
+    PushEventListener(TmcSettings settings, Course currentCourse) {
+        this.settings = settings;
+        this.currentCourse = currentCourse;
         //this.courseDb = CourseDb.getInstance();
         this.eventBus = TmcEventBus.getDefault();
         this.shouldReconnect = false;
         
-        /*this.eventBus.subscribeDependent(new TmcEventListener() {
-            public void receive(NbTmcSettings.SavedEvent e) {
+        this.eventBus.subscribeDependent(new TmcEventListener() {
+            public void receive(TmcSettings.SavedEvent e) {
                 reconnectSoon();
             }
             
             public void receive(CourseDb.ChangedEvent e) {
                 reconnectSoon();
             }
-        }, this);*/
+        }, this);
         
         java.util.Timer timer = new java.util.Timer("PushEventListener reconnect", true);
         timer.schedule(new TimerTask() {
@@ -103,7 +105,8 @@ public class PushEventListener {
     }
     
     private synchronized void initClientIfPossible() {
-        Course course = courseDb.getCurrentCourse();
+        //Course course = courseDb.getCurrentCourse();
+        Course course = currentCourse;
         if (course == null) {
             log.fine("Not connecting to comet since no course is selected");
             return;

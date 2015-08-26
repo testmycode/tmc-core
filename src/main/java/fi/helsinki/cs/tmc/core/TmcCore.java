@@ -110,7 +110,10 @@ public class TmcCore {
      * Fetch one course from tmc-server.
      *
      * @param url defines the url to course
+     *
+     * @deprecated Use {@link #getCourse(String)} instead.
      */
+    @Deprecated
     public ListenableFuture<Course> getCourse(URI url) throws TmcCoreException {
         checkParameters(settings.getUsername(), settings.getPassword());
         GetCourse getter = new GetCourse(settings, url);
@@ -120,11 +123,21 @@ public class TmcCore {
     /**
      * Returns course instance with given name.
      */
-    public ListenableFuture<Course> getCourseByName(String courseName)
-            throws TmcCoreException {
+     public ListenableFuture<Course> getCourse(String courseName) throws TmcCoreException {
         checkParameters(settings.getUsername(), settings.getPassword());
         GetCourse getC = new GetCourse(settings, courseName);
         return threadPool.submit(getC);
+    }
+
+    /**
+     * Returns course instance with given name.
+     *
+     * @deprecated Use {@link #getCourse(String)} instead.
+     */
+    @Deprecated
+    public ListenableFuture<Course> getCourseByName(String courseName)
+    throws TmcCoreException {
+        return getCourse(courseName);
     }
 
     /**

@@ -46,7 +46,7 @@ public class DownloadModelSolutionTest {
     @Test
     public void testCall() throws Exception {
         dl.call();
-        verify(downloader).createCourseFolder(eq(exercise.getName()), eq("tira"));
+        verify(downloader).createCourseFolder(eq("home"), eq("tira"));
         verify(downloader).downloadModelSolution(eq(exercise), eq(Paths.get("path")));
     }
 
@@ -54,7 +54,7 @@ public class DownloadModelSolutionTest {
     public void testFallbackToCourseInSettings() throws Exception {
         exercise.setCourseName("");
         dl.call();
-        verify(downloader).createCourseFolder(eq(exercise.getName()), eq("ohpe"));
+        verify(downloader).createCourseFolder(eq("home"), eq("ohpe"));
         verify(downloader).downloadModelSolution(eq(exercise), eq(Paths.get("path")));
     }
 

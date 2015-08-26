@@ -2,7 +2,6 @@ package fi.helsinki.cs.tmc.core;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import static org.mockito.Matchers.any;
@@ -23,6 +22,8 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.FileWriterHelper;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
+import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 
 import org.apache.commons.io.FileUtils;
 
@@ -33,7 +34,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
@@ -95,6 +95,12 @@ public class TmcCoreTest {
     }
 
     @Test
+    public void downloadModelTest() throws TmcCoreException {
+        tmcCore.downloadModelSolution(new Exercise());
+        verify(threadPool, times(1)).submit(any(DownloadModelSolution.class));
+    }
+
+    @Test
     public void listCourses() throws Exception {
         tmcCore.listCourses();
         verify(threadPool, times(1)).submit(any(ListCourses.class));
@@ -126,7 +132,8 @@ public class TmcCoreTest {
         // using catch to verify command has not been sent
         try {
             tmcCore.getNewAndUpdatedExercises(course);
-        } catch (TmcCoreException ex) {
+        }
+        catch (TmcCoreException ex) {
             verify(threadPool, times(0)).submit(any(GetExerciseUpdates.class));
             return;
         }
@@ -200,16 +207,16 @@ public class TmcCoreTest {
         tmcCore.setExerciseChecksumCacheLocation(
                 Paths.get("src", "test", "resources", "cachefile"));
         tmcCore.downloadExercises(Paths.get("asdf"), -1, null);
-        final ArgumentCaptor<DownloadExercises> argument =
-                ArgumentCaptor.forClass(DownloadExercises.class);
+        final ArgumentCaptor<DownloadExercises> argument
+                = ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
     }
 
     @Test
     public void downloadExercisesDoesNotUseCacheIfNotSet() throws Exception {
         tmcCore.downloadExercises(Paths.get("asdf"), -1, null);
-        final ArgumentCaptor<DownloadExercises> argument =
-                ArgumentCaptor.forClass(DownloadExercises.class);
+        final ArgumentCaptor<DownloadExercises> argument
+                = ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
     }
 }

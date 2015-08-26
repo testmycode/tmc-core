@@ -37,10 +37,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.eq;
 
 public class ExerciseDownloaderTest {
 
-    @Rule public WireMockRule wireMockRule = new WireMockRule();
+    @Rule
+    public WireMockRule wireMockRule = new WireMockRule();
 
     private ArrayList<Exercise> exercises;
     private ExerciseDownloader exDl;
@@ -49,6 +52,7 @@ public class ExerciseDownloaderTest {
     private String testZipPath;
     private String contentFilePath;
     private String zipDestination;
+    private Exercise modelSolutionExample;
 
     /**
      * Creates required stubs and example data for downloader.
@@ -63,6 +67,9 @@ public class ExerciseDownloaderTest {
         testZipPath = "testzip.zip";
         contentFilePath = "testfile.txt";
         zipDestination = Paths.get("src", "test", "resources", "__files").toString();
+
+        modelSolutionExample = new Exercise();
+        modelSolutionExample.setSolutionDownloadUrl("http://127.0.0.1:8080/model");
 
         Exercise e1 = new Exercise();
         e1.setZipUrl("http://127.0.0.1:8080/ex1.zip");
@@ -81,44 +88,52 @@ public class ExerciseDownloaderTest {
 
         stubFor(
                 get(urlEqualTo("/ex1.zip"))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "text/xml")
-                                        .withBodyFile(testZipPath)));
+                .willReturn(
+                        aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/xml")
+                        .withBodyFile(testZipPath)));
+
+        stubFor(
+                get(urlEqualTo("/ex1.zip"))
+                .willReturn(
+                        aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/xml")
+                        .withBodyFile(testZipPath)));
 
         wireMockRule.stubFor(
                 get(urlEqualTo("/ex2.zip"))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "text/xml")
-                                        .withBody("<response>Exercise 2</response>")));
+                .willReturn(
+                        aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/xml")
+                        .withBody("<response>Exercise 2</response>")));
 
         wireMockRule.stubFor(
                 get(urlEqualTo("/ex3.zip"))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "text/xml")
-                                        .withBody("<response>Exercise 3</response>")));
+                .willReturn(
+                        aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/xml")
+                        .withBody("<response>Exercise 3</response>")));
 
-        String response =
-                "{\"api_version\":7,\"course\":{\"id\":21,\"name\":\"k2015-tira\","
-                        + "\"details_url\":\"https://tmc.mooc.fi/staging/courses/21.json\""
-                        + ",\"unlock_url\":\"https://tmc.mooc.fi/staging/courses/21/unlock"
-                        + ".json\",\"reviews_url\":\"https://tmc.mooc.fi/staging/courses"
-                        + "/21/reviews"
-                        + ".json\",\"comet_url\":\"https://tmc.mooc.fi:8443/"
-                        + "comet\",\"spyware_urls\":[\"http://staging.spyware."
-                        + "testmycode.net/\"],\"unlockables\":[],\"exercises\":[]}}";
+        String response
+                = "{\"api_version\":7,\"course\":{\"id\":21,\"name\":\"k2015-tira\","
+                + "\"details_url\":\"https://tmc.mooc.fi/staging/courses/21.json\""
+                + ",\"unlock_url\":\"https://tmc.mooc.fi/staging/courses/21/unlock"
+                + ".json\",\"reviews_url\":\"https://tmc.mooc.fi/staging/courses"
+                + "/21/reviews"
+                + ".json\",\"comet_url\":\"https://tmc.mooc.fi:8443/"
+                + "comet\",\"spyware_urls\":[\"http://staging.spyware."
+                + "testmycode.net/\"],\"unlockables\":[],\"exercises\":[]}}";
         stubFor(
                 get(urlEqualTo("/emptyCourse.json"))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "application/json")
-                                        .withBody(response)));
+                .willReturn(
+                        aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "application/json")
+                        .withBody(response)));
 
         settings.setUsername("pihla");
         settings.setPassword("juuh");
@@ -142,11 +157,11 @@ public class ExerciseDownloaderTest {
 
         wireMockRule.verify(
                 getRequestedFor(urlEqualTo("/ex1.zip"))
-                        .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
+                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
 
         wireMockRule.verify(
                 getRequestedFor(urlEqualTo("/ex2.zip"))
-                        .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
+                .withHeader("Authorization", equalTo("Basic cGlobGE6anV1aA==")));
     }
 
     @Test
@@ -162,8 +177,8 @@ public class ExerciseDownloaderTest {
     public void downloadedExercisesHasContent() throws IOException {
         exDl.downloadFiles(exercises, zipDestination);
 
-        String fileContent =
-                FileUtils.readFileToString(
+        String fileContent
+                = FileUtils.readFileToString(
                         Paths.get("src", "test", "resources", "__files", "testfile.txt").toFile());
 
         assertEquals(this.testFileContent, fileContent);
@@ -184,11 +199,21 @@ public class ExerciseDownloaderTest {
     public void downloadsCorrectAmount() throws IOException {
         TaskExecutor executor = Mockito.mock(TaskExecutor.class);
         Mockito.doNothing().when(executor).extractProject(any(Path.class), any(Path.class));
-        exDl =
-                new ExerciseDownloader(
-                        new UrlCommunicator(settings), new TmcApi(settings), executor);
+        exDl = new ExerciseDownloader(
+                new UrlCommunicator(settings), new TmcApi(settings), executor);
         Optional<List<Exercise>> optionalList = exDl.downloadFiles(exercises, zipDestination);
         List<Exercise> list = optionalList.or(new ArrayList<Exercise>());
         assertEquals(3, list.size());
+    }
+
+    @Test
+    public void downloadsModelSolution() throws IOException {
+        TaskExecutor executor = Mockito.mock(TaskExecutor.class);
+        Mockito.doNothing().when(executor).extractProject(any(Path.class), any(Path.class), anyBoolean());
+        exDl = new ExerciseDownloader(
+                new UrlCommunicator(settings), new TmcApi(settings), executor);
+        Path p = Paths.get("not", "really", "a", "path");
+        exDl.downloadModelSolution(modelSolutionExample, p);
+        verify(executor).extractProject(any(Path.class), eq(p), eq(true));
     }
 }

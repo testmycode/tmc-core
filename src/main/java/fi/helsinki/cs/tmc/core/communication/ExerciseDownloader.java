@@ -42,7 +42,7 @@ public class ExerciseDownloader {
         this(urlCommunicator, tmcApi, new TaskExecutorImpl());
     }
 
-    /**s
+    /**
      * Download exercises by course url.
      *
      * @param courseUrl course url
@@ -123,11 +123,29 @@ public class ExerciseDownloader {
         downloadExerciseZip(exercise.getZipUrl(), filePath.toString());
         try {
             taskExecutor.extractProject(filePath, Paths.get(path));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             System.err.println(e.getMessage());
             return false;
-        } finally {
+        }
+        finally {
             deleteZip(filePath);
+        }
+        return true;
+    }
+
+    public boolean downloadModelSolution(Exercise exercise, Path targetPath) {
+        Path zipPath = Folders.tempFolder().resolve(exercise.getName() + "-solution.zip");
+        downloadExerciseZip(exercise.getSolutionDownloadUrl(), zipPath.toString());
+        try {
+            taskExecutor.extractProject(zipPath, targetPath, true);
+        }
+        catch (IOException ex) {
+            System.err.println(ex.getMessage());
+            return false;
+        }
+        finally {
+            deleteZip(zipPath);
         }
         return true;
     }
@@ -140,7 +158,8 @@ public class ExerciseDownloader {
     private void deleteZip(Path filePath) {
         try {
             Files.delete(filePath);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }

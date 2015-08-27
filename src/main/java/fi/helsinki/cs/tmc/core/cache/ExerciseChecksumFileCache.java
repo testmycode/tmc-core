@@ -1,11 +1,13 @@
 package fi.helsinki.cs.tmc.core.cache;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
-import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ExerciseChecksumFileCache implements ExerciseChecksumCache {
+
+    private static final Logger log = LoggerFactory.getLogger(ExerciseChecksumFileCache.class);
 
     private static Type TYPE_TOKEN = new TypeToken<Map<String, Map<String, String>>>() {}.getType();
 
@@ -92,7 +96,7 @@ public class ExerciseChecksumFileCache implements ExerciseChecksumCache {
             try {
                 checksums = parser.fromJson(oldCacheData, TYPE_TOKEN);
             } catch (JsonSyntaxException ex) {
-                System.err.println("WARNING: corrupt cache file, ignoring and overwriting");
+                log.warn("WARNING: corrupt cache file, ignoring and overwriting");
                 checksums = new HashMap<>();
             }
         }

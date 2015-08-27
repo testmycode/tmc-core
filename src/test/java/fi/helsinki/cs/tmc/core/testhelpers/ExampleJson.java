@@ -2,11 +2,15 @@ package fi.helsinki.cs.tmc.core.testhelpers;
 
 import org.apache.commons.io.FileUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 
 public class ExampleJson {
 
+    private static final Logger log = LoggerFactory.getLogger(ExampleJson.class);
     private static final String jsonFolder = "src/test/resources/json/";
 
     public static String courseExample = courseExample();
@@ -98,8 +102,8 @@ public class ExampleJson {
     private static String readFile(final String path) {
         try {
             return FileUtils.readFileToString(new File(jsonFolder + path));
-        } catch (IOException ex) {
-            System.err.println(ex.getMessage());
+        } catch (IOException e) {
+            log.error("Could not read file. {}", e);
             return "";
         }
     }

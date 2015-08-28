@@ -30,6 +30,7 @@ public class ExampleJson {
     public static String valgrindFailed = valgrindFailed();
     public static String expiredCourseExample = expiredCourseExample();
     public static String sentFeedbackExample = sentFeedbackExample();
+    public static String processingSubmission = processing();
 
     private static String sentFeedbackExample() {
         return readFile("sentFeedbackExample.json");
@@ -97,6 +98,10 @@ public class ExampleJson {
 
     private static String valgrindFailed() {
         return readFile("valgrindFailed.json");
+    }
+
+    private static String processing() {
+        return readFile("processingSubmission.json");
     }
 
     private static String readFile(final String path) {

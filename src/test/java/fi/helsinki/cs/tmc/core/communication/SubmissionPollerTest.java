@@ -4,20 +4,28 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult.Status;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
+import java.io.IOException;
 
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 
 import org.mockito.Mockito;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class SubmissionPollerTest {
 
     private SubmissionPoller submissionPoller;
-    private String url =
-            "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7&client=tmc_cli&client_version=1";
+    private String url
+            = "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7&client=tmc_cli&client_version=1";
     private CoreTestSettings settings;
     private TmcApi tmcApi;
 
@@ -48,5 +56,28 @@ public class SubmissionPollerTest {
         assertFalse(output == null);
         assertEquals("2014-mooc-no-deadline", output.getCourse());
         assertEquals(Status.FAIL, output.getStatus());
+    }
+
+    @Test
+    public void testProgressMessages() throws Exception {
+        mockPolling();
+        ProgressObserver observer = mock(ProgressObserver.class);
+        submissionPoller.getSubmissionResult(url, observer);
+
+        verify(observer).progress(eq("waiting for server. Place in queue: 1/1"));
+        verify(observer).progress(eq("waiting for server. Place in queue: 1/5"));
+        verify(observer).progress(eq("waiting for server. Place in queue: 4/8"));
+    }
+
+    private void mockPolling() throws IOException {
+        String first = ExampleJson.processingSubmission;
+        String second = ExampleJson.processingSubmission
+                .replace("1", "5");
+        String placeChange = ExampleJson.processingSubmission
+                .replace("0", "3")
+                .replace("1", "8");
+        String success = ExampleJson.successfulSubmission;
+
+        when(tmcApi.getRawTextFrom(anyString())).thenReturn(first, second, placeChange, success);
     }
 }

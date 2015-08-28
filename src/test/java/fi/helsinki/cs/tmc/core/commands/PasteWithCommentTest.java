@@ -11,6 +11,7 @@ import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +48,7 @@ public class PasteWithCommentTest {
     @Test
     public void testCheckDataSuccess()
             throws TmcCoreException, IOException, ParseException, ExpiredException,
-            URISyntaxException {
+            URISyntaxException, NoLanguagePluginFoundException {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 
         new PasteWithComment(settings, "path", "comment", submitterMock).call();

@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.communication;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
@@ -10,10 +11,11 @@ import fi.helsinki.cs.tmc.core.zipping.RootFinder;
 import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
 import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
 import fi.helsinki.cs.tmc.langs.io.zip.Zipper;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import com.google.common.base.Optional;
-import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,7 +35,7 @@ public class ExerciseSubmitter {
     private RootFinder rootFinder;
     private final UrlCommunicator urlCommunicator;
     private final TmcApi tmcApi;
-    private final Zipper langsZipper;
+    private TaskExecutor langs;
     private TmcSettings settings;
     private UrlHelper urlHelper;
 
@@ -45,7 +47,7 @@ public class ExerciseSubmitter {
     public ExerciseSubmitter(TmcSettings settings) {
         this(
                 new ProjectRootFinder(new TaskExecutorImpl(), new TmcApi(settings)),
-                new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
+                new TaskExecutorImpl(),
                 new UrlCommunicator(settings),
                 new TmcApi(settings),
                 settings);
@@ -53,14 +55,14 @@ public class ExerciseSubmitter {
 
     public ExerciseSubmitter(
             RootFinder rootFinder,
-            Zipper zipper,
+            TaskExecutor taskExecutor,
             UrlCommunicator urlCommunicator,
             TmcApi jsonParser,
             TmcSettings settings) {
         this.urlCommunicator = urlCommunicator;
         this.tmcApi = jsonParser;
         this.rootFinder = rootFinder;
-        this.langsZipper = zipper;
+        this.langs = taskExecutor;
         this.settings = settings;
         this.urlHelper = new UrlHelper(settings);
     }
@@ -97,7 +99,7 @@ public class ExerciseSubmitter {
      */
     public String submit(String currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-            TmcCoreException, URISyntaxException {
+            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
@@ -112,7 +114,7 @@ public class ExerciseSubmitter {
      */
     public String submit(String currentPath, ProgressObserver observer) throws ParseException,
             ExpiredException, IllegalArgumentException, IOException,
-            TmcCoreException, URISyntaxException {
+            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, observer, false);
     }
@@ -127,7 +129,7 @@ public class ExerciseSubmitter {
      */
     public String submitPaste(String currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-            TmcCoreException, URISyntaxException {
+            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, true);
     }
@@ -142,7 +144,7 @@ public class ExerciseSubmitter {
      */
     public String submitPasteWithComment(String currentPath, String comment)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-            TmcCoreException, URISyntaxException {
+            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         HashMap<String, String> params = new HashMap<>();
         params.put("message_for_paste", comment);
@@ -151,12 +153,11 @@ public class ExerciseSubmitter {
     }
 
     /**
-<<<<<<< HEAD
      * Requests a code review for a exercise.
      */
     public String submitWithCodeReviewRequest(Path currentPath, String message)
         throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-        TmcCoreException, URISyntaxException {
+        TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath.toString());
         HashMap<String, String> params = new HashMap<>();
         params.put("request_review", "1");
@@ -167,11 +168,7 @@ public class ExerciseSubmitter {
     }
 
     /**
-     * Search exercise and throw exception if exercise is expired or not
-     * returnable.
-=======
      * Search exercise and throw exception if exercise is expired or not returnable.
->>>>>>> submission progress info
      *
      * @throws ParseException to frontend
      * @throws ExpiredException to frontend
@@ -203,9 +200,9 @@ public class ExerciseSubmitter {
     }
 
     private String sendZipFile(String currentPath, Exercise currentExercise, boolean paste)
-            throws IOException, URISyntaxException {
+            throws IOException, URISyntaxException, NoLanguagePluginFoundException {
         String returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
-        byte[] zippedExercise = langsZipper.zip(Paths.get(currentPath));
+        byte[] zippedExercise = langs.compressProject(Paths.get(currentPath));
         String resultUrl;
         if (paste) {
             resultUrl = sendSubmissionToServerWithPaste(zippedExercise, returnUrl);
@@ -216,10 +213,10 @@ public class ExerciseSubmitter {
     }
 
     private String sendZipFile(String currentPath, Exercise currentExercise,
-            ProgressObserver observer, boolean paste) throws IOException, URISyntaxException {
+            ProgressObserver observer, boolean paste) throws IOException, URISyntaxException, NoLanguagePluginFoundException {
         String returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
         observer.progress("zipping exercise");
-        byte[] zippedExercise = langsZipper.zip(Paths.get(currentPath));
+        byte[] zippedExercise = langs.compressProject(Paths.get(currentPath));
         observer.progress("submitting exercise");
         String resultUrl;
         if (paste) {
@@ -232,9 +229,9 @@ public class ExerciseSubmitter {
 
     private String sendZipFileWithParams(
             String currentPath, Exercise currentExercise, boolean paste, Map<String, String> params)
-            throws IOException, URISyntaxException {
+            throws IOException, URISyntaxException, NoLanguagePluginFoundException {
         String returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
-        byte[] zippedExercise = langsZipper.zip(Paths.get(currentPath));
+        byte[] zippedExercise = langs.compressProject(Paths.get(currentPath));
         String resultUrl;
         if (paste) {
             resultUrl = sendSubmissionToServerWithPasteAndParams(zippedExercise, returnUrl, params);

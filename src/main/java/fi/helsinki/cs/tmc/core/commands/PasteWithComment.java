@@ -7,6 +7,7 @@ import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import java.io.IOException;
 import java.net.URI;
@@ -49,7 +50,7 @@ public class PasteWithComment extends Command<URI> {
     @Override
     public URI call()
             throws TmcCoreException, ExpiredException, ParseException, IOException,
-            URISyntaxException {
+            URISyntaxException, IllegalArgumentException, NoLanguagePluginFoundException {
         if (!settings.userDataExists()) {
             throw new TmcCoreException("User must be authenticated");
         }

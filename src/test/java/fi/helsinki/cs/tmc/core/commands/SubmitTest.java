@@ -19,7 +19,9 @@ import fi.helsinki.cs.tmc.core.communication.SubmissionPoller;
 import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 
@@ -29,8 +31,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -166,7 +167,7 @@ public class SubmitTest {
 
     @Test
     public void testSubmissionWithObserver() throws TmcCoreException, IOException, ParseException,
-            ExpiredException, IllegalArgumentException, InterruptedException, URISyntaxException {
+            ExpiredException, IllegalArgumentException, InterruptedException, URISyntaxException, NoLanguagePluginFoundException {
         when(submitterMock.submit(eq(path), eq(observer)))
                 .thenReturn("xkcd.com");
         submitWithObserver.call();

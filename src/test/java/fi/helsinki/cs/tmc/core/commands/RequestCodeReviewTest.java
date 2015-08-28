@@ -7,6 +7,7 @@ import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +48,7 @@ public class RequestCodeReviewTest {
 
     @Test
     public void testCheckDataSuccess()
-        throws TmcCoreException, IOException, ParseException, ExpiredException, URISyntaxException {
+        throws TmcCoreException, IOException, ParseException, ExpiredException, URISyntaxException, IllegalArgumentException, NoLanguagePluginFoundException {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 
         new RequestCodeReview(settings, Paths.get("path"), "message", submitterMock).call();

@@ -35,12 +35,11 @@ import fi.helsinki.cs.tmc.core.spyware.DiffSender;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
-import fi.helsinki.cs.tmc.langs.io.EverythingIsStudentFileStudentFilePolicy;
-import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -228,7 +227,7 @@ public class TmcCore {
 
         ExerciseSubmitter exerciseSubmitter = new ExerciseSubmitter(
                 new ProjectRootFinder(tmcApi),
-                new StudentFileAwareZipper(new EverythingIsStudentFileStudentFilePolicy()),
+                new TaskExecutorImpl(),
                 communicator, tmcApi, settings);
 
         Submit submit = new Submit(

@@ -10,6 +10,7 @@ import fi.helsinki.cs.tmc.core.commands.GetExerciseUpdates;
 import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
 import fi.helsinki.cs.tmc.core.commands.ListCourses;
 import fi.helsinki.cs.tmc.core.commands.PasteWithComment;
+import fi.helsinki.cs.tmc.core.commands.RequestCodeReview;
 import fi.helsinki.cs.tmc.core.commands.RunCheckStyle;
 import fi.helsinki.cs.tmc.core.commands.RunTests;
 import fi.helsinki.cs.tmc.core.commands.SendFeedback;
@@ -314,6 +315,23 @@ public class TmcCore {
         //checkParameters(path);
         PasteWithComment paste = new PasteWithComment(settings, path.toString(), comment);
         return threadPool.submit(paste);
+    }
+
+    /**
+     * Submits the current exercise to the TMC-server and requests for a code review, with a
+     * message given by user.
+     *
+     * @param path inside any exercise directory
+     * @param message message given by user
+     * @return URI object containing location of the submission
+     * @throws TmcCoreException if there was no course in the given path, or no exercise in the
+     *     given path
+     */
+    public ListenableFuture<URI> requestCodeReview(Path path, String message)
+        throws TmcCoreException {
+        //checkParameters(path);
+        RequestCodeReview request = new RequestCodeReview(settings, path, message);
+        return threadPool.submit(request);
     }
 
     /**

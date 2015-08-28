@@ -136,6 +136,21 @@ public class ExerciseSubmitter {
     }
 
     /**
+     * Requests a code review for a exercise.
+     */
+    public String submitWithCodeReviewRequest(Path currentPath, String message)
+        throws IOException, ParseException, ExpiredException, IllegalArgumentException,
+        TmcCoreException, URISyntaxException {
+        Exercise currentExercise = initExercise(currentPath.toString());
+        HashMap<String, String> params = new HashMap<>();
+        params.put("request_review", "1");
+        if (!message.isEmpty()) {
+            params.put("message_for_reviewer", message);
+        }
+        return sendZipFileWithParams(currentPath.toString(), currentExercise, false, params);
+    }
+
+    /**
      * Search exercise and throw exception if exercise is expired or not
      * returnable.
      *
@@ -144,8 +159,7 @@ public class ExerciseSubmitter {
      */
     private Exercise initExercise(String currentPath)
             throws ParseException, ExpiredException, IllegalArgumentException, IOException,
-                    TmcCoreException,
-                    URISyntaxException {
+                    TmcCoreException, URISyntaxException {
         Exercise currentExercise = searchExercise(currentPath);
         if (isExpired(currentExercise) || !currentExercise.isReturnable()) {
             throw new ExpiredException("Exercise is expired.");

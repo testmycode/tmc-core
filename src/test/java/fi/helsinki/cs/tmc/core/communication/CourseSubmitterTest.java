@@ -1,8 +1,6 @@
 package fi.helsinki.cs.tmc.core.communication;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.powermock.api.mockito.PowerMockito.mock;
+import com.google.common.base.Optional;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -15,19 +13,28 @@ import fi.helsinki.cs.tmc.langs.io.zip.StudentFileAwareZipper;
 import fi.helsinki.cs.tmc.langs.io.zip.Zipper;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
-import com.google.common.base.Optional;
-
 import org.junit.Before;
 import org.junit.Test;
-
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Matchers.anyString;
+
+import static org.powermock.api.mockito.PowerMockito.mock;
 
 public class CourseSubmitterTest {
 
@@ -305,11 +312,49 @@ public class CourseSubmitterTest {
         courseSubmitter.submit(testPath);
     }
 
+    @Test
+    public void submitWithCodeReviewRequest()
+        throws IOException, ParseException, ExpiredException, IllegalArgumentException,
+        TmcCoreException,
+        URISyntaxException {
+        Path testPath = Paths.get("home", "test", "2014-mooc-no-deadline", "viikko1",
+            "viikko1-Viikko1_001.Nimi");
+        settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath.toString()).or(new Course()));
+        ArgumentCaptor<Map> capture = ArgumentCaptor.forClass(Map.class);
+        this.courseSubmitter =
+            new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, tmcApi, settings);
+        rootFinder.setReturnValue(testPath.toString());
+        courseSubmitter.submitWithCodeReviewRequest(testPath, "Help");
+        Mockito.verify(urlCommunicator).makePostWithByteArray(anyString(), any(byte[].class),
+            anyMap(), capture.capture());
+        assertEquals("1", capture.getValue().get("request_review"));
+        assertEquals("Help", capture.getValue().get("message_for_reviewer"));
+    }
+
+    @Test
+    public void submitWithCodeReviewRequestWithEmptyMessage()
+        throws IOException, ParseException, ExpiredException, IllegalArgumentException,
+        TmcCoreException,
+        URISyntaxException {
+        Path testPath = Paths.get("home", "test", "2014-mooc-no-deadline", "viikko1",
+            "viikko1-Viikko1_001.Nimi");
+        settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath.toString()).or(new Course()));
+        ArgumentCaptor<Map> capture = ArgumentCaptor.forClass(Map.class);
+        this.courseSubmitter =
+            new ExerciseSubmitter(rootFinder, zipper, urlCommunicator, tmcApi, settings);
+        rootFinder.setReturnValue(testPath.toString());
+        courseSubmitter.submitWithCodeReviewRequest(testPath, "");
+        Mockito.verify(urlCommunicator).makePostWithByteArray(anyString(), any(byte[].class),
+            anyMap(), capture.capture());
+        assertEquals("1", capture.getValue().get("request_review"));
+        assertNull(capture.getValue().get("message_for_reviewer"));
+    }
+
     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
         Mockito.when(
                         urlCommunicator.makeGetRequest(
-                                Mockito.contains(pieceOfUrl), Mockito.anyString()))
+                                Mockito.contains(pieceOfUrl), anyString()))
                 .thenReturn(fakeResult);
         Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(Mockito.contains(pieceOfUrl)))
                 .thenReturn(fakeResult);

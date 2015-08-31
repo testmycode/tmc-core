@@ -104,8 +104,7 @@ public class ExerciseUpdaterTest {
                         .withExercise("new", 8, "woksirjd", "test-course")
                         .withExercise("duck", 9, "asdfsdf", "test-course")
                         .build();
-        when(tmcApi.getExercisesFromServer(any(Course.class)))
-                .thenReturn(serverExercises);
+        when(tmcApi.getExercisesFromServer(any(Course.class))).thenReturn(serverExercises);
         return tmcApi;
     }
 

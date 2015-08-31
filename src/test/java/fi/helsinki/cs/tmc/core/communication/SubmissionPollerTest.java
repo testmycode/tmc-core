@@ -24,8 +24,8 @@ import static org.mockito.Mockito.when;
 public class SubmissionPollerTest {
 
     private SubmissionPoller submissionPoller;
-    private String url
-            = "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7&client=tmc_cli&client_version=1";
+    private String url =
+            "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7&client=tmc_cli&client_version=1";
     private CoreTestSettings settings;
     private TmcApi tmcApi;
 
@@ -71,11 +71,8 @@ public class SubmissionPollerTest {
 
     private void mockPolling() throws IOException {
         String first = ExampleJson.processingSubmission;
-        String second = ExampleJson.processingSubmission
-                .replace("1", "5");
-        String placeChange = ExampleJson.processingSubmission
-                .replace("0", "3")
-                .replace("1", "8");
+        String second = ExampleJson.processingSubmission.replace("1", "5");
+        String placeChange = ExampleJson.processingSubmission.replace("0", "3").replace("1", "8");
         String success = ExampleJson.successfulSubmission;
 
         when(tmcApi.getRawTextFrom(anyString())).thenReturn(first, second, placeChange, success);

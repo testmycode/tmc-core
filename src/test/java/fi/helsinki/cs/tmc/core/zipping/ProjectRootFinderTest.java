@@ -108,9 +108,9 @@ public class ProjectRootFinderTest {
 
     @Test
     public void doesntFindRootWhenNotAnExercise() {
-        Path notAnExercise = Paths.get("testResources", "2013_ohpeJaOhja", "viikko1", "NotAnExercise");
-        Optional<Path> root =
-                finder.getRootDirectory(notAnExercise);
+        Path notAnExercise =
+                Paths.get("testResources", "2013_ohpeJaOhja", "viikko1", "NotAnExercise");
+        Optional<Path> root = finder.getRootDirectory(notAnExercise);
         if (!root.isPresent()) {
             return;
         }

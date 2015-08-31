@@ -48,7 +48,7 @@ public class PasteWithCommentTest {
     @Test
     public void testCheckDataSuccess()
             throws TmcCoreException, IOException, ParseException, ExpiredException,
-            URISyntaxException, NoLanguagePluginFoundException {
+                    URISyntaxException, NoLanguagePluginFoundException {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 
         new PasteWithComment(settings, "path", "comment", submitterMock).call();

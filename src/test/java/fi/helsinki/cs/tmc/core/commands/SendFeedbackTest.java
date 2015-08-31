@@ -27,8 +27,7 @@ public class SendFeedbackTest {
     private SendFeedback command;
     private CoreTestSettings settings;
 
-    @Rule
-    public WireMockRule wireMock = new WireMockRule();
+    @Rule public WireMockRule wireMock = new WireMockRule();
 
     @Before
     public void setUp() {
@@ -49,17 +48,16 @@ public class SendFeedbackTest {
 
     @Test
     public void testCallSendsFeedbackToServer() throws Exception {
-        String expected = "[{\"question_id\":\"4\", \"answer\":\"jee jee!\"},"
-                + "{\"question_id\":\"13\", \"answer\":\"Oli kiva tehtävä. Opin paljon koodia, "
-                + "nyt tunnen osaavani paljon paremmin\"},{\"question_id\":\"88\", "
-                + "\"answer\":\"<(^)\n (___)\n lorem ipsum, sit dolor amet\"}]";
+        String expected =
+                "[{\"question_id\":\"4\", \"answer\":\"jee jee!\"},"
+                        + "{\"question_id\":\"13\", \"answer\":\"Oli kiva tehtävä. Opin paljon koodia, "
+                        + "nyt tunnen osaavani paljon paremmin\"},{\"question_id\":\"88\", "
+                        + "\"answer\":\"<(^)\n (___)\n lorem ipsum, sit dolor amet\"}]";
 
         wireMock.stubFor(
                 post(urlMatching("/feedback.*"))
                         .withRequestBody(matching(expected))
-                        .willReturn(
-                                WireMock.aResponse()
-                                        .withStatus(200)));
+                        .willReturn(WireMock.aResponse().withStatus(200)));
 
         Course currentCourse = new Course();
         currentCourse.setSpywareUrls(Arrays.asList("http://localhost:8080/spyware"));

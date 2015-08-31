@@ -40,8 +40,7 @@ public class DownloadModelSolutionTest {
     }
 
     @After
-    public void tearDown() {
-    }
+    public void tearDown() {}
 
     @Test
     public void testCall() throws Exception {
@@ -57,5 +56,4 @@ public class DownloadModelSolutionTest {
         verify(downloader).createCourseFolder(eq("home"), eq("ohpe"));
         verify(downloader).downloadModelSolution(eq(exercise), eq(Paths.get("path")));
     }
-
 }

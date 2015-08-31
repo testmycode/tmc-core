@@ -118,8 +118,7 @@ public class DownloadExercisesTest {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         core = new TmcCore(settings1);
         Path folder = Paths.get(System.getProperty("user.dir") + "/testResources/");
-        ListenableFuture<List<Exercise>> download =
-                core.downloadExercises(folder, 35, null);
+        ListenableFuture<List<Exercise>> download = core.downloadExercises(folder, 35, null);
 
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi");

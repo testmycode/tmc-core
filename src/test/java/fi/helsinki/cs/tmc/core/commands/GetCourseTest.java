@@ -81,9 +81,7 @@ public class GetCourseTest {
         wireMock.stubFor(
                 get(mockUrl)
                         .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withBody(ExampleJson.courseExample)));
+                                aResponse().withStatus(200).withBody(ExampleJson.courseExample)));
 
         ListenableFuture<Course> getCourse = core.getCourse(finalUrl);
         Course course = getCourse.get();
@@ -95,15 +93,11 @@ public class GetCourseTest {
     public void testCallWithCourseName() throws Exception {
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses.json"))
-                        .willReturn(
-                                aResponse()
-                                        .withBody(ExampleJson.allCoursesExample)));
+                        .willReturn(aResponse().withBody(ExampleJson.allCoursesExample)));
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses/3.json"))
                         .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withBody(ExampleJson.courseExample)));
+                                aResponse().withStatus(200).withBody(ExampleJson.courseExample)));
 
         ListenableFuture<Course> getCourse = core.getCourseByName("2013_ohpeJaOhja");
         Course course = getCourse.get();

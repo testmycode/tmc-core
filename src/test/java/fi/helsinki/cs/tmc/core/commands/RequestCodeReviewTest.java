@@ -34,8 +34,10 @@ public class RequestCodeReviewTest {
     public void setup() throws Exception {
         mock();
         submitterMock = Mockito.mock(ExerciseSubmitter.class);
-        when(submitterMock.submitWithCodeReviewRequest(Mockito.any(Path.class), Mockito.anyString()))
-            .thenReturn(pasteUrl);
+        when(
+                        submitterMock.submitWithCodeReviewRequest(
+                                Mockito.any(Path.class), Mockito.anyString()))
+                .thenReturn(pasteUrl);
     }
 
     private void mock() {
@@ -48,7 +50,8 @@ public class RequestCodeReviewTest {
 
     @Test
     public void testCheckDataSuccess()
-        throws TmcCoreException, IOException, ParseException, ExpiredException, URISyntaxException, IllegalArgumentException, NoLanguagePluginFoundException {
+            throws TmcCoreException, IOException, ParseException, ExpiredException,
+                    URISyntaxException, IllegalArgumentException, NoLanguagePluginFoundException {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 
         new RequestCodeReview(settings, Paths.get("path"), "message", submitterMock).call();
@@ -58,7 +61,8 @@ public class RequestCodeReviewTest {
     public void pasteSuccess() throws Exception {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 
-        URI uri = new RequestCodeReview(settings, Paths.get("path"), "message", submitterMock).call();
+        URI uri =
+                new RequestCodeReview(settings, Paths.get("path"), "message", submitterMock).call();
         assertEquals(uri.toString(), "http://example.com/paste");
     }
 

@@ -57,8 +57,8 @@ public class SubmitTest {
     private String submissionUrl;
     private ProgressObserver observer;
 
-    @Rule
-    public WireMockRule wireMock = new WireMockRule();
+    @Rule public WireMockRule wireMock = new WireMockRule();
+
     private Submit submitWithObserver;
     private SubmissionPoller pollerMock;
     private String path;
@@ -81,11 +81,10 @@ public class SubmitTest {
         path = Paths.get("polku", "kurssi", "kansioon", "src").toString();
 
         when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
-        submit
-                = new Submit(settings, submitterMock,
-                        new SubmissionPoller(new TmcApi(settings)), path);
-        submitWithObserver
-                = new Submit(settings, submitterMock, pollerMock, path, observer);
+        submit =
+                new Submit(
+                        settings, submitterMock, new SubmissionPoller(new TmcApi(settings)), path);
+        submitWithObserver = new Submit(settings, submitterMock, pollerMock, path, observer);
     }
 
     @Test(expected = TmcCoreException.class)
@@ -104,10 +103,10 @@ public class SubmitTest {
     public void testHandlesSuccessfulTestRunResponseCorrectly() throws Exception {
         wireMock.stubFor(
                 get(urlEqualTo(submissionUrl))
-                .willReturn(
-                        WireMock.aResponse()
-                        .withStatus(200)
-                        .withBody(ExampleJson.successfulSubmission)));
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(ExampleJson.successfulSubmission)));
 
         SubmissionResult submissionResult = submit.call();
         assertNotNull(submissionResult);
@@ -118,10 +117,10 @@ public class SubmitTest {
     public void testHandlesUnsuccessfulTestRunResponseCorrectly() throws Exception {
         wireMock.stubFor(
                 get(urlEqualTo(submissionUrl))
-                .willReturn(
-                        WireMock.aResponse()
-                        .withStatus(200)
-                        .withBody(ExampleJson.failedSubmission)));
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(ExampleJson.failedSubmission)));
 
         SubmissionResult submissionResult = submit.call();
         assertNotNull(submissionResult);
@@ -139,8 +138,8 @@ public class SubmitTest {
         settings.setCurrentCourse(course);
         TmcCore core = new TmcCore(settings);
 
-        Path path = Paths.get(
-                "testResources", "halfdoneExercise", "viikko1", "Viikko1_004.Muuttujat");
+        Path path =
+                Paths.get("testResources", "halfdoneExercise", "viikko1", "Viikko1_004.Muuttujat");
         ListenableFuture<SubmissionResult> submit = core.submit(path);
         final List<SubmissionResult> result = new ArrayList<>();
         Futures.addCallback(
@@ -166,10 +165,11 @@ public class SubmitTest {
     }
 
     @Test
-    public void testSubmissionWithObserver() throws TmcCoreException, IOException, ParseException,
-            ExpiredException, IllegalArgumentException, InterruptedException, URISyntaxException, NoLanguagePluginFoundException {
-        when(submitterMock.submit(eq(path), eq(observer)))
-                .thenReturn("xkcd.com");
+    public void testSubmissionWithObserver()
+            throws TmcCoreException, IOException, ParseException, ExpiredException,
+                    IllegalArgumentException, InterruptedException, URISyntaxException,
+                    NoLanguagePluginFoundException {
+        when(submitterMock.submit(eq(path), eq(observer))).thenReturn("xkcd.com");
         submitWithObserver.call();
         verify(submitterMock).submit(eq(path), eq(observer));
         verify(pollerMock).getSubmissionResult(eq("xkcd.com"), eq(observer));
@@ -178,32 +178,32 @@ public class SubmitTest {
     private void buildWireMock() throws URISyntaxException {
         wireMock.stubFor(
                 post(urlPathEqualTo("/exercises/1231/submissions.json"))
-                .willReturn(
-                        WireMock.aResponse()
-                        .withStatus(200)
-                        .withBody(
-                                ExampleJson.failedSubmitResponse.replace(
-                                        "https://tmc.mooc.fi/staging",
-                                        "http://localhost:8080"))));
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(
+                                                ExampleJson.failedSubmitResponse.replace(
+                                                        "https://tmc.mooc.fi/staging",
+                                                        "http://localhost:8080"))));
 
         wireMock.stubFor(
                 get(urlPathEqualTo("/submissions/7777.json"))
-                .willReturn(
-                        WireMock.aResponse()
-                        .withStatus(200)
-                        .withBody(
-                                ExampleJson.failedSubmission.replace(
-                                        "https://tmc.mooc.fi/staging",
-                                        "http://localhost:8080"))));
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(
+                                                ExampleJson.failedSubmission.replace(
+                                                        "https://tmc.mooc.fi/staging",
+                                                        "http://localhost:8080"))));
 
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses/19.json"))
-                .willReturn(
-                        WireMock.aResponse()
-                        .withStatus(200)
-                        .withBody(
-                                ExampleJson.noDeadlineCourseExample.replace(
-                                        "https://tmc.mooc.fi/staging",
-                                        "http://localhost:8080"))));
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(
+                                                ExampleJson.noDeadlineCourseExample.replace(
+                                                        "https://tmc.mooc.fi/staging",
+                                                        "http://localhost:8080"))));
     }
 }

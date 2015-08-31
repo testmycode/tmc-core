@@ -133,8 +133,7 @@ public class TmcCoreTest {
         // using catch to verify command has not been sent
         try {
             tmcCore.getNewAndUpdatedExercises(course);
-        }
-        catch (TmcCoreException ex) {
+        } catch (TmcCoreException ex) {
             verify(threadPool, times(0)).submit(any(GetExerciseUpdates.class));
             return;
         }
@@ -214,16 +213,16 @@ public class TmcCoreTest {
         tmcCore.setExerciseChecksumCacheLocation(
                 Paths.get("src", "test", "resources", "cachefile"));
         tmcCore.downloadExercises(Paths.get("asdf"), -1, null);
-        final ArgumentCaptor<DownloadExercises> argument
-                = ArgumentCaptor.forClass(DownloadExercises.class);
+        final ArgumentCaptor<DownloadExercises> argument =
+                ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
     }
 
     @Test
     public void downloadExercisesDoesNotUseCacheIfNotSet() throws Exception {
         tmcCore.downloadExercises(Paths.get("asdf"), -1, null);
-        final ArgumentCaptor<DownloadExercises> argument
-                = ArgumentCaptor.forClass(DownloadExercises.class);
+        final ArgumentCaptor<DownloadExercises> argument =
+                ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
     }
 }

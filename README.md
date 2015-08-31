@@ -1,9 +1,9 @@
 # tmc-core
 
-[![Build Status](https://travis-ci.org/rage/tmc-core.svg?branch=master)](https://travis-ci.org/rage/tmc-core)
-[![Build status](https://ci.appveyor.com/api/projects/status/o3l71ihukd7dwgks/branch/master?svg=true)](https://ci.appveyor.com/project/rage/tmc-core/branch/master)
+[![Build Status](https://travis-ci.org/testmycode/tmc-core.svg?branch=master)](https://travis-ci.org/testmycode/tmc-core)
+[![Build status](https://ci.appveyor.com/api/projects/status/o3l71ihukd7dwgks/branch/master?svg=true)](https://ci.appveyor.com/project/testmycode/tmc-core/branch/master)
 
-[![Coverage Status](https://coveralls.io/repos/rage/tmc-core/badge.svg?branch=master&service=github)](https://coveralls.io/github/rage/tmc-core?branch=master)
+[![Coverage Status](https://coveralls.io/repos/testmycode/tmc-core/badge.svg?branch=master&service=github)](https://coveralls.io/github/testmycode/tmc-core?branch=master)
 
 This is a library for the core functionalities of a [TestMyCode](https://testmycode.github.io) 
 client. The tmc-core uses [tmc-langs](https://github.com/testmycode/tmc-langs) for 

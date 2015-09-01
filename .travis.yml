@@ -1,19 +1,23 @@
 language: java
 sudo: false
+
 before_install:
-  - ./before_install.sh
+  - git clone https://github.com/testmycode/tmc-langs.git
+  - mvn clean install -U -Dmaven.test.skip=true -f tmc-langs/pom.xml
 
 after_success:
   - mvn clean cobertura:cobertura coveralls:report
+
 jdk:
   - oraclejdk8
   - oraclejdk7
   - openjdk6
+
 matrix:
   allow_failures:
     - jdk: openjdk6
     - os: osx
+
 os:
   - linux
-  - osx
-
+  # - osx

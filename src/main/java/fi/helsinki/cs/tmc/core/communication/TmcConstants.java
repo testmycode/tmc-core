@@ -8,6 +8,5 @@ public final class TmcConstants {
     public static final String CLIENT_NAME_PARAM = "client";
     public static final String CLIENT_VERSION_PARAM = "client_version";
 
-    private TmcConstants() {
-    }
+    private TmcConstants() {}
 }

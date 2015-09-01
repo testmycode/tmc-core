@@ -27,8 +27,10 @@ public class Submit extends Command<SubmissionResult> {
      * {@code submissionPoller} for submitting the exercise located at {@code path}.
      */
     public Submit(
-            TmcSettings settings, ExerciseSubmitter submitter,
-            SubmissionPoller submissionPoller, String path) {
+            TmcSettings settings,
+            ExerciseSubmitter submitter,
+            SubmissionPoller submissionPoller,
+            String path) {
         this(settings, submitter, submissionPoller, path, null);
     }
 
@@ -37,8 +39,12 @@ public class Submit extends Command<SubmissionResult> {
      * {@code submissionPoller} for submitting the exercise located at {@code path}. The
      * {@code observer} will be notified of submission progress.
      */
-    public Submit(TmcSettings settings, ExerciseSubmitter submitter, 
-            SubmissionPoller submissionPoller, String path, ProgressObserver observer) {
+    public Submit(
+            TmcSettings settings,
+            ExerciseSubmitter submitter,
+            SubmissionPoller submissionPoller,
+            String path,
+            ProgressObserver observer) {
         super(settings);
 
         this.path = path;
@@ -65,7 +71,8 @@ public class Submit extends Command<SubmissionResult> {
     @Override
     public SubmissionResult call()
             throws TmcCoreException, IOException, ParseException, ExpiredException,
-            IllegalArgumentException, InterruptedException, URISyntaxException, NoLanguagePluginFoundException {
+                    IllegalArgumentException, InterruptedException, URISyntaxException,
+                    NoLanguagePluginFoundException {
 
         assertHasRequiredData();
 

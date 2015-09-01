@@ -19,8 +19,7 @@ public abstract class Command<E> implements Callable<E> {
     /**
      * Constructs a Command object.
      */
-    public Command() { }
-
+    public Command() {}
 
     /**
      * Constructs a Command object with an associated {@link TmcSettings}.

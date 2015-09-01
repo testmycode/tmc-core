@@ -35,7 +35,7 @@ public class RequestCodeReview extends Command<URI> {
      * Constructs a new code review request with a message.
      */
     public RequestCodeReview(
-        TmcSettings settings, Path path, String comment, ExerciseSubmitter submitter) {
+            TmcSettings settings, Path path, String comment, ExerciseSubmitter submitter) {
         super(settings);
 
         this.submitter = submitter;
@@ -48,8 +48,8 @@ public class RequestCodeReview extends Command<URI> {
      */
     @Override
     public URI call()
-        throws TmcCoreException, ExpiredException, ParseException, IOException,
-        URISyntaxException, IllegalArgumentException, NoLanguagePluginFoundException {
+            throws TmcCoreException, ExpiredException, ParseException, IOException,
+                    URISyntaxException, IllegalArgumentException, NoLanguagePluginFoundException {
         if (!settings.userDataExists()) {
             throw new TmcCoreException("Cannot request a code review. User must be authenticated.");
         }

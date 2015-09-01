@@ -24,8 +24,9 @@ public class DownloadModelSolution extends Command<Boolean> {
         TmcApi tmcApi = new TmcApi(settings);
         this.exerciseDownloader = new ExerciseDownloader(new UrlCommunicator(settings), tmcApi);
     }
-    
-    public DownloadModelSolution(TmcSettings settings, Exercise exercise, ExerciseDownloader downloader) {
+
+    public DownloadModelSolution(
+            TmcSettings settings, Exercise exercise, ExerciseDownloader downloader) {
         this.settings = settings;
         this.exercise = exercise;
         this.exerciseDownloader = downloader;
@@ -34,30 +35,35 @@ public class DownloadModelSolution extends Command<Boolean> {
     @Override
     public Boolean call() throws Exception {
         if (!settings.userDataExists()) {
-            throw new TmcCoreException("Unable to download model solution: missing username/password");
+            throw new TmcCoreException(
+                    "Unable to download model solution: missing username/password");
         }
 
         String courseName = getCourseName();
 
-        Path target = Paths.get(exerciseDownloader.createCourseFolder(settings.getTmcMainDirectory(), courseName));
+        Path target =
+                Paths.get(
+                        exerciseDownloader.createCourseFolder(
+                                settings.getTmcMainDirectory(), courseName));
         return exerciseDownloader.downloadModelSolution(exercise, target);
     }
-    
+
     private String getCourseName() throws TmcCoreException {
         String courseName = exercise.getCourseName();
 
         if (Strings.isNullOrEmpty(courseName)) {
             Optional<Course> courseOpt = settings.getCurrentCourse();
             if (!courseOpt.isPresent()) {
-                throw new TmcCoreException("Could not determine course name for exercise " 
-                        + exercise.getName() + ", course not set");
+                throw new TmcCoreException(
+                        "Could not determine course name for exercise "
+                                + exercise.getName()
+                                + ", course not set");
             }
             Course course = courseOpt.get();
             courseName = course.getName();
             exercise.setCourseName(courseName);
         }
-        
+
         return courseName;
     }
-
 }

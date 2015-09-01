@@ -50,7 +50,7 @@ public class PasteWithComment extends Command<URI> {
     @Override
     public URI call()
             throws TmcCoreException, ExpiredException, ParseException, IOException,
-            URISyntaxException, IllegalArgumentException, NoLanguagePluginFoundException {
+                    URISyntaxException, IllegalArgumentException, NoLanguagePluginFoundException {
         if (!settings.userDataExists()) {
             throw new TmcCoreException("User must be authenticated");
         }

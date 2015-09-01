@@ -53,7 +53,7 @@ public class DiffSender {
     public HttpResult sendToUrl(byte[] diffs, String url) {
         try {
             return urlCommunicator.makePostWithByteArray(
-                            url, diffs, createHeaders(), new HashMap<String, String>());
+                    url, diffs, createHeaders(), new HashMap<String, String>());
         } catch (IOException ex) {
             return new HttpResult(ex.getMessage(), 500, false);
         }

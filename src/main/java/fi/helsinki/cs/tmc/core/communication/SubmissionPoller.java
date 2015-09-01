@@ -27,8 +27,8 @@ public class SubmissionPoller {
      */
     private final int pollInterval = 1000;
 
-    private final String timeOutmessage
-            = "Something went wrong. " + "Please check your internet connection.";
+    private final String timeOutmessage =
+            "Something went wrong. " + "Please check your internet connection.";
 
     private SubmissionResult latestResult;
     private TmcApi tmcApi;
@@ -161,8 +161,7 @@ public class SubmissionPoller {
             int yourPlace = jsonObject.get("submissions_before_this").getAsInt() + 1;
             int queueSize = jsonObject.get("total_unprocessed").getAsInt();
             message += " Place in queue: " + yourPlace + "/" + queueSize;
-        }
-        catch (ClassCastException | NullPointerException ex) {
+        } catch (ClassCastException | NullPointerException ex) {
             System.err.println(ex);
         }
         System.out.println(message);

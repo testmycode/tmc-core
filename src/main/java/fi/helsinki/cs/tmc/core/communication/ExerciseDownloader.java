@@ -32,9 +32,7 @@ public class ExerciseDownloader {
      * Constructor for dependency injection.
      */
     public ExerciseDownloader(
-            UrlCommunicator urlCommunicator,
-            TmcApi tmcApi,
-            TaskExecutor taskExecutor) {
+            UrlCommunicator urlCommunicator, TmcApi tmcApi, TaskExecutor taskExecutor) {
         this.urlCommunicator = urlCommunicator;
         this.tmcApi = tmcApi;
         this.taskExecutor = taskExecutor;
@@ -128,12 +126,10 @@ public class ExerciseDownloader {
         downloadExerciseZip(exercise.getZipUrl(), filePath.toString());
         try {
             taskExecutor.extractProject(filePath, Paths.get(path));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             log.error("Could not extract archive: {}", path.toString());
             return false;
-        }
-        finally {
+        } finally {
             deleteZip(filePath);
         }
         return true;
@@ -144,12 +140,10 @@ public class ExerciseDownloader {
         downloadExerciseZip(exercise.getSolutionDownloadUrl(), zipPath.toString());
         try {
             taskExecutor.extractProject(zipPath, targetPath, true);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             log.error("Could not download model solution: {}", ex);
             return false;
-        }
-        finally {
+        } finally {
             deleteZip(zipPath);
         }
         return true;
@@ -163,8 +157,7 @@ public class ExerciseDownloader {
     private void deleteZip(Path filePath) {
         try {
             Files.delete(filePath);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

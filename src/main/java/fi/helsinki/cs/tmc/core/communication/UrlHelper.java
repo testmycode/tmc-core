@@ -44,6 +44,7 @@ public class UrlHelper {
                 .setParameter(API_VERSION_PARAM, settings.apiVersion())
                 .setParameter(CLIENT_NAME_PARAM, settings.clientName())
                 .setParameter(CLIENT_VERSION_PARAM, settings.clientVersion())
-                .build().toString();
+                .build()
+                .toString();
     }
 }

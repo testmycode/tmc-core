@@ -99,7 +99,7 @@ public class ExerciseSubmitter {
      */
     public String submit(String currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
@@ -112,9 +112,9 @@ public class ExerciseSubmitter {
      * @return String with url from which to get results or null if exercise was not found.
      * @throws IOException if zip creation fails
      */
-    public String submit(String currentPath, ProgressObserver observer) throws ParseException,
-            ExpiredException, IllegalArgumentException, IOException,
-            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+    public String submit(String currentPath, ProgressObserver observer)
+            throws ParseException, ExpiredException, IllegalArgumentException, IOException,
+                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, observer, false);
     }
@@ -129,7 +129,7 @@ public class ExerciseSubmitter {
      */
     public String submitPaste(String currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, true);
     }
@@ -144,7 +144,7 @@ public class ExerciseSubmitter {
      */
     public String submitPasteWithComment(String currentPath, String comment)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         HashMap<String, String> params = new HashMap<>();
         params.put("message_for_paste", comment);
@@ -156,8 +156,8 @@ public class ExerciseSubmitter {
      * Requests a code review for a exercise.
      */
     public String submitWithCodeReviewRequest(Path currentPath, String message)
-        throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-        TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+            throws IOException, ParseException, ExpiredException, IllegalArgumentException,
+                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath.toString());
         HashMap<String, String> params = new HashMap<>();
         params.put("request_review", "1");
@@ -173,9 +173,10 @@ public class ExerciseSubmitter {
      * @throws ParseException to frontend
      * @throws ExpiredException to frontend
      */
-    private Exercise initExercise(String currentPath) throws IllegalArgumentException, IOException, 
-            TmcCoreException, URISyntaxException, ParseException, ExpiredException {
-            
+    private Exercise initExercise(String currentPath)
+            throws IllegalArgumentException, IOException, TmcCoreException, URISyntaxException,
+                    ParseException, ExpiredException {
+
         Exercise currentExercise = searchExercise(currentPath);
         if (isExpired(currentExercise) || !currentExercise.isReturnable()) {
             throw new ExpiredException("Exercise is expired.");
@@ -193,8 +194,8 @@ public class ExerciseSubmitter {
     }
 
     private String sendSubmissionToServerWithPaste(byte[] file, String url) throws IOException {
-        HttpResult result
-                = urlCommunicator.makePostWithByteArray(
+        HttpResult result =
+                urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), new HashMap<String, String>());
         return tmcApi.getPasteUrl(result);
     }
@@ -212,8 +213,9 @@ public class ExerciseSubmitter {
         return resultUrl;
     }
 
-    private String sendZipFile(String currentPath, Exercise currentExercise,
-            ProgressObserver observer, boolean paste) throws IOException, URISyntaxException, NoLanguagePluginFoundException {
+    private String sendZipFile(
+            String currentPath, Exercise currentExercise, ProgressObserver observer, boolean paste)
+            throws IOException, URISyntaxException, NoLanguagePluginFoundException {
         String returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
         observer.progress("zipping exercise");
         byte[] zippedExercise = langs.compressProject(Paths.get(currentPath));
@@ -246,24 +248,24 @@ public class ExerciseSubmitter {
     }
 
     private String sendSubmissionToServer(byte[] file, String url) throws IOException {
-        HttpResult result
-                = urlCommunicator.makePostWithByteArray(
+        HttpResult result =
+                urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), new HashMap<String, String>());
         return tmcApi.getSubmissionUrl(result);
     }
 
     private String sendSubmissionToServerWithParams(
             byte[] file, String url, Map<String, String> params) throws IOException {
-        HttpResult result
-                = urlCommunicator.makePostWithByteArray(
+        HttpResult result =
+                urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), params);
         return tmcApi.getSubmissionUrl(result);
     }
 
     private String sendSubmissionToServerWithPasteAndParams(
             byte[] file, String url, Map<String, String> params) throws IOException {
-        HttpResult result
-                = urlCommunicator.makePostWithByteArray(
+        HttpResult result =
+                urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), params);
         return tmcApi.getPasteUrl(result);
     }

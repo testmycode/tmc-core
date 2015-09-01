@@ -149,7 +149,6 @@ public class DownloadExercises extends Command<List<Exercise>> {
         return downloadedExercises;
     }
 
-
     private List<Exercise> downloadExercises(Course course) throws TmcInterruptionException {
         Path target = Paths.get(exerciseDownloader.createCourseFolder(this.path, course.getName()));
         List<Exercise> downloaded = new ArrayList<>();
@@ -190,6 +189,4 @@ public class DownloadExercises extends Command<List<Exercise>> {
                     "Unable to download exercises: unable to get course details", ex);
         }
     }
-
-
 }

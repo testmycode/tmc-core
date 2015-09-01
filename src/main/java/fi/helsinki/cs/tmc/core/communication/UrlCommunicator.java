@@ -237,11 +237,9 @@ public class UrlCommunicator {
         return createClient().execute(request);
     }
 
-
     private void addCredentials(HttpRequestBase httpRequest, String credentials) {
         httpRequest.setHeader(
-                HttpHeaders.AUTHORIZATION,
-                "Basic " + Authorization.encode(credentials));
+                HttpHeaders.AUTHORIZATION, "Basic " + Authorization.encode(credentials));
     }
 
     /**

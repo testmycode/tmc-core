@@ -89,7 +89,6 @@ public class Course {
         return URI.create(detailsUrl);
     }
 
-
     public void setDetailsUrl(String detailsUrl) {
         this.detailsUrl = detailsUrl;
     }

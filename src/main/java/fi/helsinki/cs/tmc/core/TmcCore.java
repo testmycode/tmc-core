@@ -70,7 +70,8 @@ public class TmcCore {
         this.threadPool = pool;
     }
 
-    public TmcCore(TmcSettings settings,
+    public TmcCore(
+            TmcSettings settings,
             Path exerciseChecksumCacheLocation,
             ListeningExecutorService threadPool)
             throws FileNotFoundException {
@@ -123,7 +124,7 @@ public class TmcCore {
     /**
      * Returns course instance with given name.
      */
-     public ListenableFuture<Course> getCourse(String courseName) throws TmcCoreException {
+    public ListenableFuture<Course> getCourse(String courseName) throws TmcCoreException {
         checkParameters(settings.getUsername(), settings.getPassword());
         GetCourse getC = new GetCourse(settings, courseName);
         return threadPool.submit(getC);
@@ -135,8 +136,7 @@ public class TmcCore {
      * @deprecated Use {@link #getCourse(String)} instead.
      */
     @Deprecated
-    public ListenableFuture<Course> getCourseByName(String courseName)
-    throws TmcCoreException {
+    public ListenableFuture<Course> getCourseByName(String courseName) throws TmcCoreException {
         return getCourse(courseName);
     }
 
@@ -152,10 +152,9 @@ public class TmcCore {
      * @throws TmcCoreException if something in the given input was wrong
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
-            Path path, int courseId, ProgressObserver observer)
-            throws TmcCoreException {
-        DownloadExercises downloadCommand
-                = new DownloadExercises(settings, path.toString(), courseId, observer, updateCache);
+            Path path, int courseId, ProgressObserver observer) throws TmcCoreException {
+        DownloadExercises downloadCommand =
+                new DownloadExercises(settings, path.toString(), courseId, observer, updateCache);
         return threadPool.submit(downloadCommand);
     }
 
@@ -174,14 +173,14 @@ public class TmcCore {
      * Downloads exercises.
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
-            List<Exercise> exercises, ProgressObserver observer)
-            throws TmcCoreException {
-        DownloadExercises downloadCommand
-                = new DownloadExercises(settings, exercises, observer, updateCache);
+            List<Exercise> exercises, ProgressObserver observer) throws TmcCoreException {
+        DownloadExercises downloadCommand =
+                new DownloadExercises(settings, exercises, observer, updateCache);
         return threadPool.submit(downloadCommand);
     }
 
-    public ListenableFuture<Boolean> downloadModelSolution(Exercise exercise) throws TmcCoreException {
+    public ListenableFuture<Boolean> downloadModelSolution(Exercise exercise)
+            throws TmcCoreException {
         DownloadModelSolution downloadCommand = new DownloadModelSolution(settings, exercise);
         return threadPool.submit(downloadCommand);
     }
@@ -221,17 +220,26 @@ public class TmcCore {
      * @throws TmcCoreException if there was no course in the given path, no exercise in the given
      * path, or not logged in
      */
-    public ListenableFuture<SubmissionResult> submit(Path path, ProgressObserver observer) throws TmcCoreException {
+    public ListenableFuture<SubmissionResult> submit(Path path, ProgressObserver observer)
+            throws TmcCoreException {
         UrlCommunicator communicator = new UrlCommunicator(settings);
         TmcApi tmcApi = new TmcApi(communicator, settings);
 
-        ExerciseSubmitter exerciseSubmitter = new ExerciseSubmitter(
-                new ProjectRootFinder(tmcApi),
-                new TaskExecutorImpl(),
-                communicator, tmcApi, settings);
+        ExerciseSubmitter exerciseSubmitter =
+                new ExerciseSubmitter(
+                        new ProjectRootFinder(tmcApi),
+                        new TaskExecutorImpl(),
+                        communicator,
+                        tmcApi,
+                        settings);
 
-        Submit submit = new Submit(
-                settings, exerciseSubmitter, new SubmissionPoller(tmcApi), path.toString(), observer);
+        Submit submit =
+                new Submit(
+                        settings,
+                        exerciseSubmitter,
+                        new SubmissionPoller(tmcApi),
+                        path.toString(),
+                        observer);
 
         return threadPool.submit(submit);
     }
@@ -290,8 +298,8 @@ public class TmcCore {
      */
     public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course)
             throws TmcCoreException {
-        ExerciseUpdateHandler updater
-                = new ExerciseUpdateHandler(updateCache, new TmcApi(settings));
+        ExerciseUpdateHandler updater =
+                new ExerciseUpdateHandler(updateCache, new TmcApi(settings));
         GetExerciseUpdates command = new GetExerciseUpdates(course, updater);
         return threadPool.submit(command);
     }
@@ -338,7 +346,7 @@ public class TmcCore {
      *     given path
      */
     public ListenableFuture<URI> requestCodeReview(Path path, String message)
-        throws TmcCoreException {
+            throws TmcCoreException {
         //checkParameters(path);
         RequestCodeReview request = new RequestCodeReview(settings, path, message);
         return threadPool.submit(request);
@@ -353,8 +361,8 @@ public class TmcCore {
      */
     public ListenableFuture<List<HttpResult>> sendSpywareDiffs(byte[] spywareDiffs)
             throws TmcCoreException {
-        SendSpywareDiffs spyware
-                = new SendSpywareDiffs(settings, new DiffSender(settings), spywareDiffs);
+        SendSpywareDiffs spyware =
+                new SendSpywareDiffs(settings, new DiffSender(settings), spywareDiffs);
         return threadPool.submit(spyware);
     }
 

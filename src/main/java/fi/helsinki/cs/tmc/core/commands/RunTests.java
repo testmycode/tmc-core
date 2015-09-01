@@ -22,7 +22,7 @@ public class RunTests extends Command<RunResult> {
      */
     public RunTests(TmcSettings settings, String path) {
         super(settings);
-        this.path  = path;
+        this.path = path;
     }
 
     /**

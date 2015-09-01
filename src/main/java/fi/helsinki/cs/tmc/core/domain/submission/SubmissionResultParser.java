@@ -49,8 +49,7 @@ public class SubmissionResultParser {
 
         } catch (RuntimeException | IOException exception) {
             throw new RuntimeException(
-                    "Failed to parse submission result: " + exception.getMessage(),
-                    exception);
+                    "Failed to parse submission result: " + exception.getMessage(), exception);
         }
     }
 

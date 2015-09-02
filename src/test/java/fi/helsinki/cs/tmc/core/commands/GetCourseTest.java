@@ -27,10 +27,12 @@ import java.net.URISyntaxException;
 
 public class GetCourseTest {
 
-    @Rule public WireMockRule wireMock = new WireMockRule();
+    @Rule public WireMockRule wireMock = new WireMockRule(0);
+
+    private String serverAddress = "http://127.0.0.1:";
 
     private UrlHelper urlHelper;
-    private URI finalUrl = new URI("http://127.0.0.1:8080/courses/19.json");
+    private URI finalUrl;
     private UrlMatchingStrategy mockUrl;
     private TmcCore core;
     private CoreTestSettings settings;
@@ -39,14 +41,16 @@ public class GetCourseTest {
         settings = new CoreTestSettings();
         settings.setCredentials("test", "1234");
         settings.setCurrentCourse(new Course());
-        settings.setServerAddress("http://localhost:8080/");
         settings.setApiVersion("7");
         urlHelper = new UrlHelper(settings);
         mockUrl = urlPathEqualTo("/courses/19.json");
     }
 
     @Before
-    public void setup() {
+    public void setup() throws URISyntaxException {
+        serverAddress += wireMock.port();
+        settings.setServerAddress(serverAddress);
+        finalUrl = new URI(serverAddress + "/courses/19.json");
         core = new TmcCore(settings);
     }
 

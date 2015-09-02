@@ -42,7 +42,9 @@ import static org.mockito.Matchers.eq;
 
 public class ExerciseDownloaderTest {
 
-    @Rule public WireMockRule wireMockRule = new WireMockRule();
+    @Rule public WireMockRule wireMockRule = new WireMockRule(0);
+
+    private String serverAddress = "http://127.0.0.1:";
 
     private ArrayList<Exercise> exercises;
     private ExerciseDownloader exDl;
@@ -60,6 +62,8 @@ public class ExerciseDownloaderTest {
     public void setup() {
         settings = new CoreTestSettings();
 
+        serverAddress += wireMockRule.port();
+
         exDl = new ExerciseDownloader(new UrlCommunicator(settings), new TmcApi(settings));
         exercises = new ArrayList<>();
 
@@ -68,20 +72,20 @@ public class ExerciseDownloaderTest {
         zipDestination = Paths.get("src", "test", "resources", "__files").toString();
 
         modelSolutionExample = new Exercise();
-        modelSolutionExample.setSolutionDownloadUrl("http://127.0.0.1:8080/model");
+        modelSolutionExample.setSolutionDownloadUrl(serverAddress + "/model");
 
         Exercise e1 = new Exercise();
-        e1.setZipUrl("http://127.0.0.1:8080/ex1.zip");
+        e1.setZipUrl(serverAddress + "/ex1.zip");
         e1.setName("Exercise1");
         exercises.add(e1);
 
         Exercise e2 = new Exercise();
-        e2.setZipUrl("http://127.0.0.1:8080/ex2.zip");
+        e2.setZipUrl(serverAddress + "/ex2.zip");
         e2.setName("Exercise2");
         exercises.add(e2);
 
         Exercise e3 = new Exercise();
-        e3.setZipUrl("http://127.0.0.1:8080/ex3.zip");
+        e3.setZipUrl(serverAddress + "/ex3.zip");
         e3.setName("Exercise3");
         exercises.add(e3);
 

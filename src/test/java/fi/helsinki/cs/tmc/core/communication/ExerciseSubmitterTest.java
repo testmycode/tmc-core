@@ -150,8 +150,8 @@ public class ExerciseSubmitterTest {
         Path testPath = Paths.get("home", "test", "expired-course", "viikko01", "tira1.1");
 
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
-        this.courseSubmitter =
-                new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
+        this.courseSubmitter
+                = new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         courseSubmitter.submit(testPath);
     }

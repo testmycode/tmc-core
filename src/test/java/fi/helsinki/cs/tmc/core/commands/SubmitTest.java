@@ -154,7 +154,6 @@ public class SubmitTest {
                         WireMock.aResponse()
                         .withStatus(200)
                         .withBody(ExampleJson.successfulSubmission)));
-
         SubmissionResult submissionResult = submit.call();
         assertNotNull(submissionResult);
         assertTrue(submissionResult.isAllTestsPassed());

@@ -93,7 +93,7 @@ public class ExerciseSubmitter {
     /**
      * Submits folder of exercise to TMC. Finds it from current directory.
      *
-     * @param currentPath path from which this was called. 
+     * @param currentPath path from which this was called.
      * @return URI from which to get results or null if exercise was not found.
      * @throws IOException if zip creation fails
      */
@@ -217,7 +217,8 @@ public class ExerciseSubmitter {
     }
 
     private URI sendZipFileWithParams(
-            Path currentPath, Exercise currentExercise,
+            Path currentPath, 
+            Exercise currentExercise,
             boolean paste, Map<String, String> params)
             throws IOException, URISyntaxException, NoLanguagePluginFoundException {
         Optional<ProgressObserver> observer = Optional.absent();

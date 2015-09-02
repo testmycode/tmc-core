@@ -1,17 +1,12 @@
 package fi.helsinki.cs.tmc.core.communication;
 
+import com.google.common.base.Optional;
 import static com.google.common.base.Strings.isNullOrEmpty;
-
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.util.Folders;
+import fi.helsinki.cs.tmc.core.util.Optionals;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
-import com.google.common.base.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -20,6 +15,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExerciseDownloader {
 
@@ -28,19 +30,28 @@ public class ExerciseDownloader {
     private UrlCommunicator urlCommunicator;
     private TmcApi tmcApi;
     private TaskExecutor taskExecutor;
+    private final ExecutorService downloadThreadPool;
 
     /**
      * Constructor for dependency injection.
+     *
+     * @param urlCommunicator
+     * @param tmcApi
+     * @param taskExecutor
      */
     public ExerciseDownloader(
             UrlCommunicator urlCommunicator, TmcApi tmcApi, TaskExecutor taskExecutor) {
         this.urlCommunicator = urlCommunicator;
         this.tmcApi = tmcApi;
         this.taskExecutor = taskExecutor;
+        this.downloadThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
     /**
      * Creates a new ExerciseDownloader instance.
+     *
+     * @param urlCommunicator
+     * @param tmcApi
      */
     public ExerciseDownloader(UrlCommunicator urlCommunicator, TmcApi tmcApi) {
         this(urlCommunicator, tmcApi, new TaskExecutorImpl());
@@ -73,6 +84,8 @@ public class ExerciseDownloader {
     /**
      * Method for downloading files if path where to download is defined.
      *
+     * @param exercises
+     * @param path
      * @return info about downloading.
      */
     public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, String path) {
@@ -86,19 +99,38 @@ public class ExerciseDownloader {
      * @param exercises list of exercises which will be downloaded, list is parsed from json.
      * @param path server path to exercises.
      * @param folderName folder name of where exercises will be extracted (for example course name)
+     * @return
      */
     public Optional<List<Exercise>> downloadFiles(
             List<Exercise> exercises, String path, String folderName) {
-        List<Exercise> downloadedExercises = new ArrayList<>();
-        path = createCourseFolder(path, folderName);
-        for (Exercise exercise : exercises) {
-            boolean success = handleSingleExercise(exercise, path);
-            if (success) {
-                downloadedExercises.add(exercise);
+        final List<Future<Optional<Exercise>>> futures = new ArrayList<>();
+        final String coursePath = createCourseFolder(path, folderName);
+        for (final Exercise exercise : exercises) {
+            Callable<Optional<Exercise>> downloadHandler
+                    = new SingleExerciseDownloadHandler(exercise, coursePath);
+            futures.add(downloadThreadPool.submit(downloadHandler));
+        }
+        return collectExerciseFutures(futures);
+    }
+
+    private Optional<List<Exercise>> collectExerciseFutures(
+            List<Future<Optional<Exercise>>> futures) {
+        List<Exercise> exercises = new ArrayList<>();
+        for (Future<Optional<Exercise>> future : futures) {
+            try {
+                Optional<Exercise> exercise = future.get();
+                if (exercise.isPresent()) {
+                    exercises.add(exercise.get());
+                }
+            }
+            catch (ExecutionException ex) {
+                log.error("Failed to handle exercise: {}", ex);
+            }
+            catch (InterruptedException ex) {
+                log.error("Handling of exercise was interrupted: {}", ex);
             }
         }
-
-        return Optional.of(downloadedExercises);
+        return Optionals.ofNonEmpty(exercises);
     }
 
     public String createCourseFolder(String path, String folderName) {
@@ -118,6 +150,7 @@ public class ExerciseDownloader {
      *
      * @param exercise Exercise which will be downloaded
      * @param path path where single exercise will be downloaded
+     * @return
      */
     public boolean handleSingleExercise(Exercise exercise, String path) {
         if (exercise.isLocked()) {
@@ -127,10 +160,12 @@ public class ExerciseDownloader {
         downloadExerciseZip(exercise.getZipUrl(), filePath.toString());
         try {
             taskExecutor.extractProject(filePath, Paths.get(path));
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             log.error("Could not extract archive: {}", path.toString());
             return false;
-        } finally {
+        }
+        finally {
             deleteZip(filePath);
         }
         return true;
@@ -141,10 +176,12 @@ public class ExerciseDownloader {
         downloadExerciseZip(exercise.getSolutionDownloadUrl(), zipPath.toString());
         try {
             taskExecutor.extractProject(zipPath, targetPath, true);
-        } catch (IOException ex) {
+        }
+        catch (IOException ex) {
             log.error("Could not download model solution: {}", ex);
             return false;
-        } finally {
+        }
+        finally {
             deleteZip(zipPath);
         }
         return true;
@@ -158,7 +195,8 @@ public class ExerciseDownloader {
     private void deleteZip(Path filePath) {
         try {
             Files.delete(filePath);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -179,17 +217,6 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Get advantage percent in downloading single exercise.
-     *
-     * @param exCount order number of exercise in downloading
-     * @param exercisesSize total amount of exercises that will be downloaded
-     * @return percents
-     */
-    public double getPercents(int exCount, int exercisesSize) {
-        return Math.round(1.0 * exCount / exercisesSize * 100);
-    }
-
-    /**
      * Downloads single .zip file by using URLCommunicator.
      *
      * @param zipUrl url which will be downloaded
@@ -198,5 +225,24 @@ public class ExerciseDownloader {
     private void downloadExerciseZip(URI zipUrl, String path) {
         File file = new File(path);
         urlCommunicator.downloadToFile(zipUrl, file);
+    }
+
+    private class SingleExerciseDownloadHandler implements Callable<Optional<Exercise>> {
+
+        private final Exercise exercise;
+        private final String coursePath;
+
+        public SingleExerciseDownloadHandler(Exercise exercise, String coursePath) {
+            this.exercise = exercise;
+            this.coursePath = coursePath;
+        }
+
+        @Override
+        public Optional<Exercise> call() {
+            if (handleSingleExercise(exercise, coursePath)) {
+                return Optional.of(exercise);
+            }
+            return Optional.absent();
+        }
     }
 }

@@ -217,7 +217,7 @@ public class ExerciseSubmitter {
     }
 
     private URI sendZipFileWithParams(
-            Path currentPath, 
+            Path currentPath,
             Exercise currentExercise,
             boolean paste, Map<String, String> params)
             throws IOException, URISyntaxException, NoLanguagePluginFoundException {

@@ -65,8 +65,8 @@ public class ExerciseSubmitterTest {
 
         Mockito.when(langs.compressProject(Mockito.any(Path.class))).thenReturn(new byte[100]);
 
-        this.courseSubmitter =
-                new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
+        this.courseSubmitter
+                = new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
 
         mockUrlCommunicator(
                 "/courses.json?api_version=7&client=tmc_cli&client_version=1",
@@ -106,8 +106,8 @@ public class ExerciseSubmitterTest {
     public void testGetExerciseName() {
         final Path path = Paths.get("home", "test", "ohpe-test", "viikko_01");
         settings.setCurrentCourse(rootFinder.getCurrentCourse(path).or(new Course()));
-        this.courseSubmitter =
-                new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
+        this.courseSubmitter
+                = new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(path);
         assertEquals("viikko_01", path.getFileName().toString());
     }
@@ -240,9 +240,9 @@ public class ExerciseSubmitterTest {
     @Test
     public void submitWithCodeReviewRequest()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
-        Path testPath =
-                Paths.get(
+            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+        Path testPath
+                = Paths.get(
                         "home",
                                 "test",
                                 "no-deadline",
@@ -312,7 +312,6 @@ public class ExerciseSubmitterTest {
 
     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
-
         Mockito.when(urlCommunicator.makeGetRequest(
                         Mockito.argThat(new UriContains(pieceOfUrl)), Mockito.anyString()))
                 .thenReturn(fakeResult);

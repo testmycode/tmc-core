@@ -5,6 +5,8 @@
 
 [![Coverage Status](https://coveralls.io/repos/testmycode/tmc-core/badge.svg?branch=master&service=github)](https://coveralls.io/github/testmycode/tmc-core?branch=master)
 
+Poista tämä!
+
 This is a library for the core functionalities of a [TestMyCode](https://testmycode.github.io) 
 client. The tmc-core uses [tmc-langs](https://github.com/testmycode/tmc-langs) for 
 running tests locally, and supports fully the same languages as tmc-langs. Other features

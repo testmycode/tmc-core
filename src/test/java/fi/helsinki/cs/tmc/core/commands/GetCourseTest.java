@@ -27,7 +27,13 @@ import java.net.URISyntaxException;
 
 public class GetCourseTest {
 
-    @Rule public WireMockRule wireMock = new WireMockRule(0);
+    /*
+    *  Adding 0 to constructor makes this work on all ports, but the testCallWithCourseName() -test brakes
+    *  for some reason. The reason lies somewhere deep inside this tmc-core. I think GetCourse - class's pollServerForCourseUrl()
+    *  is the reason. It gives address directly from the .json. Then when .get() of the getCourse - object is called it
+    *  makes the request to :8080 port instead of the wiremocks random open port.
+    * */
+    @Rule public WireMockRule wireMock = new WireMockRule();
 
     private String serverAddress = "http://127.0.0.1:";
 
@@ -95,6 +101,7 @@ public class GetCourseTest {
 
     @Test
     public void testCallWithCourseName() throws Exception {
+
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses.json"))
                         .willReturn(aResponse().withBody(ExampleJson.allCoursesExample)));
@@ -102,6 +109,7 @@ public class GetCourseTest {
                 get(urlPathEqualTo("/courses/3.json"))
                         .willReturn(
                                 aResponse().withStatus(200).withBody(ExampleJson.courseExample)));
+
 
         ListenableFuture<Course> getCourse = core.getCourseByName("2013_ohpeJaOhja");
         Course course = getCourse.get();

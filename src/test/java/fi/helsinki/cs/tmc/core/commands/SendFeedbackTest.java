@@ -22,17 +22,19 @@ import java.util.TreeMap;
 
 public class SendFeedbackTest {
 
-    private static final String URL = "http://localhost:8080/feedback";
+    private static String URL = "http://localhost:8080/feedback";
 
     private SendFeedback command;
     private CoreTestSettings settings;
 
-    @Rule public WireMockRule wireMock = new WireMockRule();
+    @Rule public WireMockRule wireMock = new WireMockRule(0);
+    private String serverAddress = "http://127.0.0.1:";
 
     @Before
     public void setUp() {
         settings = new CoreTestSettings();
-
+        serverAddress += wireMock.port();
+        URL = serverAddress + "/feedback";
         command = new SendFeedback(settings, testCaseMap(), URL);
     }
 
@@ -60,7 +62,7 @@ public class SendFeedbackTest {
                         .willReturn(WireMock.aResponse().withStatus(200)));
 
         Course currentCourse = new Course();
-        currentCourse.setSpywareUrls(Arrays.asList("http://localhost:8080/spyware"));
+        currentCourse.setSpywareUrls(Arrays.asList(serverAddress + "/spyware"));
         settings.setCurrentCourse(currentCourse);
 
         command = new SendFeedback(settings, testCaseMap(), URL);

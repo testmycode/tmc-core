@@ -17,8 +17,7 @@ public class Folders {
             if (tmp == null) {
                 try {
                     tmp = Files.createTempDirectory("tmc-core");
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     tmp = Paths.get(System.getProperty("java.io.tmpdir"));
                 }
             }

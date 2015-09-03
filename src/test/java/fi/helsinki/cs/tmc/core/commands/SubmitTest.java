@@ -51,6 +51,10 @@ import static org.mockito.Mockito.verify;
 
 public class SubmitTest {
 
+    /**
+     * Here the same problem as in GetCourseTest
+     * */
+
     private Submit submit;
     private ExerciseSubmitter submitterMock;
     private CoreTestSettings settings;
@@ -58,6 +62,7 @@ public class SubmitTest {
     private ProgressObserver observer;
 
     @Rule public WireMockRule wireMock = new WireMockRule();
+    private String serverAddress = "http://127.0.0.1:";
 
     private Submit submitWithObserver;
     private SubmissionPoller pollerMock;
@@ -71,6 +76,8 @@ public class SubmitTest {
         settings.setCurrentCourse(new Course());
         settings.setApiVersion("7");
 
+        serverAddress += wireMock.port();
+
         observer = mock(ProgressObserver.class);
 
         submissionUrl = new UrlHelper(settings).withParams("/submissions/1781.json");
@@ -80,7 +87,7 @@ public class SubmitTest {
 
         path = Paths.get("polku", "kurssi", "kansioon", "src").toString();
 
-        when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
+        when(submitterMock.submit(anyString())).thenReturn(serverAddress + submissionUrl);
         submit =
                 new Submit(
                         settings, submitterMock, new SubmissionPoller(new TmcApi(settings)), path);
@@ -132,7 +139,7 @@ public class SubmitTest {
     public void submitWithTmcCore() throws Exception {
         buildWireMock();
 
-        CoreTestSettings settings = new CoreTestSettings("test", "1234", "http://localhost:8080");
+        CoreTestSettings settings = new CoreTestSettings("test", "1234", serverAddress);
         TmcApi tmcApi = new TmcApi(settings);
         Course course = tmcApi.getCourseFromString(ExampleJson.noDeadlineCourseExample);
         settings.setCurrentCourse(course);
@@ -184,7 +191,7 @@ public class SubmitTest {
                                         .withBody(
                                                 ExampleJson.failedSubmitResponse.replace(
                                                         "https://tmc.mooc.fi/staging",
-                                                        "http://localhost:8080"))));
+                                                        serverAddress))));
 
         wireMock.stubFor(
                 get(urlPathEqualTo("/submissions/7777.json"))
@@ -194,7 +201,7 @@ public class SubmitTest {
                                         .withBody(
                                                 ExampleJson.failedSubmission.replace(
                                                         "https://tmc.mooc.fi/staging",
-                                                        "http://localhost:8080"))));
+                                                        serverAddress))));
 
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses/19.json"))
@@ -204,6 +211,6 @@ public class SubmitTest {
                                         .withBody(
                                                 ExampleJson.noDeadlineCourseExample.replace(
                                                         "https://tmc.mooc.fi/staging",
-                                                        "http://localhost:8080"))));
+                                                        serverAddress))));
     }
 }

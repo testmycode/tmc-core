@@ -29,13 +29,13 @@ import java.util.List;
 
 public class DiffSenderTest {
 
-    @Rule public WireMockRule wireMockRule = new WireMockRule();
+    @Rule public WireMockRule wireMockRule = new WireMockRule(0);
+    private String serverAddress = "http://127.0.0.1:";
 
     @Rule public ExpectedException exceptedEx = ExpectedException.none();
 
-    private final String spywareUrl = "http://127.0.0.1:8080/spyware";
+    private String spywareUrl;
     private DiffSender sender;
-    private String originalServerUrl;
     private CoreTestSettings settings;
 
     /**
@@ -47,6 +47,9 @@ public class DiffSenderTest {
         settings.setServerAddress("http://127.0.0.1:8080");
         settings.setUsername("test");
         settings.setPassword("1234");
+
+        serverAddress += wireMockRule.port();
+        spywareUrl = serverAddress + "/spyware";
 
         sender = new DiffSender(settings);
         startWiremock();

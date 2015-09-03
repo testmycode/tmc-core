@@ -29,12 +29,14 @@ public class VerifyCredentialsTest {
     private CoreTestSettings settings;
     private UrlCommunicator comm;
 
-    @Rule public WireMockRule wireMockServer = new WireMockRule();
+    @Rule public WireMockRule wireMockServer = new WireMockRule(0);
+    private String serverAddress = "http://127.0.0.1:";
 
     @Before
     public void setUp() {
+        serverAddress += wireMockServer.port();
         settings = new CoreTestSettings();
-        settings.setServerAddress("http://127.0.0.1:8080/");
+        settings.setServerAddress(serverAddress);
         comm = new UrlCommunicator(settings);
     }
 

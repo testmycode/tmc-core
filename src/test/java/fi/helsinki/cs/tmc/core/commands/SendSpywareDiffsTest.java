@@ -27,7 +27,8 @@ public class SendSpywareDiffsTest {
     private CoreTestSettings settings;
     private byte[] bytes;
 
-    @Rule public WireMockRule wireMock = new WireMockRule();
+    @Rule public WireMockRule wireMock = new WireMockRule(0);
+    private String serverAddress = "http://127.0.0.1:";
 
     @Before
     public void setUp() {
@@ -41,6 +42,7 @@ public class SendSpywareDiffsTest {
         this.bytes = new byte[] {0x01, 0x02, 0x03};
 
         this.command = new SendSpywareDiffs(settings, sender, bytes);
+        serverAddress += wireMock.port();
     }
 
     @Test(expected = TmcCoreException.class)
@@ -72,7 +74,7 @@ public class SendSpywareDiffsTest {
                                         .withBody("SPYWARE TULI PERILLE")));
 
         Course currentCourse = new Course();
-        currentCourse.setSpywareUrls(Arrays.asList("http://localhost:8080/spyware"));
+        currentCourse.setSpywareUrls(Arrays.asList(serverAddress + "/spyware"));
         settings.setCurrentCourse(currentCourse);
 
         command = new SendSpywareDiffs(settings, sender, bytes);

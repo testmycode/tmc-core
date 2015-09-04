@@ -10,7 +10,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.TmcCore;
@@ -24,6 +28,7 @@ import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -31,13 +36,12 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
+
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -45,11 +49,9 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 public class SubmitTest {
+
 
     private Submit submit;
     private ExerciseSubmitter submitterMock;
@@ -57,19 +59,65 @@ public class SubmitTest {
     private String submissionUrl;
     private ProgressObserver observer;
 
-    @Rule public WireMockRule wireMock = new WireMockRule();
+    @Rule public WireMockRule wireMock = new WireMockRule(0);
+    private String serverAddress = "http://127.0.0.1:";
 
     private Submit submitWithObserver;
     private SubmissionPoller pollerMock;
     private String path;
 
-    @Before
-    public void setup() throws Exception {
+    private void createSettings() {
         settings = new CoreTestSettings();
         settings.setUsername("Samu");
         settings.setPassword("Bossman");
         settings.setCurrentCourse(new Course());
         settings.setApiVersion("7");
+    }
+
+    private void buildWireMock() throws URISyntaxException {
+        wireMock.stubFor(
+                post(urlPathEqualTo("/exercises/1231/submissions.json"))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(
+                                                ExampleJson.failedSubmitResponse.replace(
+                                                        "https://tmc.mooc.fi/staging",
+                                                        serverAddress)
+                                                        .replaceAll(
+                                                                "8080",
+                                                                String.valueOf(wireMock.port())))));
+
+        wireMock.stubFor(
+                get(urlPathEqualTo("/submissions/7777.json"))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(
+                                                ExampleJson.failedSubmission
+                                                        .replace(
+                                                                "https://tmc.mooc.fi/staging",
+                                                                serverAddress)
+                                                        .replaceAll(
+                                                                "8080",
+                                                                String.valueOf(wireMock.port())))));
+
+        wireMock.stubFor(
+                get(urlPathEqualTo("/courses/19.json"))
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(
+                                                ExampleJson.noDeadlineCourseExample.replace(
+                                                        "https://tmc.mooc.fi/staging",
+                                                        serverAddress))));
+    }
+
+    @Before
+    public void setup() throws Exception {
+        createSettings();
+
+        serverAddress += wireMock.port();
 
         observer = mock(ProgressObserver.class);
 
@@ -80,7 +128,7 @@ public class SubmitTest {
 
         path = Paths.get("polku", "kurssi", "kansioon", "src").toString();
 
-        when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
+        when(submitterMock.submit(anyString())).thenReturn(serverAddress + submissionUrl);
         submit =
                 new Submit(
                         settings, submitterMock, new SubmissionPoller(new TmcApi(settings)), path);
@@ -132,7 +180,7 @@ public class SubmitTest {
     public void submitWithTmcCore() throws Exception {
         buildWireMock();
 
-        CoreTestSettings settings = new CoreTestSettings("test", "1234", "http://localhost:8080");
+        CoreTestSettings settings = new CoreTestSettings("test", "1234", serverAddress);
         TmcApi tmcApi = new TmcApi(settings);
         Course course = tmcApi.getCourseFromString(ExampleJson.noDeadlineCourseExample);
         settings.setCurrentCourse(course);
@@ -169,41 +217,11 @@ public class SubmitTest {
             throws TmcCoreException, IOException, ParseException, ExpiredException,
                     IllegalArgumentException, InterruptedException, URISyntaxException,
                     NoLanguagePluginFoundException {
+
         when(submitterMock.submit(eq(path), eq(observer))).thenReturn("xkcd.com");
         submitWithObserver.call();
         verify(submitterMock).submit(eq(path), eq(observer));
         verify(pollerMock).getSubmissionResult(eq("xkcd.com"), eq(observer));
     }
 
-    private void buildWireMock() throws URISyntaxException {
-        wireMock.stubFor(
-                post(urlPathEqualTo("/exercises/1231/submissions.json"))
-                        .willReturn(
-                                WireMock.aResponse()
-                                        .withStatus(200)
-                                        .withBody(
-                                                ExampleJson.failedSubmitResponse.replace(
-                                                        "https://tmc.mooc.fi/staging",
-                                                        "http://localhost:8080"))));
-
-        wireMock.stubFor(
-                get(urlPathEqualTo("/submissions/7777.json"))
-                        .willReturn(
-                                WireMock.aResponse()
-                                        .withStatus(200)
-                                        .withBody(
-                                                ExampleJson.failedSubmission.replace(
-                                                        "https://tmc.mooc.fi/staging",
-                                                        "http://localhost:8080"))));
-
-        wireMock.stubFor(
-                get(urlPathEqualTo("/courses/19.json"))
-                        .willReturn(
-                                WireMock.aResponse()
-                                        .withStatus(200)
-                                        .withBody(
-                                                ExampleJson.noDeadlineCourseExample.replace(
-                                                        "https://tmc.mooc.fi/staging",
-                                                        "http://localhost:8080"))));
-    }
 }

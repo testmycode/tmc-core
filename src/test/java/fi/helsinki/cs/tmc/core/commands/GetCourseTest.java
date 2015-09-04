@@ -8,7 +8,6 @@ import static org.junit.Assert.assertEquals;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.TmcCore;
-import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
@@ -27,11 +26,12 @@ import java.net.URISyntaxException;
 
 public class GetCourseTest {
 
-    @Rule public WireMockRule wireMock = new WireMockRule();
+    @Rule public WireMockRule wireMock = new WireMockRule(0);
+    private String serverAddress = "http://127.0.0.1:";
 
-    private UrlHelper urlHelper;
-    private URI finalUrl = new URI("http://127.0.0.1:8080/courses/19.json");
+    private URI finalUrl;
     private UrlMatchingStrategy mockUrl;
+
     private TmcCore core;
     private CoreTestSettings settings;
 
@@ -39,15 +39,40 @@ public class GetCourseTest {
         settings = new CoreTestSettings();
         settings.setCredentials("test", "1234");
         settings.setCurrentCourse(new Course());
-        settings.setServerAddress("http://localhost:8080/");
         settings.setApiVersion("7");
-        urlHelper = new UrlHelper(settings);
         mockUrl = urlPathEqualTo("/courses/19.json");
     }
 
     @Before
-    public void setup() {
+    public void setup() throws URISyntaxException {
+        serverAddress += wireMock.port();
+        settings.setServerAddress(serverAddress);
+        finalUrl = new URI(serverAddress + "/courses/19.json");
         core = new TmcCore(settings);
+        performWiremockStubbing();
+    }
+
+    private void performWiremockStubbing() {
+        wireMock.stubFor(
+                get(urlPathEqualTo("/courses.json"))
+                        .willReturn(aResponse().withBody(ExampleJson
+                                .allCoursesExample.replaceAll("8080", String.valueOf(wireMock.port())))));
+        wireMock.stubFor(
+                get(urlPathEqualTo("/courses/3.json"))
+                        .willReturn(
+                                aResponse().withStatus(200).withBody(ExampleJson.courseExample)));
+        wireMock.stubFor(
+                get(mockUrl)
+                        .willReturn(
+                                aResponse().withStatus(200).withBody(ExampleJson.courseExample)));
+    }
+
+    private CoreTestSettings createSettingsWith(String password, String username, String address) {
+        CoreTestSettings localSettings = new CoreTestSettings();
+        localSettings.setPassword(password);
+        localSettings.setUsername(username);
+        localSettings.setServerAddress(address);
+        return localSettings;
     }
 
     @Test(expected = TmcCoreException.class)
@@ -68,20 +93,8 @@ public class GetCourseTest {
         core.getCourse(finalUrl);
     }
 
-    private CoreTestSettings createSettingsWith(String password, String username, String address) {
-        CoreTestSettings localSettings = new CoreTestSettings();
-        localSettings.setPassword(password);
-        localSettings.setUsername(username);
-        localSettings.setServerAddress(address);
-        return localSettings;
-    }
-
     @Test
     public void testCall() throws Exception {
-        wireMock.stubFor(
-                get(mockUrl)
-                        .willReturn(
-                                aResponse().withStatus(200).withBody(ExampleJson.courseExample)));
 
         ListenableFuture<Course> getCourse = core.getCourse(finalUrl);
         Course course = getCourse.get();
@@ -91,13 +104,6 @@ public class GetCourseTest {
 
     @Test
     public void testCallWithCourseName() throws Exception {
-        wireMock.stubFor(
-                get(urlPathEqualTo("/courses.json"))
-                        .willReturn(aResponse().withBody(ExampleJson.allCoursesExample)));
-        wireMock.stubFor(
-                get(urlPathEqualTo("/courses/3.json"))
-                        .willReturn(
-                                aResponse().withStatus(200).withBody(ExampleJson.courseExample)));
 
         ListenableFuture<Course> getCourse = core.getCourseByName("2013_ohpeJaOhja");
         Course course = getCourse.get();

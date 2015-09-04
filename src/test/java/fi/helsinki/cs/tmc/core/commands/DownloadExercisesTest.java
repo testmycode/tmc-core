@@ -46,7 +46,6 @@ import org.junit.Test;
 
 import org.mockito.Mockito;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -62,10 +61,12 @@ public class DownloadExercisesTest {
     private TmcApi tmcApi;
     private TmcCore core;
 
-    @Rule public WireMockRule wireMockServer = new WireMockRule();
+    @Rule public WireMockRule wireMockServer = new WireMockRule(0);
+    private String serverAddress = "http://127.0.0.1:";
 
     @Before
     public void setup() throws IOException {
+        serverAddress += wireMockServer.port();
         settings = new CoreTestSettings();
         settings.setUsername("Bossman");
         settings.setPassword("Samu");
@@ -123,7 +124,7 @@ public class DownloadExercisesTest {
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi");
 
-        assertEquals(exercises.size(), 153);
+        assertEquals(exercises.size(), 152);
         assertTrue(Files.exists(exercisePath));
 
         FileUtils.deleteDirectory(exercisePath.toFile());
@@ -140,7 +141,7 @@ public class DownloadExercisesTest {
                 core.downloadExercises(folder, 35, observerMock);
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi");
-        assertEquals(exercises.size(), 153);
+        assertEquals(exercises.size(), 152);
         assertTrue(Files.exists(exercisePath));
         FileUtils.deleteDirectory(exercisePath.toFile());
         assertFalse(Files.exists(exercisePath));
@@ -150,7 +151,6 @@ public class DownloadExercisesTest {
 
     private CoreTestSettings createSettingsAndWiremock() throws URISyntaxException {
         CoreTestSettings settings1 = new CoreTestSettings();
-        String serverAddress = "http://127.0.0.1:8080";
         settings1.setServerAddress(serverAddress);
         settings1.setUsername("test");
         settings1.setPassword("1234");

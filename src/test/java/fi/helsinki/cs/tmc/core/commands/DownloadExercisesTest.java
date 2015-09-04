@@ -46,7 +46,6 @@ import org.junit.Test;
 
 import org.mockito.Mockito;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -125,7 +124,7 @@ public class DownloadExercisesTest {
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi");
 
-        assertEquals(exercises.size(), 152); // 8080-fix fixes everything except 152 != 153?
+        assertEquals(exercises.size(), 152);
         assertTrue(Files.exists(exercisePath));
 
         FileUtils.deleteDirectory(exercisePath.toFile());

@@ -16,13 +16,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class SendFeedbackTest {
-
-    private static String URL = "http://localhost:8080/feedback";
 
     private SendFeedback command;
     private CoreTestSettings settings;
@@ -34,8 +32,7 @@ public class SendFeedbackTest {
     public void setUp() {
         settings = new CoreTestSettings();
         serverAddress += wireMock.port();
-        URL = serverAddress + "/feedback";
-        command = new SendFeedback(settings, testCaseMap(), URL);
+        command = new SendFeedback(settings, testCaseMap(), serverAddress + "/feedback");
     }
 
     private Map<String, String> testCaseMap() {
@@ -52,7 +49,8 @@ public class SendFeedbackTest {
     public void testCallSendsFeedbackToServer() throws Exception {
         String expected =
                 "[{\"question_id\":\"4\", \"answer\":\"jee jee!\"},"
-                        + "{\"question_id\":\"13\", \"answer\":\"Oli kiva tehtävä. Opin paljon koodia, "
+                        + "{\"question_id\":\"13\", \"answer\":\""
+                        + "Oli kiva tehtävä. Opin paljon koodia, "
                         + "nyt tunnen osaavani paljon paremmin\"},{\"question_id\":\"88\", "
                         + "\"answer\":\"<(^)\n (___)\n lorem ipsum, sit dolor amet\"}]";
 
@@ -62,10 +60,10 @@ public class SendFeedbackTest {
                         .willReturn(WireMock.aResponse().withStatus(200)));
 
         Course currentCourse = new Course();
-        currentCourse.setSpywareUrls(Arrays.asList(serverAddress + "/spyware"));
+        currentCourse.setSpywareUrls(Collections.singletonList(serverAddress + "/spyware"));
         settings.setCurrentCourse(currentCourse);
 
-        command = new SendFeedback(settings, testCaseMap(), URL);
+        command = new SendFeedback(settings, testCaseMap(), serverAddress + "/feedback");
 
         command.call();
 

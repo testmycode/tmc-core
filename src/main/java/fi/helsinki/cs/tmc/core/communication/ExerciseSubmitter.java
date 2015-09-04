@@ -8,23 +8,22 @@ import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.core.zipping.RootFinder;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import com.google.common.base.Optional;
-import edu.emory.mathcs.backport.java.util.Collections;
-import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -203,7 +202,11 @@ public class ExerciseSubmitter {
     private URI sendZipFile(Path currentPath, Exercise currentExercise, boolean paste)
             throws IOException, URISyntaxException, NoLanguagePluginFoundException {
         Optional<ProgressObserver> observer = Optional.absent();
-        return sendZipFileWithParams(currentPath, currentExercise, paste, observer, Collections.emptyMap());
+        return sendZipFileWithParams(currentPath,
+                currentExercise,
+                paste,
+                observer,
+                Collections.<String, String>emptyMap());
     }
 
     private URI sendZipFile(
@@ -213,7 +216,7 @@ public class ExerciseSubmitter {
                 currentExercise,
                 paste,
                 Optional.of(observer),
-                Collections.emptyMap());
+                Collections.<String, String>emptyMap());
     }
 
     private URI sendZipFileWithParams(
@@ -237,13 +240,10 @@ public class ExerciseSubmitter {
         if (observer.isPresent()) {
             observer.get().progress("submitting exercise");
         }
-        URI resultUrl;
         if (paste) {
-            resultUrl = sendSubmissionToServerWithPasteAndParams(zippedExercise, returnUrl, params);
-        } else {
-            resultUrl = sendSubmissionToServerWithParams(zippedExercise, returnUrl, params);
+            return sendSubmissionToServerWithPasteAndParams(zippedExercise, returnUrl, params);
         }
-        return resultUrl;
+        return sendSubmissionToServerWithParams(zippedExercise, returnUrl, params);
     }
 
     private Path findExerciseFolderToZip(Path currentPath) {

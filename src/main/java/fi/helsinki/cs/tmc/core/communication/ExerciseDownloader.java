@@ -1,12 +1,18 @@
 package fi.helsinki.cs.tmc.core.communication;
 
-import com.google.common.base.Optional;
 import static com.google.common.base.Strings.isNullOrEmpty;
+
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.util.Folders;
 import fi.helsinki.cs.tmc.core.util.Optionals;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
+import com.google.common.base.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -20,8 +26,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ExerciseDownloader {
 
@@ -113,6 +117,8 @@ public class ExerciseDownloader {
                 Optional<Exercise> exercise = future.get();
                 if (exercise.isPresent()) {
                     exercises.add(exercise.get());
+                } else {
+                    
                 }
             } catch (ExecutionException ex) {
                 log.error("Failed to handle exercise: {}", ex);
@@ -146,7 +152,9 @@ public class ExerciseDownloader {
             return false;
         }
         Path filePath = Folders.tempFolder().resolve(exercise.getName() + ".zip");
-        downloadExerciseZip(exercise.getZipUrl(), filePath.toString());
+        if(!downloadExerciseZip(exercise.getZipUrl(), filePath.toString())) {
+            return false;
+        }
         try {
             taskExecutor.extractProject(filePath, Paths.get(path));
         } catch (IOException e) {
@@ -160,7 +168,9 @@ public class ExerciseDownloader {
 
     public boolean downloadModelSolution(Exercise exercise, Path targetPath) {
         Path zipPath = Folders.tempFolder().resolve(exercise.getName() + "-solution.zip");
-        downloadExerciseZip(exercise.getSolutionDownloadUrl(), zipPath.toString());
+        if(!downloadExerciseZip(exercise.getSolutionDownloadUrl(), zipPath.toString())) {
+            return false;
+        }
         try {
             taskExecutor.extractProject(zipPath, targetPath, true);
         } catch (IOException ex) {
@@ -206,9 +216,9 @@ public class ExerciseDownloader {
      * @param zipUrl url which will be downloaded
      * @param path where to download
      */
-    private void downloadExerciseZip(URI zipUrl, String path) {
+    private boolean downloadExerciseZip(URI zipUrl, String path) {
         File file = new File(path);
-        urlCommunicator.downloadToFile(zipUrl, file);
+        return urlCommunicator.downloadToFile(zipUrl, file);
     }
 
     private class SingleExerciseDownloadHandler implements Callable<Optional<Exercise>> {

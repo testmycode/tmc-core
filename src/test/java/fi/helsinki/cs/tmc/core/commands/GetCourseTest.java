@@ -26,16 +26,6 @@ import java.net.URISyntaxException;
 
 public class GetCourseTest {
 
-    /*
-    *  Adding 0 to constructor makes this work on all ports,
-    *  but the testCallWithCourseName() -test brakes for some reason.
-    *  The reason lies somewhere deep inside this tmc-core.
-    *  I think GetCourse - class's pollServerForCourseUrl() is the reason.
-    *  It gives address directly from the .json.
-    *  Then when .get() of the getCourse - object is called
-    *  it makes the request to :8080 port instead of the wiremocks random open port.
-    * */
-
     @Rule public WireMockRule wireMock = new WireMockRule(0);
     private String serverAddress = "http://127.0.0.1:";
 

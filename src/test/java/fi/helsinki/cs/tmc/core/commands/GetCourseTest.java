@@ -8,7 +8,6 @@ import static org.junit.Assert.assertEquals;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.TmcCore;
-import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
@@ -28,17 +27,21 @@ import java.net.URISyntaxException;
 public class GetCourseTest {
 
     /*
-    *  Adding 0 to constructor makes this work on all ports, but the testCallWithCourseName() -test brakes
-    *  for some reason. The reason lies somewhere deep inside this tmc-core. I think GetCourse - class's pollServerForCourseUrl()
-    *  is the reason. It gives address directly from the .json. Then when .get() of the getCourse - object is called it
-    *  makes the request to :8080 port instead of the wiremocks random open port.
+    *  Adding 0 to constructor makes this work on all ports,
+    *  but the testCallWithCourseName() -test brakes for some reason.
+    *  The reason lies somewhere deep inside this tmc-core.
+    *  I think GetCourse - class's pollServerForCourseUrl() is the reason.
+    *  It gives address directly from the .json.
+    *  Then when .get() of the getCourse - object is called
+    *  it makes the request to :8080 port instead of the wiremocks random open port.
     * */
+
     @Rule public WireMockRule wireMock = new WireMockRule(0);
     private String serverAddress = "http://127.0.0.1:";
 
-    private UrlHelper urlHelper;
     private URI finalUrl;
     private UrlMatchingStrategy mockUrl;
+
     private TmcCore core;
     private CoreTestSettings settings;
 
@@ -47,7 +50,6 @@ public class GetCourseTest {
         settings.setCredentials("test", "1234");
         settings.setCurrentCourse(new Course());
         settings.setApiVersion("7");
-        urlHelper = new UrlHelper(settings);
         mockUrl = urlPathEqualTo("/courses/19.json");
     }
 
@@ -57,6 +59,30 @@ public class GetCourseTest {
         settings.setServerAddress(serverAddress);
         finalUrl = new URI(serverAddress + "/courses/19.json");
         core = new TmcCore(settings);
+        performWiremockStubbing();
+    }
+
+    private void performWiremockStubbing() {
+        wireMock.stubFor(
+                get(urlPathEqualTo("/courses.json"))
+                        .willReturn(aResponse().withBody(ExampleJson
+                                .allCoursesExample.replaceAll("8080", String.valueOf(wireMock.port())))));
+        wireMock.stubFor(
+                get(urlPathEqualTo("/courses/3.json"))
+                        .willReturn(
+                                aResponse().withStatus(200).withBody(ExampleJson.courseExample)));
+        wireMock.stubFor(
+                get(mockUrl)
+                        .willReturn(
+                                aResponse().withStatus(200).withBody(ExampleJson.courseExample)));
+    }
+
+    private CoreTestSettings createSettingsWith(String password, String username, String address) {
+        CoreTestSettings localSettings = new CoreTestSettings();
+        localSettings.setPassword(password);
+        localSettings.setUsername(username);
+        localSettings.setServerAddress(address);
+        return localSettings;
     }
 
     @Test(expected = TmcCoreException.class)
@@ -77,20 +103,8 @@ public class GetCourseTest {
         core.getCourse(finalUrl);
     }
 
-    private CoreTestSettings createSettingsWith(String password, String username, String address) {
-        CoreTestSettings localSettings = new CoreTestSettings();
-        localSettings.setPassword(password);
-        localSettings.setUsername(username);
-        localSettings.setServerAddress(address);
-        return localSettings;
-    }
-
     @Test
     public void testCall() throws Exception {
-        wireMock.stubFor(
-                get(mockUrl)
-                        .willReturn(
-                                aResponse().withStatus(200).withBody(ExampleJson.courseExample)));
 
         ListenableFuture<Course> getCourse = core.getCourse(finalUrl);
         Course course = getCourse.get();
@@ -100,15 +114,6 @@ public class GetCourseTest {
 
     @Test
     public void testCallWithCourseName() throws Exception {
-
-        wireMock.stubFor(
-                get(urlPathEqualTo("/courses.json"))
-                        .willReturn(aResponse().withBody(ExampleJson.allCoursesExample)));
-        wireMock.stubFor(
-                get(urlPathEqualTo("/courses/3.json"))
-                        .willReturn(
-                                aResponse().withStatus(200).withBody(ExampleJson.courseExample)));
-
 
         ListenableFuture<Course> getCourse = core.getCourseByName("2013_ohpeJaOhja");
         Course course = getCourse.get();

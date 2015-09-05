@@ -1,12 +1,12 @@
 package fi.helsinki.cs.tmc.core.domain;
 
-import java.net.URI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

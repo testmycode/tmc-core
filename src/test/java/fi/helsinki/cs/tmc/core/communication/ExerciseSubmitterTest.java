@@ -267,7 +267,7 @@ public class ExerciseSubmitterTest {
         rootFinder.setReturnValue(testPath.toString());
         courseSubmitter.submitWithCodeReviewRequest(testPath, "Help");
         Mockito.verify(urlCommunicator)
-				.makePostWithByteArray(URI.create(anyString()),
+				.makePostWithByteArray(Mockito.any(URI.class),
 						any(byte[].class),
 						anyMap(),
 						capture.capture());
@@ -294,7 +294,7 @@ public class ExerciseSubmitterTest {
         rootFinder.setReturnValue(testPath.toString());
         courseSubmitter.submitWithCodeReviewRequest(testPath, "");
         Mockito.verify(urlCommunicator)
-                .makePostWithByteArray(URI.create(anyString()),
+                .makePostWithByteArray(Mockito.any(URI.class),
 						any(byte[].class),
 						anyMap(),
 						capture.capture());

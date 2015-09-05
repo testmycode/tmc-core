@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,7 +42,7 @@ public class ExerciseUpdaterTest {
 
         builder = new ExerciseBuilder();
         urlCommunicator = mock(UrlCommunicator.class);
-        when(urlCommunicator.makeGetRequest(URI.create(anyString()), any(String.class)))
+        when(urlCommunicator.makeGetRequest(any(URI.class), any(String.class)))
                 .thenReturn(new HttpResult(ExampleJson.courseExample, 200, true));
     }
 

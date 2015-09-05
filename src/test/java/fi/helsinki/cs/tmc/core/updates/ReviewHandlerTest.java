@@ -4,8 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
 
 import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.updates.ReviewHandler;
@@ -33,7 +32,7 @@ public class ReviewHandlerTest {
 
         tmcApi = Mockito.mock(TmcApi.class);
         handler = new ReviewHandler(tmcApi);
-        Mockito.when(tmcApi.getReviews(URI.create(anyString())))
+        Mockito.when(tmcApi.getReviews(any(URI.class)))
                 .thenReturn(
                         new ReviewListBuilder()
                                 .withExercise(3, true)
@@ -45,7 +44,7 @@ public class ReviewHandlerTest {
     @Test
     public void fetchReviewReturnsEmptyListIfServerSendsNull()
             throws IOException, URISyntaxException {
-        Mockito.when(tmcApi.getReviews(URI.create(anyString()))).thenReturn(null);
+        Mockito.when(tmcApi.getReviews(any(URI.class))).thenReturn(null);
         assertNotNull(handler.fetchFromServer(new Course()));
         assertEquals(0, handler.fetchFromServer(new Course()).size());
     }

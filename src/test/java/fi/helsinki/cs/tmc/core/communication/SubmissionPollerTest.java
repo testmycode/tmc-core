@@ -2,24 +2,24 @@ package fi.helsinki.cs.tmc.core.communication;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult.Status;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
+
 import java.io.IOException;
 import java.net.URI;
 
 import org.junit.Before;
 import org.junit.Test;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-
 import org.mockito.Mockito;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class SubmissionPollerTest {
 
@@ -40,7 +40,7 @@ public class SubmissionPollerTest {
 
     @Test
     public void successfulSubmission() throws Exception {
-        Mockito.when(tmcApi.getRawTextFrom(URI.create(Mockito.anyString())))
+        Mockito.when(tmcApi.getRawTextFrom(any(URI.class)))
                 .thenReturn(ExampleJson.successfulSubmission);
         SubmissionResult output = submissionPoller.getSubmissionResult(url);
         assertFalse(output == null);
@@ -50,7 +50,7 @@ public class SubmissionPollerTest {
 
     @Test
     public void unsuccessfulSubmission() throws Exception {
-        Mockito.when(tmcApi.getRawTextFrom(URI.create(Mockito.anyString())))
+        Mockito.when(tmcApi.getRawTextFrom(any(URI.class)))
                 .thenReturn(ExampleJson.failedSubmission);
         SubmissionResult output = submissionPoller.getSubmissionResult(url);
         assertFalse(output == null);
@@ -75,7 +75,7 @@ public class SubmissionPollerTest {
         String placeChange = ExampleJson.processingSubmission.replace("0", "3").replace("1", "8");
         String success = ExampleJson.successfulSubmission;
 
-        when(tmcApi.getRawTextFrom(URI.create(anyString())))
+        when(tmcApi.getRawTextFrom(any(URI.class)))
 				.thenReturn(first, second, placeChange, success);
     }
 }

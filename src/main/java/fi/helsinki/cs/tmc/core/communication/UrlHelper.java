@@ -6,10 +6,10 @@ import static fi.helsinki.cs.tmc.core.communication.TmcConstants.CLIENT_VERSION_
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
-import java.net.URI;
 
 import org.apache.http.client.utils.URIBuilder;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 
 public class UrlHelper {

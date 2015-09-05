@@ -51,7 +51,7 @@ public class ListCoursesTest {
         settings.setPassword("password");
 
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
-        Mockito.when(communicator.makeGetRequestWithAuthentication(URI.create(Mockito.anyString())))
+        Mockito.when(communicator.makeGetRequestWithAuthentication(Mockito.any(URI.class)))
                 .thenReturn(fakeResult);
     }
 

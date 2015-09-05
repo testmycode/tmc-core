@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 
 import org.powermock.api.mockito.PowerMockito;
@@ -32,7 +33,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import org.mockito.ArgumentMatcher;
+import static org.mockito.Matchers.any;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(UrlCommunicator.class)
@@ -55,17 +56,17 @@ public class TmcApiTest {
 
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
 
-        Mockito.when(urlCommunicator.makeGetRequest(URI.create(anyString()), anyString()))
+        Mockito.when(urlCommunicator.makeGetRequest(any(URI.class), anyString()))
                 .thenReturn(fakeResult);
-        Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(URI.create(anyString())))
+        Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(any(URI.class)))
                 .thenReturn(fakeResult);
     }
 
     private void mockSubmissionUrl() throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.successfulSubmission, 200, true);
-        Mockito.when(urlCommunicator.makeGetRequest(URI.create(anyString()), anyString()))
+        Mockito.when(urlCommunicator.makeGetRequest(any(URI.class), anyString()))
                 .thenReturn(fakeResult);
-        Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(URI.create(anyString())))
+        Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(any(URI.class)))
                 .thenReturn(fakeResult);
     }
 
@@ -94,7 +95,7 @@ public class TmcApiTest {
     @Test
     public void parsesSubmissionUrlFromJson() throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.submitResponse, 200, true);
-        Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(URI.create(anyString())))
+        Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(any(URI.class)))
                 .thenReturn(fakeResult);
         assertEquals(
                 URI.create("http://127.0.0.1:8080/submissions/1781.json?api_version=7"),

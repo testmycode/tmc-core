@@ -6,8 +6,8 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import java.net.URI;
 
+import java.net.URI;
 import java.util.Map;
 import java.util.Map.Entry;
 

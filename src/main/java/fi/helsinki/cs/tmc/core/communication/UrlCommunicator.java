@@ -67,7 +67,7 @@ public class UrlCommunicator {
     public HttpResult makePostWithFile(
             ContentBody fileBody, URI destinationUrl, Map<String, String> headers)
             throws IOException {
-        HttpPost httppost = new HttpPost(destinationUrl.toString());
+        HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
 
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
@@ -92,7 +92,7 @@ public class UrlCommunicator {
 
     private HttpPost makeRawPostRequest(
             URI url, byte[] data, Map<String, String> extraHeaders, Map<String, String> params) {
-        HttpPost request = new HttpPost(url.toString());
+        HttpPost request = new HttpPost(url);
         addHeadersTo(request, extraHeaders);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
@@ -122,7 +122,7 @@ public class UrlCommunicator {
             Map<String, String> headers,
             Map<String, String> params)
             throws IOException {
-        HttpPost httppost = new HttpPost(destinationUrl.toString());
+        HttpPost httppost = new HttpPost(destinationUrl);
         addHeadersTo(httppost, headers);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
@@ -174,7 +174,7 @@ public class UrlCommunicator {
     public HttpResult makePutRequest(URI url, Optional<Map<String, String>> body)
             throws IOException, URISyntaxException {
         url = urlHelper.withParams(url);
-        HttpPut httpPut = new HttpPut(url.toString());
+        HttpPut httpPut = new HttpPut(url);
         addCredentials(httpPut, this.settings.getFormattedUserData());
         List<NameValuePair> params = new ArrayList<>();
 
@@ -187,7 +187,7 @@ public class UrlCommunicator {
     }
 
     private HttpGet createGet(URI url, String credentials) {
-        HttpGet request = new HttpGet(url.toString());
+        HttpGet request = new HttpGet(url);
         addCredentials(request, credentials);
         return request;
     }

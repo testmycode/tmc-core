@@ -24,6 +24,7 @@ import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 
@@ -185,7 +186,7 @@ public class SubmitTest {
     }
 
     @Test
-    public void testSubmissionWithObserver() throws Exception{
+    public void testSubmissionWithObserver() throws Exception {
         when(submitterMock.submit(eq(path), eq(observer))).thenReturn(URI.create("xkcd.com"));
         submitWithObserver.call();
         verify(submitterMock).submit(eq(path), eq(observer));

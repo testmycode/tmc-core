@@ -25,7 +25,7 @@ public class SubmissionPollerTest {
 
     private SubmissionPoller submissionPoller;
     private URI url = URI.create(
-            "https://tmc.mooc.fi/staging/submissions/1764.json?api_version=7&client=tmc_cli&client_version=1");
+            "https://example.com/staging/submissions/1764.json?api_version=7&client=tmc_cli&client_version=1");
     private CoreTestSettings settings;
     private TmcApi tmcApi;
 

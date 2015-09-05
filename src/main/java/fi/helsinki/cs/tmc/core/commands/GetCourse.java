@@ -61,7 +61,7 @@ public class GetCourse extends Command<Course> {
 
         if (!course.isPresent()) {
             throw new TmcCoreException(
-                    "Attempted to fetch nonexistent course " + urlWithApiVersion);
+					"Attempted to fetch nonexistent course " + urlWithApiVersion);
         }
 
         return course.get();

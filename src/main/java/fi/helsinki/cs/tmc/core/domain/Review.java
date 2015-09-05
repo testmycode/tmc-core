@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
@@ -36,10 +37,10 @@ public class Review {
     @SerializedName("points_not_awarded")
     private List<String> pointsNotAwarded;
 
-    private String url;
+    private URI url;
 
     @SerializedName("update_url")
-    private String updateUrl;
+    private URI updateUrl;
 
     @SerializedName("created_at")
     private String createdAt;
@@ -111,19 +112,19 @@ public class Review {
         this.pointsNotAwarded = pointsNotAwarded;
     }
 
-    public String getUrl() {
+    public URI getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl(URI url) {
         this.url = url;
     }
 
-    public String getUpdateUrl() {
+    public URI getUpdateUrl() {
         return updateUrl;
     }
 
-    public void setUpdateUrl(String updateUrl) {
+    public void setUpdateUrl(URI updateUrl) {
         this.updateUrl = updateUrl;
     }
 
@@ -164,7 +165,7 @@ public class Review {
         return headers;
     }
 
-    private String putUrl() {
+    private URI putUrl() {
         return this.updateUrl;
     }
 

@@ -6,6 +6,7 @@ import static fi.helsinki.cs.tmc.core.communication.TmcConstants.CLIENT_VERSION_
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import java.net.URI;
 
 import org.apache.http.client.utils.URIBuilder;
 
@@ -27,11 +28,12 @@ public class UrlHelper {
         this.settings = settings;
     }
 
-    public String getCourseUrl(int courseId) throws URISyntaxException {
-        return withParams(settings.getServerAddress() + "/courses/" + courseId + ".json");
+    public URI getCourseUrl(int courseId) throws URISyntaxException {
+        return withParams(URI.create(
+				settings.getServerAddress() + "/courses/" + courseId + ".json"));
     }
 
-    public String getCourseUrl(Course course) throws URISyntaxException {
+    public URI getCourseUrl(Course course) throws URISyntaxException {
         return withParams(course.getDetailsUrl());
     }
 
@@ -39,12 +41,11 @@ public class UrlHelper {
         return serverAddress + this.coursesExtension;
     }
 
-    public String withParams(String url) throws URISyntaxException {
+    public URI withParams(URI url) throws URISyntaxException {
         return new URIBuilder(url)
                 .setParameter(API_VERSION_PARAM, settings.apiVersion())
                 .setParameter(CLIENT_NAME_PARAM, settings.clientName())
                 .setParameter(CLIENT_VERSION_PARAM, settings.clientVersion())
-                .build()
-                .toString();
+                .build();
     }
 }

@@ -7,6 +7,7 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,9 +36,9 @@ public class DiffSender {
      */
     public List<HttpResult> sendToSpyware(byte[] diffs, Course currentCourse)
             throws TmcCoreException {
-        List<String> spywareUrls = currentCourse.getSpywareUrls();
+        List<URI> spywareUrls = currentCourse.getSpywareUrls();
         List<HttpResult> results = new ArrayList<>();
-        for (String url : spywareUrls) {
+        for (URI url : spywareUrls) {
             results.add(sendToUrl(diffs, url));
         }
         return results;
@@ -50,7 +51,7 @@ public class DiffSender {
      * @param url of destination
      * @return HttpResult from UrlCommunicator
      */
-    public HttpResult sendToUrl(byte[] diffs, String url) {
+    public HttpResult sendToUrl(byte[] diffs, URI url) {
         try {
             return urlCommunicator.makePostWithByteArray(
                     url, diffs, createHeaders(), new HashMap<String, String>());

@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class RequestCodeReviewTest {
     private RequestCodeReview request;
     private ExerciseSubmitter submitterMock;
-    private String pasteUrl = "http://example.com/paste";
+    private URI pasteUrl = URI.create("http://example.com/paste");
     private CoreTestSettings settings = new CoreTestSettings();
 
     @Before

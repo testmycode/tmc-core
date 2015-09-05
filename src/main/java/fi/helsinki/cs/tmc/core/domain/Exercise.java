@@ -1,3 +1,4 @@
+
 package fi.helsinki.cs.tmc.core.domain;
 
 import com.google.gson.annotations.SerializedName;
@@ -6,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.net.URI;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -28,21 +30,21 @@ public class Exercise implements Serializable {
     private String checksum; //: "406f2f0690550c6dea94f319b2b1580c",
 
     @SerializedName("return_url")
-    private String returnUrl; //: "https://tmc.mooc.fi/staging/exercises/284/submissions.json",
+    private URI returnUrl; //: "https://tmc.mooc.fi/staging/exercises/284/submissions.json",
 
     @SerializedName("zip_url")
-    private String zipUrl; //": "https://tmc.mooc.fi/staging/exercises/284.zip",
+    private URI zipUrl; //": "https://tmc.mooc.fi/staging/exercises/284.zip",
 
     //        /**
     //     * The URL this exercise can be downloaded from.
     //     */
     //    @SerializedName("zip_url")
-    //    private String downloadUrl;
+    //    private URI downloadUrl;
     /**
      * The URL the solution can be downloaded from (admins only).
      */
     @SerializedName("solution_zip_url")
-    private String solutionDownloadUrl;
+    private URI solutionDownloadUrl;
 
     private boolean returnable; //": true,
 
@@ -72,7 +74,7 @@ public class Exercise implements Serializable {
     private boolean runTestsLocallyActionEnabled = true;
 
     @SerializedName("exercise_submissions_url")
-    private String exerciseSubmissionsUrl;
+    private URI exerciseSubmissionsUrl;
 
     public Exercise() {}
 
@@ -149,19 +151,19 @@ public class Exercise implements Serializable {
         this.checksum = checksum;
     }
 
-    public String getReturnUrl() {
+    public URI getReturnUrl() {
         return returnUrl;
     }
 
-    public void setReturnUrl(String returnUrl) {
+    public void setReturnUrl(URI returnUrl) {
         this.returnUrl = returnUrl;
     }
 
-    public String getZipUrl() {
+    public URI getZipUrl() {
         return zipUrl;
     }
 
-    public void setZipUrl(String zipUrl) {
+    public void setZipUrl(URI zipUrl) {
         this.zipUrl = zipUrl;
     }
 
@@ -245,11 +247,11 @@ public class Exercise implements Serializable {
         this.runTestsLocallyActionEnabled = runTestsLocallyActionEnabled;
     }
 
-    public String getExerciseSubmissionsUrl() {
+    public URI getExerciseSubmissionsUrl() {
         return exerciseSubmissionsUrl;
     }
 
-    public void setExerciseSubmissionsUrl(String exerciseSubmissionsUrl) {
+    public void setExerciseSubmissionsUrl(URI exerciseSubmissionsUrl) {
         this.exerciseSubmissionsUrl = exerciseSubmissionsUrl;
     }
 
@@ -296,16 +298,16 @@ public class Exercise implements Serializable {
         this.courseName = courseName;
     }
 
-    public String getDownloadUrl() {
+    public URI getDownloadUrl() {
         return this.zipUrl;
     }
 
-    public void setDownloadUrl(String downloadAddress) {
+    public void setDownloadUrl(URI downloadAddress) {
         if (downloadAddress == null) {
             throw new NullPointerException(
                     "downloadAddress was null at Exercise.setDownloadAddress");
         }
-        if (downloadAddress.isEmpty()) {
+        if (downloadAddress.toString().isEmpty()) {
             throw new IllegalArgumentException(
                     "downloadAddress cannot be empty at Exercise.setDownloadAddress");
         }
@@ -313,11 +315,11 @@ public class Exercise implements Serializable {
         this.zipUrl = downloadAddress;
     }
 
-    public void setSolutionDownloadUrl(String solutionDownloadUrl) {
+    public void setSolutionDownloadUrl(URI solutionDownloadUrl) {
         this.solutionDownloadUrl = solutionDownloadUrl;
     }
 
-    public String getSolutionDownloadUrl() {
+    public URI getSolutionDownloadUrl() {
         return solutionDownloadUrl;
     }
 

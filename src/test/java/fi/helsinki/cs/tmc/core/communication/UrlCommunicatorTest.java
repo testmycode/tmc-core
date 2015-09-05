@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,21 +75,22 @@ public class UrlCommunicatorTest {
 
     @Test
     public void okWithValidParams() throws IOException, TmcCoreException {
-        HttpResult result = urlCommunicator.makeGetRequest(serverAddress, "test:1234");
+        HttpResult result = urlCommunicator.makeGetRequest(URI.create(serverAddress), "test:1234");
         assertEquals(200, result.getStatusCode());
     }
 
     @Test
     public void badRequestWithoutValidUrl() throws IOException, TmcCoreException {
-        HttpResult result =
-                urlCommunicator.makeGetRequest(serverAddress + "/vaaraurl", "test:1234");
+        HttpResult result = urlCommunicator.makeGetRequest(
+				URI.create(serverAddress + "/vaaraurl"),
+				"test:1234");
         assertEquals(400, result.getStatusCode());
     }
 
     @Test
     public void notFoundWithoutValidParams() throws IOException, TmcCoreException {
         HttpResult result =
-                urlCommunicator.makeGetRequest(serverAddress, "ihanvaaraheaderi:1234");
+                urlCommunicator.makeGetRequest(URI.create(serverAddress), "ihanvaaraheaderi:1234");
         assertEquals(403, result.getStatusCode());
     }
 
@@ -100,7 +102,7 @@ public class UrlCommunicatorTest {
         HttpResult result =
                 urlCommunicator.makePostWithFile(
                         new FileBody(testFile),
-                        serverAddress + "/kivaurl",
+                        URI.create(serverAddress + "/kivaurl"),
                         new HashMap<String, String>());
 
         assertEquals("All tests passed", result.getData());
@@ -116,7 +118,7 @@ public class UrlCommunicatorTest {
         HttpResult result =
                 urlCommunicator.makePostWithFileAndParams(
                         new FileBody(testFile),
-                        serverAddress + "/kivaurl",
+                        URI.create(serverAddress + "/kivaurl"),
                         new HashMap<String, String>(),
                         params);
 
@@ -125,7 +127,7 @@ public class UrlCommunicatorTest {
 
     @Test(expected = IOException.class)
     public void badGetRequestIsThrown() throws IOException, TmcCoreException {
-        urlCommunicator.makeGetRequest("asasdasd", "chang:/\\\\eiparas");
+        urlCommunicator.makeGetRequest(URI.create("asasdasd"), "chang:/\\\\eiparas");
     }
 
     @Test
@@ -134,8 +136,9 @@ public class UrlCommunicatorTest {
         settings.setPassword("1234");
         Map<String, String> body = new HashMap<>();
         body.put("mark_as_read", "1");
-        HttpResult makePutRequest =
-                urlCommunicator.makePutRequest(serverAddress + "/putty", Optional.of(body));
+        HttpResult makePutRequest = urlCommunicator.makePutRequest(
+				URI.create(serverAddress + "/putty"),
+				Optional.of(body));
         assertEquals(200, makePutRequest.getStatusCode());
     }
 
@@ -148,7 +151,7 @@ public class UrlCommunicatorTest {
         body.put("mark_as_read", "1");
         HttpResult makePutRequest =
                 urlCommunicator.makePutRequest(
-                        serverAddress + "/putty_with_headers", Optional.of(body));
+                        URI.create(serverAddress + "/putty_with_headers"), Optional.of(body));
         assertEquals(200, makePutRequest.getStatusCode());
     }
 }

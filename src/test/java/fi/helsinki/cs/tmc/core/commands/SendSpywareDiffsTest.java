@@ -13,6 +13,7 @@ import fi.helsinki.cs.tmc.core.spyware.DiffSender;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import java.net.URI;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -74,7 +75,7 @@ public class SendSpywareDiffsTest {
                                         .withBody("SPYWARE TULI PERILLE")));
 
         Course currentCourse = new Course();
-        currentCourse.setSpywareUrls(Arrays.asList(serverAddress + "/spyware"));
+        currentCourse.setSpywareUrls(Arrays.asList(URI.create(serverAddress + "/spyware")));
         settings.setCurrentCourse(currentCourse);
 
         command = new SendSpywareDiffs(settings, sender, bytes);

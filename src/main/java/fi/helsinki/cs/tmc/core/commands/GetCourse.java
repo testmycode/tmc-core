@@ -19,7 +19,7 @@ import java.util.List;
 public class GetCourse extends Command<Course> {
 
     private TmcApi tmcApi;
-    private String url;
+    private URI url;
 
     /**
      * Constructs a new get course command with {@code settings} for fetching course details for
@@ -40,7 +40,7 @@ public class GetCourse extends Command<Course> {
         super(settings);
 
         this.tmcApi = new TmcApi(settings);
-        this.url = courseUri.toString();
+        this.url = courseUri;
     }
 
     /**
@@ -51,7 +51,7 @@ public class GetCourse extends Command<Course> {
         validate(this.settings.getUsername(), "Username must be set!");
         validate(this.settings.getPassword(), "Password must be set!");
 
-        String urlWithApiVersion = new UrlHelper(settings).withParams(this.url);
+        URI urlWithApiVersion = new UrlHelper(settings).withParams(this.url);
         Optional<Course> course;
         try {
             course = tmcApi.getCourse(urlWithApiVersion);
@@ -61,13 +61,13 @@ public class GetCourse extends Command<Course> {
 
         if (!course.isPresent()) {
             throw new TmcCoreException(
-                    "Attempted to fetch nonexistent course " + urlWithApiVersion);
+					"Attempted to fetch nonexistent course " + urlWithApiVersion);
         }
 
         return course.get();
     }
 
-    private String pollServerForCourseUrl(String courseName) throws TmcCoreException {
+    private URI pollServerForCourseUrl(String courseName) throws TmcCoreException {
         List<Course> courses = null;
         try {
             courses = tmcApi.getCourses();

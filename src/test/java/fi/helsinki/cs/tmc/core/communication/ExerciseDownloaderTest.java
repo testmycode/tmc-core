@@ -33,6 +33,7 @@ import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -72,20 +73,20 @@ public class ExerciseDownloaderTest {
         zipDestination = Paths.get("src", "test", "resources", "__files").toString();
 
         modelSolutionExample = new Exercise();
-        modelSolutionExample.setSolutionDownloadUrl(serverAddress + "/model");
+        modelSolutionExample.setSolutionDownloadUrl(URI.create(serverAddress + "/model"));
 
         Exercise e1 = new Exercise();
-        e1.setZipUrl(serverAddress + "/ex1.zip");
+        e1.setZipUrl(URI.create(serverAddress + "/ex1.zip"));
         e1.setName("Exercise1");
         exercises.add(e1);
 
         Exercise e2 = new Exercise();
-        e2.setZipUrl(serverAddress + "/ex2.zip");
+        e2.setZipUrl(URI.create(serverAddress + "/ex2.zip"));
         e2.setName("Exercise2");
         exercises.add(e2);
 
         Exercise e3 = new Exercise();
-        e3.setZipUrl(serverAddress + "/ex3.zip");
+        e3.setZipUrl(URI.create(serverAddress + "/ex3.zip"));
         e3.setName("Exercise3");
         exercises.add(e3);
 

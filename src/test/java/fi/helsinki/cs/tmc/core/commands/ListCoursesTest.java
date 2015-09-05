@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,9 +26,8 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.net.URI;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class ListCoursesTest {
 
@@ -53,7 +51,7 @@ public class ListCoursesTest {
         settings.setPassword("password");
 
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
-        Mockito.when(communicator.makeGetRequestWithAuthentication(Mockito.anyString()))
+        Mockito.when(communicator.makeGetRequestWithAuthentication(URI.create(Mockito.anyString())))
                 .thenReturn(fakeResult);
     }
 

@@ -22,6 +22,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +31,9 @@ import java.util.Arrays;
 @PrepareForTest(UrlCommunicator.class)
 public class ReviewTest {
 
-    private static final String updateUrl = "http://test.mooc.duck.fi/courses/47/reviews/8";
-    private static final String putUrl = updateUrl + ".json?api_version=7";
+    private static final URI updateUrl =
+			URI.create("http://test.mooc.duck.fi/courses/47/reviews/8");
+    private static final URI putUrl = URI.create(updateUrl + ".json?api_version=7");
     private Review review;
 
     @Before
@@ -50,7 +52,7 @@ public class ReviewTest {
         review.setReviewerName("Samu");
         review.setSubmissionId(2);
         review.setUpdatedAt("09.6.2015");
-        review.setUrl("http://localhost:8080/url");
+        review.setUrl(URI.create("http://localhost:8080/url"));
     }
 
     @Test
@@ -73,7 +75,7 @@ public class ReviewTest {
 
     private UrlCommunicator mockUrlCommunicator() throws IOException, URISyntaxException {
         UrlCommunicator urlcom = Mockito.mock(UrlCommunicator.class);
-        when(urlcom.makePutRequest(Mockito.anyString(), Mockito.any(Optional.class)))
+        when(urlcom.makePutRequest(URI.create(Mockito.anyString()), Mockito.any(Optional.class)))
                 .thenReturn(new HttpResult("OK", 200, true));
         return urlcom;
     }
@@ -128,7 +130,7 @@ public class ReviewTest {
 
     @Test
     public void testGetUrl() {
-        assertEquals("http://localhost:8080/url", review.getUrl());
+        assertEquals(URI.create("http://localhost:8080/url"), review.getUrl());
     }
 
     @Test

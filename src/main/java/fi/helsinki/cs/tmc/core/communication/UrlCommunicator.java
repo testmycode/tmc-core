@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +65,9 @@ public class UrlCommunicator {
      * @throws java.io.IOException if file is invalid.
      */
     public HttpResult makePostWithFile(
-            ContentBody fileBody, String destinationUrl, Map<String, String> headers)
+            ContentBody fileBody, URI destinationUrl, Map<String, String> headers)
             throws IOException {
-        HttpPost httppost = new HttpPost(destinationUrl);
+        HttpPost httppost = new HttpPost(destinationUrl.toString());
         addHeadersTo(httppost, headers);
 
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
@@ -83,15 +84,15 @@ public class UrlCommunicator {
      * Adds byte-array to entity of post-request and executes it.
      */
     public HttpResult makePostWithByteArray(
-            String url, byte[] data, Map<String, String> extraHeaders, Map<String, String> params)
+            URI url, byte[] data, Map<String, String> extraHeaders, Map<String, String> params)
             throws IOException {
         HttpPost rawPost = makeRawPostRequest(url, data, extraHeaders, params);
         return getResponseResult(rawPost);
     }
 
     private HttpPost makeRawPostRequest(
-            String url, byte[] data, Map<String, String> extraHeaders, Map<String, String> params) {
-        HttpPost request = new HttpPost(url);
+            URI url, byte[] data, Map<String, String> extraHeaders, Map<String, String> params) {
+        HttpPost request = new HttpPost(url.toString());
         addHeadersTo(request, extraHeaders);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
@@ -117,11 +118,11 @@ public class UrlCommunicator {
      */
     public HttpResult makePostWithFileAndParams(
             FileBody fileBody,
-            String destinationUrl,
+            URI destinationUrl,
             Map<String, String> headers,
             Map<String, String> params)
             throws IOException {
-        HttpPost httppost = new HttpPost(destinationUrl);
+        HttpPost httppost = new HttpPost(destinationUrl.toString());
         addHeadersTo(httppost, headers);
         MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 
@@ -158,7 +159,7 @@ public class UrlCommunicator {
      * @param credentials to add to the request
      * @return A Result-object with some data and a state of success or fail
      */
-    public HttpResult makeGetRequest(String url, String credentials) throws IOException {
+    public HttpResult makeGetRequest(URI url, String credentials) throws IOException {
         HttpGet httpGet = createGet(url, credentials);
         return getResponseResult(httpGet);
     }
@@ -170,10 +171,10 @@ public class UrlCommunicator {
      * @param body contains key-value -pairs.
      * @return Result which contains the result.
      */
-    public HttpResult makePutRequest(String url, Optional<Map<String, String>> body)
+    public HttpResult makePutRequest(URI url, Optional<Map<String, String>> body)
             throws IOException, URISyntaxException {
         url = urlHelper.withParams(url);
-        HttpPut httpPut = new HttpPut(url);
+        HttpPut httpPut = new HttpPut(url.toString());
         addCredentials(httpPut, this.settings.getFormattedUserData());
         List<NameValuePair> params = new ArrayList<>();
 
@@ -185,8 +186,8 @@ public class UrlCommunicator {
         return getResponseResult(httpPut);
     }
 
-    private HttpGet createGet(String url, String credentials) {
-        HttpGet request = new HttpGet(url);
+    private HttpGet createGet(URI url, String credentials) {
+        HttpGet request = new HttpGet(url.toString());
         addCredentials(request, credentials);
         return request;
     }
@@ -198,7 +199,7 @@ public class UrlCommunicator {
      * @param file file to write the results into
      * @return true if successful
      */
-    public boolean downloadToFile(String url, File file, String credentials) {
+    public boolean downloadToFile(URI url, File file, String credentials) {
         try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             HttpGet httpget = createGet(url, credentials);
             HttpResponse response = executeRequest(httpget);
@@ -213,7 +214,7 @@ public class UrlCommunicator {
     /**
      * Calls downloadToFile with username and password as params.
      */
-    public boolean downloadToFile(String url, File file) {
+    public boolean downloadToFile(URI url, File file) {
         return downloadToFile(url, file, this.settings.getFormattedUserData());
     }
 
@@ -268,7 +269,7 @@ public class UrlCommunicator {
     /**
      * Makes a POST HTTP request.
      */
-    public HttpResult makePostWithJson(JsonObject req, String feedbackUrl)
+    public HttpResult makePostWithJson(JsonObject req, URI feedbackUrl)
             throws IOException, URISyntaxException {
         feedbackUrl = urlHelper.withParams(feedbackUrl);
         HttpPost httppost = new HttpPost(feedbackUrl);
@@ -280,7 +281,7 @@ public class UrlCommunicator {
         return getResponseResult(httppost);
     }
 
-    public HttpResult makeGetRequestWithAuthentication(String url) throws IOException {
+    public HttpResult makeGetRequestWithAuthentication(URI url) throws IOException {
         return this.makeGetRequest(url, this.settings.getFormattedUserData());
     }
 }

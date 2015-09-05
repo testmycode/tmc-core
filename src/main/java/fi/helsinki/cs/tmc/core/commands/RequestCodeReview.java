@@ -56,7 +56,7 @@ public class RequestCodeReview extends Command<URI> {
 
         Optional<Course> currentCourse = settings.getCurrentCourse();
         if (currentCourse.isPresent()) {
-            return URI.create(submitter.submitWithCodeReviewRequest(this.path, this.comment));
+            return submitter.submitWithCodeReviewRequest(this.path, this.comment);
         } else {
             throw new TmcCoreException("Cannot request a code review. Unable to determine course.");
         }

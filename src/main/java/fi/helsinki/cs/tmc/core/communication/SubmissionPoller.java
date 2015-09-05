@@ -12,8 +12,8 @@ import com.google.gson.JsonParser;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.List;
-import org.apache.log4j.Logger;
 
 public class SubmissionPoller {
 
@@ -57,7 +57,7 @@ public class SubmissionPoller {
      * @return SubmissionResult containing details of submission. Null if timed out.
      * @throws InterruptedException if thread failed to sleep
      */
-    private Optional<SubmissionResult> pollSubmissionUrl(String url)
+    private Optional<SubmissionResult> pollSubmissionUrl(URI url)
             throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
             String json = tmcApi.getRawTextFrom(url);
@@ -78,7 +78,7 @@ public class SubmissionPoller {
      * @return SubmissionResult containing details of submission. Null if timed out.
      * @throws InterruptedException if thread failed to sleep
      */
-    private Optional<SubmissionResult> pollSubmissionUrl(String url, ProgressObserver observer)
+    private Optional<SubmissionResult> pollSubmissionUrl(URI url, ProgressObserver observer)
             throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
             String json = tmcApi.getRawTextFrom(url);
@@ -104,7 +104,7 @@ public class SubmissionPoller {
      *
      * @param url the submission url
      */
-    public SubmissionResult getSubmissionResult(String url)
+    public SubmissionResult getSubmissionResult(URI url)
             throws InterruptedException, TmcCoreException, IOException {
         Optional<SubmissionResult> result = pollSubmissionUrl(url);
         if (!result.isPresent()) {
@@ -120,7 +120,7 @@ public class SubmissionPoller {
      * @param url the submission url
      * @param observer {@link ProgressObserver} that is informed of the polling status
      */
-    public SubmissionResult getSubmissionResult(String url, ProgressObserver observer)
+    public SubmissionResult getSubmissionResult(URI url, ProgressObserver observer)
             throws InterruptedException, TmcCoreException, IOException {
         Optional<SubmissionResult> result = pollSubmissionUrl(url, observer);
         if (!result.isPresent()) {

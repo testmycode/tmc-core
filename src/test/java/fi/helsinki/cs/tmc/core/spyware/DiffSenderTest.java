@@ -24,6 +24,7 @@ import org.junit.rules.ExpectedException;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class DiffSenderTest {
 
     @Rule public ExpectedException exceptedEx = ExpectedException.none();
 
-    private String spywareUrl;
+    private URI spywareUrl;
     private DiffSender sender;
     private CoreTestSettings settings;
 
@@ -49,7 +50,7 @@ public class DiffSenderTest {
         settings.setPassword("1234");
 
         serverAddress += wireMockRule.port();
-        spywareUrl = serverAddress + "/spyware";
+        spywareUrl = URI.create(serverAddress + "/spyware");
 
         sender = new DiffSender(settings);
         startWiremock();
@@ -73,7 +74,7 @@ public class DiffSenderTest {
 
         DiffSender sender = new DiffSender(settings);
 
-        HttpResult res = sender.sendToUrl(byteArray, "vaaraUrl");
+        HttpResult res = sender.sendToUrl(byteArray, URI.create("vaaraUrl"));
         assertEquals(500, res.getStatusCode());
     }
 

@@ -13,12 +13,12 @@ import fi.helsinki.cs.tmc.core.spyware.DiffSender;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import java.net.URI;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.net.URI;
 import java.util.Arrays;
 
 public class SendSpywareDiffsTest {

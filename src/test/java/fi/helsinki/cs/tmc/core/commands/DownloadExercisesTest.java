@@ -176,7 +176,6 @@ public class DownloadExercisesTest {
 
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi");
-
         assertEquals(153, exercises.size());
         assertTrue(Files.exists(exercisePath));
 

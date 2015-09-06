@@ -104,7 +104,7 @@ public class TmcApiTest {
     public void parsesPasteUrlFromJson() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.pasteResponse, 200, true);
         Mockito.when(urlCommunicator.makeGetRequest(URI.create(Mockito.anyString()),
-						Mockito.anyString()))
+                        Mockito.anyString()))
                 .thenReturn(fakeResult);
         assertEquals(
                 URI.create("https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ"),

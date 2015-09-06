@@ -32,7 +32,7 @@ import java.util.Arrays;
 public class ReviewTest {
 
     private static final URI updateUrl =
-			URI.create("http://test.mooc.duck.fi/courses/47/reviews/8");
+            URI.create("http://test.mooc.duck.fi/courses/47/reviews/8");
     private static final URI putUrl = URI.create(updateUrl + ".json?api_version=7");
     private Review review;
 

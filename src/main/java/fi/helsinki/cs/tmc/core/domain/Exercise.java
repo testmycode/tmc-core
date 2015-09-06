@@ -35,11 +35,6 @@ public class Exercise implements Serializable {
     @SerializedName("zip_url")
     private URI zipUrl; //": "https://tmc.mooc.fi/staging/exercises/284.zip",
 
-    //        /**
-    //     * The URL this exercise can be downloaded from.
-    //     */
-    //    @SerializedName("zip_url")
-    //    private URI downloadUrl;
     /**
      * The URL the solution can be downloaded from (admins only).
      */

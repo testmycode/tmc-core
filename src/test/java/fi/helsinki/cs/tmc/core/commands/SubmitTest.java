@@ -15,7 +15,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
@@ -37,7 +36,6 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -52,7 +50,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SubmitTest {
-
 
     private Submit submit;
     private ExerciseSubmitter submitterMock;
@@ -130,7 +127,7 @@ public class SubmitTest {
         path = Paths.get("polku", "kurssi", "kansioon", "src").toString();
 
         when(submitterMock.submit(anyString()))
-				.thenReturn(URI.create(serverAddress + submissionUrl));
+                .thenReturn(URI.create(serverAddress + submissionUrl));
         submit =
                 new Submit(
                         settings, submitterMock, new SubmissionPoller(new TmcApi(settings)), path);

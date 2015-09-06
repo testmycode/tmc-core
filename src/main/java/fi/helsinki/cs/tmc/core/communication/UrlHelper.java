@@ -30,7 +30,7 @@ public class UrlHelper {
 
     public URI getCourseUrl(int courseId) throws URISyntaxException {
         return withParams(URI.create(
-				settings.getServerAddress() + "/courses/" + courseId + ".json"));
+                settings.getServerAddress() + "/courses/" + courseId + ".json"));
     }
 
     public URI getCourseUrl(Course course) throws URISyntaxException {

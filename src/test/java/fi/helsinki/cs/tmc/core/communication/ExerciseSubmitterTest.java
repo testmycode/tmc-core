@@ -1,5 +1,14 @@
 package fi.helsinki.cs.tmc.core.communication;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
@@ -9,10 +18,10 @@ import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 import fi.helsinki.cs.tmc.core.testhelpers.ProjectRootFinderStub;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
-import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
+
+import com.google.common.base.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,16 +37,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyMap;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 
 public class ExerciseSubmitterTest {
 
@@ -267,10 +266,10 @@ public class ExerciseSubmitterTest {
         rootFinder.setReturnValue(testPath.toString());
         courseSubmitter.submitWithCodeReviewRequest(testPath, "Help");
         Mockito.verify(urlCommunicator)
-				.makePostWithByteArray(Mockito.any(URI.class),
-						any(byte[].class),
-						anyMap(),
-						capture.capture());
+                .makePostWithByteArray(Mockito.any(URI.class),
+                        any(byte[].class),
+                        anyMap(),
+                        capture.capture());
         assertEquals("1", capture.getValue().get("request_review"));
         assertEquals("Help", capture.getValue().get("message_for_reviewer"));
     }
@@ -295,9 +294,9 @@ public class ExerciseSubmitterTest {
         courseSubmitter.submitWithCodeReviewRequest(testPath, "");
         Mockito.verify(urlCommunicator)
                 .makePostWithByteArray(Mockito.any(URI.class),
-						any(byte[].class),
-						anyMap(),
-						capture.capture());
+                        any(byte[].class),
+                        anyMap(),
+                        capture.capture());
         assertEquals("1", capture.getValue().get("request_review"));
         assertNull(capture.getValue().get("message_for_reviewer"));
     }
@@ -318,7 +317,7 @@ public class ExerciseSubmitterTest {
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         URI submissionPath = URI.create(
-				"http://127.0.0.1:8080/submissions/1781.json?api_version=7");
+                "http://127.0.0.1:8080/submissions/1781.json?api_version=7");
         URI result = courseSubmitter.submit(testPath, observer);
         verify(observer).progress("zipping exercise");
         verify(observer).progress("submitting exercise");
@@ -329,10 +328,10 @@ public class ExerciseSubmitterTest {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
 
         Mockito.when(urlCommunicator.makeGetRequest(
-						Mockito.argThat(new UriContains(pieceOfUrl)), Mockito.anyString()))
+                        Mockito.argThat(new UriContains(pieceOfUrl)), Mockito.anyString()))
                 .thenReturn(fakeResult);
         Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(
-						Mockito.argThat(new UriContains(pieceOfUrl))))
+                        Mockito.argThat(new UriContains(pieceOfUrl))))
                 .thenReturn(fakeResult);
     }
 
@@ -346,9 +345,5 @@ public class ExerciseSubmitterTest {
                                 Mockito.any(Map.class),
                                 Mockito.any(Map.class)))
                 .thenReturn(fakeResult);
-        /*Mockito.when(urlCommunicator.makePostWithFileAndParams(Mockito.any(FileBody.class),
-         Mockito.contains(url), Mockito.any(Map.class), Mockito.any(Map.class)))
-         .thenReturn(fakeResult);*/
-
     }
 }

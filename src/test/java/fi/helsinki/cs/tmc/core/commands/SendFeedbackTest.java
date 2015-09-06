@@ -34,8 +34,8 @@ public class SendFeedbackTest {
         settings = new CoreTestSettings();
         serverAddress += wireMock.port();
         command = new SendFeedback(settings,
-				testCaseMap(),
-				URI.create(serverAddress + "/feedback"));
+                testCaseMap(),
+                URI.create(serverAddress + "/feedback"));
     }
 
     private Map<String, String> testCaseMap() {
@@ -64,12 +64,12 @@ public class SendFeedbackTest {
 
         Course currentCourse = new Course();
         currentCourse.setSpywareUrls(Collections.singletonList(
-				URI.create(serverAddress + "/spyware")));
+                URI.create(serverAddress + "/spyware")));
         settings.setCurrentCourse(currentCourse);
 
         command = new SendFeedback(settings,
-				testCaseMap(),
-				URI.create(serverAddress + "/feedback"));
+                testCaseMap(),
+                URI.create(serverAddress + "/feedback"));
 
         command.call();
 

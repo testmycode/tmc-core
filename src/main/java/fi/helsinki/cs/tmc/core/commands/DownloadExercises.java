@@ -30,7 +30,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
     private TmcApi tmcApi;
     private List<Exercise> exercises;
     private int courseId;
-    private String path;
+    private Path path;
 
     /**
      *  Constructs a new downloaded exercises command for downloading {@code exercises} into TMC
@@ -52,8 +52,9 @@ public class DownloadExercises extends Command<List<Exercise>> {
         this.tmcApi = new TmcApi(settings);
         this.exerciseDownloader = new ExerciseDownloader(new UrlCommunicator(settings), tmcApi);
         this.exercises = exercises;
-        this.path = settings.getTmcMainDirectory();
-
+        this.path = settings.getTmcMainDirectory() != null ? 
+                Paths.get(settings.getTmcMainDirectory()):Paths.get("");
+       
         Optional<Course> currentCourse = settings.getCurrentCourse();
         if (currentCourse.isPresent()) {
             this.courseId = currentCourse.get().getId();
@@ -76,7 +77,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
      */
     public DownloadExercises(
             TmcSettings settings,
-            String path,
+            Path path,
             int courseId,
             ProgressObserver observer,
             ExerciseChecksumCache cache) {
@@ -104,7 +105,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
      */
     public DownloadExercises(
             TmcSettings settings,
-            String path,
+            Path path,
             int courseId,
             ExerciseChecksumCache cache,
             ProgressObserver observer,
@@ -150,7 +151,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
     }
 
     private List<Exercise> downloadExercises(Course course) throws TmcInterruptionException {
-        Path target = Paths.get(exerciseDownloader.createCourseFolder(this.path, course.getName()));
+        Path target = exerciseDownloader.createCourseFolder(this.path, course.getName());
         List<Exercise> downloaded = new ArrayList<>();
 
         for (int i = 0; i < exercises.size(); i++) {
@@ -159,7 +160,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
             Exercise exercise = exercises.get(i);
             exercise.setCourseName(course.getName());
 
-            boolean success = exerciseDownloader.handleSingleExercise(exercise, target.toString());
+            boolean success = exerciseDownloader.handleSingleExercise(exercise, target);
 
             String message = "Downloading exercise " + exercise.getName() + " failed";
             if (success) {

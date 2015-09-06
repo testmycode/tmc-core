@@ -46,7 +46,6 @@ import org.junit.Test;
 
 import org.mockito.Mockito;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -92,8 +91,8 @@ public class DownloadExercisesTest {
     public void writesChecksumsToCacheIfCacheFileIsGiven()
             throws IOException, TmcCoreException, URISyntaxException {
         ExerciseDownloader downloader = mock(ExerciseDownloader.class);
-        Mockito.when(downloader.createCourseFolder(anyString(), anyString())).thenReturn("");
-        Mockito.when(downloader.handleSingleExercise(any(Exercise.class), anyString()))
+        Mockito.when(downloader.createCourseFolder(any(Path.class), anyString())).thenReturn(Paths.get("path"));
+        Mockito.when(downloader.handleSingleExercise(any(Exercise.class), any(Path.class)))
                 .thenReturn(true);
 
         Course course = new Course();
@@ -109,7 +108,7 @@ public class DownloadExercisesTest {
 
         when(tmcApi.getCourse(anyInt())).thenReturn(Optional.of(course));
 
-        new DownloadExercises(settings, "", 8, cache, null, downloader, tmcApi).call();
+        new DownloadExercises(settings, Paths.get(""), 8, cache, null, downloader, tmcApi).call();
         verify(cache, times(1)).write(course.getExercises());
     }
 
@@ -117,7 +116,7 @@ public class DownloadExercisesTest {
     public void downloadAllExercises() throws Exception {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         core = new TmcCore(settings1);
-        Path folder = Paths.get(System.getProperty("user.dir") + "/testResources/");
+        Path folder = Paths.get(System.getProperty("user.dir") , "testResources");
         ListenableFuture<List<Exercise>> download = core.downloadExercises(folder, 35, null);
 
         List<Exercise> exercises = download.get();

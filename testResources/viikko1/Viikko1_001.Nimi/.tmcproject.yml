@@ -1,0 +1,3 @@
+extra_student_files:
+    - ignore_this.txt
+    - test/StudentTest.java

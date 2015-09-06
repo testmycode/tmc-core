@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Random;
 
 public class FileWriterHelper {
@@ -15,9 +16,9 @@ public class FileWriterHelper {
      * Writes stuff to file.
      * @param path to write
      */
-    public void writeStuffToFile(String path) throws IOException {
+    public void writeStuffToFile(Path path) throws IOException {
         try {
-            writer = new FileWriter(new File(path));
+            writer = new FileWriter(new File(path.toString()));
             Random random = new Random();
             for (int i = 0; i < 20; i++) {
                 writer.append(random.nextBoolean() + "\n");

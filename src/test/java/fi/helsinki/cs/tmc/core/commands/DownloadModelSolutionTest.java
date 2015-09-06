@@ -5,10 +5,12 @@ import fi.helsinki.cs.tmc.core.communication.ExerciseDownloader;
 import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -36,7 +38,7 @@ public class DownloadModelSolutionTest {
     public void setUp() {
         downloader = mock(ExerciseDownloader.class);
         dl = new DownloadModelSolution(settings, exercise, downloader);
-        when(downloader.createCourseFolder(anyString(), anyString())).thenReturn("path");
+        when(downloader.createCourseFolder(any(Path.class), anyString())).thenReturn(Paths.get("path"));
     }
 
     @After
@@ -45,7 +47,7 @@ public class DownloadModelSolutionTest {
     @Test
     public void testCall() throws Exception {
         dl.call();
-        verify(downloader).createCourseFolder(eq("home"), eq("tira"));
+        verify(downloader).createCourseFolder(eq(Paths.get("home")), eq("tira"));
         verify(downloader).downloadModelSolution(eq(exercise), eq(Paths.get("path")));
     }
 
@@ -53,7 +55,7 @@ public class DownloadModelSolutionTest {
     public void testFallbackToCourseInSettings() throws Exception {
         exercise.setCourseName("");
         dl.call();
-        verify(downloader).createCourseFolder(eq("home"), eq("ohpe"));
+        verify(downloader).createCourseFolder(eq(Paths.get("home")), eq("ohpe"));
         verify(downloader).downloadModelSolution(eq(exercise), eq(Paths.get("path")));
     }
 }

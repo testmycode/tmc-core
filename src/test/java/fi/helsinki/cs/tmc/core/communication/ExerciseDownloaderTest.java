@@ -50,7 +50,7 @@ public class ExerciseDownloaderTest {
     private String testFileContent = "Testfile for DownloadExercisesTest \n";
     private String testZipPath;
     private String contentFilePath;
-    private String zipDestination;
+    private Path zipDestination;
     private Exercise modelSolutionExample;
 
     /**
@@ -65,7 +65,7 @@ public class ExerciseDownloaderTest {
 
         testZipPath = "testzip.zip";
         contentFilePath = "testfile.txt";
-        zipDestination = Paths.get("src", "test", "resources", "__files").toString();
+        zipDestination = Paths.get("src", "test", "resources", "__files");
 
         modelSolutionExample = new Exercise();
         modelSolutionExample.setSolutionDownloadUrl("http://127.0.0.1:8080/model");

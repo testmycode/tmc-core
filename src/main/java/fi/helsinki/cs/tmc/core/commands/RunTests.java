@@ -6,6 +6,7 @@ import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+import java.nio.file.Path;
 
 import java.nio.file.Paths;
 
@@ -14,13 +15,13 @@ import java.nio.file.Paths;
  */
 public class RunTests extends Command<RunResult> {
 
-    private String path;
+    private Path path;
 
     /**
      * Constructs a run tests command with {@code settings} for running test on the project
      * located at {@code path}.
      */
-    public RunTests(TmcSettings settings, String path) {
+    public RunTests(TmcSettings settings, Path path) {
         super(settings);
         this.path = path;
     }
@@ -33,7 +34,7 @@ public class RunTests extends Command<RunResult> {
         TaskExecutor tmcLangs = new TaskExecutorImpl();
 
         try {
-            return tmcLangs.runTests(Paths.get(path));
+            return tmcLangs.runTests(path);
         } catch (NoLanguagePluginFoundException ex) {
             throw new TmcCoreException("Failed to run tests for project", ex);
         }

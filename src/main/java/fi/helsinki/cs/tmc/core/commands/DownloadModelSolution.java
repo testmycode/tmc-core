@@ -41,10 +41,9 @@ public class DownloadModelSolution extends Command<Boolean> {
 
         String courseName = getCourseName();
 
-        Path target =
-                Paths.get(
-                        exerciseDownloader.createCourseFolder(
-                                settings.getTmcMainDirectory(), courseName));
+        Path target
+                = exerciseDownloader.createCourseFolder(
+                        Paths.get(settings.getTmcMainDirectory()), courseName);
         return exerciseDownloader.downloadModelSolution(exercise, target);
     }
 
@@ -56,8 +55,8 @@ public class DownloadModelSolution extends Command<Boolean> {
             if (!courseOpt.isPresent()) {
                 throw new TmcCoreException(
                         "Could not determine course name for exercise "
-                                + exercise.getName()
-                                + ", course not set");
+                        + exercise.getName()
+                        + ", course not set");
             }
             Course course = courseOpt.get();
             courseName = course.getName();

@@ -45,6 +45,7 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -61,7 +62,7 @@ public class SubmitTest {
 
     private Submit submitWithObserver;
     private SubmissionPoller pollerMock;
-    private String path;
+    private Path path;
 
     @Before
     public void setup() throws Exception {
@@ -78,9 +79,9 @@ public class SubmitTest {
         submitterMock = mock(ExerciseSubmitter.class);
         pollerMock = mock(SubmissionPoller.class);
 
-        path = Paths.get("polku", "kurssi", "kansioon", "src").toString();
+        path = Paths.get("polku", "kurssi", "kansioon", "src");
 
-        when(submitterMock.submit(anyString())).thenReturn("http://127.0.0.1:8080" + submissionUrl);
+        when(submitterMock.submit(any(Path.class))).thenReturn("http://127.0.0.1:8080" + submissionUrl);
         submit =
                 new Submit(
                         settings, submitterMock, new SubmissionPoller(new TmcApi(settings)), path);
@@ -90,13 +91,13 @@ public class SubmitTest {
     @Test(expected = TmcCoreException.class)
     public void testThrowsExceptionIfNoUsername() throws Exception {
         settings.setUsername(null);
-        new Submit(settings, null, null, "").call();
+        new Submit(settings, null, null, Paths.get("")).call();
     }
 
     @Test(expected = TmcCoreException.class)
     public void testThrowsExceptionIfNoPassword() throws Exception {
         settings.setPassword(null);
-        new Submit(settings, null, null, "").call();
+        new Submit(settings, null, null, Paths.get("")).call();
     }
 
     @Test

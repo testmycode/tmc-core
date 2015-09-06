@@ -21,7 +21,10 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
+import static org.mockito.Matchers.any;
 
 public class PasteWithCommentTest {
     private PasteWithComment paste;
@@ -33,7 +36,7 @@ public class PasteWithCommentTest {
     public void setup() throws Exception {
         mock();
         submitterMock = Mockito.mock(ExerciseSubmitter.class);
-        when(submitterMock.submitPasteWithComment(Mockito.anyString(), Mockito.anyString()))
+        when(submitterMock.submitPasteWithComment(any(Path.class), Mockito.anyString()))
                 .thenReturn(pasteUrl);
     }
 
@@ -51,14 +54,14 @@ public class PasteWithCommentTest {
                     URISyntaxException, NoLanguagePluginFoundException {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 
-        new PasteWithComment(settings, "path", "comment", submitterMock).call();
+        new PasteWithComment(settings, Paths.get("path"), "comment", submitterMock).call();
     }
 
     @Test
     public void pasteSuccess() throws Exception {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 
-        URI uri = new PasteWithComment(settings, "path", "comment", submitterMock).call();
+        URI uri = new PasteWithComment(settings, Paths.get("path"), "comment", submitterMock).call();
         assertEquals(uri.toString(), "http://example.com/paste");
     }
 
@@ -70,13 +73,13 @@ public class PasteWithCommentTest {
     @Test(expected = TmcCoreException.class)
     public void testThrowsExceptionIfAuthFails() throws Exception {
         settings = new CoreTestSettings();
-        new PasteWithComment(settings, "path", "comment", submitterMock).call();
+        new PasteWithComment(settings, Paths.get("path"), "comment", submitterMock).call();
     }
 
     @Test(expected = TmcCoreException.class)
     public void throwsErrorIfCourseCantBeRetrieved() throws Exception {
         Mockito.when(settings.userDataExists()).thenReturn(true);
         Mockito.when(settings.getCurrentCourse()).thenReturn(Optional.<Course>absent());
-        new PasteWithComment(settings, "path", "comment", submitterMock).call();
+        new PasteWithComment(settings, Paths.get("path"), "comment", submitterMock).call();
     }
 }

@@ -130,10 +130,8 @@ public class ProjectRootFinderTest {
     @Test
     public void getsCurrentCourse() throws IOException, TmcCoreException {
         Optional<Course> course =
-                finder.getCurrentCourse(
-                        Paths.get("path", "that", "contains", "course").toString()
-                                + File.separatorChar
-                                + fakeName);
+                finder.getCurrentCourse(Paths.get(
+                        "path", "that", "contains", "course",fakeName));
         assertEquals(fakeName, course.get().getName());
     }
 }

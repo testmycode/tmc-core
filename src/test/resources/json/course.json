@@ -6,8 +6,8 @@
         "details_url": "http://127.0.0.1:8080/courses/3.json",
         "unlock_url": "http://127.0.0.1:8080/courses/3/unlock.json",
         "reviews_url": "http://127.0.0.1:8080/courses/3/reviews.json",
-        "comet_url": "https://tmc.mooc.fi:8443/comet",
-        "spyware_urls": ["http://staging.spyware.testmycode.net/"],
+        "comet_url": "http://www.example.com:8443/comet",
+        "spyware_urls": ["http://example.com/"],
         "unlockables": [],
         "exercises": [
             {
@@ -17,7 +17,7 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "406f2f0690550c6dea94f319b2b1580c",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/284/submissions.json",
+                "return_url": "https://example.com/staging/exercises/284/submissions.json",
                 "zip_url": "https://tmc.mooc.fi/staging/exercises/284.zip",
                 "returnable": true,
                 "requires_review": false,
@@ -30,7 +30,7 @@
                 "valgrind_strategy": null,
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/284.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/284.json?api_version=7"
             },
             {
                 "id": 285,

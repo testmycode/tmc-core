@@ -54,7 +54,8 @@ public class ExerciseDownloaderTest {
     private String testZipPath;
     private String contentFilePath;
     private Path zipDestination;
-    private Exercise modelSolutionExample;
+    
+private Exercise modelSolutionExample;
 
     /**
      * Creates required stubs and example data for downloader.
@@ -124,11 +125,11 @@ public class ExerciseDownloaderTest {
 
         String response =
                 "{\"api_version\":7,\"course\":{\"id\":21,\"name\":\"k2015-tira\","
-                        + "\"details_url\":\"https://tmc.mooc.fi/staging/courses/21.json\""
-                        + ",\"unlock_url\":\"https://tmc.mooc.fi/staging/courses/21/unlock"
-                        + ".json\",\"reviews_url\":\"https://tmc.mooc.fi/staging/courses"
+                        + "\"details_url\":\"https://example.com/staging/courses/21.json\""
+                        + ",\"unlock_url\":\"https://example.com/staging/courses/21/unlock"
+                        + ".json\",\"reviews_url\":\"https://example.com/staging/courses"
                         + "/21/reviews"
-                        + ".json\",\"comet_url\":\"https://tmc.mooc.fi:8443/"
+                        + ".json\",\"comet_url\":\"https://example.com:8443/"
                         + "comet\",\"spyware_urls\":[\"http://staging.spyware."
                         + "testmycode.net/\"],\"unlockables\":[],\"exercises\":[]}}";
         stubFor(
@@ -173,8 +174,6 @@ public class ExerciseDownloaderTest {
         exDl.downloadFiles(exercises, zipDestination);
         File exercise1 = Paths.get("src", "test", "resources", "__files", "testfile.txt").toFile();
         assertTrue("Zipped file testfile.txt was not downloaded to the fs", exercise1.exists());
-        //File exercise2 = new File("Exercise2.zip");
-        //assertTrue("File Exercise2 was not downloaded to the fs", exercise2.exists());
     }
 
     @Test
@@ -185,7 +184,8 @@ public class ExerciseDownloaderTest {
                 FileUtils.readFileToString(
                         Paths.get("src", "test", "resources", "__files", "testfile.txt").toFile());
 
-        assertEquals(this.testFileContent, fileContent);
+        String testFileContent = "Testfile for DownloadExercisesTest \n";
+        assertEquals(testFileContent, fileContent);
     }
 
     @Test
@@ -220,8 +220,8 @@ public class ExerciseDownloaderTest {
         exDl =
                 new ExerciseDownloader(
                         new UrlCommunicator(settings), new TmcApi(settings), executor);
-        Path p = Paths.get("not", "really", "a", "path");
-        exDl.downloadModelSolution(modelSolutionExample, p);
-        verify(executor).extractProject(any(Path.class), eq(p), eq(true));
+        Path path = Paths.get("not", "really", "a", "path");
+        exDl.downloadModelSolution(modelSolutionExample, path);
+        verify(executor).extractProject(any(Path.class), eq(path), eq(true));
     }
 }

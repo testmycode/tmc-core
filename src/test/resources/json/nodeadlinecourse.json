@@ -3,11 +3,11 @@
     "course": {
         "id": 19,
         "name": "2014-mooc-no-deadline",
-        "details_url": "https://tmc.mooc.fi/staging/courses/19.json",
-        "unlock_url": "https://tmc.mooc.fi/staging/courses/19/unlock.json",
-        "reviews_url": "https://tmc.mooc.fi/staging/courses/19/reviews.json",
-        "comet_url": "https://tmc.mooc.fi:8443/comet",
-        "spyware_urls": ["http://staging.spyware.testmycode.net/"],
+        "details_url": "https://example.com/staging/courses/19.json",
+        "unlock_url": "https://example.com/staging/courses/19/unlock.json",
+        "reviews_url": "https://example.com/staging/courses/19/reviews.json",
+        "comet_url": "https://example.com/comet",
+        "spyware_urls": ["http://example.com/"],
         "unlockables": [],
         "exercises": [{
                 "id": 1227,
@@ -16,8 +16,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "639a95265dddb7bdf725a445348b1f51",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1227/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1227.zip",
+                "return_url": "https://example.com/staging/exercises/1227/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1227.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -29,7 +29,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1227.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1227.json?api_version=7"
             }, {
                 "id": 1228,
                 "name": "viikko1-Viikko1_001.Nimi",
@@ -37,8 +37,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "e0178c2302facb3bb235ccf84b255131",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1228/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1228.zip",
+                "return_url": "https://example.com/staging/exercises/1228/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1228.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": true,
@@ -50,8 +50,8 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1228.json?api_version=7",
-                "latest_submission_url": "https://tmc.mooc.fi/staging/submissions/1809.zip",
+                "exercise_submissions_url": "https://example.com/staging/exercises/1228.json?api_version=7",
+                "latest_submission_url": "https://example.com/staging/submissions/1809.zip",
                 "latest_submission_id": 1809
             }, {
                 "id": 1229,
@@ -60,8 +60,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "9c8dc360ad7707e14c7aa6431265a7ac",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1229/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1229.zip",
+                "return_url": "https://example.com/staging/exercises/1229/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1229.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -73,7 +73,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1229.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1229.json?api_version=7"
             }, {
                 "id": 1230,
                 "name": "viikko1-Viikko1_003.Kuusi",
@@ -81,8 +81,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "6ed2b0f24801807d0a14a67382b4081e",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1230/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1230.zip",
+                "return_url": "https://example.com/staging/exercises/1230/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1230.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -94,7 +94,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1230.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1230.json?api_version=7"
             }, {
                 "id": 1231,
                 "name": "viikko1-Viikko1_004.Muuttujat",
@@ -102,8 +102,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "d08e73243274e5301abe97d2decaa062",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1231/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1231.zip",
+                "return_url": "https://example.com/staging/exercises/1231/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1231.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -115,7 +115,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1231.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1231.json?api_version=7"
             }, {
                 "id": 1232,
                 "name": "viikko1-Viikko1_005.SekunnitVuodessa",
@@ -123,8 +123,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "481b5e5c14c022d6f3337b90bdb6971b",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1232/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1232.zip",
+                "return_url": "https://example.com/staging/exercises/1232/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1232.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -136,7 +136,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1232.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1232.json?api_version=7"
             }, {
                 "id": 1233,
                 "name": "viikko1-Viikko1_006.Yhteenlasku",
@@ -144,8 +144,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "a630a1bdf6fd11365431cf95fe22a95d",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1233/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1233.zip",
+                "return_url": "https://example.com/staging/exercises/1233/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1233.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -157,7 +157,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1233.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1233.json?api_version=7"
             }, {
                 "id": 1234,
                 "name": "viikko1-Viikko1_007.Kertolasku",
@@ -165,8 +165,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "089702e8cf07c151f3e9c67d30eb20c7",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1234/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1234.zip",
+                "return_url": "https://example.com/staging/exercises/1234/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1234.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -178,7 +178,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1234.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1234.json?api_version=7"
             }, {
                 "id": 1235,
                 "name": "viikko1-Viikko1_008.Summaaja",
@@ -186,8 +186,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "87f8061b2efbb3869245316d0959a26a",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1235/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1235.zip",
+                "return_url": "https://example.com/staging/exercises/1235/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1235.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -199,7 +199,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1235.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1235.json?api_version=7"
             }, {
                 "id": 1236,
                 "name": "viikko1-Viikko1_009.Jakaja",
@@ -207,8 +207,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "3cad1aa864a1058376955b042666f10b",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1236/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1236.zip",
+                "return_url": "https://example.com/staging/exercises/1236/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1236.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -220,7 +220,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1236.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1236.json?api_version=7"
             }, {
                 "id": 1237,
                 "name": "viikko1-Viikko1_010.YmpyranKehanPituus",
@@ -228,8 +228,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "b028a95aa60b06f75b2f1ab82ad24be2",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1237/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1237.zip",
+                "return_url": "https://example.com/staging/exercises/1237/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1237.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -241,7 +241,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1237.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1237.json?api_version=7"
             }, {
                 "id": 1238,
                 "name": "viikko1-Viikko1_011.SuurempiLuku",
@@ -249,8 +249,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "af552865edc9c3519e9273f878445c6b",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1238/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1238.zip",
+                "return_url": "https://example.com/staging/exercises/1238/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1238.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -262,7 +262,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1238.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1238.json?api_version=7"
             }, {
                 "id": 1239,
                 "name": "viikko1-Viikko1_012.IkienSumma",
@@ -271,7 +271,7 @@
                 "deadline": null,
                 "checksum": "998671ca9fce0593306d837676a201f0",
                 "return_url": "http://127.0.0.1:8080/exercises/1239/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1239.zip",
+                "zip_url": "https://example.com/staging/exercises/1239.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -283,7 +283,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1239.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1239.json?api_version=7"
             }, {
                 "id": 1240,
                 "name": "viikko1-Viikko1_013.RobottiOhjain",
@@ -291,8 +291,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "3c1aa7124e99192eb27c9dd05babb991",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1240/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1240.zip",
+                "return_url": "https://example.com/staging/exercises/1240/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1240.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -304,7 +304,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1240.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1240.json?api_version=7"
             }, {
                 "id": 1241,
                 "name": "viikko1-Viikko1_014.PositiivinenLuku",
@@ -312,8 +312,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "f1065663782c8cb2aa99bc44ba2bcd04",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1241/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1241.zip",
+                "return_url": "https://example.com/staging/exercises/1241/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1241.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -325,7 +325,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1241.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1241.json?api_version=7"
             }, {
                 "id": 1242,
                 "name": "viikko1-Viikko1_015.TaysiIkaisyys",
@@ -333,8 +333,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "d4f57d1b121298e5d47b804190409541",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1242/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1242.zip",
+                "return_url": "https://example.com/staging/exercises/1242/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1242.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -346,7 +346,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1242.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1242.json?api_version=7"
             }, {
                 "id": 1243,
                 "name": "viikko1-Viikko1_016.ParitonVaiParillinen",
@@ -354,8 +354,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "2d287f9c1a937fff1d25ce402f11bc77",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1243/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1243.zip",
+                "return_url": "https://example.com/staging/exercises/1243/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1243.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -367,7 +367,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1243.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1243.json?api_version=7"
             }, {
                 "id": 1244,
                 "name": "viikko1-Viikko1_017.SuurempiLuku",
@@ -375,8 +375,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "6c4dfece737412bd579388c11e777b0c",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1244/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1244.zip",
+                "return_url": "https://example.com/staging/exercises/1244/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1244.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -388,7 +388,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1244.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1244.json?api_version=7"
             }, {
                 "id": 1245,
                 "name": "viikko1-Viikko1_018.ArvosanatJaPisteet",
@@ -396,8 +396,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "ba476fbffb679b1061850c90ed4d9514",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1245/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1245.zip",
+                "return_url": "https://example.com/staging/exercises/1245/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1245.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -409,7 +409,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1245.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1245.json?api_version=7"
             }, {
                 "id": 1246,
                 "name": "viikko1-Viikko1_019.IanTarkastus",
@@ -417,8 +417,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "e5cd342dbc1271b996fde8ddf82afa3c",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1246/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1246.zip",
+                "return_url": "https://example.com/staging/exercises/1246/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1246.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -430,7 +430,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1246.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1246.json?api_version=7"
             }, {
                 "id": 1247,
                 "name": "viikko1-Viikko1_020.Kayttajatunnukset",
@@ -438,8 +438,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "493030743c6e3badc0c82f997557cdf9",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1247/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1247.zip",
+                "return_url": "https://example.com/staging/exercises/1247/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1247.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -451,7 +451,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1247.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1247.json?api_version=7"
             }, {
                 "id": 1248,
                 "name": "viikko1-Viikko1_021.Karkausvuosi",
@@ -459,8 +459,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "890de395337e3e47682287718e6e92da",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1248/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1248.zip",
+                "return_url": "https://example.com/staging/exercises/1248/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1248.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -472,7 +472,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1248.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1248.json?api_version=7"
             }, {
                 "id": 1249,
                 "name": "viikko1-Viikko1_022.Salasana",
@@ -480,8 +480,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "a59fc2734f7ea3ed1bffe905ed95aa25",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1249/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1249.zip",
+                "return_url": "https://example.com/staging/exercises/1249/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1249.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -493,7 +493,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1249.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1249.json?api_version=7"
             }, {
                 "id": 1250,
                 "name": "viikko1-Viikko1_023.Lampotiloja",
@@ -501,8 +501,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "9be950feccd2c1d0687fcc6766f25202",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1250/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1250.zip",
+                "return_url": "https://example.com/staging/exercises/1250/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1250.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -514,7 +514,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1250.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1250.json?api_version=7"
             }, {
                 "id": 1251,
                 "name": "viikko1-Viikko1_024.RobottiOhjainOsa2",
@@ -522,8 +522,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "f6837d08ec1a3831def4ccbfbed63324",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1251/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1251.zip",
+                "return_url": "https://example.com/staging/exercises/1251/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1251.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -535,7 +535,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1251.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1251.json?api_version=7"
             }]
     }
 }

@@ -1,4 +1,4 @@
 {
-    "submission_url": "http://127.0.0.1:8080/submissions/1781.json?api_version=7",
-    "paste_url": "https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ"
+    "submission_url": "http://example.com/submissions/1781.json?api_version=7",
+    "paste_url": "https://example.com/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ"
 }

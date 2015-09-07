@@ -47,7 +47,7 @@ public class TmcCoreTest {
     private TmcCore tmcCore;
     private ListeningExecutorService threadPool;
     private Course course;
-    private String tmcServerAddress = "https://tmc.mooc.fi/mooc";
+    private String tmcServerAddress = "https://example.com/mooc";
     private CoreTestSettings settings;
 
     @Before

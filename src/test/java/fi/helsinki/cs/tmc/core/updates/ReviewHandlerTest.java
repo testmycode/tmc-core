@@ -51,7 +51,7 @@ public class ReviewHandlerTest {
 
     @Test
     public void reviewsFetchedFromCorrectUrl() throws Exception {
-        URI url = URI.create("www.tmc.mooc.fi.duck/reviews");
+        URI url = URI.create("www.example.com/reviews");
         Course course = new Course();
         course.setReviewsUrl(url);
         handler.getNewObjects(course);

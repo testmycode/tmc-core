@@ -2,11 +2,11 @@
     "course": {
         "id": 27,
         "name": "tmc-testcourse",
-        "details_url": "https://tmc.mooc.fi/staging/courses/27.json",
-        "unlock_url": "https://tmc.mooc.fi/staging/courses/27/unlock.json",
-        "reviews_url": "https://tmc.mooc.fi/staging/courses/27/reviews.json",
-        "comet_url": "https://tmc.mooc.fi:8443/comet",
-        "spyware_urls": ["http://staging.spyware.testmycode.net/"],
+        "details_url": "https://example.com/staging/courses/27.json",
+        "unlock_url": "https://example.com/staging/courses/27/unlock.json",
+        "reviews_url": "https://example.com/staging/courses/27/reviews.json",
+        "comet_url": "https://example.com/comet",
+        "spyware_urls": ["http://example.com/"],
         "unlockables": [],
         "exercises": [
             {
@@ -16,8 +16,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "89204e639e37112573d2bc33bb49a58e",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1649/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1649.zip",
+                "return_url": "https://example.com/staging/exercises/1649/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1649.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -29,7 +29,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1649.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1649.json?api_version=7"
             },
             {
                 "id": 1650,
@@ -38,8 +38,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "f3fd5cb9e4ac06fb30c953437e8d490f",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1650/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1650.zip",
+                "return_url": "https://example.com/staging/exercises/1650/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1650.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -51,7 +51,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1650.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1650.json?api_version=7"
             },
             {
                 "id": 1655,
@@ -60,8 +60,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "d3ee6f3d56242c02f502a108a5f1d0c6",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1655/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1655.zip",
+                "return_url": "https://example.com/staging/exercises/1655/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1655.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -73,7 +73,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1655.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1655.json?api_version=7"
             },
             {
                 "id": 1651,
@@ -82,8 +82,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "c903e8deadc8200630f3e07201ffa435",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1651/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1651.zip",
+                "return_url": "https://example.com/staging/exercises/1651/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1651.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -95,7 +95,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1651.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1651.json?api_version=7"
             },
             {
                 "id": 1652,
@@ -104,8 +104,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "af11af9494bb9d0cb308e8251aaf1441",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1652/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1652.zip",
+                "return_url": "https://example.com/staging/exercises/1652/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1652.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": true,
@@ -117,8 +117,8 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1652.json?api_version=7",
-                "latest_submission_url": "https://tmc.mooc.fi/staging/submissions/1924.zip",
+                "exercise_submissions_url": "https://example.com/staging/exercises/1652.json?api_version=7",
+                "latest_submission_url": "https://example.com/staging/submissions/1924.zip",
                 "latest_submission_id": 1924
             },
             {
@@ -128,8 +128,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "4c211a2bfe91e993ffc137db620f30f8",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1653/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1653.zip",
+                "return_url": "https://example.com/staging/exercises/1653/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1653.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": true,
@@ -141,8 +141,8 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1653.json?api_version=7",
-                "latest_submission_url": "https://tmc.mooc.fi/staging/submissions/1855.zip",
+                "exercise_submissions_url": "https://example.com/staging/exercises/1653.json?api_version=7",
+                "latest_submission_url": "https://example.com/staging/submissions/1855.zip",
                 "latest_submission_id": 1855
             },
             {
@@ -152,8 +152,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "1f5526c47e01a7a8c386b8b4dd2e91c1",
-                "return_url": "https://tmc.mooc.fi/staging/exercises/1654/submissions.json",
-                "zip_url": "https://tmc.mooc.fi/staging/exercises/1654.zip",
+                "return_url": "https://example.com/staging/exercises/1654/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1654.zip",
                 "returnable": true,
                 "requires_review": true,
                 "attempted": false,
@@ -165,7 +165,7 @@
                 "valgrind_strategy": "fail",
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "https://tmc.mooc.fi/staging/exercises/1654.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/exercises/1654.json?api_version=7"
             }
         ]
     }}

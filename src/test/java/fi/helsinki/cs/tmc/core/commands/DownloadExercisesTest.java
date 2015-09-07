@@ -64,6 +64,59 @@ public class DownloadExercisesTest {
     @Rule public WireMockRule wireMockServer = new WireMockRule(0);
     private String serverAddress = "http://127.0.0.1:";
 
+    private CoreTestSettings createSettingsAndWiremock() throws URISyntaxException {
+        CoreTestSettings settings1 = new CoreTestSettings();
+        settings1.setServerAddress(serverAddress);
+        settings1.setUsername("test");
+        settings1.setPassword("1234");
+        wiremock(settings1.getUsername(), settings1.getPassword(), "35", serverAddress);
+        return settings1;
+    }
+
+    private void wiremock(String username, String password, String courseId, String serverAddress)
+            throws URISyntaxException {
+        String encodedCredentials = "Basic " + Authorization.encode(username + ":" + password);
+        wireMockServer.stubFor(
+                get(urlPathEqualTo("/user"))
+                        .withHeader("Authorization", equalTo(encodedCredentials))
+                        .willReturn(aResponse().withStatus(200)));
+
+        wireMockServer.stubFor(
+                get(urlPathEqualTo(new UrlHelper(settings).coursesExtension))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "text/json")
+                                        .withBody(
+                                                ExampleJson.allCoursesExample.replaceAll(
+                                                        "https://example.com/staging",
+                                                        serverAddress))));
+
+        wireMockServer.stubFor(
+                get(urlPathEqualTo("/courses/" + courseId + ".json"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "text/json")
+                                        .withBody(
+                                                ExampleJson.courseExample
+                                                        .replaceAll(
+                                                                "https://example.com/staging",
+                                                                serverAddress)
+                                                        .replaceFirst("3", courseId))));
+
+
+
+
+        wireMockServer.stubFor(
+                get(urlMatching("/exercises/[0-9]+.zip"))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "text/json")
+                                        .withBodyFile("test.zip")));
+    }
+
     @Before
     public void setup() throws IOException {
         serverAddress += wireMockServer.port();
@@ -124,7 +177,7 @@ public class DownloadExercisesTest {
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi");
 
-        assertEquals(152, exercises.size());
+        assertEquals(153, exercises.size());
         assertTrue(Files.exists(exercisePath));
 
         FileUtils.deleteDirectory(exercisePath.toFile());
@@ -141,7 +194,7 @@ public class DownloadExercisesTest {
                 core.downloadExercises(folder, 35, observerMock);
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi");
-        assertEquals(152, exercises.size());
+        assertEquals(153, exercises.size());
         assertTrue(Files.exists(exercisePath));
         FileUtils.deleteDirectory(exercisePath.toFile());
         assertFalse(Files.exists(exercisePath));
@@ -149,53 +202,4 @@ public class DownloadExercisesTest {
         verify(observerMock, times(153)).progress(anyDouble(), anyString());
     }
 
-    private CoreTestSettings createSettingsAndWiremock() throws URISyntaxException {
-        CoreTestSettings settings1 = new CoreTestSettings();
-        settings1.setServerAddress(serverAddress);
-        settings1.setUsername("test");
-        settings1.setPassword("1234");
-        wiremock(settings1.getUsername(), settings1.getPassword(), "35", serverAddress);
-        return settings1;
-    }
-
-    private void wiremock(String username, String password, String courseId, String serverAddress)
-            throws URISyntaxException {
-        String encodedCredentials = "Basic " + Authorization.encode(username + ":" + password);
-        wireMockServer.stubFor(
-                get(urlPathEqualTo("/user"))
-                        .withHeader("Authorization", equalTo(encodedCredentials))
-                        .willReturn(aResponse().withStatus(200)));
-
-        wireMockServer.stubFor(
-                get(urlPathEqualTo(new UrlHelper(settings).coursesExtension))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "text/json")
-                                        .withBody(
-                                                ExampleJson.allCoursesExample.replace(
-                                                        "https://tmc.mooc.fi/staging",
-                                                        serverAddress))));
-
-        wireMockServer.stubFor(
-                get(urlPathEqualTo("/courses/" + courseId + ".json"))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "text/json")
-                                        .withBody(
-                                                ExampleJson.courseExample
-                                                        .replace(
-                                                                "https://tmc.mooc.fi/staging",
-                                                                serverAddress)
-                                                        .replaceFirst("3", courseId))));
-
-        wireMockServer.stubFor(
-                get(urlMatching("/exercises/[0-9]+.zip"))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "text/json")
-                                        .withBodyFile("test.zip")));
-    }
 }

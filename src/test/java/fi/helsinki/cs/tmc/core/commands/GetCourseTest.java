@@ -43,20 +43,11 @@ public class GetCourseTest {
         mockUrl = urlPathEqualTo("/courses/19.json");
     }
 
-    @Before
-    public void setup() throws URISyntaxException {
-        serverAddress += wireMock.port();
-        settings.setServerAddress(serverAddress);
-        finalUrl = new URI(serverAddress + "/courses/19.json");
-        core = new TmcCore(settings);
-        performWiremockStubbing();
-    }
-
     private void performWiremockStubbing() {
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses.json"))
                         .willReturn(aResponse().withBody(ExampleJson
-                                .allCoursesExample.replaceAll("8080", String.valueOf(wireMock.port())))));
+                                .allCoursesExample.replaceAll("http://example.com", serverAddress))));
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses/3.json"))
                         .willReturn(
@@ -65,6 +56,15 @@ public class GetCourseTest {
                 get(mockUrl)
                         .willReturn(
                                 aResponse().withStatus(200).withBody(ExampleJson.courseExample)));
+    }
+
+    @Before
+    public void setup() throws URISyntaxException {
+        serverAddress += wireMock.port();
+        settings.setServerAddress(serverAddress);
+        finalUrl = new URI(serverAddress + "/courses/19.json");
+        core = new TmcCore(settings);
+        performWiremockStubbing();
     }
 
     private CoreTestSettings createSettingsWith(String password, String username, String address) {

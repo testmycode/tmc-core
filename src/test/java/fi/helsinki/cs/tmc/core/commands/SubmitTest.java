@@ -73,12 +73,10 @@ public class SubmitTest {
                                 WireMock.aResponse()
                                         .withStatus(200)
                                         .withBody(
-                                                ExampleJson.failedSubmitResponse.replace(
-                                                        "https://tmc.mooc.fi/staging",
-                                                        serverAddress)
+                                                ExampleJson.failedSubmitResponse
                                                         .replaceAll(
-                                                                "8080",
-                                                                String.valueOf(wireMock.port())))));
+                                                                "http://example.com",
+                                                                serverAddress))));
 
         wireMock.stubFor(
                 get(urlPathEqualTo("/submissions/7777.json"))
@@ -86,13 +84,7 @@ public class SubmitTest {
                                 WireMock.aResponse()
                                         .withStatus(200)
                                         .withBody(
-                                                ExampleJson.failedSubmission
-                                                        .replace(
-                                                                "https://tmc.mooc.fi/staging",
-                                                                serverAddress)
-                                                        .replaceAll(
-                                                                "8080",
-                                                                String.valueOf(wireMock.port())))));
+                                                ExampleJson.failedSubmission)));
 
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses/19.json"))
@@ -100,8 +92,8 @@ public class SubmitTest {
                                 WireMock.aResponse()
                                         .withStatus(200)
                                         .withBody(
-                                                ExampleJson.noDeadlineCourseExample.replace(
-                                                        "https://tmc.mooc.fi/staging",
+                                                ExampleJson.noDeadlineCourseExample.replaceAll(
+                                                        "https://example.com/staging",
                                                         serverAddress))));
     }
 

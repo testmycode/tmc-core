@@ -50,12 +50,8 @@ public class ExerciseDownloaderTest {
     private ArrayList<Exercise> exercises;
     private ExerciseDownloader exDl;
     private CoreTestSettings settings;
-    private String testFileContent = "Testfile for DownloadExercisesTest \n";
-    private String testZipPath;
-    private String contentFilePath;
-    private Path zipDestination;
-    
-private Exercise modelSolutionExample;
+    private Path zipDestination; 
+    private Exercise modelSolutionExample;
 
     /**
      * Creates required stubs and example data for downloader.
@@ -69,8 +65,7 @@ private Exercise modelSolutionExample;
         exDl = new ExerciseDownloader(new UrlCommunicator(settings), new TmcApi(settings));
         exercises = new ArrayList<>();
 
-        testZipPath = "testzip.zip";
-        contentFilePath = "testfile.txt";
+        String testZipPath = "testzip.zip";
         zipDestination = Paths.get("src", "test", "resources", "__files");
 
         modelSolutionExample = new Exercise();

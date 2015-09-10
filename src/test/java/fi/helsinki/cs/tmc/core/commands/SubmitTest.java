@@ -24,30 +24,22 @@ import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
-import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
-import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SubmitTest {
 
@@ -188,35 +180,12 @@ public class SubmitTest {
         Path path =
                 Paths.get("testResources", "halfdoneExercise", "viikko1", "Viikko1_004.Muuttujat");
         ListenableFuture<SubmissionResult> submit = core.submit(path);
-        final List<SubmissionResult> result = new ArrayList<>();
-        Futures.addCallback(
-                submit,
-                new FutureCallback<SubmissionResult>() {
-
-                    @Override
-                    public void onSuccess(SubmissionResult sub) {
-                        result.add(sub);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable thrwbl) {
-                        System.out.println("VIRHE: " + thrwbl);
-                        thrwbl.printStackTrace();
-                    }
-                });
-        while (!submit.isDone()) {
-            Thread.sleep(100);
-        }
-        assertFalse(result.isEmpty());
-        assertFalse(result.get(0).isAllTestsPassed());
+        SubmissionResult result = submit.get();
+        assertFalse(result.isAllTestsPassed());
     }
 
     @Test
-    public void testSubmissionWithObserver()
-            throws TmcCoreException, IOException, ParseException, ExpiredException,
-                    IllegalArgumentException, InterruptedException, URISyntaxException,
-                    NoLanguagePluginFoundException {
-
+    public void testSubmissionWithObserver() throws Exception{
         when(submitterMock.submit(eq(path), eq(observer))).thenReturn(URI.create("xkcd.com"));
         submitWithObserver.call();
         verify(submitterMock).submit(eq(path), eq(observer));

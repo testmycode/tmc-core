@@ -171,7 +171,7 @@ public class TmcApi {
         Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
 
         if (course == null) {
-            return Optional.absent();
+            return Optional.fromNullable(course);
         }
 
         for (Exercise e : course.getExercises()) {

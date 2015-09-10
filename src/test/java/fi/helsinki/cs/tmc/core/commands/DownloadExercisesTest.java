@@ -89,7 +89,7 @@ public class DownloadExercisesTest {
                                         .withHeader("Content-Type", "text/json")
                                         .withBody(
                                                 ExampleJson.allCoursesExample.replaceAll(
-                                                        "https://example.com/staging",
+                                                        "http://example.com",
                                                         serverAddress))));
 
         wireMockServer.stubFor(
@@ -201,5 +201,4 @@ public class DownloadExercisesTest {
 
         verify(observerMock, times(153)).progress(anyDouble(), anyString());
     }
-
 }

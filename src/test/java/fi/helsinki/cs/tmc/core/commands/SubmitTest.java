@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -67,6 +68,17 @@ public class SubmitTest {
     }
 
     private void buildWireMock() throws URISyntaxException {
+        wireMock.stubFor(
+                get(urlPathEqualTo(new UrlHelper(settings).coursesExtension))
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(200)
+                                        .withHeader("Content-Type", "text/json")
+                                        .withBody(
+                                                ExampleJson.allCoursesExample
+                                                        .replace(
+                                                                "http://example.com",
+                                                                serverAddress))));
         wireMock.stubFor(
                 post(urlPathEqualTo("/exercises/1231/submissions.json"))
                         .willReturn(

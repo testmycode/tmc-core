@@ -146,12 +146,14 @@ public class TmcApi {
      *
      * @return an course Object (parsed from JSON)
      */
-    public Optional<Course> getCourse(int courseId)
-            throws IOException, TmcCoreException, URISyntaxException {
-        if (!courseExists(courseId)) {
-            return Optional.absent();
+    public Optional<Course> getCourse(int courseId) throws IOException, URISyntaxException {
+        List<Course> allCourses = getCourses();
+        for (Course course : allCourses) {
+            if (course.getId() == courseId) {
+                return getCourse(helper.getCourseUrl(course));
+            }
         }
-        return getCourse(helper.getCourseUrl(courseId));
+        return Optional.absent();
     }
 
     /**
@@ -168,13 +170,14 @@ public class TmcApi {
         Gson mapper = new Gson();
         Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
 
+        if (course == null) {
+            return Optional.absent();
+        }
+
         for (Exercise e : course.getExercises()) {
             e.setCourseName(course.getName());
         }
 
-        if (course == null) {
-            return Optional.absent();
-        }
         return Optional.of(course);
     }
 
@@ -206,7 +209,15 @@ public class TmcApi {
      * @return List of a all exercises as Exercise-objects
      */
     public List<Exercise> getExercises(int id) throws IOException, URISyntaxException {
-        return getExercises(helper.getCourseUrl(id));
+        Optional<Course> courseOptional = getCourse(id);
+        if (courseOptional.isPresent()) {
+            Course course = courseOptional.get();
+            for (Exercise exercise : course.getExercises()) {
+                exercise.setCourseName(course.getName());
+            }
+            return course.getExercises();
+        }
+        return new ArrayList<>();
     }
 
     /**

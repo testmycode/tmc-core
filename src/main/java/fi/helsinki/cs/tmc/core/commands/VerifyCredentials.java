@@ -5,6 +5,7 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import java.io.IOException;
+import java.net.URI;
 
 /**
  * A {@link Command} for authenticating the user details saved in {@link TmcSettings}.
@@ -47,10 +48,9 @@ public class VerifyCredentials extends Command<Boolean> {
 
         String auth = settings.getUsername() + ":" + settings.getPassword();
 
-        int response =
-                communicator
-                        .makeGetRequest(settings.getServerAddress() + TMC_SERVER_ROUTE, auth)
-                        .getStatusCode();
+        int response = communicator
+                .makeGetRequest(URI.create(settings.getServerAddress() + TMC_SERVER_ROUTE), auth)
+                .getStatusCode();
 
         return (response >= HTTP_SUCCESS_RANGE_MIN && response <= HTTP_SUCCESS_RANGE_MAX);
     }

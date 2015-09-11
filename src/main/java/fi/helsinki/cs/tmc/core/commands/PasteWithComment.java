@@ -57,7 +57,7 @@ public class PasteWithComment extends Command<URI> {
 
         Optional<Course> currentCourse = settings.getCurrentCourse();
         if (currentCourse.isPresent()) {
-            return URI.create(submitter.submitPasteWithComment(this.path, this.comment));
+            return submitter.submitPasteWithComment(this.path, this.comment);
         } else {
             throw new TmcCoreException("Unable to determine course");
         }

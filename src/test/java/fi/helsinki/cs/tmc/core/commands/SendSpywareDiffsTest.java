@@ -18,6 +18,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.net.URI;
 import java.util.Arrays;
 
 public class SendSpywareDiffsTest {
@@ -74,7 +75,7 @@ public class SendSpywareDiffsTest {
                                         .withBody("SPYWARE TULI PERILLE")));
 
         Course currentCourse = new Course();
-        currentCourse.setSpywareUrls(Arrays.asList(serverAddress + "/spyware"));
+        currentCourse.setSpywareUrls(Arrays.asList(URI.create(serverAddress + "/spyware")));
         settings.setCurrentCourse(currentCourse);
 
         command = new SendSpywareDiffs(settings, sender, bytes);

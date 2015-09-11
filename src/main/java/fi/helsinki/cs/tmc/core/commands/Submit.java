@@ -10,6 +10,7 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 
@@ -77,11 +78,11 @@ public class Submit extends Command<SubmissionResult> {
         assertHasRequiredData();
 
         if (observer != null) {
-            String returnUrl = submitter.submit(this.path, observer);
+            URI returnUrl = submitter.submit(this.path, observer);
             return submissionPoller.getSubmissionResult(returnUrl, observer);
         }
 
-        String returnUrl = submitter.submit(this.path);
+        URI returnUrl = submitter.submit(this.path);
         return submissionPoller.getSubmissionResult(returnUrl);
     }
 }

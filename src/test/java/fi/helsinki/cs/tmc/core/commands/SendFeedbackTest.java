@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
@@ -32,7 +33,9 @@ public class SendFeedbackTest {
     public void setUp() {
         settings = new CoreTestSettings();
         serverAddress += wireMock.port();
-        command = new SendFeedback(settings, testCaseMap(), serverAddress + "/feedback");
+        command = new SendFeedback(settings,
+                testCaseMap(),
+                URI.create(serverAddress + "/feedback"));
     }
 
     private Map<String, String> testCaseMap() {
@@ -60,10 +63,13 @@ public class SendFeedbackTest {
                         .willReturn(WireMock.aResponse().withStatus(200)));
 
         Course currentCourse = new Course();
-        currentCourse.setSpywareUrls(Collections.singletonList(serverAddress + "/spyware"));
+        currentCourse.setSpywareUrls(Collections.singletonList(
+                URI.create(serverAddress + "/spyware")));
         settings.setCurrentCourse(currentCourse);
 
-        command = new SendFeedback(settings, testCaseMap(), serverAddress + "/feedback");
+        command = new SendFeedback(settings,
+                testCaseMap(),
+                URI.create(serverAddress + "/feedback"));
 
         command.call();
 

@@ -15,7 +15,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.TmcCore;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
@@ -37,17 +36,17 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class SubmitTest {
 
-
     private Submit submit;
     private ExerciseSubmitter submitterMock;
     private CoreTestSettings settings;
-    private String submissionUrl;
+    private URI submissionUrl;
     private ProgressObserver observer;
 
     @Rule public WireMockRule wireMock = new WireMockRule(0);
@@ -112,14 +111,15 @@ public class SubmitTest {
 
         observer = mock(ProgressObserver.class);
 
-        submissionUrl = new UrlHelper(settings).withParams("/submissions/1781.json");
+        submissionUrl = new UrlHelper(settings).withParams(URI.create("/submissions/1781.json"));
 
         submitterMock = mock(ExerciseSubmitter.class);
         pollerMock = mock(SubmissionPoller.class);
 
         path = Paths.get("polku", "kurssi", "kansioon", "src").toString();
 
-        when(submitterMock.submit(anyString())).thenReturn(serverAddress + submissionUrl);
+        when(submitterMock.submit(anyString()))
+                .thenReturn(URI.create(serverAddress + submissionUrl));
         submit =
                 new Submit(
                         settings, submitterMock, new SubmissionPoller(new TmcApi(settings)), path);
@@ -141,7 +141,7 @@ public class SubmitTest {
     @Test
     public void testHandlesSuccessfulTestRunResponseCorrectly() throws Exception {
         wireMock.stubFor(
-                get(urlEqualTo(submissionUrl))
+                get(urlEqualTo(submissionUrl.toString()))
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)
@@ -155,7 +155,7 @@ public class SubmitTest {
     @Test
     public void testHandlesUnsuccessfulTestRunResponseCorrectly() throws Exception {
         wireMock.stubFor(
-                get(urlEqualTo(submissionUrl))
+                get(urlEqualTo(submissionUrl.toString()))
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)
@@ -186,10 +186,10 @@ public class SubmitTest {
 
     @Test
     public void testSubmissionWithObserver() throws Exception{
-        when(submitterMock.submit(eq(path), eq(observer))).thenReturn("xkcd.com");
+        when(submitterMock.submit(eq(path), eq(observer))).thenReturn(URI.create("xkcd.com"));
         submitWithObserver.call();
         verify(submitterMock).submit(eq(path), eq(observer));
-        verify(pollerMock).getSubmissionResult(eq("xkcd.com"), eq(observer));
+        verify(pollerMock).getSubmissionResult(eq(URI.create("xkcd.com")), eq(observer));
     }
 
 }

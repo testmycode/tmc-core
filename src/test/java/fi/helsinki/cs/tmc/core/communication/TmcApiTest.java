@@ -96,7 +96,7 @@ public class TmcApiTest {
         Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(any(URI.class)))
                 .thenReturn(fakeResult);
         assertEquals(
-                URI.create("http://127.0.0.1:8080/submissions/1781.json?api_version=7"),
+                URI.create("http://example.com/submissions/1781.json?api_version=7"),
                 tmcApi.getSubmissionUrl(fakeResult));
     }
 
@@ -107,7 +107,7 @@ public class TmcApiTest {
                         Mockito.anyString()))
                 .thenReturn(fakeResult);
         assertEquals(
-                URI.create("https://tmc.mooc.fi/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ"),
+                URI.create("https://example.com/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ"),
                 tmcApi.getPasteUrl(fakeResult));
     }
 

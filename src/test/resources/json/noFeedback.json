@@ -183,7 +183,7 @@
         },
         "detailed_message": null
     }
-], "solution_url": "https://tmc.mooc.fi/staging/exercises/1653/solution", "validations": {
+], "solution_url": "https://example.com/staging/exercises/1653/solution", "validations": {
     "strategy": "DISABLED",
     "validationErrors": {}
 }, "valgrind": "", "reviewed": false, "requests_review": false, "submitted_at": "2015-06-04T15:08:03.395+03:00"}

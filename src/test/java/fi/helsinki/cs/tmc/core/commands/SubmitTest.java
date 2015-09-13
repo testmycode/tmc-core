@@ -24,8 +24,10 @@ import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -71,12 +73,10 @@ public class SubmitTest {
                                 WireMock.aResponse()
                                         .withStatus(200)
                                         .withBody(
-                                                ExampleJson.failedSubmitResponse.replace(
-                                                        "https://tmc.mooc.fi/staging",
-                                                        serverAddress)
+                                                ExampleJson.failedSubmitResponse
                                                         .replaceAll(
-                                                                "8080",
-                                                                String.valueOf(wireMock.port())))));
+                                                                "http://example.com",
+                                                                serverAddress))));
 
         wireMock.stubFor(
                 get(urlPathEqualTo("/submissions/7777.json"))
@@ -84,13 +84,7 @@ public class SubmitTest {
                                 WireMock.aResponse()
                                         .withStatus(200)
                                         .withBody(
-                                                ExampleJson.failedSubmission
-                                                        .replace(
-                                                                "https://tmc.mooc.fi/staging",
-                                                                serverAddress)
-                                                        .replaceAll(
-                                                                "8080",
-                                                                String.valueOf(wireMock.port())))));
+                                                ExampleJson.failedSubmission)));
 
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses/19.json"))
@@ -98,8 +92,8 @@ public class SubmitTest {
                                 WireMock.aResponse()
                                         .withStatus(200)
                                         .withBody(
-                                                ExampleJson.noDeadlineCourseExample.replace(
-                                                        "https://tmc.mooc.fi/staging",
+                                                ExampleJson.noDeadlineCourseExample.replaceAll(
+                                                        "https://example.com/staging",
                                                         serverAddress))));
     }
 
@@ -185,7 +179,7 @@ public class SubmitTest {
     }
 
     @Test
-    public void testSubmissionWithObserver() throws Exception{
+    public void testSubmissionWithObserver() throws Exception {
         when(submitterMock.submit(eq(path), eq(observer))).thenReturn(URI.create("xkcd.com"));
         submitWithObserver.call();
         verify(submitterMock).submit(eq(path), eq(observer));

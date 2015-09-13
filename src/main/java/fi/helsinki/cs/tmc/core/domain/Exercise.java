@@ -29,11 +29,11 @@ public class Exercise implements Serializable {
 
     private String checksum; //: "406f2f0690550c6dea94f319b2b1580c",
 
+    @SerializedName("zip_url")
+    private URI zipUrl;
+
     @SerializedName("return_url")
     private URI returnUrl; //: "https://tmc.mooc.fi/staging/exercises/284/submissions.json",
-
-    @SerializedName("zip_url")
-    private URI zipUrl; //": "https://tmc.mooc.fi/staging/exercises/284.zip",
 
     /**
      * The URL the solution can be downloaded from (admins only).

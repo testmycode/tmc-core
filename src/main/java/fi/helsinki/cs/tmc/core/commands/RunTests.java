@@ -6,9 +6,8 @@ import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-import java.nio.file.Path;
 
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 /**
  * A {@link Command} for running test for an exercise.

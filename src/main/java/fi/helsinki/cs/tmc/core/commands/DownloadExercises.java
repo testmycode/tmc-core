@@ -16,7 +16,6 @@ import com.google.common.base.Optional;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,8 +51,8 @@ public class DownloadExercises extends Command<List<Exercise>> {
         this.tmcApi = new TmcApi(settings);
         this.exerciseDownloader = new ExerciseDownloader(new UrlCommunicator(settings), tmcApi);
         this.exercises = exercises;
-        this.path = settings.getTmcMainDirectory() != null ? 
-                Paths.get(settings.getTmcMainDirectory()):Paths.get("");
+        this.path = settings.getTmcMainDirectory();// != null ? 
+              //  Paths.get(settings.getTmcMainDirectory()):Paths.get("");
        
         Optional<Course> currentCourse = settings.getCurrentCourse();
         if (currentCourse.isPresent()) {
@@ -124,7 +123,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
      * Entry point for launching this command.
      */
     @Override
-    public List<Exercise> call() throws TmcCoreException {
+    public List<Exercise> call() throws TmcCoreException, IOException {
         if (!settings.userDataExists()) {
             throw new TmcCoreException("Unable to download exercises: missing username/password");
         }
@@ -150,7 +149,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
         return downloadedExercises;
     }
 
-    private List<Exercise> downloadExercises(Course course) throws TmcInterruptionException {
+    private List<Exercise> downloadExercises(Course course) throws TmcInterruptionException, IOException {
         Path target = exerciseDownloader.createCourseFolder(this.path, course.getName());
         List<Exercise> downloaded = new ArrayList<>();
 

@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 

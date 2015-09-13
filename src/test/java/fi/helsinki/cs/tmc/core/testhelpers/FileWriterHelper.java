@@ -15,10 +15,11 @@ public class FileWriterHelper {
     /**
      * Writes stuff to file.
      * @param path to write
+     * @throws java.io.IOException
      */
     public void writeStuffToFile(Path path) throws IOException {
         try {
-            writer = new FileWriter(new File(path.toString()));
+            writer = new FileWriter(path.toFile());
             Random random = new Random();
             for (int i = 0; i < 20; i++) {
                 writer.append(random.nextBoolean() + "\n");

@@ -9,7 +9,7 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-import java.net.URI;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -43,7 +43,7 @@ public class DownloadModelSolution extends Command<Boolean> {
 
         Path target
                 = exerciseDownloader.createCourseFolder(
-                        Paths.get(settings.getTmcMainDirectory()), courseName);
+                        settings.getTmcMainDirectory(), courseName);
         return exerciseDownloader.downloadModelSolution(exercise, target);
     }
 

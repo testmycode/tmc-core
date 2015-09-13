@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.commands;
 import static org.junit.Assert.assertEquals;
 
 import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
@@ -24,7 +25,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
-import static org.mockito.Matchers.any;
 
 public class PasteWithCommentTest {
     private PasteWithComment paste;

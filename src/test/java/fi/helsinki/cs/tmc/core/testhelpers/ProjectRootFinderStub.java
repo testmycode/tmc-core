@@ -6,17 +6,18 @@ import fi.helsinki.cs.tmc.core.zipping.RootFinder;
 
 import com.google.common.base.Optional;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class ProjectRootFinderStub implements RootFinder {
 
     private Path returnValue;
     private TmcApi tmcApi;
-    private HashMap<String, Course> courseStubs;
+    private Map<String, Course> courseStubs;
 
     public ProjectRootFinderStub(TmcApi tmcApi) {
         this.returnValue = Paths.get("");
@@ -47,9 +48,10 @@ public class ProjectRootFinderStub implements RootFinder {
     }
 
     public Optional<Course> getCurrentCourse(Path path) {
-        String[] folders = path.toString().split("\\" + File.separator);
 
-        for (String folder : folders) {
+        Iterator<Path> it = path.iterator();
+        while (it.hasNext()) {
+            String folder = it.next().toString();
             if (courseStubs.containsKey(folder)) {
                 return Optional.of(courseStubs.get(folder));
             }

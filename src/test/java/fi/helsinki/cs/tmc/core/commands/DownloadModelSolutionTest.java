@@ -5,6 +5,8 @@ import fi.helsinki.cs.tmc.core.communication.ExerciseDownloader;
 import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import java.io.IOException;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.junit.After;
@@ -29,13 +31,13 @@ public class DownloadModelSolutionTest {
         exercise = new Exercise("tehtava");
         exercise.setCourseName("tira");
         settings = new CoreTestSettings();
-        settings.setTmcMainDirectory("home");
+        settings.setTmcMainDirectory(Paths.get("home"));
         settings.setCurrentCourse(new Course("ohpe"));
         settings.setCredentials("a", "b");
     }
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException{
         downloader = mock(ExerciseDownloader.class);
         dl = new DownloadModelSolution(settings, exercise, downloader);
         when(downloader.createCourseFolder(any(Path.class), anyString())).thenReturn(Paths.get("path"));

@@ -31,11 +31,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -198,8 +198,8 @@ public class UrlCommunicator {
      * @param file file to write the results into
      * @return true if successful
      */
-    public boolean downloadToFile(String url, File file, String credentials) {
-        try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
+    public boolean downloadToFile(String url, Path path, String credentials) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(path.toFile())) {
             HttpGet httpget = createGet(url, credentials);
             HttpResponse response = executeRequest(httpget);
             fileOutputStream.write(EntityUtils.toByteArray(response.getEntity()));
@@ -213,8 +213,8 @@ public class UrlCommunicator {
     /**
      * Calls downloadToFile with username and password as params.
      */
-    public boolean downloadToFile(String url, File file) {
-        return downloadToFile(url, file, this.settings.getFormattedUserData());
+    public boolean downloadToFile(String url, Path path) {
+        return downloadToFile(url, path, this.settings.getFormattedUserData());
     }
 
     private StringBuilder writeResponse(HttpResponse response)

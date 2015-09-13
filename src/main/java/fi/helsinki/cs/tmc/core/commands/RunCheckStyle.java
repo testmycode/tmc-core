@@ -4,9 +4,9 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
 import java.nio.file.Path;
 
-import java.nio.file.Paths;
 
 /**
  * A {@link Command} for running code style validations on an exercise.

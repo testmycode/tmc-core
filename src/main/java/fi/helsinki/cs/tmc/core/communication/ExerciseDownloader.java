@@ -12,7 +12,6 @@ import com.google.common.base.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -51,6 +50,7 @@ public class ExerciseDownloader {
      *
      * @param courseUrl course url
      * @return info about downloading.
+     * @throws java.io.IOException
      */
     public Optional<List<Exercise>> downloadExercises(URI courseUrl) throws IOException {
         List<Exercise> exercises = tmcApi.getExercises(courseUrl);
@@ -65,17 +65,19 @@ public class ExerciseDownloader {
      *
      * @param exercises list of exercises which will be downloaded, list is parsed from json.
      * @return info about downloading.
+     * @throws java.io.IOException
      */
-    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises) {
-        return downloadFiles(exercises, "");
+    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises)throws IOException {
+        return downloadFiles(exercises, Paths.get(""));
     }
 
     /**
      * Method for downloading files if path where to download is defined.
      *
      * @return info about downloading.
+     * @throws java.io.IOException
      */
-    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, String path) {
+    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, Path path) throws IOException {
         return downloadFiles(exercises, path, null);
     }
 
@@ -86,9 +88,11 @@ public class ExerciseDownloader {
      * @param exercises list of exercises which will be downloaded, list is parsed from json.
      * @param path server path to exercises.
      * @param folderName folder name of where exercises will be extracted (for example course name)
+     * @return downloaded exercises.
+     * @throws java.io.IOException
      */
     public Optional<List<Exercise>> downloadFiles(
-            List<Exercise> exercises, String path, String folderName) {
+            List<Exercise> exercises, Path path, String folderName) throws IOException  {
         List<Exercise> downloadedExercises = new ArrayList<>();
         path = createCourseFolder(path, folderName);
         for (Exercise exercise : exercises) {
@@ -101,14 +105,14 @@ public class ExerciseDownloader {
         return Optional.of(downloadedExercises);
     }
 
-    public String createCourseFolder(String path, String folderName) {
-        path = formatPath(path);
+    public Path createCourseFolder(Path path, String folderName) throws IOException{
+
         if (!isNullOrEmpty(folderName)) {
-            path += folderName + File.separator;
+            path = path.resolve(folderName);
         }
-        File coursePath = new File(path);
-        if (!coursePath.exists()) {
-            coursePath.mkdirs();
+
+        if (Files.notExists(path)) {
+            Files.createDirectories(path);
         }
         return path;
     }
@@ -119,14 +123,14 @@ public class ExerciseDownloader {
      * @param exercise Exercise which will be downloaded
      * @param path path where single exercise will be downloaded
      */
-    public boolean handleSingleExercise(Exercise exercise, String path) {
+    public boolean handleSingleExercise(Exercise exercise, Path path) {
         if (exercise.isLocked()) {
             return false;
         }
         Path filePath = Folders.tempFolder().resolve(exercise.getName() + ".zip");
-        downloadExerciseZip(exercise.getZipUrl(), filePath.toString());
+        downloadExerciseZip(exercise.getZipUrl(), filePath);
         try {
-            taskExecutor.extractProject(filePath, Paths.get(path));
+            taskExecutor.extractProject(filePath, path);
         } catch (IOException e) {
             log.error("Could not extract archive: {}", path.toString());
             return false;
@@ -138,7 +142,7 @@ public class ExerciseDownloader {
 
     public boolean downloadModelSolution(Exercise exercise, Path targetPath) {
         Path zipPath = Folders.tempFolder().resolve(exercise.getName() + "-solution.zip");
-        downloadExerciseZip(exercise.getSolutionDownloadUrl(), zipPath.toString());
+        downloadExerciseZip(exercise.getSolutionDownloadUrl(), zipPath);
         try {
             taskExecutor.extractProject(zipPath, targetPath, true);
         } catch (IOException ex) {
@@ -164,21 +168,6 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Modify path to correct. Adds a trailing '/' if necessary.
-     *
-     * @param path the pathname to be corrected
-     * @return corrected path
-     */
-    public String formatPath(String path) {
-        if (path == null) {
-            path = "";
-        } else if (!path.isEmpty() && !path.endsWith(File.separator)) {
-            path += File.separator;
-        }
-        return path;
-    }
-
-    /**
      * Get advantage percent in downloading single exercise.
      *
      * @param exCount order number of exercise in downloading
@@ -195,8 +184,9 @@ public class ExerciseDownloader {
      * @param zipUrl url which will be downloaded
      * @param path where to download
      */
-    private void downloadExerciseZip(URI zipUrl, String path) {
-        File file = new File(path);
-        urlCommunicator.downloadToFile(zipUrl, file);
+
+    private void downloadExerciseZip(URI zipUrl, Path path) {
+        urlCommunicator.downloadToFile(zipUrl, path);
+
     }
 }

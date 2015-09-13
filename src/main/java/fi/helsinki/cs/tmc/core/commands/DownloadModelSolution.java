@@ -9,7 +9,7 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-import java.net.URI;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -41,10 +41,9 @@ public class DownloadModelSolution extends Command<Boolean> {
 
         String courseName = getCourseName();
 
-        Path target =
-                Paths.get(
-                        exerciseDownloader.createCourseFolder(
-                                settings.getTmcMainDirectory(), courseName));
+        Path target
+                = exerciseDownloader.createCourseFolder(
+                        settings.getTmcMainDirectory(), courseName);
         return exerciseDownloader.downloadModelSolution(exercise, target);
     }
 
@@ -56,8 +55,8 @@ public class DownloadModelSolution extends Command<Boolean> {
             if (!courseOpt.isPresent()) {
                 throw new TmcCoreException(
                         "Could not determine course name for exercise "
-                                + exercise.getName()
-                                + ", course not set");
+                        + exercise.getName()
+                        + ", course not set");
             }
             Course course = courseOpt.get();
             courseName = course.getName();

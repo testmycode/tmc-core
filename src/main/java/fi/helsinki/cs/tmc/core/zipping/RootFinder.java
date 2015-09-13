@@ -12,5 +12,5 @@ public interface RootFinder {
 
     Optional<Path> getRootDirectory(Path zipRoot);
 
-    Optional<Course> getCurrentCourse(String path) throws IOException, TmcCoreException;
+    Optional<Course> getCurrentCourse(Path path) throws IOException, TmcCoreException;
 }

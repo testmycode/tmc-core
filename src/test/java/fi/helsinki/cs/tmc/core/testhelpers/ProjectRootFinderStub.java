@@ -6,20 +6,21 @@ import fi.helsinki.cs.tmc.core.zipping.RootFinder;
 
 import com.google.common.base.Optional;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class ProjectRootFinderStub implements RootFinder {
 
-    private String returnValue;
+    private Path returnValue;
     private TmcApi tmcApi;
-    private HashMap<String, Course> courseStubs;
+    private Map<String, Course> courseStubs;
 
     public ProjectRootFinderStub(TmcApi tmcApi) {
-        this.returnValue = "";
+        this.returnValue = Paths.get("");
         this.tmcApi = tmcApi;
         this.courseStubs = new HashMap<>();
         fillCourseStubs();
@@ -33,23 +34,24 @@ public class ProjectRootFinderStub implements RootFinder {
         }
     }
 
-    public String getReturnValue() {
+    public Path getReturnValue() {
         return returnValue;
     }
 
-    public void setReturnValue(String returnValue) {
+    public void setReturnValue(Path returnValue) {
         this.returnValue = returnValue;
     }
 
     @Override
     public Optional<Path> getRootDirectory(Path zipRoot) {
-        return Optional.of(Paths.get(returnValue));
+        return Optional.of(returnValue);
     }
 
-    public Optional<Course> getCurrentCourse(String path) {
-        String[] folders = path.split("\\" + File.separator);
+    public Optional<Course> getCurrentCourse(Path path) {
 
-        for (String folder : folders) {
+        Iterator<Path> it = path.iterator();
+        while (it.hasNext()) {
+            String folder = it.next().toString();
             if (courseStubs.containsKey(folder)) {
                 return Optional.of(courseStubs.get(folder));
             }

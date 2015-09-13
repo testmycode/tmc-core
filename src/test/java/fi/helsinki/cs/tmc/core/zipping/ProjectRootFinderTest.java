@@ -14,7 +14,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -130,10 +129,8 @@ public class ProjectRootFinderTest {
     @Test
     public void getsCurrentCourse() throws IOException, TmcCoreException {
         Optional<Course> course =
-                finder.getCurrentCourse(
-                        Paths.get("path", "that", "contains", "course").toString()
-                                + File.separatorChar
-                                + fakeName);
+                finder.getCurrentCourse(Paths.get(
+                        "path", "that", "contains", "course",fakeName));
         assertEquals(fakeName, course.get().getName());
     }
 }

@@ -9,7 +9,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -41,6 +41,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+
 public class SubmitTest {
 
     private Submit submit;
@@ -54,7 +55,7 @@ public class SubmitTest {
 
     private Submit submitWithObserver;
     private SubmissionPoller pollerMock;
-    private String path;
+    private Path path;
 
     private void createSettings() {
         settings = new CoreTestSettings();
@@ -116,10 +117,12 @@ public class SubmitTest {
         submitterMock = mock(ExerciseSubmitter.class);
         pollerMock = mock(SubmissionPoller.class);
 
-        path = Paths.get("polku", "kurssi", "kansioon", "src").toString();
+        path = Paths.get("polku", "kurssi", "kansioon", "src");
 
-        when(submitterMock.submit(anyString()))
+
+        when(submitterMock.submit(any(Path.class)))
                 .thenReturn(URI.create(serverAddress + submissionUrl));
+
         submit =
                 new Submit(
                         settings, submitterMock, new SubmissionPoller(new TmcApi(settings)), path);
@@ -129,13 +132,13 @@ public class SubmitTest {
     @Test(expected = TmcCoreException.class)
     public void testThrowsExceptionIfNoUsername() throws Exception {
         settings.setUsername(null);
-        new Submit(settings, null, null, "").call();
+        new Submit(settings, null, null, Paths.get("")).call();
     }
 
     @Test(expected = TmcCoreException.class)
     public void testThrowsExceptionIfNoPassword() throws Exception {
         settings.setPassword(null);
-        new Submit(settings, null, null, "").call();
+        new Submit(settings, null, null, Paths.get("")).call();
     }
 
     @Test

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,7 +29,7 @@ public class CourseTest {
         course = new Course();
         course.setId(id);
         course.setName(name);
-        course.setDetailsUrl("http://mooc.fi/");
+        course.setDetailsUrl(URI.create("http://mooc.fi/"));
 
         exercises = new ArrayList<>();
         ex = new Exercise();
@@ -75,13 +76,13 @@ public class CourseTest {
 
     @Test
     public void testGetDetailsUrl() {
-        assertEquals("http://mooc.fi/", course.getDetailsUrl());
+        assertEquals(URI.create("http://mooc.fi/"), course.getDetailsUrl());
     }
 
     @Test
     public void testSetDetailsUrl() {
-        course.setDetailsUrl("http://cs.helsinki.fi");
-        assertEquals("http://cs.helsinki.fi", course.getDetailsUrl());
+        course.setDetailsUrl(URI.create("http://cs.helsinki.fi"));
+        assertEquals(URI.create("http://cs.helsinki.fi"), course.getDetailsUrl());
     }
 
     @Test

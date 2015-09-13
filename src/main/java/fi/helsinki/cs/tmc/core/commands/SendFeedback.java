@@ -7,6 +7,7 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import java.net.URI;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -16,13 +17,13 @@ import java.util.Map.Entry;
 public class SendFeedback extends Command<HttpResult> {
 
     private Map<String, String> answers;
-    private String url;
+    private URI url;
 
     /**
      * Constructs a send feedback command with {@code settings} for sending {@code answers} to
      * {@code url}.
      */
-    public SendFeedback(TmcSettings settings, Map<String, String> answers, String url) {
+    public SendFeedback(TmcSettings settings, Map<String, String> answers, URI url) {
         super(settings);
         this.answers = answers;
         this.url = url;

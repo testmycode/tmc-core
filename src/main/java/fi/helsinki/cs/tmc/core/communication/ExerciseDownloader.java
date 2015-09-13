@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -51,7 +52,7 @@ public class ExerciseDownloader {
      * @return info about downloading.
      * @throws java.io.IOException
      */
-    public Optional<List<Exercise>> downloadExercises(String courseUrl) throws IOException {
+    public Optional<List<Exercise>> downloadExercises(URI courseUrl) throws IOException {
         List<Exercise> exercises = tmcApi.getExercises(courseUrl);
         if (exercises.isEmpty()) {
             return Optional.absent();
@@ -183,7 +184,9 @@ public class ExerciseDownloader {
      * @param zipUrl url which will be downloaded
      * @param path where to download
      */
-    private void downloadExerciseZip(String zipUrl, Path path) {
+
+    private void downloadExerciseZip(URI zipUrl, Path path) {
         urlCommunicator.downloadToFile(zipUrl, path);
+
     }
 }

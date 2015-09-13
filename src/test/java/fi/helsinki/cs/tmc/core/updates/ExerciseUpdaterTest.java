@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,19 +19,12 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 import fi.helsinki.cs.tmc.core.testhelpers.builders.ExerciseBuilder;
 
-import com.google.gson.Gson;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import org.mockito.Mockito;
-
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +42,7 @@ public class ExerciseUpdaterTest {
 
         builder = new ExerciseBuilder();
         urlCommunicator = mock(UrlCommunicator.class);
-        when(urlCommunicator.makeGetRequest(anyString(), any(String.class)))
+        when(urlCommunicator.makeGetRequest(any(URI.class), any(String.class)))
                 .thenReturn(new HttpResult(ExampleJson.courseExample, 200, true));
     }
 

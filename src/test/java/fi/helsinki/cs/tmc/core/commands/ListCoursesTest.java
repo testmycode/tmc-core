@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 
 import static org.junit.Assert.assertEquals;
 
@@ -27,9 +26,8 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.net.URI;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class ListCoursesTest {
 
@@ -39,10 +37,13 @@ public class ListCoursesTest {
 
     @Rule public ExpectedException expectedException = ExpectedException.none();
 
-    @Rule public WireMockRule wireMock = new WireMockRule();
+    @Rule public WireMockRule wireMock = new WireMockRule(0);
+
+    private String serverAddress = "http://127.0.0.1:";
 
     @Before
     public void setUp() throws IOException {
+        serverAddress += wireMock.port();
         communicator = Mockito.mock(UrlCommunicator.class);
         tmcApi = new TmcApi(communicator, settings);
 
@@ -50,7 +51,7 @@ public class ListCoursesTest {
         settings.setPassword("password");
 
         HttpResult fakeResult = new HttpResult(ExampleJson.allCoursesExample, 200, true);
-        Mockito.when(communicator.makeGetRequestWithAuthentication(Mockito.anyString()))
+        Mockito.when(communicator.makeGetRequestWithAuthentication(Mockito.any(URI.class)))
                 .thenReturn(fakeResult);
     }
 
@@ -77,7 +78,7 @@ public class ListCoursesTest {
         CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setUsername("username");
         localSettings.setPassword("password");
-        localSettings.setServerAddress("http://localhost:8080");
+        localSettings.setServerAddress(serverAddress);
 
         new ListCourses(localSettings, new TmcApi(localSettings)).call();
     }

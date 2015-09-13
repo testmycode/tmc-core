@@ -15,6 +15,7 @@ import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -89,10 +90,14 @@ public class ExerciseSubmitter {
      * Submits folder of exercise to TMC. Finds it from current directory.
      *
      * @param currentPath path from which this was called.
-     * @return String with url from which to get results or null if exercise was not found.
+     * @return URI from which to get results or null if exercise was not found.
      * @throws IOException if zip creation fails
+     * @throws java.text.ParseException
+     * @throws fi.helsinki.cs.tmc.core.exceptions.ExpiredException
      */
-    public String submit(Path currentPath)
+
+    public URI submit(Path currentPath)
+
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
@@ -104,10 +109,16 @@ public class ExerciseSubmitter {
      *
      * @param currentPath path from which this was called.
      * @param observer {@link ProgressObserver} that is informed of the submission progress
-     * @return String with url from which to get results or null if exercise was not found.
+     * @return URI from which to get results or null if exercise was not found.
+     * @throws java.text.ParseException
+     * @throws fi.helsinki.cs.tmc.core.exceptions.ExpiredException
      * @throws IOException if zip creation fails
+     * @throws fi.helsinki.cs.tmc.core.exceptions.TmcCoreException
+     * @throws java.net.URISyntaxException
+     * @throws fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException
      */
-    public String submit(Path currentPath, ProgressObserver observer)
+    public URI submit(Path currentPath, ProgressObserver observer)
+
             throws ParseException, ExpiredException, IllegalArgumentException, IOException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
@@ -119,10 +130,16 @@ public class ExerciseSubmitter {
      * paste.
      *
      * @param currentPath path from which this was called.
-     * @return String with url from which to get paste URL or null if exercise was not found.
+     * @return URI from which to get paste URL or null if exercise was not found.
      * @throws IOException if zip creation fails
+     * @throws java.text.ParseException
+     * @throws fi.helsinki.cs.tmc.core.exceptions.ExpiredException
+     * @throws fi.helsinki.cs.tmc.core.exceptions.TmcCoreException
+     * @throws java.net.URISyntaxException
+     * @throws fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException
      */
-    public String submitPaste(Path currentPath)
+    public URI submitPaste(Path currentPath)
+
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
@@ -134,10 +151,17 @@ public class ExerciseSubmitter {
      * Result includes URL of paste.
      *
      * @param currentPath path from which this was called.
-     * @return String with url from which to get paste URL or null if exercise was not found.
+     * @param comment
+     * @return URI from which to get paste URL or null if exercise was not found.
      * @throws IOException if failed to create zip.
+     * @throws java.text.ParseException
+     * @throws fi.helsinki.cs.tmc.core.exceptions.ExpiredException
+     * @throws java.net.URISyntaxException
+     * @throws fi.helsinki.cs.tmc.core.exceptions.TmcCoreException
+     * @throws fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException
      */
-    public String submitPasteWithComment(Path currentPath, String comment)
+    public URI submitPasteWithComment(Path currentPath, String comment)
+            
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
@@ -150,7 +174,7 @@ public class ExerciseSubmitter {
     /**
      * Requests a code review for a exercise.
      */
-    public String submitWithCodeReviewRequest(Path currentPath, String message)
+    public URI submitWithCodeReviewRequest(Path currentPath, String message)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
@@ -188,18 +212,18 @@ public class ExerciseSubmitter {
         return currentExercise.get();
     }
 
-    private String sendSubmissionToServerWithPaste(byte[] file, String url) throws IOException {
+    private URI sendSubmissionToServerWithPaste(byte[] file, URI url) throws IOException {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), new HashMap<String, String>());
         return tmcApi.getPasteUrl(result);
     }
 
-    private String sendZipFile(Path currentPath, Exercise currentExercise, boolean paste)
+    private URI sendZipFile(Path currentPath, Exercise currentExercise, boolean paste)
             throws IOException, URISyntaxException, NoLanguagePluginFoundException {
-        String returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
+        URI returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
         byte[] zippedExercise = langs.compressProject(currentPath);
-        String resultUrl;
+        URI resultUrl;
         if (paste) {
             resultUrl = sendSubmissionToServerWithPaste(zippedExercise, returnUrl);
         } else {
@@ -208,14 +232,14 @@ public class ExerciseSubmitter {
         return resultUrl;
     }
 
-    private String sendZipFile(
+    private URI sendZipFile(
             Path currentPath, Exercise currentExercise, ProgressObserver observer, boolean paste)
             throws IOException, URISyntaxException, NoLanguagePluginFoundException {
-        String returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
+        URI returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
         observer.progress("zipping exercise");
         byte[] zippedExercise = langs.compressProject(currentPath);
         observer.progress("submitting exercise");
-        String resultUrl;
+        URI resultUrl;
         if (paste) {
             resultUrl = sendSubmissionToServerWithPaste(zippedExercise, returnUrl);
         } else {
@@ -224,12 +248,12 @@ public class ExerciseSubmitter {
         return resultUrl;
     }
 
-    private String sendZipFileWithParams(
+    private URI sendZipFileWithParams(
             Path currentPath, Exercise currentExercise, boolean paste, Map<String, String> params)
             throws IOException, URISyntaxException, NoLanguagePluginFoundException {
-        String returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
+        URI returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
         byte[] zippedExercise = langs.compressProject(currentPath);
-        String resultUrl;
+        URI resultUrl;
         if (paste) {
             resultUrl = sendSubmissionToServerWithPasteAndParams(zippedExercise, returnUrl, params);
         } else {
@@ -242,23 +266,23 @@ public class ExerciseSubmitter {
         return rootFinder.getRootDirectory(currentPath).get().toString();
     }
 
-    private String sendSubmissionToServer(byte[] file, String url) throws IOException {
+    private URI sendSubmissionToServer(byte[] file, URI url) throws IOException {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), new HashMap<String, String>());
         return tmcApi.getSubmissionUrl(result);
     }
 
-    private String sendSubmissionToServerWithParams(
-            byte[] file, String url, Map<String, String> params) throws IOException {
+    private URI sendSubmissionToServerWithParams(
+            byte[] file, URI url, Map<String, String> params) throws IOException {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), params);
         return tmcApi.getSubmissionUrl(result);
     }
 
-    private String sendSubmissionToServerWithPasteAndParams(
-            byte[] file, String url, Map<String, String> params) throws IOException {
+    private URI sendSubmissionToServerWithPasteAndParams(
+            byte[] file, URI url, Map<String, String> params) throws IOException {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), params);

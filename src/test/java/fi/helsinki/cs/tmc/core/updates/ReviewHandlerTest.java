@@ -4,8 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.any;
 
 import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.updates.ReviewHandler;
@@ -19,6 +18,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class ReviewHandlerTest {
 
         tmcApi = Mockito.mock(TmcApi.class);
         handler = new ReviewHandler(tmcApi);
-        Mockito.when(tmcApi.getReviews(anyString()))
+        Mockito.when(tmcApi.getReviews(any(URI.class)))
                 .thenReturn(
                         new ReviewListBuilder()
                                 .withExercise(3, true)
@@ -44,14 +44,14 @@ public class ReviewHandlerTest {
     @Test
     public void fetchReviewReturnsEmptyListIfServerSendsNull()
             throws IOException, URISyntaxException {
-        Mockito.when(tmcApi.getReviews(anyString())).thenReturn(null);
+        Mockito.when(tmcApi.getReviews(any(URI.class))).thenReturn(null);
         assertNotNull(handler.fetchFromServer(new Course()));
         assertEquals(0, handler.fetchFromServer(new Course()).size());
     }
 
     @Test
     public void reviewsFetchedFromCorrectUrl() throws Exception {
-        String url = "www.tmc.mooc.fi.duck/reviews";
+        URI url = URI.create("www.tmc.mooc.fi.duck/reviews");
         Course course = new Course();
         course.setReviewsUrl(url);
         handler.getNewObjects(course);

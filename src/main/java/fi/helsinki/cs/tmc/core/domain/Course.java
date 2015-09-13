@@ -14,29 +14,29 @@ public class Course {
     private List<Exercise> exercises;
 
     @SerializedName("details_url")
-    private String detailsUrl;
+    private URI detailsUrl;
 
     @SerializedName("unlock_url")
-    private String unlockUrl;
+    private URI unlockUrl;
 
     @SerializedName("comet_url")
-    private String cometUrl;
+    private URI cometUrl;
 
-    public String getReviewsUrl() {
+    public URI getReviewsUrl() {
         return reviewsUrl;
     }
 
-    public void setReviewsUrl(String reviewsUrl) {
+    public void setReviewsUrl(URI reviewsUrl) {
         this.reviewsUrl = reviewsUrl;
     }
 
     @SerializedName("spyware_urls")
-    private List<String> spywareUrls;
+    private List<URI> spywareUrls;
 
     @SerializedName("reviews_url")
-    private String reviewsUrl;
+    private URI reviewsUrl;
 
-    private List<String> unlockables;
+    private List<URI> unlockables;
 
     public Course() {
         this(null);
@@ -49,11 +49,11 @@ public class Course {
         this.spywareUrls = new ArrayList<>();
     }
 
-    public List<String> getSpywareUrls() {
+    public List<URI> getSpywareUrls() {
         return spywareUrls;
     }
 
-    public void setSpywareUrls(List<String> spywareUrls) {
+    public void setSpywareUrls(List<URI> spywareUrls) {
         this.spywareUrls = spywareUrls;
     }
 
@@ -81,15 +81,11 @@ public class Course {
         this.name = name;
     }
 
-    public String getDetailsUrl() {
+    public URI getDetailsUrl() {
         return detailsUrl;
     }
 
-    public URI getDetailsUrlAsUri() {
-        return URI.create(detailsUrl);
-    }
-
-    public void setDetailsUrl(String detailsUrl) {
+    public void setDetailsUrl(URI detailsUrl) {
         this.detailsUrl = detailsUrl;
     }
 
@@ -114,19 +110,19 @@ public class Course {
 
     private boolean exercisesLoaded;
 
-    public String getUnlockUrl() {
+    public URI getUnlockUrl() {
         return unlockUrl;
     }
 
-    public void setUnlockUrl(String unlockUrl) {
+    public void setUnlockUrl(URI unlockUrl) {
         this.unlockUrl = unlockUrl;
     }
 
-    public String getCometUrl() {
+    public URI getCometUrl() {
         return cometUrl;
     }
 
-    public void setCometUrl(String cometUrl) {
+    public void setCometUrl(URI cometUrl) {
         this.cometUrl = cometUrl;
     }
 
@@ -138,11 +134,11 @@ public class Course {
         this.exercisesLoaded = exercisesLoaded;
     }
 
-    public List<String> getUnlockables() {
+    public List<URI> getUnlockables() {
         return unlockables;
     }
 
-    public void setUnlockables(List<String> unlockables) {
+    public void setUnlockables(List<URI> unlockables) {
         this.unlockables = unlockables;
     }
 

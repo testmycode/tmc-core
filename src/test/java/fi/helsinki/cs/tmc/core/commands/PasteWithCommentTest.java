@@ -29,7 +29,7 @@ import java.text.ParseException;
 public class PasteWithCommentTest {
     private PasteWithComment paste;
     private ExerciseSubmitter submitterMock;
-    private String pasteUrl = "http://example.com/paste";
+    private URI pasteUrl = URI.create("http://example.com/paste");
     private CoreTestSettings settings = new CoreTestSettings();
 
     @Before

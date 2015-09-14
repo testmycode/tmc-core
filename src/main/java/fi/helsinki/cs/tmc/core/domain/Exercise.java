@@ -267,16 +267,14 @@ public class Exercise implements Serializable {
         if (time == null) {
             throw new NullPointerException("Given time was null at Exercise.isDeadlineEnded");
         }
-        if (deadline != null) {
-            try {
-                DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-                Date deadlineDate = format.parse(deadline);
-                return deadlineDate.getTime() < time.getTime();
-            } catch (ParseException e) {
-                log.error("Could not parse date: {}", e);
-                return false;
-            }
-        } else {
+        if (deadline == null) return false;
+
+        try {
+            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+            Date deadlineDate = format.parse(deadline);
+            return deadlineDate.getTime() < time.getTime();
+        } catch (ParseException e) {
+            log.error("Could not parse date: {}", e);
             return false;
         }
     }

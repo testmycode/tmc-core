@@ -27,7 +27,7 @@ public class RunTestsTest {
     public void testfailingRunTests() throws TmcCoreException {
         String path =
                 System.getProperty("user.dir")
-                        + "/testResources/2014-mooc-no-deadline/viikko1/Viikko1_001.Nimi";
+                        + "/testResources/failingExercise/viikko1/Viikko1_001.Nimi";
 
         RunResult result = new RunTests(settings, path).call();
 

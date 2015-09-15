@@ -60,7 +60,7 @@ public class ExerciseSubmitterTest {
 
         urlCommunicator = mock(UrlCommunicator.class);
         tmcApi = new TmcApi(urlCommunicator, settings);
-        rootFinder = new ProjectRootFinderStub(tmcApi);
+        rootFinder = new ProjectRootFinderStub(tmcApi); //has the courses JSON
         langs = Mockito.mock(TaskExecutor.class);
 
         Mockito.when(langs.compressProject(Mockito.any(Path.class))).thenReturn(new byte[100]);
@@ -80,6 +80,7 @@ public class ExerciseSubmitterTest {
         mockUrlCommunicator(
                 "courses/21.json?api_version=7&client=tmc_cli&client_version=1",
                 ExampleJson.expiredCourseExample);
+        //the id was gotten from the rootFinder stub
         mockUrlCommunicatorWithFile(
                 "https://example.com/staging/exercises/285/submissions.json?api_version=7&client"
                         + "=tmc_cli&client_version=1",

@@ -536,6 +536,29 @@
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
                 "exercise_submissions_url": "https://example.com/staging/exercises/1251.json?api_version=7"
+            }, {
+                "id": 1252,
+                "name": "halfdoneExercise",
+                "locked": false,
+                "deadline_description": null,
+                "deadline": null,
+                "checksum": "e0178c2302facb3bb235ccf84b255131",
+                "return_url": "https://example.com/staging/exercises/1228/submissions.json",
+                "zip_url": "https://example.com/staging/exercises/1228.zip",
+                "returnable": true,
+                "requires_review": false,
+                "attempted": true,
+                "completed": true,
+                "reviewed": false,
+                "all_review_points_given": true,
+                "memory_limit": null,
+                "runtime_params": [],
+                "valgrind_strategy": "fail",
+                "code_review_requests_enabled": true,
+                "run_tests_locally_action_enabled": true,
+                "exercise_submissions_url": "https://example.com/staging/exercises/1228.json?api_version=7",
+                "latest_submission_url": "https://example.com/staging/submissions/1809.zip",
+                "latest_submission_id": 1809
             }]
     }
 }

@@ -55,8 +55,8 @@ public class ProjectRootFinderTest {
 
     @Test
     public void testGetRootDirectoryFromSame() {
-        Path path =
-                Paths.get("testResources", "2013_ohpeJaOhja", "viikko1", "Viikko1_002.HeiMaailma");
+        Path path
+                = Paths.get("testResources", "tmc-testcourse", "successExercise");
         Optional<Path> root = finder.getRootDirectory(path);
         assertTrue(root.isPresent());
         assertTrue(root.get().endsWith(path));
@@ -64,52 +64,48 @@ public class ProjectRootFinderTest {
 
     @Test
     public void findsDeepRoot() {
-        Optional<Path> root =
-                finder.getRootDirectory(
+        Optional<Path> root
+                = finder.getRootDirectory(
                         Paths.get(
                                 "testResources",
-                                "2013_ohpeJaOhja",
-                                "viikko1",
-                                "Viikko1_002.HeiMaailma",
+                                "tmc-testcourse",
+                                "successExercise",
                                 "src"));
         assertTrue(root.isPresent());
         assertTrue(
                 root
-                        .get()
-                        .endsWith(
-                                Paths.get(
-                                        "testResources",
-                                        "2013_ohpeJaOhja",
-                                        "viikko1",
-                                        "Viikko1_002.HeiMaailma")));
+                .get()
+                .endsWith(
+                        Paths.get(
+                                "testResources",
+                                "tmc-testcourse",
+                                "successExercise")));
     }
 
     @Test
     public void doesntFindRootWhenNoPom() {
-        Optional<Path> root =
-                finder.getRootDirectory(
+        Optional<Path> root
+                = finder.getRootDirectory(
                         Paths.get(
                                 "testResources",
-                                "2013_ohpeJaOhja",
-                                "viikko1",
-                                "Viikko1_002.HeiMaailma",
+                                "tmc-testcourse",
+                                "successExercise",
                                 "src"));
         assertTrue(root.isPresent());
         assertTrue(
                 root
-                        .get()
-                        .endsWith(
-                                Paths.get(
-                                        "testResources",
-                                        "2013_ohpeJaOhja",
-                                        "viikko1",
-                                        "Viikko1_002.HeiMaailma")));
+                .get()
+                .endsWith(
+                        Paths.get(
+                                "testResources",
+                                "tmc-testcourse",
+                                "successExercise")));
     }
 
     @Test
     public void doesntFindRootWhenNotAnExercise() {
-        Path notAnExercise =
-                Paths.get("testResources", "2013_ohpeJaOhja", "viikko1", "NotAnExercise");
+        Path notAnExercise
+                = Paths.get("testResources", "tmc-testcourse", "NotAnExercise");
         Optional<Path> root = finder.getRootDirectory(notAnExercise);
         if (!root.isPresent()) {
             return;
@@ -129,11 +125,11 @@ public class ProjectRootFinderTest {
 
     @Test
     public void getsCurrentCourse() throws IOException, TmcCoreException {
-        Optional<Course> course =
-                finder.getCurrentCourse(
+        Optional<Course> course
+                = finder.getCurrentCourse(
                         Paths.get("path", "that", "contains", "course").toString()
-                                + File.separatorChar
-                                + fakeName);
+                        + File.separatorChar
+                        + fakeName);
         assertEquals(fakeName, course.get().getName());
     }
 }

@@ -27,7 +27,7 @@ public class RunTestsTest {
     public void testfailingRunTests() throws TmcCoreException {
         String path =
                 System.getProperty("user.dir")
-                        + "/testResources/failingExercise/viikko1/Viikko1_001.Nimi";
+                        + "/testResources/tmc-testcourse/failingExercise";
 
         RunResult result = new RunTests(settings, path).call();
 
@@ -38,7 +38,7 @@ public class RunTestsTest {
     public void successRunTests() throws TmcCoreException {
         String path =
                 System.getProperty("user.dir")
-                        + "/testResources/successExercise/viikko1/Viikko1_001.Nimi";
+                        + "/testResources/tmc-testcourse/successExercise";
 
         RunResult result = new RunTests(settings, path).call();
 

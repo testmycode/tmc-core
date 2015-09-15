@@ -53,6 +53,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.junit.After;
 
 public class DownloadExercisesTest {
 
@@ -61,7 +64,8 @@ public class DownloadExercisesTest {
     private TmcApi tmcApi;
     private TmcCore core;
 
-    @Rule public WireMockRule wireMockServer = new WireMockRule(0);
+    @Rule
+    public WireMockRule wireMockServer = new WireMockRule(0);
     private String serverAddress = "http://127.0.0.1:";
 
     private CoreTestSettings createSettingsAndWiremock() throws URISyntaxException {
@@ -78,43 +82,40 @@ public class DownloadExercisesTest {
         String encodedCredentials = "Basic " + Authorization.encode(username + ":" + password);
         wireMockServer.stubFor(
                 get(urlPathEqualTo("/user"))
-                        .withHeader("Authorization", equalTo(encodedCredentials))
-                        .willReturn(aResponse().withStatus(200)));
+                .withHeader("Authorization", equalTo(encodedCredentials))
+                .willReturn(aResponse().withStatus(200)));
 
         wireMockServer.stubFor(
                 get(urlPathEqualTo(new UrlHelper(settings).coursesExtension))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "text/json")
-                                        .withBody(
-                                                ExampleJson.allCoursesExample.replaceAll(
-                                                        "http://example.com",
-                                                        serverAddress))));
+                .willReturn(
+                        aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/json")
+                        .withBody(
+                                ExampleJson.allCoursesExample.replaceAll(
+                                        "https://example.com/staging",
+                                        serverAddress))));
 
         wireMockServer.stubFor(
                 get(urlPathEqualTo("/courses/" + courseId + ".json"))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "text/json")
-                                        .withBody(
-                                                ExampleJson.courseExample
-                                                        .replaceAll(
-                                                                "https://example.com/staging",
-                                                                serverAddress)
-                                                        .replaceFirst("3", courseId))));
-
-
-
+                .willReturn(
+                        aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/json")
+                        .withBody(
+                                ExampleJson.courseExample
+                                .replaceAll(
+                                        "https://example.com/staging",
+                                        serverAddress)
+                                .replaceFirst("3", courseId))));
 
         wireMockServer.stubFor(
                 get(urlMatching("/exercises/[0-9]+.zip"))
-                        .willReturn(
-                                aResponse()
-                                        .withStatus(200)
-                                        .withHeader("Content-Type", "text/json")
-                                        .withBodyFile("test.zip")));
+                .willReturn(
+                        aResponse()
+                        .withStatus(200)
+                        .withHeader("Content-Type", "text/json")
+                        .withBodyFile("test.zip")));
     }
 
     @Before
@@ -154,10 +155,10 @@ public class DownloadExercisesTest {
         course.setName("test-course");
         course.setExercises(
                 new ExerciseBuilder()
-                        .withExercise("kissa", 2, "eujwuc")
-                        .withExercise("asdf", 793, "alnwnec")
-                        .withExercise("ankka", 88, "abcdefg")
-                        .build());
+                .withExercise("kissa", 2, "eujwuc")
+                .withExercise("asdf", 793, "alnwnec")
+                .withExercise("ankka", 88, "abcdefg")
+                .build());
 
         tmcApi = mock(TmcApi.class);
 
@@ -190,8 +191,8 @@ public class DownloadExercisesTest {
         core = new TmcCore(settings1);
         ProgressObserver observerMock = mock(ProgressObserver.class);
         Path folder = Paths.get(System.getProperty("user.dir") + "/testResources/");
-        ListenableFuture<List<Exercise>> download =
-                core.downloadExercises(folder, 35, observerMock);
+        ListenableFuture<List<Exercise>> download
+                = core.downloadExercises(folder, 35, observerMock);
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi");
         assertEquals(153, exercises.size());
@@ -201,4 +202,16 @@ public class DownloadExercisesTest {
 
         verify(observerMock, times(153)).progress(anyDouble(), anyString());
     }
+
+    @After
+    public void tearDown() {
+        try {
+            FileUtils.deleteDirectory(Paths.get(System.getProperty("user.dir")
+                    + "/testResources/2013_ohpeJaOhja").toFile());
+        }
+        catch (IOException ex) {
+            Logger.getLogger(DownloadExercisesTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
 }

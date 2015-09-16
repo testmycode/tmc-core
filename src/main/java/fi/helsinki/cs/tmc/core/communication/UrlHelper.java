@@ -28,11 +28,6 @@ public class UrlHelper {
         this.settings = settings;
     }
 
-    public URI getCourseUrl(int courseId) throws URISyntaxException {
-        return withParams(URI.create(
-                settings.getServerAddress() + "/courses/" + courseId + ".json"));
-    }
-
     public URI getCourseUrl(Course course) throws URISyntaxException {
         return withParams(course.getDetailsUrl());
     }

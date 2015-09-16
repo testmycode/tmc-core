@@ -4,45 +4,45 @@
         {
             "id": 3,
             "name": "test-course",
-            "details_url": "http://example.com/courses/3.json",
-            "unlock_url": "http://example.com/courses/3/unlock.json",
-            "reviews_url": "http://example.com/courses/3/reviews.json",
-            "comet_url": "http://example.com/comet",
+            "details_url": "https://example.com/staging/courses/3.json",
+            "unlock_url": "https://example.com/staging/courses/3/unlock.json",
+            "reviews_url": "https://example.com/staging/courses/3/reviews.json",
+            "comet_url": "https://example.com/staging/comet",
             "spyware_urls": [
-                "http://example.com"
+                "https://example.com"
             ]
         },
         {
             "id": 19,
             "name": "no-deadline",
-            "details_url": "http://example.com/courses/19.json",
-            "unlock_url": "http://example.com/courses/19/unlock.json",
-            "reviews_url": "http://example.com/courses/19/reviews.json",
-            "comet_url": "http://example.com/comet",
+            "details_url": "https://example.com/staging/courses/19.json",
+            "unlock_url": "https://example.com/staging/courses/19/unlock.json",
+            "reviews_url": "https://example.com/staging/courses/19/reviews.json",
+            "comet_url": "https://example.com/staging/comet",
             "spyware_urls": [
-                "http://example.com/"
+                "https://example.com/staging/"
             ]
         },
         {
             "id": 21,
             "name": "expired-course",
-            "details_url": "http://example.com/courses/21.json",
-            "unlock_url": "http://example.com/courses/21/unlock.json",
-            "reviews_url": "http://example.com/courses/21/reviews.json",
-            "comet_url": "http://example.com/comet",
+            "details_url": "https://example.com/staging/courses/21.json",
+            "unlock_url": "https://example.com/staging/courses/21/unlock.json",
+            "reviews_url": "https://example.com/staging/courses/21/reviews.json",
+            "comet_url": "https://example.com/staging/comet",
             "spyware_urls": [
-                "http://example.com/"
+                "https://example.com/staging/"
             ]
         },
         {
             "id": 27,
             "name": "local-test-course",
-            "details_url": "http://example.com/courses/27.json",
-            "unlock_url": "http://example.com/courses/27/unlock.json",
-            "reviews_url": "http://example.com/courses/27/reviews.json",
-            "comet_url": "http://example.com/comet",
+            "details_url": "https://example.com/staging/courses/27.json",
+            "unlock_url": "https://example.com/staging/courses/27/unlock.json",
+            "reviews_url": "https://example.com/staging/courses/27/reviews.json",
+            "comet_url": "https://example.com/staging/comet",
             "spyware_urls": [
-                "http://example.com/"
+                "https://example.com/staging/"
             ]
         }
     ]

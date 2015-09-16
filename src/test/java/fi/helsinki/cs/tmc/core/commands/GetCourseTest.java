@@ -47,7 +47,7 @@ public class GetCourseTest {
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses.json"))
                         .willReturn(aResponse().withBody(ExampleJson
-                                .allCoursesExample.replaceAll("http://example.com", serverAddress))));
+                                .allCoursesExample.replaceAll("https://example.com/staging", serverAddress))));
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses/3.json"))
                         .willReturn(

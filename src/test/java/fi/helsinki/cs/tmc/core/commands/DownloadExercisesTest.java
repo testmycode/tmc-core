@@ -40,6 +40,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import org.apache.commons.io.FileUtils;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,7 +56,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.After;
 
 public class DownloadExercisesTest {
 

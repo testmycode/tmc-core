@@ -203,7 +203,7 @@ public class ExerciseSubmitterTest {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         String testPath =
-                Paths.get("home", "test", "2014-mooc-no-deadline", "viikko1", "feikeintehtava")
+                Paths.get("home", "test", "no-deadline", "viikko1", "feikeintehtava")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -217,7 +217,7 @@ public class ExerciseSubmitterTest {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         String testPath =
-                Paths.get("home", "test", "2014-mooc-no-deadline", "viikko1", "feikkitehtava")
+                Paths.get("home", "test", "no-deadline", "viikko1", "feikkitehtava")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =

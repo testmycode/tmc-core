@@ -24,7 +24,7 @@ import java.util.List;
 public class ProjectRootFinderTest {
 
     private ProjectRootFinder finder;
-    private String fakeName = "2014-mooc-no-deadline";
+    private String fakeName = "no-deadline";
     private String otherFakeName = "2013-tira";
     private CoreTestSettings settings;
     private TmcApi parser;

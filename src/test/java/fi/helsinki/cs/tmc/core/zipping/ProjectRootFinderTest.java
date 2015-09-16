@@ -56,7 +56,7 @@ public class ProjectRootFinderTest {
     @Test
     public void testGetRootDirectoryFromSame() {
         Path path
-                = Paths.get("testResources", "tmc-testcourse", "successExercise");
+                = Paths.get("testResources", "local-test-course", "successExercise");
         Optional<Path> root = finder.getRootDirectory(path);
         assertTrue(root.isPresent());
         assertTrue(root.get().endsWith(path));
@@ -68,7 +68,7 @@ public class ProjectRootFinderTest {
                 = finder.getRootDirectory(
                         Paths.get(
                                 "testResources",
-                                "tmc-testcourse",
+                                "local-test-course",
                                 "successExercise",
                                 "src"));
         assertTrue(root.isPresent());
@@ -78,7 +78,7 @@ public class ProjectRootFinderTest {
                 .endsWith(
                         Paths.get(
                                 "testResources",
-                                "tmc-testcourse",
+                                "local-test-course",
                                 "successExercise")));
     }
 
@@ -88,7 +88,7 @@ public class ProjectRootFinderTest {
                 = finder.getRootDirectory(
                         Paths.get(
                                 "testResources",
-                                "tmc-testcourse",
+                                "local-test-course",
                                 "successExercise",
                                 "src"));
         assertTrue(root.isPresent());
@@ -98,14 +98,14 @@ public class ProjectRootFinderTest {
                 .endsWith(
                         Paths.get(
                                 "testResources",
-                                "tmc-testcourse",
+                                "local-test-course",
                                 "successExercise")));
     }
 
     @Test
     public void doesntFindRootWhenNotAnExercise() {
         Path notAnExercise
-                = Paths.get("testResources", "tmc-testcourse", "NotAnExercise");
+                = Paths.get("testResources", "local-test-course", "NotAnExercise");
         Optional<Path> root = finder.getRootDirectory(notAnExercise);
         if (!root.isPresent()) {
             return;

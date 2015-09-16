@@ -115,9 +115,9 @@ public class ExerciseSubmitterTest {
 
     @Test
     public void testFindCourseByCorrectPath() throws IOException, TmcCoreException {
-        final String path = Paths.get("home", "kansio", "toinen", "c-demo", "viikko_01").toString();
+        final String path = Paths.get("home", "kansio", "toinen", "test-course", "viikko_01").toString();
         Optional<Course> course = realFinder.findCourseByPath(path.split("\\" + File.separator));
-        assertEquals(7, course.get().getId());
+        assertEquals(3, course.get().getId());
         final String path2 =
                 Paths.get("home", "kansio", "toinen", "OLEMATON", "viikko_01").toString();
         Optional<Course> course2 = realFinder.findCourseByPath(path2.split("\\" + File.separator));
@@ -149,7 +149,7 @@ public class ExerciseSubmitterTest {
     public void testSubmitWithExpiredExercise()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
-        String testPath = Paths.get("home", "test", "k2015-tira", "viikko01", "tira1.1").toString();
+        String testPath = Paths.get("home", "test", "expired-course", "viikko01", "tira1.1").toString();
 
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =

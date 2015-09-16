@@ -73,7 +73,7 @@ public class DownloadExercisesTest {
         settings1.setServerAddress(serverAddress);
         settings1.setUsername("test");
         settings1.setPassword("1234");
-        wiremock(settings1.getUsername(), settings1.getPassword(), "35", serverAddress);
+        wiremock(settings1.getUsername(), settings1.getPassword(), "3", serverAddress);
         return settings1;
     }
 
@@ -173,7 +173,7 @@ public class DownloadExercisesTest {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         core = new TmcCore(settings1);
         Path folder = Paths.get(System.getProperty("user.dir") + "/testResources/");
-        ListenableFuture<List<Exercise>> download = core.downloadExercises(folder, 35, null);
+        ListenableFuture<List<Exercise>> download = core.downloadExercises(folder, 3, null);
 
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("test-course/viikko1/Viikko1_001.Nimi");
@@ -192,7 +192,7 @@ public class DownloadExercisesTest {
         ProgressObserver observerMock = mock(ProgressObserver.class);
         Path folder = Paths.get(System.getProperty("user.dir") + "/testResources/");
         ListenableFuture<List<Exercise>> download
-                = core.downloadExercises(folder, 35, observerMock);
+                = core.downloadExercises(folder, 3, observerMock);
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("test-course/viikko1/Viikko1_001.Nimi");
         assertEquals(153, exercises.size());

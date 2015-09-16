@@ -25,7 +25,7 @@
         },
         {
             "id": 19,
-            "name": "2014-mooc-no-deadline",
+            "name": "no-deadline",
             "details_url": "http://example.com/courses/19.json",
             "unlock_url": "http://example.com/courses/19/unlock.json",
             "reviews_url": "http://example.com/courses/19/reviews.json",

@@ -132,9 +132,8 @@ public class ExerciseSubmitterTest {
                 Paths.get(
                                 "home",
                                 "test",
-                                "2014-mooc-no-deadline",
-                                "viikko1",
-                                "viikko1-Viikko1_001.Nimi")
+                                "no-deadline",
+                                "halfdoneExercise")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -167,9 +166,8 @@ public class ExerciseSubmitterTest {
                 Paths.get(
                                 "home",
                                 "test",
-                                "2014-mooc-no-deadline",
-                                "viikko1",
-                                "viikko1-Viikko1_001.Nimi")
+                                "no-deadline",
+                                "halfdoneExercise")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -188,9 +186,8 @@ public class ExerciseSubmitterTest {
                 Paths.get(
                                 "home",
                                 "test",
-                                "2014-mooc-no-deadline",
-                                "viikko1",
-                                "viikko1-Viikko1_001.Nimi")
+                                "no-deadline",
+                                "halfdoneExercise")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -237,9 +234,8 @@ public class ExerciseSubmitterTest {
                 Paths.get(
                                 "home",
                                 "test",
-                                "2013_FEIKKIKURSSI",
-                                "viikko_01",
-                                "viikko1-Viikko1_001.Nimi")
+                                "FAKE_COURSE",
+                                "halfdoneExercise")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -255,10 +251,9 @@ public class ExerciseSubmitterTest {
         Path testPath =
                 Paths.get(
                         "home",
-                        "test",
-                        "2014-mooc-no-deadline",
-                        "viikko1",
-                        "viikko1-Viikko1_001.Nimi");
+                                "test",
+                                "no-deadline",
+                                "halfdoneExercise");
         settings.setCurrentCourse(
                 rootFinder.getCurrentCourse(testPath.toString()).or(new Course()));
         ArgumentCaptor<Map> capture = ArgumentCaptor.forClass(Map.class);
@@ -281,11 +276,10 @@ public class ExerciseSubmitterTest {
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Path testPath =
                 Paths.get(
-                        "home",
-                        "test",
-                        "2014-mooc-no-deadline",
-                        "viikko1",
-                        "viikko1-Viikko1_001.Nimi");
+                                "home",
+                                "test",
+                                "no-deadline",
+                                "halfdoneExercise");
         settings.setCurrentCourse(
                 rootFinder.getCurrentCourse(testPath.toString()).or(new Course()));
         ArgumentCaptor<Map> capture = ArgumentCaptor.forClass(Map.class);
@@ -309,9 +303,8 @@ public class ExerciseSubmitterTest {
                 Paths.get(
                                 "home",
                                 "test",
-                                "2014-mooc-no-deadline",
-                                "viikko1",
-                                "viikko1-Viikko1_001.Nimi")
+                                "no-deadline",
+                                "halfdoneExercise")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =

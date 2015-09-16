@@ -65,7 +65,7 @@ public class ListCoursesTest {
     @Test
     public void testWithAuthSuccess() throws Exception {
         List<Course> courses = new ListCourses(settings, tmcApi).call();
-        assertEquals("2013_ohpeJaOhja", courses.get(0).getName());
+        assertEquals("test-course", courses.get(0).getName());
     }
 
     @Test

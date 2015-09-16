@@ -176,7 +176,7 @@ public class DownloadExercisesTest {
         ListenableFuture<List<Exercise>> download = core.downloadExercises(folder, 35, null);
 
         List<Exercise> exercises = download.get();
-        Path exercisePath = folder.resolve("2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi");
+        Path exercisePath = folder.resolve("test-course/viikko1/Viikko1_001.Nimi");
 
         assertEquals(153, exercises.size());
         assertTrue(Files.exists(exercisePath));
@@ -194,7 +194,7 @@ public class DownloadExercisesTest {
         ListenableFuture<List<Exercise>> download
                 = core.downloadExercises(folder, 35, observerMock);
         List<Exercise> exercises = download.get();
-        Path exercisePath = folder.resolve("2013_ohpeJaOhja/viikko1/Viikko1_001.Nimi");
+        Path exercisePath = folder.resolve("test-course/viikko1/Viikko1_001.Nimi");
         assertEquals(153, exercises.size());
         assertTrue(Files.exists(exercisePath));
         FileUtils.deleteDirectory(exercisePath.toFile());
@@ -207,7 +207,7 @@ public class DownloadExercisesTest {
     public void tearDown() {
         try {
             FileUtils.deleteDirectory(Paths.get(System.getProperty("user.dir")
-                    + "/testResources/2013_ohpeJaOhja").toFile());
+                    + "/testResources/test-course").toFile());
         }
         catch (IOException ex) {
             Logger.getLogger(DownloadExercisesTest.class.getName()).log(Level.SEVERE, null, ex);

@@ -3,7 +3,7 @@
     "courses": [
         {
             "id": 3,
-            "name": "2013_ohpeJaOhja",
+            "name": "test-course",
             "details_url": "http://example.com/courses/3.json",
             "unlock_url": "http://example.com/courses/3/unlock.json",
             "reviews_url": "http://example.com/courses/3/reviews.json",

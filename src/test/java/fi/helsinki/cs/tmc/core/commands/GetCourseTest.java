@@ -99,15 +99,15 @@ public class GetCourseTest {
         ListenableFuture<Course> getCourse = core.getCourse(finalUrl);
         Course course = getCourse.get();
         assertEquals(course.getId(), 3);
-        assertEquals(course.getName(), "2013_ohpeJaOhja");
+        assertEquals(course.getName(), "test-course");
     }
 
     @Test
     public void testCallWithCourseName() throws Exception {
 
-        ListenableFuture<Course> getCourse = core.getCourseByName("2013_ohpeJaOhja");
+        ListenableFuture<Course> getCourse = core.getCourseByName("test-course");
         Course course = getCourse.get();
         assertEquals(course.getId(), 3);
-        assertEquals(course.getName(), "2013_ohpeJaOhja");
+        assertEquals(course.getName(), "test-course");
     }
 }

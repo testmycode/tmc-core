@@ -135,7 +135,7 @@ public class TmcApiTest {
 
         Optional<Course> course = tmcApi.getCourse(3);
         assertTrue(course.isPresent());
-        assertEquals("2013_ohpeJaOhja", course.get().getName());
+        assertEquals("test-course", course.get().getName());
     }
 
     @Test
@@ -143,7 +143,7 @@ public class TmcApiTest {
         mockSubmissionUrl();
         SubmissionResult result = tmcApi.getSubmissionResult(URI.create("http://real.address.fi"));
         assertNotNull(result);
-        assertEquals("2014-mooc-no-deadline", result.getCourse());
+        assertEquals("no-deadline", result.getCourse());
     }
 	
 }

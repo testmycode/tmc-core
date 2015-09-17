@@ -140,7 +140,7 @@ public class ExerciseSubmitterTest {
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         URI submissionPath = URI.create(
-                "http://example.com/submissions/1781.json?api_version=7");
+                "https://example.com/staging/submissions/1781.json?api_version=7");
         URI result = courseSubmitter.submit(testPath);
         assertEquals(submissionPath, result);
     }
@@ -311,7 +311,7 @@ public class ExerciseSubmitterTest {
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         URI submissionPath = URI.create(
-                "http://example.com/submissions/1781.json?api_version=7");
+                "https://example.com/staging/submissions/1781.json?api_version=7");
         URI result = courseSubmitter.submit(testPath, observer);
         verify(observer).progress("zipping exercise");
         verify(observer).progress("submitting exercise");

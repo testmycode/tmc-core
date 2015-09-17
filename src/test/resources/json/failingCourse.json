@@ -3,11 +3,11 @@
     "course": {
         "id": 313,
         "name": "failingExercise",
-        "details_url": "http://example.com/courses/313.json",
-        "unlock_url": "http://example.com/courses/313/unlock.json",
-        "reviews_url": "http://example.com/courses/313/reviews.json",
+        "details_url": "https://example.com/staging/ourses/313.json",
+        "unlock_url": "https://example.com/staging/ourses/313/unlock.json",
+        "reviews_url": "https://example.com/staging/ourses/313/reviews.json",
         "comet_url": "https://example.com:8443/comet",
-        "spyware_urls": ["http://example.com/"],
+        "spyware_urls": ["https://example.com/staging"],
         "unlockables": [],
         "exercises": [
             {
@@ -39,8 +39,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "702a4187bac09c519a2e2cf02ba7ccf9",
-                "return_url": "http://example.com/exercises/285/submissions.json",
-                "zip_url": "http://example.com/exercises/285.zip",
+                "return_url": "https://example.com/staging/xercises/285/submissions.json",
+                "zip_url": "https://example.com/staging/xercises/285.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -52,7 +52,7 @@
                 "valgrind_strategy": null,
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "http://example.com/exercises/285.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/xercises/285.json?api_version=7"
             }, {
                 "id": 286,
                 "name": "viikko1-Viikko1_002.HeiMaailma",
@@ -60,8 +60,8 @@
                 "deadline_description": null,
                 "deadline": null,
                 "checksum": "5e8749d5450d19c3181d9271b726eb0c",
-                "return_url": "http://example.com/exercises/286/submissions.json",
-                "zip_url": "http://example.com/exercises/286.zip",
+                "return_url": "https://example.com/staging/xercises/286/submissions.json",
+                "zip_url": "https://example.com/staging/xercises/286.zip",
                 "returnable": true,
                 "requires_review": false,
                 "attempted": false,
@@ -73,7 +73,7 @@
                 "valgrind_strategy": null,
                 "code_review_requests_enabled": true,
                 "run_tests_locally_action_enabled": true,
-                "exercise_submissions_url": "http://example.com/exercises/286.json?api_version=7"
+                "exercise_submissions_url": "https://example.com/staging/xercises/286.json?api_version=7"
             }, {
                 "id": 287,
                 "name": "viikko1-Viikko1_003.Kuusi",

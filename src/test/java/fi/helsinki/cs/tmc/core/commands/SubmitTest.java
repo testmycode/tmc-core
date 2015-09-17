@@ -78,7 +78,7 @@ public class SubmitTest {
                                         .withBody(
                                                 ExampleJson.allCoursesExample
                                                         .replace(
-                                                                "http://example.com",
+                                                                "https://example.com/staging",
                                                                 serverAddress))));
         wireMock.stubFor(
                 post(urlPathEqualTo("/exercises/1228/submissions.json"))
@@ -88,7 +88,7 @@ public class SubmitTest {
                                         .withBody(
                                                 ExampleJson.failedSubmitResponse
                                                         .replaceAll(
-                                                                "http://example.com",
+                                                                "https://example.com/staging",
                                                                 serverAddress))));
 
         wireMock.stubFor(

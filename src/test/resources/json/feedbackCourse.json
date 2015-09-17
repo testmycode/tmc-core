@@ -6,7 +6,7 @@
         "unlock_url": "https://example.com/staging/courses/27/unlock.json",
         "reviews_url": "https://example.com/staging/courses/27/reviews.json",
         "comet_url": "https://example.com/comet",
-        "spyware_urls": ["http://example.com/"],
+        "spyware_urls": ["https://example.com/staging"],
         "unlockables": [],
         "exercises": [
             {

@@ -22,8 +22,6 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
-import com.google.common.base.Optional;
-
 import org.apache.commons.io.FileUtils;
 
 import org.junit.After;
@@ -39,7 +37,7 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ExerciseDownloaderTest {
 
@@ -146,14 +144,14 @@ public class ExerciseDownloaderTest {
 
     @Test
     public void downloadExercisesDoesRequests() {
-        exDl.downloadFiles(exercises, zipDestination);
+        exDl.downloadExercises(exercises, zipDestination, "", ExerciseObserver.NOP);
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex1.zip")));
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex2.zip")));
     }
 
     @Test
     public void requestsHaveAuth() {
-        exDl.downloadFiles(exercises, zipDestination);
+        exDl.downloadExercises(exercises, zipDestination, "", ExerciseObserver.NOP);
 
         wireMockRule.verify(
                 getRequestedFor(urlEqualTo("/ex1.zip"))
@@ -166,14 +164,14 @@ public class ExerciseDownloaderTest {
 
     @Test
     public void downloadedExercisesExists() {
-        exDl.downloadFiles(exercises, zipDestination);
+        exDl.downloadExercises(exercises, zipDestination, "", ExerciseObserver.NOP);
         File exercise1 = Paths.get("src", "test", "resources", "__files", "testfile.txt").toFile();
         assertTrue("Zipped file testfile.txt was not downloaded to the fs", exercise1.exists());
     }
 
     @Test
     public void downloadedExercisesHasContent() throws IOException {
-        exDl.downloadFiles(exercises, zipDestination);
+        exDl.downloadExercises(exercises, zipDestination, "", ExerciseObserver.NOP);
 
         String fileContent =
                 FileUtils.readFileToString(
@@ -191,7 +189,7 @@ public class ExerciseDownloaderTest {
         exercises.get(0).setLocked(true);
         exercises.get(1).setLocked(true);
         exercises.get(2).setLocked(true);
-        exDl.downloadFiles(exercises, zipDestination);
+        exDl.downloadExercises(exercises, zipDestination, "", ExerciseObserver.NOP);
     }
 
     @Test
@@ -201,9 +199,16 @@ public class ExerciseDownloaderTest {
         exDl =
                 new ExerciseDownloader(
                         new UrlCommunicator(settings), new TmcApi(settings), executor);
-        Optional<List<Exercise>> optionalList = exDl.downloadFiles(exercises, zipDestination);
-        List<Exercise> list = optionalList.or(new ArrayList<Exercise>());
-        assertEquals(3, list.size());
+        final AtomicInteger counter = new AtomicInteger();
+        exDl.downloadExercises(exercises, zipDestination, "", new ExerciseObserver() {
+            @Override
+            public void observe(Exercise exercise, boolean success) {
+                if(success) {
+                    counter.incrementAndGet();
+                }
+            }
+        });
+        assertEquals(3, counter.get());
     }
 
     @Test

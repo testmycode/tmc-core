@@ -4,11 +4,8 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.util.Folders;
-import fi.helsinki.cs.tmc.core.util.Optionals;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
-import com.google.common.base.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +16,10 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -57,76 +56,36 @@ public class ExerciseDownloader {
     }
 
     /**
-     * Download exercises by course url.
-     *
-     * @param courseUrl course url
-     * @return info about downloading.
-     */
-    public Optional<List<Exercise>> downloadExercises(URI courseUrl) throws IOException {
-        List<Exercise> exercises = tmcApi.getExercises(courseUrl);
-        if (exercises.isEmpty()) {
-            return Optional.absent();
-        }
-        return downloadFiles(exercises);
-    }
-
-    /**
-     * Method for downloading files if path is not defined.
-     *
-     * @param exercises list of exercises which will be downloaded, list is parsed from json.
-     * @return info about downloading.
-     */
-    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises) {
-        return downloadFiles(exercises, "");
-    }
-
-    /**
-     * Method for downloading files if path where to download is defined.
-     *
-     * @return info about downloading.
-     */
-    public Optional<List<Exercise>> downloadFiles(List<Exercise> exercises, String path) {
-        return downloadFiles(exercises, path, null);
-    }
-
-    /**
      * Method for downloading files if path where to download is defined. Also requires separate
      * folder name that will be created to defined path.
      *
-     * @param exercises list of exercises which will be downloaded, list is parsed from json.
-     * @param path server path to exercises.
+     * @param exercises list of exercises which will be downloaded, list is parsed from json
+     * @param path server path to exercises
      * @param folderName folder name of where exercises will be extracted (for example course name)
      */
-    public Optional<List<Exercise>> downloadFiles(
-            List<Exercise> exercises, String path, String folderName) {
-        final List<Future<Optional<Exercise>>> futures = new ArrayList<>();
-        final String coursePath = createCourseFolder(path, folderName);
-        for (final Exercise exercise : exercises) {
-            Callable<Optional<Exercise>> downloadHandler
+    public void downloadExercises(
+            List<Exercise> exercises, String path, String folderName, ExerciseObserver obs) {
+        Map<Exercise, Future<Boolean>> futures = new HashMap<>();
+        String coursePath = createCourseFolder(path, folderName);
+        for (Exercise exercise : exercises) {
+            Callable<Boolean> downloadHandler
                     = new SingleExerciseDownloadHandler(exercise, coursePath);
-            futures.add(downloadThreadPool.submit(downloadHandler));
+            futures.put(exercise, downloadThreadPool.submit(downloadHandler));
         }
-        return collectExerciseFutures(futures);
+        collectExerciseFutures(futures, obs);
     }
 
-    private Optional<List<Exercise>> collectExerciseFutures(
-            List<Future<Optional<Exercise>>> futures) {
-        List<Exercise> exercises = new ArrayList<>();
-        for (Future<Optional<Exercise>> future : futures) {
+    private void collectExerciseFutures(
+            Map<Exercise, Future<Boolean>> futures, ExerciseObserver obs) {
+        for (Entry<Exercise, Future<Boolean>> future : futures.entrySet()) {
             try {
-                Optional<Exercise> exercise = future.get();
-                if (exercise.isPresent()) {
-                    exercises.add(exercise.get());
-                } else {
-                    
-                }
+                obs.observe(future.getKey(), future.getValue().get());
             } catch (ExecutionException ex) {
                 log.error("Failed to handle exercise: {}", ex);
             } catch (InterruptedException ex) {
                 log.error("Handling of exercise was interrupted: {}", ex);
             }
         }
-        return Optionals.ofNonEmpty(exercises);
     }
 
     public String createCourseFolder(String path, String folderName) {
@@ -144,7 +103,7 @@ public class ExerciseDownloader {
     /**
      * Handles downloading, unzipping & telling user information, for single exercise.
      *
-     * @param exercise Exercise which will be downloaded
+     * @param exercise exercise which will be downloaded
      * @param path path where single exercise will be downloaded
      */
     public boolean handleSingleExercise(Exercise exercise, String path) {
@@ -221,7 +180,7 @@ public class ExerciseDownloader {
         return urlCommunicator.downloadToFile(zipUrl, file);
     }
 
-    private class SingleExerciseDownloadHandler implements Callable<Optional<Exercise>> {
+    private class SingleExerciseDownloadHandler implements Callable<Boolean> {
 
         private final Exercise exercise;
         private final String coursePath;
@@ -232,11 +191,8 @@ public class ExerciseDownloader {
         }
 
         @Override
-        public Optional<Exercise> call() {
-            if (handleSingleExercise(exercise, coursePath)) {
-                return Optional.of(exercise);
-            }
-            return Optional.absent();
+        public Boolean call() {
+            return handleSingleExercise(exercise, coursePath);
         }
     }
 }

@@ -58,8 +58,8 @@ public class ProjectRootFinder implements RootFinder {
      * @return Course-object containing information of the course found.
      */
     @Override
-    public Optional<Course> getCurrentCourse(String path) throws IOException, TmcCoreException {
-        String[] foldersOfWorkingDirectory = path.split("\\" + File.separator);
+    public Optional<Course> getCurrentCourse(Path path) throws IOException, TmcCoreException {
+        String[] foldersOfWorkingDirectory = path.toString().split("\\" + File.separator);
         try {
             checkPwd(foldersOfWorkingDirectory);
         } catch (TmcCoreException ex) {

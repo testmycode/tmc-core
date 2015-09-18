@@ -43,6 +43,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import static org.mockito.Matchers.any;
 
 public class SubmitTest {
 
@@ -58,7 +59,7 @@ public class SubmitTest {
 
     private Submit submitWithObserver;
     private SubmissionPoller pollerMock;
-    private String path;
+    private Path path;
 
     private void createSettings() {
         settings = new CoreTestSettings();
@@ -123,9 +124,9 @@ public class SubmitTest {
         submitterMock = mock(ExerciseSubmitter.class);
         pollerMock = mock(SubmissionPoller.class);
 
-        path = Paths.get("polku", "kurssi", "kansioon", "src").toString();
+        path = Paths.get("polku", "kurssi", "kansioon", "src");
 
-        when(submitterMock.submit(anyString()))
+        when(submitterMock.submit(any(Path.class)))
                 .thenReturn(URI.create(serverAddress + submissionUrl));
         submit
                 = new Submit(
@@ -136,13 +137,13 @@ public class SubmitTest {
     @Test(expected = TmcCoreException.class)
     public void testThrowsExceptionIfNoUsername() throws Exception {
         settings.setUsername(null);
-        new Submit(settings, null, null, "").call();
+        new Submit(settings, null, null, Paths.get("")).call();
     }
 
     @Test(expected = TmcCoreException.class)
     public void testThrowsExceptionIfNoPassword() throws Exception {
         settings.setPassword(null);
-        new Submit(settings, null, null, "").call();
+        new Submit(settings, null, null, Paths.get("")).call();
     }
 
     @Test

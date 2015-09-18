@@ -5,6 +5,8 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 
 import com.google.common.base.Optional;
 
+import java.nio.file.Path;
+
 public class CoreTestSettings implements TmcSettings {
 
     private String serverAddress;
@@ -12,7 +14,7 @@ public class CoreTestSettings implements TmcSettings {
     private String password;
     private Course currentCourse;
     private String apiVersion;
-    private String mainDirectory;
+    private Path mainDirectory;
 
     public CoreTestSettings() {
         apiVersion = "7";
@@ -99,11 +101,11 @@ public class CoreTestSettings implements TmcSettings {
     }
 
     @Override
-    public String getTmcMainDirectory() {
+    public Path getTmcMainDirectory() {
         return this.mainDirectory;
     }
 
-    public void setTmcMainDirectory(String path) {
+    public void setTmcMainDirectory(Path path) {
         this.mainDirectory = path;
     }
 

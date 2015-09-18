@@ -4,6 +4,7 @@ import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumCache;
 import fi.helsinki.cs.tmc.core.communication.ExerciseDownloader;
 import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
+import fi.helsinki.cs.tmc.core.communication.ExerciseObserver;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
@@ -15,10 +16,9 @@ import com.google.common.base.Optional;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A {@link Command} for downloading exercises.
@@ -33,13 +33,14 @@ public class DownloadExercises extends Command<List<Exercise>> {
     private String path;
 
     /**
-     *  Constructs a new downloaded exercises command for downloading {@code exercises} into TMC
-     *  main directory.
+     * Constructs a new downloaded exercises command for downloading
+     * {@code exercises} into TMC main directory.
      *
-     * @param settings      Provides login credentials and download location.
-     * @param exercises     List of exercises to download.
-     * @param observer      This observer is notified of command's progress. May be {@code null}.
-     * @param cache         A cache for storing the downloads.
+     * @param settings provides login credentials and download location
+     * @param exercises list of exercises to download
+     * @param observer this observer is notified of command's progress. May be
+     * {@code null}
+     * @param cache a cache for storing the downloads
      */
     public DownloadExercises(
             TmcSettings settings,
@@ -65,14 +66,15 @@ public class DownloadExercises extends Command<List<Exercise>> {
     }
 
     /**
-     * Constructs a new downloaded exercises command for downloading exercises of the course
-     * identified by {@code courseId} into {@code path}.
+     * Constructs a new downloaded exercises command for downloading exercises
+     * of the course identified by {@code courseId} into {@code path}.
      *
-     * @param settings      Provides login credentials and download location.
-     * @param path          Target path for downloads.
-     * @param courseId      Identifies which course's exercises should be downloaded.
-     * @param observer      This observer is notified of command's progress. May be {@code null}.
-     * @param cache         A cache for storing the downloads.
+     * @param settings provides login credentials and download location
+     * @param path target path for downloads
+     * @param courseId identifies which course's exercises should be downloaded
+     * @param observer this observer is notified of command's progress. May be
+     * {@code null}
+     * @param cache a cache for storing the downloads
      */
     public DownloadExercises(
             TmcSettings settings,
@@ -94,13 +96,13 @@ public class DownloadExercises extends Command<List<Exercise>> {
      * Constructs a new download exercises command for downloading exercises of the course
      * identified by {@code courseId} into {@code path}.
      *
-     * @param settings      Provides login credentials and download location.
-     * @param path          Target path for downloads.
-     * @param courseId      Identifies which course's exercises should be downloaded.
-     * @param cache         A cache for storing the downloads.
-     * @param observer      This observer is notified of command's progress. May be {@code null}.
-     * @param downloader    Downloader to download the the exercises with.
-     * @param tmcApi        TMC server connector for querying the server with.
+     * @param settings      provides login credentials and download location
+     * @param path          target path for downloads
+     * @param courseId      identifies which course's exercises should be downloaded
+     * @param cache         a cache for storing the downloads
+     * @param observer      this observer is notified of command's progress. May be {@code null}
+     * @param downloader    downloader to download the the exercises with
+     * @param tmcApi        TMC server connector for querying the server with
      */
     public DownloadExercises(
             TmcSettings settings,
@@ -149,27 +151,24 @@ public class DownloadExercises extends Command<List<Exercise>> {
         return downloadedExercises;
     }
 
-    private List<Exercise> downloadExercises(Course course) throws TmcInterruptionException {
-        Path target = Paths.get(exerciseDownloader.createCourseFolder(this.path, course.getName()));
-        List<Exercise> downloaded = new ArrayList<>();
+    private List<Exercise> downloadExercises(final Course course) throws TmcInterruptionException {
+        final List<Exercise> downloaded = new ArrayList<>();
+        final AtomicInteger counter = new AtomicInteger();
+        exerciseDownloader.downloadExercises(exercises, this.path, course.getName(),
+            new ExerciseObserver() {
+                @Override
+                public void observe(Exercise exercise, boolean success) {
+                    exercise.setCourseName(course.getName());
 
-        for (int i = 0; i < exercises.size(); i++) {
-            checkInterrupt();
+                    String message = "Downloading exercise " + exercise.getName() + " failed";
+                    if (success) {
+                        downloaded.add(exercise);
+                        message = "Downloading exercise " + exercise.getName() + " was successful";
+                    }
 
-            Exercise exercise = exercises.get(i);
-            exercise.setCourseName(course.getName());
-
-            boolean success = exerciseDownloader.handleSingleExercise(exercise, target.toString());
-
-            String message = "Downloading exercise " + exercise.getName() + " failed";
-            if (success) {
-                downloaded.add(exercise);
-                message = "Downloading exercise " + exercise.getName() + " was successful";
-            }
-
-            informObserver(i, exercises.size(), message);
-        }
-
+                    informObserver(counter.incrementAndGet(), exercises.size(), message);
+                }
+        });
         return downloaded;
     }
 

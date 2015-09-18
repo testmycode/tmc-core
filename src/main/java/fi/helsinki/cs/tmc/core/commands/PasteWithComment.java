@@ -12,6 +12,7 @@ import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.text.ParseException;
 
 /**
@@ -21,13 +22,13 @@ public class PasteWithComment extends Command<URI> {
 
     private ExerciseSubmitter submitter;
     private String comment;
-    private String path;
+    private Path path;
 
     /**
      * Constructs a new paste with comment command using {@code settings} for creating a paste of
      * the exercise at {@code path} with an accompanying {@code comment}.
      */
-    public PasteWithComment(TmcSettings settings, String path, String comment) {
+    public PasteWithComment(TmcSettings settings, Path path, String comment) {
         this(settings, path, comment, new ExerciseSubmitter(settings));
     }
 
@@ -36,7 +37,7 @@ public class PasteWithComment extends Command<URI> {
      * the exercise at {@code path} with an accompanying {@code comment} to the server.
      */
     public PasteWithComment(
-            TmcSettings settings, String path, String comment, ExerciseSubmitter submitter) {
+            TmcSettings settings, Path path, String comment, ExerciseSubmitter submitter) {
         super(settings);
 
         this.submitter = submitter;

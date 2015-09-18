@@ -36,14 +36,14 @@ public class RunCheckStyleTest {
 
     @Test
     public void testCommandDelegatesToTmcLangs() throws Exception {
-        new RunCheckStyle("somePath", tmcLangsMock).call();
+        new RunCheckStyle(Paths.get("somePath"), tmcLangsMock).call();
 
         verify(tmcLangsMock).runCheckCodeStyle(eq(Paths.get("somePath")));
     }
 
     @Test(expected = TmcCoreException.class)
     public void testRunCheckStyleThrowsExceptionOnInvalidPath() throws Exception {
-        new RunCheckStyle("nosuch").call();
+        new RunCheckStyle(Paths.get("nosuch")).call();
     }
 
     @Test
@@ -51,7 +51,7 @@ public class RunCheckStyleTest {
         ValidationResult expected = new ValidationResultImpl();
         when(tmcLangsMock.runCheckCodeStyle(any(Path.class))).thenReturn(expected);
 
-        ValidationResult result = new RunCheckStyle("somePath", tmcLangsMock).call();
+        ValidationResult result = new RunCheckStyle(Paths.get("somePath"), tmcLangsMock).call();
 
         assertEquals(expected, result);
     }

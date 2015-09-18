@@ -16,6 +16,7 @@ import com.google.common.base.Optional;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -30,7 +31,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
     private TmcApi tmcApi;
     private List<Exercise> exercises;
     private int courseId;
-    private String path;
+    private Path path;
 
     /**
      * Constructs a new downloaded exercises command for downloading
@@ -78,7 +79,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
      */
     public DownloadExercises(
             TmcSettings settings,
-            String path,
+            Path path,
             int courseId,
             ProgressObserver observer,
             ExerciseChecksumCache cache) {
@@ -106,7 +107,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
      */
     public DownloadExercises(
             TmcSettings settings,
-            String path,
+            Path path,
             int courseId,
             ExerciseChecksumCache cache,
             ProgressObserver observer,
@@ -125,7 +126,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
      * Entry point for launching this command.
      */
     @Override
-    public List<Exercise> call() throws TmcCoreException {
+    public List<Exercise> call() throws TmcCoreException, TmcInterruptionException, IOException {
         if (!settings.userDataExists()) {
             throw new TmcCoreException("Unable to download exercises: missing username/password");
         }
@@ -151,7 +152,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
         return downloadedExercises;
     }
 
-    private List<Exercise> downloadExercises(final Course course) throws TmcInterruptionException {
+    private List<Exercise> downloadExercises(final Course course) throws TmcInterruptionException, IOException {
         final List<Exercise> downloaded = new ArrayList<>();
         final AtomicInteger counter = new AtomicInteger();
         exerciseDownloader.downloadExercises(exercises, this.path, course.getName(),

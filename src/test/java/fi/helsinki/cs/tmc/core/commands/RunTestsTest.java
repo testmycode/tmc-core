@@ -9,6 +9,9 @@ import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class RunTestsTest {
 
     private CoreTestSettings settings;
@@ -20,14 +23,14 @@ public class RunTestsTest {
 
     @Test(expected = TmcCoreException.class)
     public void testThrowsExceptionOnInvalidPath() throws TmcCoreException {
-        new RunTests(settings, "nosuch").call();
+        new RunTests(settings,Paths.get("nosuch")).call();
     }
 
     @Test
     public void testfailingRunTests() throws TmcCoreException {
-        String path =
-                System.getProperty("user.dir")
-                        + "/testResources/local-test-course/failingExercise";
+        Path path =
+                Paths.get(System.getProperty("user.dir")
+                        + "/testResources/local-test-course/failingExercise");
 
         RunResult result = new RunTests(settings, path).call();
 
@@ -36,9 +39,9 @@ public class RunTestsTest {
 
     @Test
     public void successRunTests() throws TmcCoreException {
-        String path =
-                System.getProperty("user.dir")
-                        + "/testResources/local-test-course/successExercise";
+        Path path =
+                Paths.get(System.getProperty("user.dir")
+                        + "/testResources/local-test-course/successExercise");
 
         RunResult result = new RunTests(settings, path).call();
 

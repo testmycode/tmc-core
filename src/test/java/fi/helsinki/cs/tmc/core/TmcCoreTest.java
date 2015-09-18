@@ -165,7 +165,7 @@ public class TmcCoreTest {
         Path firstPath = Paths.get("src", "test", "resources", "cachefile");
         Path secondPath = Paths.get("src", "test", "resources", "file2.cache");
         tmcCore.setExerciseChecksumCacheLocation(firstPath);
-        new FileWriterHelper().writeStuffToFile(firstPath.toString());
+        new FileWriterHelper().writeStuffToFile(firstPath);
         tmcCore.setExerciseChecksumCacheLocation(secondPath);
         assertFalse(FileUtils.readFileToString(secondPath.toFile()).isEmpty());
         assertFalse(firstPath.toFile().exists());

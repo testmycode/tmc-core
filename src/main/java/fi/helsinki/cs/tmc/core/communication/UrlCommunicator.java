@@ -216,11 +216,7 @@ public class UrlCommunicator {
 
     /**
      * Calls downloadToFile with username and password as params.
-     * @param url
-     * @param path
-     * @return 
      */
-
     public boolean downloadToFile(URI url, Path path) {
         return downloadToFile(url, path, this.settings.getFormattedUserData());
 

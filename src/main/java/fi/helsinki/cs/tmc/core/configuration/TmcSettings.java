@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.configuration;
 import fi.helsinki.cs.tmc.core.domain.Course;
 
 import com.google.common.base.Optional;
+
 import java.nio.file.Path;
 
 public interface TmcSettings {

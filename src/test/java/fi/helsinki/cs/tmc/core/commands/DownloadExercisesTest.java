@@ -171,7 +171,7 @@ public class DownloadExercisesTest {
     public void downloadAllExercises() throws Exception {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         core = new TmcCore(settings1);
-        Path folder = Paths.get(System.getProperty("user.dir") , "testResources");
+        Path folder = Paths.get(System.getProperty("user.dir") + "/testResources/");
         ListenableFuture<List<Exercise>> download = core.downloadExercises(folder, 35, null);
 
         List<Exercise> exercises = download.get();

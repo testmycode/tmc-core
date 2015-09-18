@@ -1,23 +1,25 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.CoreTestSettings;
-import fi.helsinki.cs.tmc.core.communication.ExerciseDownloader;
-import fi.helsinki.cs.tmc.core.communication.TmcApi;
-import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.domain.Exercise;
-import java.io.IOException;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import fi.helsinki.cs.tmc.core.communication.ExerciseDownloader;
+import fi.helsinki.cs.tmc.core.communication.TmcApi;
+import fi.helsinki.cs.tmc.core.CoreTestSettings;
+import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class DownloadModelSolutionTest {
 

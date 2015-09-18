@@ -47,7 +47,7 @@ public class SubmissionPollerTest {
                 .thenReturn(ExampleJson.successfulSubmission);
         SubmissionResult output = submissionPoller.getSubmissionResult(url);
         assertFalse(output == null);
-        assertEquals("2014-mooc-no-deadline", output.getCourse());
+        assertEquals("no-deadline", output.getCourse());
         assertEquals(Status.OK, output.getStatus());
     }
 
@@ -57,7 +57,7 @@ public class SubmissionPollerTest {
                 .thenReturn(ExampleJson.failedSubmission);
         SubmissionResult output = submissionPoller.getSubmissionResult(url);
         assertFalse(output == null);
-        assertEquals("2014-mooc-no-deadline", output.getCourse());
+        assertEquals("no-deadline", output.getCourse());
         assertEquals(Status.FAIL, output.getStatus());
     }
 

@@ -2,7 +2,7 @@
     "api_version": 7,
     "all_tests_passed": false,
     "user_id": 52,
-    "course": "tmc-testcourse",
+    "course": "local-test-course",
     "exercise_name": "trivial",
     "status": "fail",
     "points": [],

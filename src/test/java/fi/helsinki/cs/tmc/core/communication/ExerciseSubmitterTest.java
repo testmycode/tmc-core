@@ -60,7 +60,7 @@ public class ExerciseSubmitterTest {
 
         urlCommunicator = mock(UrlCommunicator.class);
         tmcApi = new TmcApi(urlCommunicator, settings);
-        rootFinder = new ProjectRootFinderStub(tmcApi);
+        rootFinder = new ProjectRootFinderStub(tmcApi); //has the courses JSON
         langs = Mockito.mock(TaskExecutor.class);
 
         Mockito.when(langs.compressProject(Mockito.any(Path.class))).thenReturn(new byte[100]);
@@ -80,6 +80,7 @@ public class ExerciseSubmitterTest {
         mockUrlCommunicator(
                 "courses/21.json?api_version=7&client=tmc_cli&client_version=1",
                 ExampleJson.expiredCourseExample);
+        //the id was gotten from the rootFinder stub
         mockUrlCommunicatorWithFile(
                 "https://example.com/staging/exercises/285/submissions.json?api_version=7&client"
                         + "=tmc_cli&client_version=1",
@@ -114,9 +115,9 @@ public class ExerciseSubmitterTest {
 
     @Test
     public void testFindCourseByCorrectPath() throws IOException, TmcCoreException {
-        final String path = Paths.get("home", "kansio", "toinen", "c-demo", "viikko_01").toString();
+        final String path = Paths.get("home", "kansio", "toinen", "test-course", "viikko_01").toString();
         Optional<Course> course = realFinder.findCourseByPath(path.split("\\" + File.separator));
-        assertEquals(7, course.get().getId());
+        assertEquals(3, course.get().getId());
         final String path2 =
                 Paths.get("home", "kansio", "toinen", "OLEMATON", "viikko_01").toString();
         Optional<Course> course2 = realFinder.findCourseByPath(path2.split("\\" + File.separator));
@@ -131,16 +132,15 @@ public class ExerciseSubmitterTest {
                 Paths.get(
                                 "home",
                                 "test",
-                                "2014-mooc-no-deadline",
-                                "viikko1",
-                                "viikko1-Viikko1_001.Nimi")
+                                "no-deadline",
+                                "halfdoneExercise")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         URI submissionPath = URI.create(
-                "http://example.com/submissions/1781.json?api_version=7");
+                "https://example.com/staging/submissions/1781.json?api_version=7");
         URI result = courseSubmitter.submit(testPath);
         assertEquals(submissionPath, result);
     }
@@ -149,7 +149,7 @@ public class ExerciseSubmitterTest {
     public void testSubmitWithExpiredExercise()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
-        String testPath = Paths.get("home", "test", "k2015-tira", "viikko01", "tira1.1").toString();
+        String testPath = Paths.get("home", "test", "expired-course", "viikko01", "tira1.1").toString();
 
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -166,9 +166,8 @@ public class ExerciseSubmitterTest {
                 Paths.get(
                                 "home",
                                 "test",
-                                "2014-mooc-no-deadline",
-                                "viikko1",
-                                "viikko1-Viikko1_001.Nimi")
+                                "no-deadline",
+                                "halfdoneExercise")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -187,9 +186,8 @@ public class ExerciseSubmitterTest {
                 Paths.get(
                                 "home",
                                 "test",
-                                "2014-mooc-no-deadline",
-                                "viikko1",
-                                "viikko1-Viikko1_001.Nimi")
+                                "no-deadline",
+                                "halfdoneExercise")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -205,7 +203,7 @@ public class ExerciseSubmitterTest {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         String testPath =
-                Paths.get("home", "test", "2014-mooc-no-deadline", "viikko1", "feikeintehtava")
+                Paths.get("home", "test", "no-deadline", "viikko1", "feikeintehtava")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -219,7 +217,7 @@ public class ExerciseSubmitterTest {
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         String testPath =
-                Paths.get("home", "test", "2014-mooc-no-deadline", "viikko1", "feikkitehtava")
+                Paths.get("home", "test", "no-deadline", "viikko1", "feikkitehtava")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -236,9 +234,8 @@ public class ExerciseSubmitterTest {
                 Paths.get(
                                 "home",
                                 "test",
-                                "2013_FEIKKIKURSSI",
-                                "viikko_01",
-                                "viikko1-Viikko1_001.Nimi")
+                                "FAKE_COURSE",
+                                "halfdoneExercise")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
@@ -254,10 +251,9 @@ public class ExerciseSubmitterTest {
         Path testPath =
                 Paths.get(
                         "home",
-                        "test",
-                        "2014-mooc-no-deadline",
-                        "viikko1",
-                        "viikko1-Viikko1_001.Nimi");
+                                "test",
+                                "no-deadline",
+                                "halfdoneExercise");
         settings.setCurrentCourse(
                 rootFinder.getCurrentCourse(testPath.toString()).or(new Course()));
         ArgumentCaptor<Map> capture = ArgumentCaptor.forClass(Map.class);
@@ -280,11 +276,10 @@ public class ExerciseSubmitterTest {
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Path testPath =
                 Paths.get(
-                        "home",
-                        "test",
-                        "2014-mooc-no-deadline",
-                        "viikko1",
-                        "viikko1-Viikko1_001.Nimi");
+                                "home",
+                                "test",
+                                "no-deadline",
+                                "halfdoneExercise");
         settings.setCurrentCourse(
                 rootFinder.getCurrentCourse(testPath.toString()).or(new Course()));
         ArgumentCaptor<Map> capture = ArgumentCaptor.forClass(Map.class);
@@ -308,16 +303,15 @@ public class ExerciseSubmitterTest {
                 Paths.get(
                                 "home",
                                 "test",
-                                "2014-mooc-no-deadline",
-                                "viikko1",
-                                "viikko1-Viikko1_001.Nimi")
+                                "no-deadline",
+                                "halfdoneExercise")
                         .toString();
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         URI submissionPath = URI.create(
-                "http://example.com/submissions/1781.json?api_version=7");
+                "https://example.com/staging/submissions/1781.json?api_version=7");
         URI result = courseSubmitter.submit(testPath, observer);
         verify(observer).progress("zipping exercise");
         verify(observer).progress("submitting exercise");

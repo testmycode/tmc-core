@@ -2,7 +2,7 @@
     "api_version": 7,
     "all_tests_passed": false,
     "user_id": 2702,
-    "course": "k2015-cee",
+    "course": "valgrind-failed",
     "exercise_name": "Module_6-Task_1",
     "status": "fail",
     "points": [],

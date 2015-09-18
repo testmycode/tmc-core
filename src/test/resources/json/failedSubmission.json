@@ -2,7 +2,7 @@
     "api_version": 7,
     "all_tests_passed": false,
     "user_id": 52,
-    "course": "2014-mooc-no-deadline",
+    "course": "no-deadline",
     "exercise_name": "viikko1-Viikko1_020.Kayttajatunnukset",
     "status": "fail",
     "points": [],

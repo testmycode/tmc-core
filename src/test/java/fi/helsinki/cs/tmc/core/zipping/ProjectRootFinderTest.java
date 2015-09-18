@@ -24,7 +24,7 @@ import java.util.List;
 public class ProjectRootFinderTest {
 
     private ProjectRootFinder finder;
-    private String fakeName = "2014-mooc-no-deadline";
+    private String fakeName = "no-deadline";
     private String otherFakeName = "2013-tira";
     private CoreTestSettings settings;
     private TmcApi parser;
@@ -55,8 +55,8 @@ public class ProjectRootFinderTest {
 
     @Test
     public void testGetRootDirectoryFromSame() {
-        Path path =
-                Paths.get("testResources", "2013_ohpeJaOhja", "viikko1", "Viikko1_002.HeiMaailma");
+        Path path
+                = Paths.get("testResources", "local-test-course", "successExercise");
         Optional<Path> root = finder.getRootDirectory(path);
         assertTrue(root.isPresent());
         assertTrue(root.get().endsWith(path));
@@ -64,52 +64,48 @@ public class ProjectRootFinderTest {
 
     @Test
     public void findsDeepRoot() {
-        Optional<Path> root =
-                finder.getRootDirectory(
+        Optional<Path> root
+                = finder.getRootDirectory(
                         Paths.get(
                                 "testResources",
-                                "2013_ohpeJaOhja",
-                                "viikko1",
-                                "Viikko1_002.HeiMaailma",
+                                "local-test-course",
+                                "successExercise",
                                 "src"));
         assertTrue(root.isPresent());
         assertTrue(
                 root
-                        .get()
-                        .endsWith(
-                                Paths.get(
-                                        "testResources",
-                                        "2013_ohpeJaOhja",
-                                        "viikko1",
-                                        "Viikko1_002.HeiMaailma")));
+                .get()
+                .endsWith(
+                        Paths.get(
+                                "testResources",
+                                "local-test-course",
+                                "successExercise")));
     }
 
     @Test
     public void doesntFindRootWhenNoPom() {
-        Optional<Path> root =
-                finder.getRootDirectory(
+        Optional<Path> root
+                = finder.getRootDirectory(
                         Paths.get(
                                 "testResources",
-                                "2013_ohpeJaOhja",
-                                "viikko1",
-                                "Viikko1_002.HeiMaailma",
+                                "local-test-course",
+                                "successExercise",
                                 "src"));
         assertTrue(root.isPresent());
         assertTrue(
                 root
-                        .get()
-                        .endsWith(
-                                Paths.get(
-                                        "testResources",
-                                        "2013_ohpeJaOhja",
-                                        "viikko1",
-                                        "Viikko1_002.HeiMaailma")));
+                .get()
+                .endsWith(
+                        Paths.get(
+                                "testResources",
+                                "local-test-course",
+                                "successExercise")));
     }
 
     @Test
     public void doesntFindRootWhenNotAnExercise() {
-        Path notAnExercise =
-                Paths.get("testResources", "2013_ohpeJaOhja", "viikko1", "NotAnExercise");
+        Path notAnExercise
+                = Paths.get("testResources", "local-test-course", "NotAnExercise");
         Optional<Path> root = finder.getRootDirectory(notAnExercise);
         if (!root.isPresent()) {
             return;
@@ -129,11 +125,11 @@ public class ProjectRootFinderTest {
 
     @Test
     public void getsCurrentCourse() throws IOException, TmcCoreException {
-        Optional<Course> course =
-                finder.getCurrentCourse(
+        Optional<Course> course
+                = finder.getCurrentCourse(
                         Paths.get("path", "that", "contains", "course").toString()
-                                + File.separatorChar
-                                + fakeName);
+                        + File.separatorChar
+                        + fakeName);
         assertEquals(fakeName, course.get().getName());
     }
 }

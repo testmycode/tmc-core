@@ -1,12 +1,12 @@
 {"api_version": 7,
     "course": {
         "id": 27,
-        "name": "tmc-testcourse",
+        "name": "local-test-course",
         "details_url": "https://example.com/staging/courses/27.json",
         "unlock_url": "https://example.com/staging/courses/27/unlock.json",
         "reviews_url": "https://example.com/staging/courses/27/reviews.json",
         "comet_url": "https://example.com/comet",
-        "spyware_urls": ["http://example.com/"],
+        "spyware_urls": ["https://example.com/staging"],
         "unlockables": [],
         "exercises": [
             {

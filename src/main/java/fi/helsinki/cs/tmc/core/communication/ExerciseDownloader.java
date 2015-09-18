@@ -37,7 +37,6 @@ public class ExerciseDownloader {
 
     /**
      * Constructor for dependency injection.
-     *
      */
     public ExerciseDownloader(
             UrlCommunicator urlCommunicator, TmcApi tmcApi, TaskExecutor taskExecutor) {
@@ -49,7 +48,6 @@ public class ExerciseDownloader {
 
     /**
      * Creates a new ExerciseDownloader instance.
-     *
      */
     public ExerciseDownloader(UrlCommunicator urlCommunicator, TmcApi tmcApi) {
         this(urlCommunicator, tmcApi, new TaskExecutorImpl());

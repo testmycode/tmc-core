@@ -1,11 +1,18 @@
 package fi.helsinki.cs.tmc.core.domain.submission;
 
-import com.google.gson.annotations.SerializedName;
-
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.util.Collections;
 import java.util.List;
+
+/**
+ * This class is missing tests at the moment.
+ * All domain.submission -classes are missing tests also and
+ * this class contains lots of uncommented code plus
+ * lots of methods that are unused atm.
+ **/
 
 public class SubmissionResult {
 
@@ -65,8 +72,6 @@ public class SubmissionResult {
     @SerializedName("solution_url")
     private String solutionUrl;
 
-    private Validations validations;
-
     private String valgrind;
 
     private boolean reviewed;
@@ -102,14 +107,6 @@ public class SubmissionResult {
 
     public void setError(String error) {
         this.error = error;
-    }
-
-    public Validations getValidations() {
-        return validations;
-    }
-
-    public void setValidations(Validations validations) {
-        this.validations = validations;
     }
 
     public List<TestCase> getTestCases() {
@@ -284,9 +281,8 @@ public class SubmissionResult {
      * Returns whether validation has failed.
      */
     public boolean validationsFailed() {
-        return this.validationResult == null
-                ? false
-                : !this.validationResult.getValidationErrors().isEmpty();
+        return this.validationResult != null
+                && !this.validationResult.getValidationErrors().isEmpty();
     }
 
     @Override
@@ -322,8 +318,6 @@ public class SubmissionResult {
                 + feedbackAnswerUrl
                 + ", solutionUrl="
                 + solutionUrl
-                + ", validations="
-                + validations
                 + ", \n valgrind="
                 + valgrind
                 + ", reviewed="

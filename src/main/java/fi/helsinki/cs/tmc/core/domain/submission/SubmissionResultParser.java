@@ -15,9 +15,6 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.lang.reflect.Type;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 public class SubmissionResultParser {
 
     public SubmissionResult parseFromJson(final String json) {
@@ -56,13 +53,6 @@ public class SubmissionResultParser {
         }
     }
 
-    /*
-    public static void main(String[] args) throws IOException {
-        SubmissionResult sr = new SubmissionResultParser().parseFromJson(new String(Files.readAllBytes(Paths.get("src/test/resources/json/checkstyleFailed.json"))));
-        System.out.println(sr);
-    }
-
-*/
     private static class StatusDeserializer implements JsonDeserializer<SubmissionResult.Status> {
         @Override
         public SubmissionResult.Status deserialize(

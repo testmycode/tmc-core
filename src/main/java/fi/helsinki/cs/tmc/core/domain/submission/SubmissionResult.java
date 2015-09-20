@@ -7,13 +7,6 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * This class is missing tests at the moment.
- * All domain.submission -classes are missing tests also and
- * this class contains lots of uncommented code plus
- * lots of methods that are unused atm.
- **/
-
 public class SubmissionResult {
 
     public enum TestResultStatus {

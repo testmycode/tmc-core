@@ -4,6 +4,8 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 
 import com.google.common.base.Optional;
 
+import java.nio.file.Path;
+
 public interface TmcSettings {
 
     String getServerAddress();
@@ -31,5 +33,5 @@ public interface TmcSettings {
      * Return the directory where course directories will be located. Projects
      * will be placed as follows: maindirectory/courseName/exerciseName
      */
-    String getTmcMainDirectory();
+    Path getTmcMainDirectory();
 }

@@ -11,15 +11,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProjectRootFinderStub implements RootFinder {
 
-    private String returnValue;
+    private Path returnValue;
     private TmcApi tmcApi;
-    private HashMap<String, Course> courseStubs;
+    private Map<String, Course> courseStubs;
 
     public ProjectRootFinderStub(TmcApi tmcApi) {
-        this.returnValue = "";
+        this.returnValue = Paths.get("");
         this.tmcApi = tmcApi;
         this.courseStubs = new HashMap<>();
         fillCourseStubs();
@@ -33,21 +34,21 @@ public class ProjectRootFinderStub implements RootFinder {
         }
     }
 
-    public String getReturnValue() {
+    public Path getReturnValue() {
         return returnValue;
     }
 
-    public void setReturnValue(String returnValue) {
+    public void setReturnValue(Path returnValue) {
         this.returnValue = returnValue;
     }
 
     @Override
     public Optional<Path> getRootDirectory(Path zipRoot) {
-        return Optional.of(Paths.get(returnValue));
+        return Optional.of(returnValue);
     }
 
-    public Optional<Course> getCurrentCourse(String path) {
-        String[] folders = path.split("\\" + File.separator);
+    public Optional<Course> getCurrentCourse(Path path) {
+        String[] folders = path.toString().split("\\" + File.separator);
 
         for (String folder : folders) {
             if (courseStubs.containsKey(folder)) {

@@ -147,8 +147,8 @@ public class DownloadExercisesTest {
     public void writesChecksumsToCacheIfCacheFileIsGiven()
             throws IOException, TmcCoreException, URISyntaxException {
         ExerciseDownloader downloader = mock(ExerciseDownloader.class);
-        Mockito.when(downloader.createCourseFolder(anyString(), anyString())).thenReturn("");
-        Mockito.when(downloader.handleSingleExercise(any(Exercise.class), anyString()))
+        Mockito.when(downloader.createCourseFolder(any(Path.class), anyString())).thenReturn(Paths.get("path"));
+        Mockito.when(downloader.handleSingleExercise(any(Exercise.class), any(Path.class)))
                 .thenReturn(true);
 
         Course course = new Course();
@@ -164,7 +164,7 @@ public class DownloadExercisesTest {
 
         when(tmcApi.getCourse(anyInt())).thenReturn(Optional.of(course));
 
-        new DownloadExercises(settings, "", 8, cache, null, downloader, tmcApi).call();
+        new DownloadExercises(settings, Paths.get(""), 8, cache, null, downloader, tmcApi).call();
         verify(cache, times(1)).write(course.getExercises());
     }
 

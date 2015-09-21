@@ -12,6 +12,7 @@ import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.text.ParseException;
 
 /**
@@ -21,7 +22,7 @@ public class Submit extends Command<SubmissionResult> {
 
     private ExerciseSubmitter submitter;
     private SubmissionPoller submissionPoller;
-    private String path;
+    private Path path;
 
     /**
      * Creates a new submit command with {@code settings}, {@code submitter} and
@@ -31,7 +32,7 @@ public class Submit extends Command<SubmissionResult> {
             TmcSettings settings,
             ExerciseSubmitter submitter,
             SubmissionPoller submissionPoller,
-            String path) {
+            Path path) {
         this(settings, submitter, submissionPoller, path, null);
     }
 
@@ -44,7 +45,7 @@ public class Submit extends Command<SubmissionResult> {
             TmcSettings settings,
             ExerciseSubmitter submitter,
             SubmissionPoller submissionPoller,
-            String path,
+            Path path,
             ProgressObserver observer) {
         super(settings);
 

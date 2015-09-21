@@ -1,7 +1,5 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Strings;
 import fi.helsinki.cs.tmc.core.communication.ExerciseDownloader;
 import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
@@ -9,7 +7,10 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-import java.net.URI;
+
+import com.google.common.base.Optional;
+import com.google.common.base.Strings;
+
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -41,10 +42,9 @@ public class DownloadModelSolution extends Command<Boolean> {
 
         String courseName = getCourseName();
 
-        Path target =
-                Paths.get(
-                        exerciseDownloader.createCourseFolder(
-                                settings.getTmcMainDirectory(), courseName));
+        Path target
+                = exerciseDownloader.createCourseFolder(
+                        settings.getTmcMainDirectory(), courseName);
         return exerciseDownloader.downloadModelSolution(exercise, target);
     }
 

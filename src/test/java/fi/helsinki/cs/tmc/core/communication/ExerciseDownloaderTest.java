@@ -48,7 +48,7 @@ public class ExerciseDownloaderTest {
     private ArrayList<Exercise> exercises;
     private ExerciseDownloader exDl;
     private CoreTestSettings settings;
-    private String zipDestination;
+    private Path zipDestination;
     private Exercise modelSolutionExample;
 
     /**
@@ -64,7 +64,7 @@ public class ExerciseDownloaderTest {
         exercises = new ArrayList<>();
 
         String testZipPath = "testzip.zip";
-        zipDestination = Paths.get("src", "test", "resources", "__files").toString();
+        zipDestination = Paths.get("src", "test", "resources", "__files");
 
         modelSolutionExample = new Exercise();
         modelSolutionExample.setSolutionDownloadUrl(URI.create(serverAddress + "/model"));
@@ -143,14 +143,14 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void downloadExercisesDoesRequests() {
+    public void downloadExercisesDoesRequests() throws IOException{
         exDl.downloadExercises(exercises, zipDestination, "", ExerciseObserver.NOP);
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex1.zip")));
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex2.zip")));
     }
 
     @Test
-    public void requestsHaveAuth() {
+    public void requestsHaveAuth() throws IOException{
         exDl.downloadExercises(exercises, zipDestination, "", ExerciseObserver.NOP);
 
         wireMockRule.verify(
@@ -163,7 +163,7 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void downloadedExercisesExists() {
+    public void downloadedExercisesExists() throws IOException{
         exDl.downloadExercises(exercises, zipDestination, "", ExerciseObserver.NOP);
         File exercise1 = Paths.get("src", "test", "resources", "__files", "testfile.txt").toFile();
         assertTrue("Zipped file testfile.txt was not downloaded to the fs", exercise1.exists());

@@ -46,7 +46,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -85,9 +84,9 @@ public class TmcCore {
             throw new FileNotFoundException("Attempted to set non-existent cache file");
         }
         if (updateCache == null) {
-            updateCache = new ExerciseChecksumFileCache(Paths.get(newCache.toString()));
+            updateCache = new ExerciseChecksumFileCache(newCache);
         } else {
-            updateCache.moveCache(Paths.get(newCache.toString()));
+            updateCache.moveCache(newCache);
         }
     }
 
@@ -154,7 +153,7 @@ public class TmcCore {
     public ListenableFuture<List<Exercise>> downloadExercises(
             Path path, int courseId, ProgressObserver observer) throws TmcCoreException {
         DownloadExercises downloadCommand =
-                new DownloadExercises(settings, path.toString(), courseId, observer, updateCache);
+                new DownloadExercises(settings, path, courseId, observer, updateCache);
         return threadPool.submit(downloadCommand);
     }
 
@@ -238,7 +237,7 @@ public class TmcCore {
                         settings,
                         exerciseSubmitter,
                         new SubmissionPoller(tmcApi),
-                        path.toString(),
+                        path,
                         observer);
 
         return threadPool.submit(submit);
@@ -254,7 +253,7 @@ public class TmcCore {
      * given path
      */
     public ListenableFuture<RunResult> test(Path path) throws TmcCoreException {
-        RunTests testCommand = new RunTests(settings, path.toString());
+        RunTests testCommand = new RunTests(settings, path);
         return threadPool.submit(testCommand);
     }
 
@@ -269,7 +268,7 @@ public class TmcCore {
      */
     public ListenableFuture<ValidationResult> runCheckstyle(Path path) throws TmcCoreException {
 
-        RunCheckStyle checkstyleCommand = new RunCheckStyle(path.toString());
+        RunCheckStyle checkstyleCommand = new RunCheckStyle(path);
         return threadPool.submit(checkstyleCommand);
     }
 
@@ -331,7 +330,7 @@ public class TmcCore {
     public ListenableFuture<URI> pasteWithComment(Path path, String comment)
             throws TmcCoreException {
         //checkParameters(path);
-        PasteWithComment paste = new PasteWithComment(settings, path.toString(), comment);
+        PasteWithComment paste = new PasteWithComment(settings, path, comment);
         return threadPool.submit(paste);
     }
 

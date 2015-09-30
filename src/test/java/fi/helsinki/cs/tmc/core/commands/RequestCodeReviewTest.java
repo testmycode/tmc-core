@@ -1,6 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import com.google.common.base.Optional;
+import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
@@ -8,6 +8,8 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
+
+import com.google.common.base.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +24,6 @@ import java.text.ParseException;
 
 import static org.junit.Assert.assertEquals;
 
-import static org.mockito.Mockito.when;
 
 public class RequestCodeReviewTest {
     private RequestCodeReview request;
@@ -35,8 +36,8 @@ public class RequestCodeReviewTest {
         mock();
         submitterMock = Mockito.mock(ExerciseSubmitter.class);
         when(
-                        submitterMock.submitWithCodeReviewRequest(
-                                Mockito.any(Path.class), Mockito.anyString()))
+                submitterMock.submitWithCodeReviewRequest(
+                        Mockito.any(Path.class), Mockito.anyString()))
                 .thenReturn(pasteUrl);
     }
 
@@ -51,7 +52,7 @@ public class RequestCodeReviewTest {
     @Test
     public void testCheckDataSuccess()
             throws TmcCoreException, IOException, ParseException, ExpiredException,
-                    URISyntaxException, IllegalArgumentException, NoLanguagePluginFoundException {
+            URISyntaxException, IllegalArgumentException, NoLanguagePluginFoundException {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 
         new RequestCodeReview(settings, Paths.get("path"), "message", submitterMock).call();
@@ -61,8 +62,8 @@ public class RequestCodeReviewTest {
     public void pasteSuccess() throws Exception {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 
-        URI uri =
-                new RequestCodeReview(settings, Paths.get("path"), "message", submitterMock).call();
+        URI uri
+                = new RequestCodeReview(settings, Paths.get("path"), "message", submitterMock).call();
         assertEquals(uri.toString(), "http://example.com/paste");
     }
 

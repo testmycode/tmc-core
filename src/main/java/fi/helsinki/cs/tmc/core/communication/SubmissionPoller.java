@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core.communication;
 
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackQuestion;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResultParser;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
@@ -9,7 +10,6 @@ import com.google.common.base.Optional;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 
 import java.io.IOException;
 import java.net.URI;

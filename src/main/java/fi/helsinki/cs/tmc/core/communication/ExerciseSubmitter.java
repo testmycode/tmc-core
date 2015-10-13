@@ -8,18 +8,16 @@ import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.core.zipping.RootFinder;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import com.google.common.base.Optional;
-import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -97,7 +95,7 @@ public class ExerciseSubmitter {
      */
     public URI submit(Path currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
@@ -106,13 +104,13 @@ public class ExerciseSubmitter {
      * Submits folder of exercise to TMC. Finds it from current directory.
      *
      * @param currentPath path from which this was called.
-     * @param observer {@link ProgressObserver} that is informed of the submission progress
+     * @param observer    {@link ProgressObserver} that is informed of the submission progress
      * @return URI from which to get results or null if exercise was not found.
      * @throws IOException if zip creation fails
      */
     public URI submit(Path currentPath, ProgressObserver observer)
             throws ParseException, ExpiredException, IllegalArgumentException, IOException,
-                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, observer, false);
     }
@@ -127,7 +125,7 @@ public class ExerciseSubmitter {
      */
     public URI submitPaste(Path currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, true);
     }
@@ -142,7 +140,7 @@ public class ExerciseSubmitter {
      */
     public URI submitPasteWithComment(Path currentPath, String comment)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         HashMap<String, String> params = new HashMap<>();
         params.put("message_for_paste", comment);
@@ -155,7 +153,7 @@ public class ExerciseSubmitter {
      */
     public URI submitWithCodeReviewRequest(Path currentPath, String message)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         HashMap<String, String> params = new HashMap<>();
         params.put("request_review", "1");
@@ -168,12 +166,12 @@ public class ExerciseSubmitter {
     /**
      * Search exercise and throw exception if exercise is expired or not returnable.
      *
-     * @throws ParseException to frontend
+     * @throws ParseException   to frontend
      * @throws ExpiredException to frontend
      */
     private Exercise initExercise(Path currentPath)
             throws IllegalArgumentException, IOException, TmcCoreException, URISyntaxException,
-                    ParseException, ExpiredException {
+            ParseException, ExpiredException {
 
         Exercise currentExercise = searchExercise(currentPath);
         if (isExpired(currentExercise) || !currentExercise.isReturnable()) {
@@ -241,10 +239,6 @@ public class ExerciseSubmitter {
         return resultUrl;
     }
 
-    private String findExerciseFolderToZip(Path currentPath) {
-        return rootFinder.getRootDirectory(currentPath).get().toString();
-    }
-
     private URI sendSubmissionToServer(byte[] file, URI url) throws IOException {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
@@ -270,10 +264,10 @@ public class ExerciseSubmitter {
 
     private Optional<Exercise> findExercise(Path currentPath)
             throws IllegalArgumentException, IOException, TmcCoreException, URISyntaxException {
-        return findCurrentExercise(findCourseExercises(currentPath), currentPath);
+        return findCurrentExercise(findCourseExercises(), currentPath);
     }
 
-    private List<Exercise> findCourseExercises(Path currentPath)
+    private List<Exercise> findCourseExercises()
             throws IllegalArgumentException, IOException, URISyntaxException {
         Optional<Course> currentCourse = this.settings.getCurrentCourse();
         if (!currentCourse.isPresent()) {
@@ -288,8 +282,8 @@ public class ExerciseSubmitter {
         if (!rootDir.isPresent()) {
             throw new IllegalArgumentException("Could not find exercise directory");
         }
-         String name = rootDir.get().getFileName().toString();
-         return getExerciseByName(name, courseExercises);
+        String name = rootDir.get().getFileName().toString();
+        return getExerciseByName(name, courseExercises);
     }
 
     private Optional<Exercise> getExerciseByName(String name, List<Exercise> courseExercises) {

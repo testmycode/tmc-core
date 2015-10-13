@@ -35,11 +35,11 @@ import fi.helsinki.cs.tmc.core.spyware.DiffSender;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -147,34 +147,13 @@ public class TmcCore {
      * @param path where it downloads the exercises
      * @param courseId ID of course to download
      * @param observer ProgressObserver will be informed about the progress of downloading
-     * exercises. Observer can print progress status to end-user.
+     * exercises. Observer can print progress status to end-user
      * @throws TmcCoreException if something in the given input was wrong
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
             Path path, int courseId, ProgressObserver observer) throws TmcCoreException {
         DownloadExercises downloadCommand =
                 new DownloadExercises(settings, path, courseId, observer, updateCache);
-        return threadPool.submit(downloadCommand);
-    }
-
-    /**
-     * Downloads exercise files specified in the given list. The exercises will be located in
-     * TmcMainDirectory (field in TmcSettings).
-     *
-     * @param exercises to be downloaded
-     */
-    public ListenableFuture<List<Exercise>> downloadExercises(List<Exercise> exercises)
-            throws TmcCoreException {
-        return this.downloadExercises(exercises, null);
-    }
-
-    /**
-     * Downloads exercises.
-     */
-    public ListenableFuture<List<Exercise>> downloadExercises(
-            List<Exercise> exercises, ProgressObserver observer) throws TmcCoreException {
-        DownloadExercises downloadCommand =
-                new DownloadExercises(settings, exercises, observer, updateCache);
         return threadPool.submit(downloadCommand);
     }
 
@@ -203,7 +182,7 @@ public class TmcCore {
      * @param path inside any exercise directory
      * @return SubmissionResult object containing details of the tests run on server
      * @throws TmcCoreException if there was no course in the given path, no exercise in the given
-     * path, or not logged in
+     * path, or not logged in.
      */
     public ListenableFuture<SubmissionResult> submit(Path path) throws TmcCoreException {
         return submit(path, null);
@@ -346,7 +325,6 @@ public class TmcCore {
      */
     public ListenableFuture<URI> requestCodeReview(Path path, String message)
             throws TmcCoreException {
-        //checkParameters(path);
         RequestCodeReview request = new RequestCodeReview(settings, path, message);
         return threadPool.submit(request);
     }

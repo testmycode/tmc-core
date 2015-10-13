@@ -1,8 +1,8 @@
 package fi.helsinki.cs.tmc.core.domain.submission;
 
 import com.google.gson.annotations.SerializedName;
-
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
+
 
 import java.util.Collections;
 import java.util.List;

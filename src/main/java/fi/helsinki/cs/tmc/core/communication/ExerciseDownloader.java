@@ -7,8 +7,6 @@ import fi.helsinki.cs.tmc.core.util.Folders;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
-import com.google.common.base.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +14,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +29,6 @@ public class ExerciseDownloader {
     private static final Logger log = LoggerFactory.getLogger(ExerciseDownloader.class);
 
     private UrlCommunicator urlCommunicator;
-    private TmcApi tmcApi;
     private TaskExecutor taskExecutor;
     private final ExecutorService downloadThreadPool;
 
@@ -42,9 +38,9 @@ public class ExerciseDownloader {
     public ExerciseDownloader(
             UrlCommunicator urlCommunicator, TmcApi tmcApi, TaskExecutor taskExecutor) {
         this.urlCommunicator = urlCommunicator;
-        this.tmcApi = tmcApi;
         this.taskExecutor = taskExecutor;
-        this.downloadThreadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        this.downloadThreadPool = Executors
+                .newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
     /**
@@ -58,12 +54,13 @@ public class ExerciseDownloader {
      * Method for downloading files if path where to download is defined. Also requires separate
      * folder name that will be created to defined path.
      *
-     * @param exercises list of exercises which will be downloaded, list is parsed from json
-     * @param path server path to exercises
+     * @param exercises  list of exercises which will be downloaded, list is parsed from json
+     * @param path       server path to exercises
      * @param folderName folder name of where exercises will be extracted (for example course name)
      */
     public void downloadExercises(
-            List<Exercise> exercises, Path path, String folderName, ExerciseObserver obs) throws IOException {
+            List<Exercise> exercises, Path path, String folderName, ExerciseObserver obs)
+            throws IOException {
         Map<Exercise, Future<Boolean>> futures = new HashMap<>();
         Path coursePath = createCourseFolder(path, folderName);
         for (Exercise exercise : exercises) {
@@ -73,8 +70,8 @@ public class ExerciseDownloader {
         }
         collectExerciseFutures(futures, obs);
     }
-    
-        private void collectExerciseFutures(
+
+    private void collectExerciseFutures(
             Map<Exercise, Future<Boolean>> futures, ExerciseObserver obs) {
         for (Entry<Exercise, Future<Boolean>> future : futures.entrySet()) {
             try {
@@ -101,24 +98,22 @@ public class ExerciseDownloader {
      * Handles downloading, unzipping & telling user information, for single exercise.
      *
      * @param exercise exercise which will be downloaded
-     * @param path path where single exercise will be downloaded
+     * @param path     path where single exercise will be downloaded
      */
     public boolean handleSingleExercise(Exercise exercise, Path path) {
         if (exercise.isLocked()) {
             return false;
         }
         Path filePath = Folders.tempFolder().resolve(exercise.getName() + ".zip");
-        if(!downloadExerciseZip(exercise.getZipUrl(), filePath)) {
+        if (!downloadExerciseZip(exercise.getZipUrl(), filePath)) {
             return false;
         }
         try {
             taskExecutor.extractProject(filePath, path);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             log.error("Could not extract archive: {}", path.toString());
             return false;
-        }
-        finally {
+        } finally {
             deleteZip(filePath);
         }
         return true;
@@ -126,17 +121,15 @@ public class ExerciseDownloader {
 
     public boolean downloadModelSolution(Exercise exercise, Path targetPath) {
         Path zipPath = Folders.tempFolder().resolve(exercise.getName() + "-solution.zip");
-        if(!downloadExerciseZip(exercise.getSolutionDownloadUrl(), zipPath)) {
+        if (!downloadExerciseZip(exercise.getSolutionDownloadUrl(), zipPath)) {
             return false;
         }
         try {
             taskExecutor.extractProject(zipPath, targetPath, true);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             log.error("Could not download model solution: {}", ex);
             return false;
-        }
-        finally {
+        } finally {
             deleteZip(zipPath);
         }
         return true;
@@ -150,17 +143,16 @@ public class ExerciseDownloader {
     private void deleteZip(Path filePath) {
         try {
             Files.delete(filePath);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Downloads single .zip file by using URLCommunicator.
      *
      * @param zipUrl url which will be downloaded
-     * @param path where to download
+     * @param path   where to download
      */
     private boolean downloadExerciseZip(URI zipUrl, Path path) {
         return urlCommunicator.downloadToFile(zipUrl, path);

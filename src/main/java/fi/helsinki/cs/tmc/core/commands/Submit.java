@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
+import com.google.common.base.Strings;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.core.communication.SubmissionPoller;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
@@ -56,15 +57,24 @@ public class Submit extends Command<SubmissionResult> {
     }
 
     private void assertHasRequiredData() throws TmcCoreException {
-        String username = settings.getUsername();
-        if (username == null || username.isEmpty()) {
-            throw new TmcCoreException("username must be set!");
-        }
+        checkUsername();
+        checkPassword();
+    }
 
-        String password = settings.getPassword();
-        if (password == null || password.isEmpty()) {
+    private void checkPassword() throws TmcCoreException {
+        if (isBadString(settings.getPassword())) {
             throw new TmcCoreException("password must be set!");
         }
+    }
+
+    private void checkUsername() throws TmcCoreException {
+        if (isBadString(settings.getUsername())) {
+            throw new TmcCoreException("username must be set!");
+        }
+    }
+
+    private boolean isBadString(String toBeTested) {
+        return Strings.isNullOrEmpty(toBeTested);
     }
 
     /**

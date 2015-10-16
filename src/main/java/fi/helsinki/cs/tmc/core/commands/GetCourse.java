@@ -52,6 +52,12 @@ public class GetCourse extends Command<Course> {
         validate(this.settings.getPassword(), "Password must be set!");
 
         URI urlWithApiVersion = new UrlHelper(settings).withParams(this.url);
+        Optional<Course> course = getCourseOptional(urlWithApiVersion);
+
+        return course.get();
+    }
+
+    private Optional<Course> getCourseOptional(URI urlWithApiVersion) throws TmcCoreException {
         Optional<Course> course;
         try {
             course = tmcApi.getCourse(urlWithApiVersion);
@@ -63,8 +69,7 @@ public class GetCourse extends Command<Course> {
             throw new TmcCoreException(
                     "Attempted to fetch nonexistent course " + urlWithApiVersion);
         }
-
-        return course.get();
+        return course;
     }
 
     private URI pollServerForCourseUrl(String courseName) throws TmcCoreException {

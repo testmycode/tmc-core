@@ -23,6 +23,15 @@ public class SubmissionResult {
         PROCESSING
     }
 
+    public SubmissionResult() {
+        status = Status.ERROR;
+        error = null;
+        testCases = Collections.emptyList();
+        points = Collections.emptyList();
+        missingReviewPoints = Collections.emptyList();
+        feedbackQuestions = Collections.emptyList();
+    }
+
     @SerializedName("api_version")
     private int apiVersion;
 
@@ -79,15 +88,6 @@ public class SubmissionResult {
     private String submittedAt;
 
     private ValidationResult validationResult;
-
-    public SubmissionResult() {
-        status = Status.ERROR;
-        error = null;
-        testCases = Collections.emptyList();
-        points = Collections.emptyList();
-        missingReviewPoints = Collections.emptyList();
-        feedbackQuestions = Collections.emptyList();
-    }
 
     public void setValidationResult(final ValidationResult result) {
         this.validationResult = result;

@@ -60,10 +60,7 @@ public class FeedbackQuestion {
      * Parse the value of kind to get the limits of the intrange, and set them.
      */
     private void setRangeLimits() {
-        String range = kind;
-        // remove "intrange[" from beginning and "]" from end
-        range = range.substring("intrange[".length(), kind.length() - 1);
-        String[] bounds = range.split("\\.\\."); // split on ".."
+        String[] bounds = parseKind();
         if (bounds.length != 2) {
             throw new IllegalStateException("Parsing kind failed, maybe not an intrange question?");
         }
@@ -74,5 +71,11 @@ public class FeedbackQuestion {
             String message = "Intrange lower bound must be smaller than upper bound. Got: " + kind;
             throw new IllegalStateException(message);
         }
+    }
+
+    private String[] parseKind() {
+        String range = kind;
+        range = range.substring("intrange[".length(), kind.length() - 1);
+        return range.split("\\.\\.");
     }
 }

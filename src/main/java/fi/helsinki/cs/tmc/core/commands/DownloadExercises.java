@@ -134,13 +134,18 @@ public class DownloadExercises extends Command<List<Exercise>> {
         checkInterrupt();
 
         Course course = getCourse();
-
         if (exercises == null) {
             exercises = course.getExercises();
         }
 
         List<Exercise> downloadedExercises = downloadExercises(course);
 
+        checkCache();
+
+        return downloadedExercises;
+    }
+
+    private void checkCache() throws TmcCoreException {
         if (cache != null) {
             try {
                 cache.write(exercises);
@@ -148,16 +153,22 @@ public class DownloadExercises extends Command<List<Exercise>> {
                 throw new TmcCoreException("Unable to write exercise checksums to cache", e);
             }
         }
-
-        return downloadedExercises;
     }
 
     private List<Exercise> downloadExercises(final Course course)
             throws TmcInterruptionException, IOException {
+
         final List<Exercise> downloaded = new ArrayList<>();
         final AtomicInteger counter = new AtomicInteger();
+
+        ExerciseObserver exerciseObserver = createExerciseObserver(course, downloaded, counter);
         exerciseDownloader.downloadExercises(exercises, this.path, course.getName(),
-                new ExerciseObserver() {
+                exerciseObserver);
+        return downloaded;
+    }
+
+    private ExerciseObserver createExerciseObserver(final Course course, final List<Exercise> downloaded, final AtomicInteger counter) {
+        return new ExerciseObserver() {
                 @Override
                 public void observe(Exercise exercise, boolean success) {
                     exercise.setCourseName(course.getName());
@@ -170,8 +181,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
 
                     informObserver(counter.incrementAndGet(), exercises.size(), message);
                 }
-            });
-        return downloaded;
+            };
     }
 
     private Course getCourse() throws TmcCoreException {

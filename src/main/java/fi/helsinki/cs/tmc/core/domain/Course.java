@@ -89,25 +89,6 @@ public class Course {
         this.detailsUrl = detailsUrl;
     }
 
-    @Override
-    public int hashCode() {
-        int hash = 3;
-        hash = 79 * hash + this.id;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Course other = (Course) obj;
-        return this.id == other.id;
-    }
-
     private boolean exercisesLoaded;
 
     public URI getUnlockUrl() {
@@ -140,6 +121,25 @@ public class Course {
 
     public void setUnlockables(List<URI> unlockables) {
         this.unlockables = unlockables;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 79 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Course other = (Course) obj;
+        return this.id == other.id;
     }
 
     @Override

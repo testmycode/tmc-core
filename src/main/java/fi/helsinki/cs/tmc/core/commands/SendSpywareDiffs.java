@@ -7,6 +7,7 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.spyware.DiffSender;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Strings;
 
 import java.util.List;
 
@@ -30,20 +31,32 @@ public class SendSpywareDiffs extends Command<List<HttpResult>> {
     }
 
     private void assertHasRequiredData() throws TmcCoreException {
-        String username = settings.getUsername();
-        if (username == null || username.isEmpty()) {
-            throw new TmcCoreException("username must be set!");
-        }
+        testUsername();
+        testPassword();
+        testCourse();
+    }
 
-        String password = settings.getPassword();
-        if (password == null || password.isEmpty()) {
-            throw new TmcCoreException("password must be set!");
-        }
-
+    private void testCourse() throws TmcCoreException {
         Optional<Course> course = this.settings.getCurrentCourse();
         if (course == null || !course.isPresent()) {
             throw new TmcCoreException("No current course found from settings.");
         }
+    }
+
+    private void testPassword() throws TmcCoreException {
+        if (isBadString(settings.getPassword())) {
+            throw new TmcCoreException("password must be set!");
+        }
+    }
+
+    private void testUsername() throws TmcCoreException {
+        if (isBadString(settings.getUsername())) {
+            throw new TmcCoreException("username must be set!");
+        }
+    }
+
+    private boolean isBadString(String toBeTested) {
+        return Strings.isNullOrEmpty(toBeTested);
     }
 
     /**

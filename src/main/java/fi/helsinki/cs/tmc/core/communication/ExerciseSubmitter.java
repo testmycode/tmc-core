@@ -212,6 +212,7 @@ public class ExerciseSubmitter {
     private URI sendZipFile(
             Path currentPath, Exercise currentExercise, ProgressObserver observer, boolean paste)
             throws IOException, URISyntaxException, NoLanguagePluginFoundException {
+
         URI returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
         observer.progress("zipping exercise");
         byte[] zippedExercise = langs.compressProject(currentPath);

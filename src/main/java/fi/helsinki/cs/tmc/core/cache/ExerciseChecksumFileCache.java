@@ -91,7 +91,7 @@ public class ExerciseChecksumFileCache implements ExerciseChecksumCache {
     private Map<String, Map<String, String>> readCacheFile(Path file) throws IOException {
         String oldCacheData = readCacheData(file);
         Map<String, Map<String, String>> checksums = new HashMap<>();
-        if (oldCacheData != null && !oldCacheData.isEmpty()) {
+        if (!oldCacheData.isEmpty()) {
 
             try {
                 checksums = parser.fromJson(oldCacheData, TYPE_TOKEN);

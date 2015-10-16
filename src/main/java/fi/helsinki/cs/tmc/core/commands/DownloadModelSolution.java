@@ -12,7 +12,6 @@ import com.google.common.base.Optional;
 import com.google.common.base.Strings;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class DownloadModelSolution extends Command<Boolean> {
 

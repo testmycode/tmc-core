@@ -1,7 +1,8 @@
 package fi.helsinki.cs.tmc.core.domain.submission;
 
-import com.google.gson.annotations.SerializedName;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
+
+import com.google.gson.annotations.SerializedName;
 
 
 import java.util.Collections;
@@ -284,9 +285,8 @@ public class SubmissionResult {
      * Returns whether validation has failed.
      */
     public boolean validationsFailed() {
-        return this.validationResult == null
-                ? false
-                : !this.validationResult.getValidationErrors().isEmpty();
+        return this.validationResult != null
+                && !this.validationResult.getValidationErrors().isEmpty();
     }
 
     @Override

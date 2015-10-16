@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.cache;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
-import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import java.io.IOException;
 import java.nio.file.Path;

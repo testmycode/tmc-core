@@ -1,8 +1,8 @@
 package fi.helsinki.cs.tmc.core.communication;
 
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackQuestion;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
-import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResultParser;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 

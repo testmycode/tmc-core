@@ -68,7 +68,8 @@ public class GetCourse extends Command<Course> {
     }
 
     private URI pollServerForCourseUrl(String courseName) throws TmcCoreException {
-        List<Course> courses = null;
+        List<Course> courses;
+
         try {
             courses = tmcApi.getCourses();
         } catch (IOException e) {

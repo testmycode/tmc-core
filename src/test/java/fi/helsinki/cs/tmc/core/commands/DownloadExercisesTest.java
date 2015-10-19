@@ -178,7 +178,7 @@ public class DownloadExercisesTest {
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("test-course/viikko1/Viikko1_001.Nimi");
 
-        assertEquals(153, exercises.size());
+        assertEquals(2, exercises.size());
         assertTrue(Files.exists(exercisePath));
 
         FileUtils.deleteDirectory(exercisePath.toFile());
@@ -195,12 +195,12 @@ public class DownloadExercisesTest {
                 = core.downloadExercises(folder, 3, observerMock);
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("test-course/viikko1/Viikko1_001.Nimi");
-        assertEquals(153, exercises.size());
+        assertEquals(2, exercises.size());
         assertTrue(Files.exists(exercisePath));
         FileUtils.deleteDirectory(exercisePath.toFile());
         assertFalse(Files.exists(exercisePath));
 
-        verify(observerMock, times(153)).progress(anyDouble(), anyString());
+        verify(observerMock, times(2)).progress(anyDouble(), anyString());
     }
 
     @After

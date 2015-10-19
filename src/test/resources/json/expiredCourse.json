@@ -11,7 +11,7 @@
         "unlockables": [],
         "exercises": [{
                 "id": 1393,
-                "name": "viikko01-tira1.1",
+                "name": "exercise",
                 "locked": false,
                 "deadline_description": "2015-01-19 01:59:00 +0200",
                 "deadline": "2015-01-19T01:59:00.000+02:00",

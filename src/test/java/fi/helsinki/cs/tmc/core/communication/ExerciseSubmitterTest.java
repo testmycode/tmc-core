@@ -147,7 +147,7 @@ public class ExerciseSubmitterTest {
     public void testSubmitWithExpiredExercise()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
-        Path testPath = Paths.get("home", "test", "expired-course", "viikko01", "tira1.1");
+        Path testPath = Paths.get("home", "test", "expired-course", "exercise");
 
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =

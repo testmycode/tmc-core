@@ -58,7 +58,7 @@ public class DiffSenderTest {
 
     @Test
     public void testSendToSpywareWithByteArray() throws IOException, TmcCoreException {
-        final File file = new File("testResources/test.zip");
+        final File file = new File("src/test/resources/test.zip");
         byte[] byteArray = Files.toByteArray(file);
 
         DiffSender sender = new DiffSender(settings);
@@ -69,7 +69,7 @@ public class DiffSenderTest {
 
     @Test
     public void requestWithInvalidParams() throws IOException, TmcCoreException {
-        final File file = new File("testResources/test.zip");
+        final File file = new File("src/test/resources/test.zip");
         byte[] byteArray = Files.toByteArray(file);
 
         DiffSender sender = new DiffSender(settings);
@@ -80,7 +80,7 @@ public class DiffSenderTest {
 
     @Test
     public void testSendToAllUrlsWithByteArray() throws IOException, TmcCoreException {
-        final File file = new File("testResources/test.zip");
+        final File file = new File("src/test/resources/test.zip");
         byte[] byteArray = Files.toByteArray(file);
         Course testCourse = new Course();
         testCourse.setSpywareUrls(Arrays.asList(spywareUrl));

@@ -11,7 +11,7 @@ import java.io.IOException;
 public class ExampleJson {
 
     private static final Logger log = LoggerFactory.getLogger(ExampleJson.class);
-    private static final String jsonFolder = "testResources/json/";
+    private static final String jsonFolder = "src/test/resources/json/";
 
     public static String courseExample = courseExample();
     public static String allCoursesExample = allCoursesExample();

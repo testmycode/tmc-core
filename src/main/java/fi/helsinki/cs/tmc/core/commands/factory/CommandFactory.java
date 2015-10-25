@@ -2,16 +2,17 @@ package fi.helsinki.cs.tmc.core.commands.factory;
 
 import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumCache;
 import fi.helsinki.cs.tmc.core.commands.*;
-import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
-import fi.helsinki.cs.tmc.core.communication.SubmissionPoller;
-import fi.helsinki.cs.tmc.core.communication.TmcApi;
-import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
+import fi.helsinki.cs.tmc.core.communication.*;
+import fi.helsinki.cs.tmc.core.communication.updates.ExerciseUpdateHandler;
+import fi.helsinki.cs.tmc.core.communication.updates.ReviewHandler;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.spyware.DiffSender;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
@@ -20,6 +21,7 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 public class CommandFactory {
 
@@ -93,5 +95,48 @@ public class CommandFactory {
         return new RunCheckStyle(path);
     }
 
+    public static Command<List<Review>> getUnreadReviewsCmd(
+            ReviewHandler reviewHandler, Course course) {
+        return new GetUnreadReviews(course, reviewHandler);
+    }
+
+    public static Command<List<Review>> getUnreadReviewsCmd(TmcSettings settings, Course course) {
+        ReviewHandler reviewHandler = new ReviewHandler(new TmcApi(settings));
+        return new GetUnreadReviews(course, reviewHandler);
+    }
+
+    public static Command<List<Exercise>> getExerciseUpdatesCmd(
+            Course course, ExerciseUpdateHandler handler) {
+        return new GetExerciseUpdates(course, handler);
+    }
+
+    public static Command<List<Exercise>> getExerciseUpdatesCmd(
+            TmcSettings settings,
+            ExerciseChecksumCache updateCache, Course course) throws TmcCoreException {
+
+        ExerciseUpdateHandler updater =
+                new ExerciseUpdateHandler(updateCache, new TmcApi(settings));
+        return new GetExerciseUpdates(course, updater);
+    }
+
+    public static Command<HttpResult> getSendFeedbackCmd(
+            TmcSettings settings, Map<String, String> answers, URI url) {
+        return new SendFeedback(settings, answers, url);
+    }
+
+    public static Command<URI> getPasteWithCommentCmd(
+            TmcSettings settings, Path path, String comment) {
+        return new PasteWithComment(settings, path, comment);
+    }
+
+    public static Command<URI> getRequestCodeReviewCmd(
+            TmcSettings settings, Path path, String comment) {
+        return new RequestCodeReview(settings, path, comment);
+    }
+
+    public static Command<List<HttpResult>> getSendSpywareDiffsCmd(
+            TmcSettings settings, byte[] spywareDiffs) {
+        return new SendSpywareDiffs(settings, new DiffSender(settings), spywareDiffs);
+    }
 
 }

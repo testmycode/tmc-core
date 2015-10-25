@@ -4,11 +4,8 @@ import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.*;
 import static fi.helsinki.cs.tmc.core.util.ParameterTester.checkStringParameters;
 
 import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumFileCache;
-import fi.helsinki.cs.tmc.core.commands.*;
+import fi.helsinki.cs.tmc.core.commands.Command;
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
-import fi.helsinki.cs.tmc.core.communication.TmcApi;
-import fi.helsinki.cs.tmc.core.communication.updates.ExerciseUpdateHandler;
-import fi.helsinki.cs.tmc.core.communication.updates.ReviewHandler;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
@@ -16,7 +13,6 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-import fi.helsinki.cs.tmc.core.spyware.DiffSender;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 
@@ -135,6 +131,7 @@ public class TmcCore {
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
             Path path, int courseId, ProgressObserver observer) throws TmcCoreException {
+
         Command<List<Exercise>> downloadExercisesCmd =
                 getDownloadExercisesCmd(settings, path, courseId, observer, updateCache);
         return threadPool.submit(downloadExercisesCmd);
@@ -223,9 +220,8 @@ public class TmcCore {
      * @return a list of unread reviews for the given course
      */
     public ListenableFuture<List<Review>> getNewReviews(Course course) throws TmcCoreException {
-        ReviewHandler reviewHandler = new ReviewHandler(new TmcApi(settings));
-        GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler);
-        return threadPool.submit(command);
+        Command<List<Review>> unreadReviewsCmd = getUnreadReviewsCmd(settings, course);
+        return threadPool.submit(unreadReviewsCmd);
     }
 
     /**
@@ -241,10 +237,10 @@ public class TmcCore {
      */
     public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course)
             throws TmcCoreException {
-        ExerciseUpdateHandler updater =
-                new ExerciseUpdateHandler(updateCache, new TmcApi(settings));
-        GetExerciseUpdates command = new GetExerciseUpdates(course, updater);
-        return threadPool.submit(command);
+
+        Command<List<Exercise>> exerciseUpdatesCmd =
+                getExerciseUpdatesCmd(settings, updateCache, course);
+        return threadPool.submit(exerciseUpdatesCmd);
     }
 
     /**
@@ -257,8 +253,8 @@ public class TmcCore {
      */
     public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, URI url)
             throws TmcCoreException {
-        SendFeedback feedback = new SendFeedback(settings, answers, url);
-        return threadPool.submit(feedback);
+        Command<HttpResult> sendFeedbackCmd = getSendFeedbackCmd(settings, answers, url);
+        return threadPool.submit(sendFeedbackCmd);
     }
 
     /**
@@ -274,8 +270,8 @@ public class TmcCore {
     public ListenableFuture<URI> pasteWithComment(Path path, String comment)
             throws TmcCoreException {
 
-        PasteWithComment paste = new PasteWithComment(settings, path, comment);
-        return threadPool.submit(paste);
+        Command<URI> pasteWithComment = getPasteWithCommentCmd(settings, path, comment);
+        return threadPool.submit(pasteWithComment);
     }
 
     /**
@@ -290,8 +286,9 @@ public class TmcCore {
      */
     public ListenableFuture<URI> requestCodeReview(Path path, String message)
             throws TmcCoreException {
-        RequestCodeReview request = new RequestCodeReview(settings, path, message);
-        return threadPool.submit(request);
+
+        Command<URI> requestCodeReview = getRequestCodeReviewCmd(settings, path, message);
+        return threadPool.submit(requestCodeReview);
     }
 
     /**
@@ -303,8 +300,9 @@ public class TmcCore {
      */
     public ListenableFuture<List<HttpResult>> sendSpywareDiffs(byte[] spywareDiffs)
             throws TmcCoreException {
-        SendSpywareDiffs spyware =
-                new SendSpywareDiffs(settings, new DiffSender(settings), spywareDiffs);
-        return threadPool.submit(spyware);
+
+        Command<List<HttpResult>> sendSpywareDiffsCmd =
+                getSendSpywareDiffsCmd(settings, spywareDiffs);
+        return threadPool.submit(sendSpywareDiffsCmd);
     }
 }

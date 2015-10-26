@@ -98,7 +98,7 @@ public class UrlCommunicatorTest {
     public void httpPostAddsFileToRequest() throws IOException, TmcCoreException {
         settings.setUsername("test");
         settings.setPassword("1234");
-        File testFile = new File("testResources/test.zip");
+        File testFile = new File("src/test/resources/test.zip");
         HttpResult result =
                 urlCommunicator.makePostWithFile(
                         new FileBody(testFile),
@@ -112,7 +112,7 @@ public class UrlCommunicatorTest {
     public void httpPostAddsCommentToRequest() throws IOException, TmcCoreException {
         settings.setUsername("test");
         settings.setPassword("1234");
-        File testFile = new File("testResources/test.zip");
+        File testFile = new File("src/test/resources/test.zip");
         HashMap<String, String> params = new HashMap<>();
         params.put("paste", "Commentti");
         HttpResult result =

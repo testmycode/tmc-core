@@ -186,7 +186,7 @@ public class SubmitTest {
         TmcCore core = new TmcCore(settings);
 
         Path path
-                = Paths.get("testResources", "local-test-course", "halfdoneExercise");
+                = Paths.get("src/test/resources", "local-test-course", "halfdoneExercise");
         ListenableFuture<SubmissionResult> submit = core.submit(path);
         SubmissionResult result = submit.get();
         assertFalse(result.isAllTestsPassed());

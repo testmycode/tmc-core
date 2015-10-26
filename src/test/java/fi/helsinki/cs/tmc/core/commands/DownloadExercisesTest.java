@@ -172,13 +172,13 @@ public class DownloadExercisesTest {
     public void downloadAllExercises() throws Exception {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         core = new TmcCore(settings1);
-        Path folder = Paths.get(System.getProperty("user.dir") + "/testResources/");
+        Path folder = Paths.get(System.getProperty("user.dir") + "/src/test/resources/");
         ListenableFuture<List<Exercise>> download = core.downloadExercises(folder, 3, null);
 
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("test-course/viikko1/Viikko1_001.Nimi");
 
-        assertEquals(153, exercises.size());
+        assertEquals(2, exercises.size());
         assertTrue(Files.exists(exercisePath));
 
         FileUtils.deleteDirectory(exercisePath.toFile());
@@ -190,24 +190,24 @@ public class DownloadExercisesTest {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         core = new TmcCore(settings1);
         ProgressObserver observerMock = mock(ProgressObserver.class);
-        Path folder = Paths.get(System.getProperty("user.dir") + "/testResources/");
+        Path folder = Paths.get(System.getProperty("user.dir") + "/src/test/resources/");
         ListenableFuture<List<Exercise>> download
                 = core.downloadExercises(folder, 3, observerMock);
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("test-course/viikko1/Viikko1_001.Nimi");
-        assertEquals(153, exercises.size());
+        assertEquals(2, exercises.size());
         assertTrue(Files.exists(exercisePath));
         FileUtils.deleteDirectory(exercisePath.toFile());
         assertFalse(Files.exists(exercisePath));
 
-        verify(observerMock, times(153)).progress(anyDouble(), anyString());
+        verify(observerMock, times(2)).progress(anyDouble(), anyString());
     }
 
     @After
     public void tearDown() {
         try {
             FileUtils.deleteDirectory(Paths.get(System.getProperty("user.dir")
-                    + "/testResources/test-course").toFile());
+                    + "/src/test/resources/test-course").toFile());
         }
         catch (IOException ex) {
             Logger.getLogger(DownloadExercisesTest.class.getName()).log(Level.SEVERE, null, ex);

@@ -3,7 +3,7 @@
     "all_tests_passed": true,
     "user_id": 52,
     "course": "no-deadline",
-    "exercise_name": "viikko1-Viikko1_020.Kayttajatunnukset",
+    "exercise_name": "exercise",
     "status": "ok",
     "points":
             [
@@ -16,7 +16,7 @@
     "test_cases":
             [
                 {
-                    "name": "KayttajatunnuksetTest sopivatKayvat",
+                    "name": "case1",
                     "successful": true,
                     "message": null,
                     "exception": null,
@@ -24,7 +24,7 @@
 
                 },
                 {
-                    "name": "KayttajatunnuksetTest sopimattomatEivatKay",
+                    "name": "case2",
                     "successful": true,
                     "message": null,
                     "exception": null,

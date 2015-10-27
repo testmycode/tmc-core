@@ -75,9 +75,8 @@ public class TmcApiTest {
                 .thenReturn(fakeResult);
         String names = tmcApi.getExerciseNames(URI.create("ankka"));
 
-        assertTrue(names.contains("viikko1-Viikko1_001.Nimi"));
-        assertTrue(names.contains("viikko1-Viikko1_002.HeiMaailma"));
-        assertTrue(names.contains("viikko1-Viikko1_003.Kuusi"));
+        assertTrue(names.contains("exercise1"));
+        assertTrue(names.contains("exercise2"));
     }
 
     @Test
@@ -87,7 +86,7 @@ public class TmcApiTest {
                 .thenReturn(fakeResult);
         String names = tmcApi.getExerciseNames(URI.create("ankka"));
 
-        assertTrue(names.contains("viikko11-Viikko11_147.Laskin"));
+        assertTrue(names.contains("exercise2"));
     }
 
     @Test
@@ -124,7 +123,7 @@ public class TmcApiTest {
         mockCourse(realAddress);
         String names = tmcApi.getExerciseNames(URI.create(realAddress));
 
-        assertTrue(names.contains("viikko11-Viikko11_147.Laskin"));
+        assertTrue(names.contains("exercise2"));
     }
 
     @Test

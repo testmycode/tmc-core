@@ -1,5 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -7,7 +9,6 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.spyware.DiffSender;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Strings;
 
 import java.util.List;
 
@@ -44,19 +45,15 @@ public class SendSpywareDiffs extends Command<List<HttpResult>> {
     }
 
     private void testPassword() throws TmcCoreException {
-        if (isBadString(settings.getPassword())) {
+        if (isNullOrEmpty(settings.getPassword())) {
             throw new TmcCoreException("password must be set!");
         }
     }
 
     private void testUsername() throws TmcCoreException {
-        if (isBadString(settings.getUsername())) {
+        if (isNullOrEmpty(settings.getUsername())) {
             throw new TmcCoreException("username must be set!");
         }
-    }
-
-    private boolean isBadString(String toBeTested) {
-        return Strings.isNullOrEmpty(toBeTested);
     }
 
     /**

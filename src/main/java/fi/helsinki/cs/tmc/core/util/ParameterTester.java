@@ -4,7 +4,6 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
-
 public class ParameterTester {
 
     public static void checkStringParameters(String...params) throws TmcCoreException {
@@ -14,7 +13,4 @@ public class ParameterTester {
             }
         }
     }
-
-
-
 }

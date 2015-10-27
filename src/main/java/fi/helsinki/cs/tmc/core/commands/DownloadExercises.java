@@ -167,7 +167,9 @@ public class DownloadExercises extends Command<List<Exercise>> {
         return downloaded;
     }
 
-    private ExerciseObserver createExerciseObserver(final Course course, final List<Exercise> downloaded, final AtomicInteger counter) {
+    private ExerciseObserver createExerciseObserver(
+            final Course course, final List<Exercise> downloaded, final AtomicInteger counter) {
+
         return new ExerciseObserver() {
                 @Override
                 public void observe(Exercise exercise, boolean success) {

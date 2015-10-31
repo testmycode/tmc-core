@@ -103,7 +103,6 @@ public class TmcCore {
      * Fetch one course from tmc-server.
      *
      * @param url defines the url to course
-     *
      * @deprecated Use {@link #getCourse(String)} instead.
      */
     @Deprecated
@@ -135,10 +134,10 @@ public class TmcCore {
      * files exist, overrides everything except the source folder and files specified in
      * .tmcproject.yml Requires login.
      *
-     * @param path where it downloads the exercises
+     * @param path     where it downloads the exercises
      * @param courseId ID of course to download
      * @param observer ProgressObserver will be informed about the progress of downloading
-     *       exercises. Observer can print progress status to end-user
+     *                 exercises. Observer can print progress status to end-user
      * @throws TmcCoreException if something in the given input was wrong
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
@@ -148,6 +147,29 @@ public class TmcCore {
                 getDownloadExercisesCmd(settings, path, courseId, observer, updateCache);
         return threadPool.submit(downloadExercisesCmd);
     }
+
+    /**
+     * Downloads exercises.
+     */
+    public ListenableFuture<List<Exercise>> downloadExercises(
+            List<Exercise> exercises, ProgressObserver observer) throws TmcCoreException {
+
+        Command<List<Exercise>> downloadExercisesCmd =
+                getDownloadExercisesCmd(settings, observer, exercises, updateCache);
+        return threadPool.submit(downloadExercisesCmd);
+    }
+
+    /**
+     * Downloads exercise files specified in the given list. The exercises will be located in
+     * TmcMainDirectory (field in TmcSettings).
+     *
+     * @param exercises to be downloaded
+     */
+    public ListenableFuture<List<Exercise>> downloadExercises(List<Exercise> exercises)
+            throws TmcCoreException {
+        return this.downloadExercises(exercises, null);
+    }
+
 
     public ListenableFuture<Boolean> downloadModelSolution(Exercise exercise)
             throws TmcCoreException {
@@ -173,7 +195,7 @@ public class TmcCore {
      * @param path inside any exercise directory
      * @return SubmissionResult object containing details of the tests run on server
      * @throws TmcCoreException if there was no course in the given path, no exercise in the given
-     *       path, or not logged in.
+     *                          path, or not logged in.
      */
     public ListenableFuture<SubmissionResult> submit(Path path) throws TmcCoreException {
         return submit(path, null);
@@ -183,11 +205,11 @@ public class TmcCore {
      * Submits an exercise in the given path to the TMC-server. Looks for a build.xml or equivalent
      * file upwards in the path to determine exercise folder. Requires login.
      *
-     * @param path inside any exercise directory
+     * @param path     inside any exercise directory
      * @param observer a {@link ProgressObserver} which will be informed of the submits progress
      * @return SubmissionResult object containing details of the tests run on server
      * @throws TmcCoreException if there was no course in the given path, no exercise in the given
-     *       path, or not logged in.
+     *                          path, or not logged in.
      */
     public ListenableFuture<SubmissionResult> submit(Path path, ProgressObserver observer)
             throws TmcCoreException {
@@ -202,7 +224,7 @@ public class TmcCore {
      * @param path inside any exercise directory
      * @return RunResult object containing details of the tests run
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     *       given path.
+     *                          given path.
      */
     public ListenableFuture<RunResult> test(Path path) throws TmcCoreException {
         return threadPool.submit(getRunTestsCmd(settings, path));
@@ -215,7 +237,7 @@ public class TmcCore {
      * @param path inside any exercise directory
      * @return ValidationResult object containing details of the checkstyle validation
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     *       given path.
+     *                          given path.
      */
     public ListenableFuture<ValidationResult> runCheckstyle(Path path) throws TmcCoreException {
         return threadPool.submit(getRunCheckStyleCmd(path));
@@ -240,7 +262,7 @@ public class TmcCore {
      * @param course the course whose exercises are checked
      * @return a list of exercises that are new or have updates
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     *       given path.
+     *                          given path.
      */
     public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course)
             throws TmcCoreException {
@@ -254,9 +276,9 @@ public class TmcCore {
      * Sends feedback answers to the TMC server.
      *
      * @param answers map of question_id -> answer
-     * @param url url that the answers will be sent to
+     * @param url     url that the answers will be sent to
      * @return a HttpResult of the servers reply. It should contain "{status:ok}" if everything goes
-     *      well.
+     * well.
      */
     public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, URI url)
             throws TmcCoreException {
@@ -268,11 +290,11 @@ public class TmcCore {
      * Submits the current exercise to the TMC-server and requests for a paste to be made, with
      * comment given by user.
      *
-     * @param path inside any exercise directory
+     * @param path    inside any exercise directory
      * @param comment comment given by user
      * @return URI object containing location of the paste
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     *       given path.
+     *                          given path.
      */
     public ListenableFuture<URI> pasteWithComment(Path path, String comment)
             throws TmcCoreException {
@@ -284,11 +306,11 @@ public class TmcCore {
      * Submits the current exercise to the TMC-server and requests for a code review, with a
      * message given by user.
      *
-     * @param path inside any exercise directory
+     * @param path    inside any exercise directory
      * @param message message given by user
      * @return URI object containing location of the submission
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     *     given path
+     *                          given path
      */
     public ListenableFuture<URI> requestCodeReview(Path path, String message)
             throws TmcCoreException {

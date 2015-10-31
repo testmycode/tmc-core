@@ -1,9 +1,10 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import com.google.common.base.Strings;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+
+import com.google.common.base.Strings;
 
 import java.io.IOException;
 import java.net.URI;
@@ -62,10 +63,10 @@ public class VerifyCredentials extends Command<Boolean> {
                 .makeGetRequest(URI.create(settings.getServerAddress() + TMC_SERVER_ROUTE), auth)
                 .getStatusCode();
 
-        return isResponseInRange(response);
+        return isStatusCodeSuccess(response);
     }
 
-    private boolean isResponseInRange(int response) {
+    private boolean isStatusCodeSuccess(int response) {
         return response >= HTTP_SUCCESS_RANGE_MIN && response <= HTTP_SUCCESS_RANGE_MAX;
     }
 }

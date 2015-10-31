@@ -2,7 +2,6 @@ package fi.helsinki.cs.tmc.core.commands.factory;
 
 import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumCache;
 
-
 import fi.helsinki.cs.tmc.core.commands.Command;
 import fi.helsinki.cs.tmc.core.commands.DownloadExercises;
 import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
@@ -76,6 +75,14 @@ public class CommandFactory {
                                                                    ExerciseChecksumCache cache) {
 
         return new DownloadExercises(settings, path, courseId, observer, cache);
+    }
+
+    public static Command<List<Exercise>> getDownloadExercisesCmd(TmcSettings settings,
+                                                                  ProgressObserver observer,
+                                                                  List<Exercise> exercises,
+                                                                  ExerciseChecksumCache cache)
+            throws TmcCoreException {
+        return new DownloadExercises(settings, exercises, observer, cache);
     }
 
     public static Command<Boolean> getDownloadModelSolutionCmd(

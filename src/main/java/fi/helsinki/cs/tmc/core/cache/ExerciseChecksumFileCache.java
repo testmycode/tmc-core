@@ -82,16 +82,20 @@ public class ExerciseChecksumFileCache implements ExerciseChecksumCache {
 
     private void updateExerciseChecksum(
             Map<String, Map<String, String>> checksums, Exercise exercise) {
-        if (!checksums.containsKey(exercise.getCourseName())) {
-            checksums.put(exercise.getCourseName(), new HashMap<String, String>());
+        String courseName = exercise.getCourseName();
+
+        if (!checksums.containsKey(courseName)) {
+            checksums.put(courseName, new HashMap<String, String>());
         }
-        checksums.get(exercise.getCourseName()).put(exercise.getName(), exercise.getChecksum());
+
+        Map<String, String> checksumMap = checksums.get(courseName);
+        checksumMap.put(exercise.getName(), exercise.getChecksum());
     }
 
     private Map<String, Map<String, String>> readCacheFile(Path file) throws IOException {
         String oldCacheData = readCacheData(file);
         Map<String, Map<String, String>> checksums = new HashMap<>();
-        if (oldCacheData != null && !oldCacheData.isEmpty()) {
+        if (!oldCacheData.isEmpty()) {
 
             try {
                 checksums = parser.fromJson(oldCacheData, TYPE_TOKEN);

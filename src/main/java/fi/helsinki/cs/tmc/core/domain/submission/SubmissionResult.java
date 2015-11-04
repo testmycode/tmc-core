@@ -1,8 +1,9 @@
 package fi.helsinki.cs.tmc.core.domain.submission;
 
+import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
+
 import com.google.gson.annotations.SerializedName;
 
-import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,15 @@ public class SubmissionResult {
         FAIL,
         ERROR,
         PROCESSING
+    }
+
+    public SubmissionResult() {
+        status = Status.ERROR;
+        error = null;
+        testCases = Collections.emptyList();
+        points = Collections.emptyList();
+        missingReviewPoints = Collections.emptyList();
+        feedbackQuestions = Collections.emptyList();
     }
 
     @SerializedName("api_version")
@@ -78,15 +88,6 @@ public class SubmissionResult {
     private String submittedAt;
 
     private ValidationResult validationResult;
-
-    public SubmissionResult() {
-        status = Status.ERROR;
-        error = null;
-        testCases = Collections.emptyList();
-        points = Collections.emptyList();
-        missingReviewPoints = Collections.emptyList();
-        feedbackQuestions = Collections.emptyList();
-    }
 
     public void setValidationResult(final ValidationResult result) {
         this.validationResult = result;
@@ -284,9 +285,8 @@ public class SubmissionResult {
      * Returns whether validation has failed.
      */
     public boolean validationsFailed() {
-        return this.validationResult == null
-                ? false
-                : !this.validationResult.getValidationErrors().isEmpty();
+        return this.validationResult != null
+                && !this.validationResult.getValidationErrors().isEmpty();
     }
 
     @Override

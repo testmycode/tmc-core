@@ -2,9 +2,9 @@ package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumCache;
 import fi.helsinki.cs.tmc.core.communication.ExerciseDownloader;
+import fi.helsinki.cs.tmc.core.communication.ExerciseObserver;
 import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
-import fi.helsinki.cs.tmc.core.communication.ExerciseObserver;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
@@ -126,7 +126,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
      * Entry point for launching this command.
      */
     @Override
-    public List<Exercise> call() throws TmcCoreException, TmcInterruptionException, IOException {
+    public List<Exercise> call() throws TmcCoreException, IOException {
         if (!settings.userDataExists()) {
             throw new TmcCoreException("Unable to download exercises: missing username/password");
         }
@@ -134,13 +134,18 @@ public class DownloadExercises extends Command<List<Exercise>> {
         checkInterrupt();
 
         Course course = getCourse();
-
         if (exercises == null) {
             exercises = course.getExercises();
         }
 
         List<Exercise> downloadedExercises = downloadExercises(course);
 
+        checkCache();
+
+        return downloadedExercises;
+    }
+
+    private void checkCache() throws TmcCoreException {
         if (cache != null) {
             try {
                 cache.write(exercises);
@@ -148,15 +153,24 @@ public class DownloadExercises extends Command<List<Exercise>> {
                 throw new TmcCoreException("Unable to write exercise checksums to cache", e);
             }
         }
-
-        return downloadedExercises;
     }
 
-    private List<Exercise> downloadExercises(final Course course) throws TmcInterruptionException, IOException {
+    private List<Exercise> downloadExercises(final Course course)
+            throws TmcInterruptionException, IOException {
+
         final List<Exercise> downloaded = new ArrayList<>();
         final AtomicInteger counter = new AtomicInteger();
+
+        ExerciseObserver exerciseObserver = createExerciseObserver(course, downloaded, counter);
         exerciseDownloader.downloadExercises(exercises, this.path, course.getName(),
-            new ExerciseObserver() {
+                exerciseObserver);
+        return downloaded;
+    }
+
+    private ExerciseObserver createExerciseObserver(
+            final Course course, final List<Exercise> downloaded, final AtomicInteger counter) {
+
+        return new ExerciseObserver() {
                 @Override
                 public void observe(Exercise exercise, boolean success) {
                     exercise.setCourseName(course.getName());
@@ -169,8 +183,7 @@ public class DownloadExercises extends Command<List<Exercise>> {
 
                     informObserver(counter.incrementAndGet(), exercises.size(), message);
                 }
-        });
-        return downloaded;
+            };
     }
 
     private Course getCourse() throws TmcCoreException {

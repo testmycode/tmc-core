@@ -1,5 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
@@ -28,14 +30,19 @@ public class VerifyCredentials extends Command<Boolean> {
     }
 
     private void assertHasRequiredData() throws TmcCoreException {
-        String username = settings.getUsername();
-        if (username == null || username.isEmpty()) {
-            throw new TmcCoreException("Cannot verify credentials when no username is set.");
-        }
+        checkUsername();
+        checkPassword();
+    }
 
-        String password = settings.getPassword();
-        if (password == null || password.isEmpty()) {
+    private void checkPassword() throws TmcCoreException {
+        if (isNullOrEmpty(settings.getPassword())) {
             throw new TmcCoreException("Cannot verify credentials when no password is set.");
+        }
+    }
+
+    private void checkUsername() throws TmcCoreException {
+        if (isNullOrEmpty(settings.getUsername())) {
+            throw new TmcCoreException("Cannot verify credentials when no username is set.");
         }
     }
 
@@ -48,10 +55,16 @@ public class VerifyCredentials extends Command<Boolean> {
 
         String auth = settings.getUsername() + ":" + settings.getPassword();
 
-        int response = communicator
-                .makeGetRequest(URI.create(settings.getServerAddress() + TMC_SERVER_ROUTE), auth)
-                .getStatusCode();
+        int response =
+                communicator
+                        .makeGetRequest(
+                                URI.create(settings.getServerAddress() + TMC_SERVER_ROUTE), auth)
+                        .getStatusCode();
 
-        return (response >= HTTP_SUCCESS_RANGE_MIN && response <= HTTP_SUCCESS_RANGE_MAX);
+        return isStatusCodeSuccess(response);
+    }
+
+    private boolean isStatusCodeSuccess(int response) {
+        return response >= HTTP_SUCCESS_RANGE_MIN && response <= HTTP_SUCCESS_RANGE_MAX;
     }
 }

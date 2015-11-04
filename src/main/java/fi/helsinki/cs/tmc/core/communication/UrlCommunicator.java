@@ -31,10 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
@@ -197,7 +196,8 @@ public class UrlCommunicator {
      * Download a file from the internet.
      *
      * @param url url of the get request
-     * @param file file to write the results into
+     * @param path path where to download
+     * @param credentials users account credentials
      * @return true if successful
      */
     public boolean downloadToFile(URI url, Path path, String credentials) {

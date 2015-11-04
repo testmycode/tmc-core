@@ -5,9 +5,9 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import com.google.common.base.Optional;
-import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import java.io.IOException;
 import java.net.URI;

@@ -58,7 +58,7 @@ public class ExerciseUpdaterTest {
     }
 
     @Test
-    public void getsCorrectExercises() throws IOException, Exception {
+    public void getsCorrectExercises() throws Exception {
         Map<String, Map<String, String>> checksums = new HashMap<>();
         checksums.put("test-course", new HashMap<String, String>());
         checksums.get("test-course").put("old", "abcdefg");
@@ -76,7 +76,7 @@ public class ExerciseUpdaterTest {
     }
 
     @Test
-    public void getsCorrectExercisesWithEmptyCache() throws IOException, Exception {
+    public void getsCorrectExercisesWithEmptyCache() throws Exception {
 
         TmcApi tmcApi = mockTmcApi();
         ExerciseUpdateHandler handler = new ExerciseUpdateHandler(cache, tmcApi);

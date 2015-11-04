@@ -1,10 +1,10 @@
 package fi.helsinki.cs.tmc.core.commands;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-
-import com.google.common.base.Strings;
 
 import java.io.IOException;
 import java.net.URI;
@@ -35,19 +35,15 @@ public class VerifyCredentials extends Command<Boolean> {
     }
 
     private void checkPassword() throws TmcCoreException {
-        if (isBadString(settings.getPassword())) {
+        if (isNullOrEmpty(settings.getPassword())) {
             throw new TmcCoreException("Cannot verify credentials when no password is set.");
         }
     }
 
     private void checkUsername() throws TmcCoreException {
-        if (isBadString(settings.getUsername())) {
+        if (isNullOrEmpty(settings.getUsername())) {
             throw new TmcCoreException("Cannot verify credentials when no username is set.");
         }
-    }
-
-    private boolean isBadString(String toBeTested) {
-        return Strings.isNullOrEmpty(toBeTested);
     }
 
     /**
@@ -59,9 +55,11 @@ public class VerifyCredentials extends Command<Boolean> {
 
         String auth = settings.getUsername() + ":" + settings.getPassword();
 
-        int response = communicator
-                .makeGetRequest(URI.create(settings.getServerAddress() + TMC_SERVER_ROUTE), auth)
-                .getStatusCode();
+        int response =
+                communicator
+                        .makeGetRequest(
+                                URI.create(settings.getServerAddress() + TMC_SERVER_ROUTE), auth)
+                        .getStatusCode();
 
         return isStatusCodeSuccess(response);
     }

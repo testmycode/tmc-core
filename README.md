@@ -145,7 +145,7 @@ The tmc-core was initially created as part of the [TMC commandline Client](https
  - Samu Tamminen
  - Pihla Toivanen
  - Kristian Wahlroos
-The course instructors were Jarmo Isotalo ([jamox](https://github.com/jamox)) and Leo Leppänen 
+The course instructors were Jarmo Isotalo ([jamox](https://github.com/jamox)) and Leo Leppänen ([ljleppan](https://github.com/ljleppan))
 
 The tmc-core was later separated and is maintained by the University of Helsinki CS 
 Dept. [Agile Education Research](https://github.com/rage) group.

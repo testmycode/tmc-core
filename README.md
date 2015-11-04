@@ -11,9 +11,6 @@ running tests locally, and supports fully the same languages as tmc-langs. Other
 may be used with even languages other than those supported by tmc-langs, provided the
 [tmc-server](https://github.com/testmycode/tmc-server) has such courses.
 
-The tmc-core is currently in use in the [TMC commandline client](https://github.com/rage/tmc-cli),
-and will be integrated into [TMC-netbeans](https://github.com/testmycode/tmc-netbeans)
-
 # Features
 
  - verify credentials
@@ -148,6 +145,7 @@ The tmc-core was initially created as part of the [TMC commandline Client](https
  - Samu Tamminen
  - Pihla Toivanen
  - Kristian Wahlroos
+The course instructors were Jarmo Isotalo ([jamox](https://github.com/jamox)) and Leo Leppänen 
 
 The tmc-core was later separated and is maintained by the University of Helsinki CS 
 Dept. [Agile Education Research](https://github.com/rage) group.

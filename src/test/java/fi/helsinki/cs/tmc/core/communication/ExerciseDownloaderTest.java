@@ -63,7 +63,6 @@ public class ExerciseDownloaderTest {
         exDl = new ExerciseDownloader(new UrlCommunicator(settings), new TmcApi(settings));
         exercises = new ArrayList<>();
 
-        String testZipPath = "testzip.zip";
         zipDestination = Paths.get("src", "test", "resources", "__files");
 
         modelSolutionExample = new Exercise();
@@ -83,6 +82,8 @@ public class ExerciseDownloaderTest {
         e3.setZipUrl(URI.create(serverAddress + "/ex3.zip"));
         e3.setName("Exercise3");
         exercises.add(e3);
+
+        String testZipPath = "testzip.zip";
 
         stubFor(
                 get(urlEqualTo("/ex1.zip"))

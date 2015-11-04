@@ -1,9 +1,11 @@
 package fi.helsinki.cs.tmc.core.util;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
+
 import org.junit.Test;
-
 import org.junit.runner.RunWith;
-
 import org.mockito.Mockito;
 
 import org.powermock.api.mockito.PowerMockito;
@@ -14,13 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import static org.mockito.Matchers.anyString;
-
 @RunWith(PowerMockRunner.class)
-
 public class FoldersTest {
 
     @Test

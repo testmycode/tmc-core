@@ -10,19 +10,16 @@ import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult.Status;
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
-
-import java.io.IOException;
-import java.net.URI;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+import java.net.URI;
 
 public class SubmissionPollerTest {
 

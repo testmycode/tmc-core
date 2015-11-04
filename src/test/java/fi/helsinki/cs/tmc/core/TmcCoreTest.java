@@ -9,6 +9,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import fi.helsinki.cs.tmc.core.commands.DownloadExercises;
+import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
 import fi.helsinki.cs.tmc.core.commands.GetExerciseUpdates;
 import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
 import fi.helsinki.cs.tmc.core.commands.ListCourses;
@@ -19,12 +20,11 @@ import fi.helsinki.cs.tmc.core.commands.SendFeedback;
 import fi.helsinki.cs.tmc.core.commands.Submit;
 import fi.helsinki.cs.tmc.core.commands.VerifyCredentials;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.FileWriterHelper;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
-import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
-import fi.helsinki.cs.tmc.core.domain.Exercise;
 
 import org.apache.commons.io.FileUtils;
 

@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import com.google.common.base.Optional;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
@@ -8,6 +9,8 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
+
+import com.google.common.base.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -20,12 +23,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.ParseException;
 
-import static org.junit.Assert.assertEquals;
-
-import static org.mockito.Mockito.when;
-
 public class RequestCodeReviewTest {
-    private RequestCodeReview request;
+
     private ExerciseSubmitter submitterMock;
     private URI pasteUrl = URI.create("http://example.com/paste");
     private CoreTestSettings settings = new CoreTestSettings();

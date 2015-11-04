@@ -17,9 +17,9 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 import fi.helsinki.cs.tmc.core.testhelpers.ProjectRootFinderStub;
 import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
-import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import com.google.common.base.Optional;
 

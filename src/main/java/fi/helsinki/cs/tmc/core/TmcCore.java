@@ -276,9 +276,8 @@ public class TmcCore {
      * Sends feedback answers to the TMC server.
      *
      * @param answers map of question_id -> answer
-     * @param url     url that the answers will be sent to
-     * @return a HttpResult of the servers reply. It should contain "{status:ok}" if everything goes
-     * well.
+     * @param url url that the answers will be sent to
+     * @return servers reply. It should contain "{status:ok}" if everything goes well.
      */
     public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, URI url)
             throws TmcCoreException {
@@ -290,7 +289,7 @@ public class TmcCore {
      * Submits the current exercise to the TMC-server and requests for a paste to be made, with
      * comment given by user.
      *
-     * @param path    inside any exercise directory
+     * @param path inside any exercise directory
      * @param comment comment given by user
      * @return URI object containing location of the paste
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the

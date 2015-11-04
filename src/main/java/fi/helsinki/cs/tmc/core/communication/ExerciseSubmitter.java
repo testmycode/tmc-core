@@ -95,7 +95,7 @@ public class ExerciseSubmitter {
      */
     public URI submit(Path currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, false);
     }
@@ -110,7 +110,7 @@ public class ExerciseSubmitter {
      */
     public URI submit(Path currentPath, ProgressObserver observer)
             throws ParseException, ExpiredException, IllegalArgumentException, IOException,
-            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, observer, false);
     }
@@ -125,7 +125,7 @@ public class ExerciseSubmitter {
      */
     public URI submitPaste(Path currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         return sendZipFile(currentPath, currentExercise, true);
     }
@@ -140,7 +140,7 @@ public class ExerciseSubmitter {
      */
     public URI submitPasteWithComment(Path currentPath, String comment)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         HashMap<String, String> params = new HashMap<>();
         params.put("message_for_paste", comment);
@@ -153,7 +153,7 @@ public class ExerciseSubmitter {
      */
     public URI submitWithCodeReviewRequest(Path currentPath, String message)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
-            TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
+                    TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
         Exercise currentExercise = initExercise(currentPath);
         HashMap<String, String> params = new HashMap<>();
         params.put("request_review", "1");
@@ -171,7 +171,7 @@ public class ExerciseSubmitter {
      */
     private Exercise initExercise(Path currentPath)
             throws IllegalArgumentException, IOException, TmcCoreException, URISyntaxException,
-            ParseException, ExpiredException {
+                    ParseException, ExpiredException {
 
         Exercise currentExercise = searchExercise(currentPath);
         if (isExpired(currentExercise) || !currentExercise.isReturnable()) {
@@ -247,8 +247,8 @@ public class ExerciseSubmitter {
         return tmcApi.getSubmissionUrl(result);
     }
 
-    private URI sendSubmissionToServerWithParams(
-            byte[] file, URI url, Map<String, String> params) throws IOException {
+    private URI sendSubmissionToServerWithParams(byte[] file, URI url, Map<String, String> params)
+            throws IOException {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), params);
@@ -277,8 +277,8 @@ public class ExerciseSubmitter {
         return tmcApi.getExercises(currentCourse.get().getId());
     }
 
-    private Optional<Exercise> findCurrentExercise(
-            List<Exercise> courseExercises, Path currentDir) throws IllegalArgumentException {
+    private Optional<Exercise> findCurrentExercise(List<Exercise> courseExercises, Path currentDir)
+            throws IllegalArgumentException {
         Optional<Path> rootDir = rootFinder.getRootDirectory(currentDir);
         if (!rootDir.isPresent()) {
             throw new IllegalArgumentException("Could not find exercise directory");

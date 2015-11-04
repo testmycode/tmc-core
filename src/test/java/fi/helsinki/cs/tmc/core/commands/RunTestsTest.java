@@ -23,14 +23,15 @@ public class RunTestsTest {
 
     @Test(expected = TmcCoreException.class)
     public void testThrowsExceptionOnInvalidPath() throws TmcCoreException {
-        new RunTests(settings,Paths.get("nosuch")).call();
+        new RunTests(settings, Paths.get("nosuch")).call();
     }
 
     @Test
     public void testfailingRunTests() throws TmcCoreException {
         Path path =
-                Paths.get(System.getProperty("user.dir")
-                        + "/src/test/resources/local-test-course/failingExercise");
+                Paths.get(
+                        System.getProperty("user.dir")
+                                + "/src/test/resources/local-test-course/failingExercise");
 
         RunResult result = new RunTests(settings, path).call();
 
@@ -40,8 +41,9 @@ public class RunTestsTest {
     @Test
     public void successRunTests() throws TmcCoreException {
         Path path =
-                Paths.get(System.getProperty("user.dir")
-                        + "/src/test/resources/local-test-course/successExercise");
+                Paths.get(
+                        System.getProperty("user.dir")
+                                + "/src/test/resources/local-test-course/successExercise");
 
         RunResult result = new RunTests(settings, path).call();
 

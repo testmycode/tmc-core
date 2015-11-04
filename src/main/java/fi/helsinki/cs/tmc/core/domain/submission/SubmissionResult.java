@@ -4,7 +4,6 @@ import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 
 import com.google.gson.annotations.SerializedName;
 
-
 import java.util.Collections;
 import java.util.List;
 

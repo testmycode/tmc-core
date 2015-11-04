@@ -60,7 +60,8 @@ public class PasteWithCommentTest {
     public void pasteSuccess() throws Exception {
         Mockito.when(settings.userDataExists()).thenReturn(true);
 
-        URI uri = new PasteWithComment(settings, Paths.get("path"), "comment", submitterMock).call();
+        URI uri =
+                new PasteWithComment(settings, Paths.get("path"), "comment", submitterMock).call();
         assertEquals(uri.toString(), "http://example.com/paste");
     }
 

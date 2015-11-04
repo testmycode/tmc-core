@@ -31,8 +31,7 @@ import java.util.Arrays;
 @PrepareForTest(UrlCommunicator.class)
 public class ReviewTest {
 
-    private static final URI updateUrl =
-            URI.create("http://example.com/courses/47/reviews/8");
+    private static final URI updateUrl = URI.create("http://example.com/courses/47/reviews/8");
     private static final URI putUrl = URI.create(updateUrl + ".json?api_version=7");
     private Review review;
 

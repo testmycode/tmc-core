@@ -162,8 +162,8 @@ public class DownloadExercises extends Command<List<Exercise>> {
         final AtomicInteger counter = new AtomicInteger();
 
         ExerciseObserver exerciseObserver = createExerciseObserver(course, downloaded, counter);
-        exerciseDownloader.downloadExercises(exercises, this.path, course.getName(),
-                exerciseObserver);
+        exerciseDownloader.downloadExercises(
+                exercises, this.path, course.getName(), exerciseObserver);
         return downloaded;
     }
 
@@ -171,19 +171,19 @@ public class DownloadExercises extends Command<List<Exercise>> {
             final Course course, final List<Exercise> downloaded, final AtomicInteger counter) {
 
         return new ExerciseObserver() {
-                @Override
-                public void observe(Exercise exercise, boolean success) {
-                    exercise.setCourseName(course.getName());
+            @Override
+            public void observe(Exercise exercise, boolean success) {
+                exercise.setCourseName(course.getName());
 
-                    String message = "Downloading exercise " + exercise.getName() + " failed";
-                    if (success) {
-                        downloaded.add(exercise);
-                        message = "Downloading exercise " + exercise.getName() + " was successful";
-                    }
-
-                    informObserver(counter.incrementAndGet(), exercises.size(), message);
+                String message = "Downloading exercise " + exercise.getName() + " failed";
+                if (success) {
+                    downloaded.add(exercise);
+                    message = "Downloading exercise " + exercise.getName() + " was successful";
                 }
-            };
+
+                informObserver(counter.incrementAndGet(), exercises.size(), message);
+            }
+        };
     }
 
     private Course getCourse() throws TmcCoreException {

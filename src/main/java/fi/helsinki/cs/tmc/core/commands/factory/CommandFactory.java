@@ -47,7 +47,6 @@ import java.util.Map;
  * This class is utilized heavily on {@link fi.helsinki.cs.tmc.core.TmcCore}.
  * All methods here will return a type of {@link fi.helsinki.cs.tmc.core.commands.Command}.
  */
-
 public class CommandFactory {
 
     public static Command<Boolean> getVerifyCredentialsCmd(
@@ -60,27 +59,29 @@ public class CommandFactory {
     }
 
     public static Command<Course> getCourseCmd(TmcSettings settings, URI courseUri) {
-        return new GetCourse(settings,courseUri);
+        return new GetCourse(settings, courseUri);
     }
 
-    public static Command<Course> getCourseCmd(
-            TmcSettings settings, String courseName) throws TmcCoreException {
+    public static Command<Course> getCourseCmd(TmcSettings settings, String courseName)
+            throws TmcCoreException {
         return new GetCourse(settings, courseName);
     }
 
-    public static Command<List<Exercise>> getDownloadExercisesCmd(TmcSettings settings,
-                                                                   Path path,
-                                                                   int courseId,
-                                                                   ProgressObserver observer,
-                                                                   ExerciseChecksumCache cache) {
+    public static Command<List<Exercise>> getDownloadExercisesCmd(
+            TmcSettings settings,
+            Path path,
+            int courseId,
+            ProgressObserver observer,
+            ExerciseChecksumCache cache) {
 
         return new DownloadExercises(settings, path, courseId, observer, cache);
     }
 
-    public static Command<List<Exercise>> getDownloadExercisesCmd(TmcSettings settings,
-                                                                  ProgressObserver observer,
-                                                                  List<Exercise> exercises,
-                                                                  ExerciseChecksumCache cache)
+    public static Command<List<Exercise>> getDownloadExercisesCmd(
+            TmcSettings settings,
+            ProgressObserver observer,
+            List<Exercise> exercises,
+            ExerciseChecksumCache cache)
             throws TmcCoreException {
         return new DownloadExercises(settings, exercises, observer, cache);
     }
@@ -94,11 +95,12 @@ public class CommandFactory {
         return new ListCourses(settings);
     }
 
-    public static Command<SubmissionResult> getSubmitCmd( TmcSettings settings,
-                                                          ExerciseSubmitter submitter,
-                                                          SubmissionPoller submissionPoller,
-                                                          Path path,
-                                                          ProgressObserver observer) {
+    public static Command<SubmissionResult> getSubmitCmd(
+            TmcSettings settings,
+            ExerciseSubmitter submitter,
+            SubmissionPoller submissionPoller,
+            Path path,
+            ProgressObserver observer) {
         return new Submit(settings, submitter, submissionPoller, path, observer);
     }
 
@@ -144,8 +146,8 @@ public class CommandFactory {
     }
 
     public static Command<List<Exercise>> getExerciseUpdatesCmd(
-            TmcSettings settings,
-            ExerciseChecksumCache updateCache, Course course) throws TmcCoreException {
+            TmcSettings settings, ExerciseChecksumCache updateCache, Course course)
+            throws TmcCoreException {
 
         ExerciseUpdateHandler updater =
                 new ExerciseUpdateHandler(updateCache, new TmcApi(settings));
@@ -171,5 +173,4 @@ public class CommandFactory {
             TmcSettings settings, byte[] spywareDiffs) {
         return new SendSpywareDiffs(settings, new DiffSender(settings), spywareDiffs);
     }
-
 }

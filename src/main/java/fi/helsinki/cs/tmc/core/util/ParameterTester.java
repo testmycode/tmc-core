@@ -6,7 +6,7 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 public class ParameterTester {
 
-    public static void checkStringParameters(String...params) throws TmcCoreException {
+    public static void checkStringParameters(String... params) throws TmcCoreException {
         for (String param : params) {
             if (isNullOrEmpty(param)) {
                 throw new TmcCoreException("Param {" + param + "}empty or null.");

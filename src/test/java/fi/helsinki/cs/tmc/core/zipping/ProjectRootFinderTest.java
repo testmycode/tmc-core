@@ -54,8 +54,7 @@ public class ProjectRootFinderTest {
 
     @Test
     public void testGetRootDirectoryFromSame() {
-        Path path
-                = Paths.get("src/test/resources", "local-test-course", "successExercise");
+        Path path = Paths.get("src/test/resources", "local-test-course", "successExercise");
         Optional<Path> root = finder.getRootDirectory(path);
         assertTrue(root.isPresent());
         assertTrue(root.get().endsWith(path));
@@ -63,8 +62,8 @@ public class ProjectRootFinderTest {
 
     @Test
     public void findsDeepRoot() {
-        Optional<Path> root
-                = finder.getRootDirectory(
+        Optional<Path> root =
+                finder.getRootDirectory(
                         Paths.get(
                                 "src/test/resources",
                                 "local-test-course",
@@ -72,19 +71,18 @@ public class ProjectRootFinderTest {
                                 "src"));
         assertTrue(root.isPresent());
         assertTrue(
-                root
-                .get()
-                .endsWith(
-                        Paths.get(
-                                "src/test/resources",
-                                "local-test-course",
-                                "successExercise")));
+                root.get()
+                        .endsWith(
+                                Paths.get(
+                                        "src/test/resources",
+                                        "local-test-course",
+                                        "successExercise")));
     }
 
     @Test
     public void doesntFindRootWhenNoPom() {
-        Optional<Path> root
-                = finder.getRootDirectory(
+        Optional<Path> root =
+                finder.getRootDirectory(
                         Paths.get(
                                 "src/test/resources",
                                 "local-test-course",
@@ -92,19 +90,17 @@ public class ProjectRootFinderTest {
                                 "src"));
         assertTrue(root.isPresent());
         assertTrue(
-                root
-                .get()
-                .endsWith(
-                        Paths.get(
-                                "src/test/resources",
-                                "local-test-course",
-                                "successExercise")));
+                root.get()
+                        .endsWith(
+                                Paths.get(
+                                        "src/test/resources",
+                                        "local-test-course",
+                                        "successExercise")));
     }
 
     @Test
     public void doesntFindRootWhenNotAnExercise() {
-        Path notAnExercise
-                = Paths.get("src/test/resources", "local-test-course", "NotAnExercise");
+        Path notAnExercise = Paths.get("src/test/resources", "local-test-course", "NotAnExercise");
         Optional<Path> root = finder.getRootDirectory(notAnExercise);
         if (!root.isPresent()) {
             return;
@@ -124,9 +120,8 @@ public class ProjectRootFinderTest {
 
     @Test
     public void getsCurrentCourse() throws IOException, TmcCoreException {
-        Optional<Course> course
-                = finder.getCurrentCourse(
-                        Paths.get("path", "that", "contains", "course",fakeName));
+        Optional<Course> course =
+                finder.getCurrentCourse(Paths.get("path", "that", "contains", "course", fakeName));
         assertEquals(fakeName, course.get().getName());
     }
 }

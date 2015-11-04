@@ -29,7 +29,7 @@
                     </excludes>
                 </configuration>
             </plugin>
-            
+
             <!-- Removes the jar from scripts/ when cleaning-->
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
@@ -58,25 +58,32 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
                     <configLocation>${basedir}/google_checks.xml</configLocation>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <encoding>UTF-8</encoding>
+                    <linkXRef>false</linkXRef>
+                    <failOnViolation>true</failOnViolation>
                 </configuration>
                 <version>2.16</version>
                 <executions>
-                    <execution>
-                        <id>test</id>
-                        <phase>test</phase>
-                        <configuration>
-                            <configLocation>${basedir}/google_checks.xml</configLocation>
-                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                            <encoding>UTF-8</encoding>
-                            <consoleOutput>true</consoleOutput>
-                            <failOnViolation>true</failOnViolation>
-                        </configuration>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
+                  <execution>
+                    <id>verify</id>
+                    <phase>verify</phase>
+                    <goals>
+                      <goal>check</goal>
+                    </goals>
+                  </execution>
+                  <execution>
+                    <id>test</id>
+                    <phase>test</phase>
+                    <goals>
+                      <goal>check</goal>
+                    </goals>
+                    <configuration>
+                        <failOnViolation>false</failOnViolation>
+                    </configuration>
+                </execution>
                 </executions>
-            </plugin>
+              </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

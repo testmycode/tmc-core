@@ -114,7 +114,8 @@ public class ExerciseSubmitterTest {
 
     @Test
     public void testFindCourseByCorrectPath() throws IOException, TmcCoreException {
-        final String path = Paths.get("home", "kansio", "toinen", "test-course", "viikko_01").toString();
+        final String path =
+                Paths.get("home", "kansio", "toinen", "test-course", "viikko_01").toString();
         Optional<Course> course = realFinder.findCourseByPath(path.split("\\" + File.separator));
         assertEquals(3, course.get().getId());
         final String path2 =
@@ -127,18 +128,13 @@ public class ExerciseSubmitterTest {
     public void testSubmitWithOneParam()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
-        Path testPath =
-                Paths.get(
-                                "home",
-                                "test",
-                                "no-deadline",
-                                "halfdoneExercise");
+        Path testPath = Paths.get("home", "test", "no-deadline", "halfdoneExercise");
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
-        URI submissionPath = URI.create(
-                "https://example.com/staging/submissions/1781.json?api_version=7");
+        URI submissionPath =
+                URI.create("https://example.com/staging/submissions/1781.json?api_version=7");
         URI result = courseSubmitter.submit(testPath);
         assertEquals(submissionPath, result);
     }
@@ -160,12 +156,7 @@ public class ExerciseSubmitterTest {
     public void submitWithPasteReturnsPasteUrl()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
-        Path testPath =
-                Paths.get(
-                                "home",
-                                "test",
-                                "no-deadline",
-                                "halfdoneExercise");
+        Path testPath = Paths.get("home", "test", "no-deadline", "halfdoneExercise");
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
@@ -179,12 +170,7 @@ public class ExerciseSubmitterTest {
     public void submitWithPasteAndCommentReturnsPasteUrl()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
-        Path testPath =
-                Paths.get(
-                                "home",
-                                "test",
-                                "no-deadline",
-                                "halfdoneExercise");
+        Path testPath = Paths.get("home", "test", "no-deadline", "halfdoneExercise");
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
@@ -198,8 +184,7 @@ public class ExerciseSubmitterTest {
     public void submitWithPasteFromBadPathThrowsException()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
-        Path testPath =
-                Paths.get("home", "test", "no-deadline", "viikko1", "feikeintehtava");
+        Path testPath = Paths.get("home", "test", "no-deadline", "viikko1", "feikeintehtava");
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
@@ -211,8 +196,7 @@ public class ExerciseSubmitterTest {
     public void testSubmitWithNonexistentExercise()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
-        Path testPath =
-                Paths.get("home", "test", "no-deadline", "viikko1", "feikkitehtava");
+        Path testPath = Paths.get("home", "test", "no-deadline", "viikko1", "feikkitehtava");
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
@@ -224,12 +208,7 @@ public class ExerciseSubmitterTest {
     public void submitWithNonExistentCourseThrowsException()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
-        Path testPath =
-                Paths.get(
-                                "home",
-                                "test",
-                                "FAKE_COURSE",
-                                "halfdoneExercise");
+        Path testPath = Paths.get("home", "test", "FAKE_COURSE", "halfdoneExercise");
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
@@ -241,24 +220,17 @@ public class ExerciseSubmitterTest {
     public void submitWithCodeReviewRequest()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
-        Path testPath =
-                Paths.get(
-                        "home",
-                                "test",
-                                "no-deadline",
-                                "halfdoneExercise");
-        settings.setCurrentCourse(
-                rootFinder.getCurrentCourse(testPath).or(new Course()));
-        ArgumentCaptor<Map> capture = ArgumentCaptor.forClass(Map.class);
+        Path testPath = Paths.get("home", "test", "no-deadline", "halfdoneExercise");
+        settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         courseSubmitter.submitWithCodeReviewRequest(testPath, "Help");
+        // TODO: Capture map with correct type
+        final ArgumentCaptor<Map> capture = ArgumentCaptor.forClass(Map.class);
         Mockito.verify(urlCommunicator)
-                .makePostWithByteArray(Mockito.any(URI.class),
-                        any(byte[].class),
-                        anyMap(),
-                        capture.capture());
+                .makePostWithByteArray(
+                        Mockito.any(URI.class), any(byte[].class), anyMap(), capture.capture());
         assertEquals("1", capture.getValue().get("request_review"));
         assertEquals("Help", capture.getValue().get("message_for_reviewer"));
     }
@@ -267,43 +239,30 @@ public class ExerciseSubmitterTest {
     public void submitWithCodeReviewRequestWithEmptyMessage()
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
-        Path testPath =
-                Paths.get(
-                                "home",
-                                "test",
-                                "no-deadline",
-                                "halfdoneExercise");
-        settings.setCurrentCourse(
-                rootFinder.getCurrentCourse(testPath).or(new Course()));
-        ArgumentCaptor<Map> capture = ArgumentCaptor.forClass(Map.class);
+        Path testPath = Paths.get("home", "test", "no-deadline", "halfdoneExercise");
+        settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
+        final ArgumentCaptor<Map> capture = ArgumentCaptor.forClass(Map.class);
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
         courseSubmitter.submitWithCodeReviewRequest(testPath, "");
         Mockito.verify(urlCommunicator)
-                .makePostWithByteArray(Mockito.any(URI.class),
-                        any(byte[].class),
-                        anyMap(),
-                        capture.capture());
+                .makePostWithByteArray(
+                        Mockito.any(URI.class), any(byte[].class), anyMap(), capture.capture());
         assertEquals("1", capture.getValue().get("request_review"));
         assertNull(capture.getValue().get("message_for_reviewer"));
     }
 
     @Test
     public void testSubmitterUsesProgressObserverIfGiven() throws Exception {
-        ProgressObserver observer = mock(ProgressObserver.class);
-        Path testPath =
-                Paths.get(
-                                "home",
-                                "test",
-                                "no-deadline",
-                                "halfdoneExercise");
+        Path testPath = Paths.get("home", "test", "no-deadline", "halfdoneExercise");
         settings.setCurrentCourse(rootFinder.getCurrentCourse(testPath).or(new Course()));
         this.courseSubmitter =
                 new ExerciseSubmitter(rootFinder, langs, urlCommunicator, tmcApi, settings);
         rootFinder.setReturnValue(testPath);
-        URI submissionPath = URI.create(
-                "https://example.com/staging/submissions/1781.json?api_version=7");
+        URI submissionPath =
+                URI.create("https://example.com/staging/submissions/1781.json?api_version=7");
+        ProgressObserver observer = mock(ProgressObserver.class);
         URI result = courseSubmitter.submit(testPath, observer);
         verify(observer).progress("zipping exercise");
         verify(observer).progress("submitting exercise");
@@ -313,11 +272,13 @@ public class ExerciseSubmitterTest {
     private void mockUrlCommunicator(String pieceOfUrl, String returnValue) throws IOException {
         HttpResult fakeResult = new HttpResult(returnValue, 200, true);
 
-        Mockito.when(urlCommunicator.makeGetRequest(
-                        Mockito.argThat(new UriContains(pieceOfUrl)), Mockito.anyString()))
+        Mockito.when(
+                        urlCommunicator.makeGetRequest(
+                                Mockito.argThat(new UriContains(pieceOfUrl)), Mockito.anyString()))
                 .thenReturn(fakeResult);
-        Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(
-                        Mockito.argThat(new UriContains(pieceOfUrl))))
+        Mockito.when(
+                        urlCommunicator.makeGetRequestWithAuthentication(
+                                Mockito.argThat(new UriContains(pieceOfUrl))))
                 .thenReturn(fakeResult);
     }
 

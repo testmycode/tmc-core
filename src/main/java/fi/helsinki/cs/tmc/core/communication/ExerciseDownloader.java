@@ -14,15 +14,15 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Map;
 
 public class ExerciseDownloader {
 
@@ -39,8 +39,8 @@ public class ExerciseDownloader {
             UrlCommunicator urlCommunicator, TmcApi tmcApi, TaskExecutor taskExecutor) {
         this.urlCommunicator = urlCommunicator;
         this.taskExecutor = taskExecutor;
-        this.downloadThreadPool = Executors
-                .newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        this.downloadThreadPool =
+                Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
     /**
@@ -64,8 +64,8 @@ public class ExerciseDownloader {
         Map<Exercise, Future<Boolean>> futures = new HashMap<>();
         Path coursePath = createCourseFolder(path, folderName);
         for (Exercise exercise : exercises) {
-            Callable<Boolean> downloadHandler
-                    = new SingleExerciseDownloadHandler(exercise, coursePath);
+            Callable<Boolean> downloadHandler =
+                    new SingleExerciseDownloadHandler(exercise, coursePath);
             futures.put(exercise, downloadThreadPool.submit(downloadHandler));
         }
         collectExerciseFutures(futures, obs);

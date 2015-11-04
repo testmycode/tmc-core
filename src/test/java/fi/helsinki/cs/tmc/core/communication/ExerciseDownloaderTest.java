@@ -144,14 +144,14 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void downloadExercisesDoesRequests() throws IOException{
+    public void downloadExercisesDoesRequests() throws IOException {
         exDl.downloadExercises(exercises, zipDestination, "", ExerciseObserver.NOP);
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex1.zip")));
         wireMockRule.verify(getRequestedFor(urlEqualTo("/ex2.zip")));
     }
 
     @Test
-    public void requestsHaveAuth() throws IOException{
+    public void requestsHaveAuth() throws IOException {
         exDl.downloadExercises(exercises, zipDestination, "", ExerciseObserver.NOP);
 
         wireMockRule.verify(
@@ -164,7 +164,7 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void downloadedExercisesExists() throws IOException{
+    public void downloadedExercisesExists() throws IOException {
         exDl.downloadExercises(exercises, zipDestination, "", ExerciseObserver.NOP);
         File exercise1 = Paths.get("src", "test", "resources", "__files", "testfile.txt").toFile();
         assertTrue("Zipped file testfile.txt was not downloaded to the fs", exercise1.exists());
@@ -201,14 +201,18 @@ public class ExerciseDownloaderTest {
                 new ExerciseDownloader(
                         new UrlCommunicator(settings), new TmcApi(settings), executor);
         final AtomicInteger counter = new AtomicInteger();
-        exDl.downloadExercises(exercises, zipDestination, "", new ExerciseObserver() {
-            @Override
-            public void observe(Exercise exercise, boolean success) {
-                if(success) {
-                    counter.incrementAndGet();
-                }
-            }
-        });
+        exDl.downloadExercises(
+                exercises,
+                zipDestination,
+                "",
+                new ExerciseObserver() {
+                    @Override
+                    public void observe(Exercise exercise, boolean success) {
+                        if (success) {
+                            counter.incrementAndGet();
+                        }
+                    }
+                });
         assertEquals(3, counter.get());
     }
 

@@ -53,8 +53,7 @@ public class SubmitTest {
     private URI submissionUrl;
     private ProgressObserver observer;
 
-    @Rule
-    public WireMockRule wireMock = new WireMockRule(0);
+    @Rule public WireMockRule wireMock = new WireMockRule(0);
     private String serverAddress = "http://127.0.0.1:";
 
     private Submit submitWithObserver;
@@ -77,38 +76,35 @@ public class SubmitTest {
                                         .withStatus(200)
                                         .withHeader("Content-Type", "text/json")
                                         .withBody(
-                                                ExampleJson.allCoursesExample
-                                                        .replace(
-                                                                "https://example.com/staging",
-                                                                serverAddress))));
+                                                ExampleJson.allCoursesExample.replace(
+                                                        "https://example.com/staging",
+                                                        serverAddress))));
         wireMock.stubFor(
                 post(urlPathEqualTo("/exercises/1228/submissions.json"))
                         .willReturn(
                                 WireMock.aResponse()
                                         .withStatus(200)
                                         .withBody(
-                                                ExampleJson.failedSubmitResponse
-                                                        .replaceAll(
-                                                                "https://example.com/staging",
-                                                                serverAddress))));
+                                                ExampleJson.failedSubmitResponse.replaceAll(
+                                                        "https://example.com/staging",
+                                                        serverAddress))));
 
         wireMock.stubFor(
                 get(urlPathEqualTo("/submissions/7777.json"))
-                .willReturn(
-                        WireMock.aResponse()
-                        .withStatus(200)
-                        .withBody(
-                                ExampleJson.failedSubmission)));
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(ExampleJson.failedSubmission)));
 
         wireMock.stubFor(
                 get(urlPathEqualTo("/courses/19.json"))
-                .willReturn(
-                        WireMock.aResponse()
-                        .withStatus(200)
-                        .withBody(
-                                ExampleJson.noDeadlineCourseExample.replaceAll(
-                                        "https://example.com/staging",
-                                        serverAddress))));
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(
+                                                ExampleJson.noDeadlineCourseExample.replaceAll(
+                                                        "https://example.com/staging",
+                                                        serverAddress))));
     }
 
     @Before
@@ -128,8 +124,8 @@ public class SubmitTest {
 
         when(submitterMock.submit(any(Path.class)))
                 .thenReturn(URI.create(serverAddress + submissionUrl));
-        submit
-                = new Submit(
+        submit =
+                new Submit(
                         settings, submitterMock, new SubmissionPoller(new TmcApi(settings)), path);
         submitWithObserver = new Submit(settings, submitterMock, pollerMock, path, observer);
     }
@@ -150,10 +146,10 @@ public class SubmitTest {
     public void testHandlesSuccessfulTestRunResponseCorrectly() throws Exception {
         wireMock.stubFor(
                 get(urlEqualTo(submissionUrl.toString()))
-                .willReturn(
-                        WireMock.aResponse()
-                        .withStatus(200)
-                        .withBody(ExampleJson.successfulSubmission)));
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(ExampleJson.successfulSubmission)));
 
         SubmissionResult submissionResult = submit.call();
         assertNotNull(submissionResult);
@@ -164,10 +160,10 @@ public class SubmitTest {
     public void testHandlesUnsuccessfulTestRunResponseCorrectly() throws Exception {
         wireMock.stubFor(
                 get(urlEqualTo(submissionUrl.toString()))
-                .willReturn(
-                        WireMock.aResponse()
-                        .withStatus(200)
-                        .withBody(ExampleJson.failedSubmission)));
+                        .willReturn(
+                                WireMock.aResponse()
+                                        .withStatus(200)
+                                        .withBody(ExampleJson.failedSubmission)));
 
         SubmissionResult submissionResult = submit.call();
         assertNotNull(submissionResult);
@@ -185,8 +181,7 @@ public class SubmitTest {
         settings.setCurrentCourse(course);
         TmcCore core = new TmcCore(settings);
 
-        Path path
-                = Paths.get("src/test/resources", "local-test-course", "halfdoneExercise");
+        Path path = Paths.get("src/test/resources", "local-test-course", "halfdoneExercise");
         ListenableFuture<SubmissionResult> submit = core.submit(path);
         SubmissionResult result = submit.get();
         assertFalse(result.isAllTestsPassed());
@@ -199,5 +194,4 @@ public class SubmitTest {
         verify(submitterMock).submit(eq(path), eq(observer));
         verify(pollerMock).getSubmissionResult(eq(URI.create("xkcd.com")), eq(observer));
     }
-
 }

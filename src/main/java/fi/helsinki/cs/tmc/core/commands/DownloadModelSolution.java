@@ -41,9 +41,8 @@ public class DownloadModelSolution extends Command<Boolean> {
 
         String courseName = getCourseName();
 
-        Path target
-                = exerciseDownloader.createCourseFolder(
-                settings.getTmcMainDirectory(), courseName);
+        Path target =
+                exerciseDownloader.createCourseFolder(settings.getTmcMainDirectory(), courseName);
         return exerciseDownloader.downloadModelSolution(exercise, target);
     }
 

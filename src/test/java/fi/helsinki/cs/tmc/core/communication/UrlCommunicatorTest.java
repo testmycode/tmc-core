@@ -81,9 +81,9 @@ public class UrlCommunicatorTest {
 
     @Test
     public void badRequestWithoutValidUrl() throws IOException, TmcCoreException {
-        HttpResult result = urlCommunicator.makeGetRequest(
-                URI.create(serverAddress + "/vaaraurl"),
-                "test:1234");
+        HttpResult result =
+                urlCommunicator.makeGetRequest(
+                        URI.create(serverAddress + "/vaaraurl"), "test:1234");
         assertEquals(400, result.getStatusCode());
     }
 
@@ -136,9 +136,9 @@ public class UrlCommunicatorTest {
         settings.setPassword("1234");
         Map<String, String> body = new HashMap<>();
         body.put("mark_as_read", "1");
-        HttpResult makePutRequest = urlCommunicator.makePutRequest(
-                URI.create(serverAddress + "/putty"),
-                Optional.of(body));
+        HttpResult makePutRequest =
+                urlCommunicator.makePutRequest(
+                        URI.create(serverAddress + "/putty"), Optional.of(body));
         assertEquals(200, makePutRequest.getStatusCode());
     }
 

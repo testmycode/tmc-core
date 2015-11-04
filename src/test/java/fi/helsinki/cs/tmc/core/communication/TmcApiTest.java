@@ -102,8 +102,9 @@ public class TmcApiTest {
     @Test
     public void parsesPasteUrlFromJson() throws IOException, TmcCoreException {
         HttpResult fakeResult = new HttpResult(ExampleJson.pasteResponse, 200, true);
-        Mockito.when(urlCommunicator.makeGetRequest(URI.create(Mockito.anyString()),
-                        Mockito.anyString()))
+        Mockito.when(
+                        urlCommunicator.makeGetRequest(
+                                URI.create(Mockito.anyString()), Mockito.anyString()))
                 .thenReturn(fakeResult);
         assertEquals(
                 URI.create("https://example.com/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ"),
@@ -129,7 +130,9 @@ public class TmcApiTest {
     @Test
     public void canFetchOneCourse() throws IOException, TmcCoreException, URISyntaxException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
-        Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(argThat(new UriContains("/courses/3"))))
+        Mockito.when(
+                        urlCommunicator.makeGetRequestWithAuthentication(
+                                argThat(new UriContains("/courses/3"))))
                 .thenReturn(fakeResult);
 
         Optional<Course> course = tmcApi.getCourse(3);
@@ -144,5 +147,4 @@ public class TmcApiTest {
         assertNotNull(result);
         assertEquals("no-deadline", result.getCourse());
     }
-	
 }

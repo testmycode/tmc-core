@@ -30,7 +30,8 @@ public class SubmissionResultParser {
             JsonElement validationElement = getJsonElement(json);
 
             if (validationElement != null) {
-                CheckstyleResult checkstyleResult = CheckstyleResult.build(validationElement.toString());
+                CheckstyleResult checkstyleResult =
+                        CheckstyleResult.build(validationElement.toString());
                 result.setValidationResult(checkstyleResult);
             } else {
                 result.setValidationResult(CheckstyleResult.build("{}"));
@@ -54,8 +55,7 @@ public class SubmissionResultParser {
                 new GsonBuilder()
                         .registerTypeAdapter(
                                 SubmissionResult.Status.class, new StatusDeserializer())
-                        .registerTypeAdapter(
-                                StackTraceElement.class, new StackTraceSerializer())
+                        .registerTypeAdapter(StackTraceElement.class, new StackTraceSerializer())
                         .create();
 
         return gson.fromJson(json, SubmissionResult.class);

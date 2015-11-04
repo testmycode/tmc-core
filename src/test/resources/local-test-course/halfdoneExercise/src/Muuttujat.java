@@ -21,5 +21,4 @@ public class Muuttujat {
         System.out.println(pekoninPaino);
         System.out.println(traktori);
     }
-
 }

@@ -1,6 +1,5 @@
 package fi.helsinki.cs.tmc.core;
 
-
 import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getCourseCmd;
 import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getDownloadExercisesCmd;
 import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getDownloadModelSolutionCmd;
@@ -169,7 +168,6 @@ public class TmcCore {
             throws TmcCoreException {
         return this.downloadExercises(exercises, null);
     }
-
 
     public ListenableFuture<Boolean> downloadModelSolution(Exercise exercise)
             throws TmcCoreException {

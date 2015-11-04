@@ -24,8 +24,9 @@ import java.net.URI;
 public class SubmissionPollerTest {
 
     private SubmissionPoller submissionPoller;
-    private URI url = URI.create(
-            "https://example.com/staging/submissions/1764.json?api_version=7&client=tmc_cli&client_version=1");
+    private URI url =
+            URI.create(
+                    "https://example.com/staging/submissions/1764.json?api_version=7&client=tmc_cli&client_version=1");
     private CoreTestSettings settings;
     private TmcApi tmcApi;
 
@@ -75,7 +76,6 @@ public class SubmissionPollerTest {
         String placeChange = ExampleJson.processingSubmission.replace("0", "3").replace("1", "8");
         String success = ExampleJson.successfulSubmission;
 
-        when(tmcApi.getRawTextFrom(any(URI.class)))
-                .thenReturn(first, second, placeChange, success);
+        when(tmcApi.getRawTextFrom(any(URI.class))).thenReturn(first, second, placeChange, success);
     }
 }

@@ -90,8 +90,7 @@ public class ExerciseUpdaterTest {
     private TmcApi mockTmcApi() throws IOException, URISyntaxException {
         TmcApi tmcApi = mock(TmcApi.class);
         List<Exercise> serverExercises =
-                builder
-                        .withExercise("old", 5, "abcdefg", "test-course")
+                builder.withExercise("old", 5, "abcdefg", "test-course")
                         .withExercise("changed", 7, "oeoeoo", "test-course")
                         .withExercise("new", 8, "woksirjd", "test-course")
                         .withExercise("duck", 9, "asdfsdf", "test-course")

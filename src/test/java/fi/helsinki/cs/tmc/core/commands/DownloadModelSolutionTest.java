@@ -42,7 +42,8 @@ public class DownloadModelSolutionTest {
     public void setUp() throws IOException {
         downloader = mock(ExerciseDownloader.class);
         dl = new DownloadModelSolution(settings, exercise, downloader);
-        when(downloader.createCourseFolder(any(Path.class), anyString())).thenReturn(Paths.get("path"));
+        when(downloader.createCourseFolder(any(Path.class), anyString()))
+                .thenReturn(Paths.get("path"));
     }
 
     @After

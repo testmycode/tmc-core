@@ -4,5 +4,4 @@ public class HeiMaailma {
         // Toteuta ohjelmasi tähän.
 
     }
-
 }

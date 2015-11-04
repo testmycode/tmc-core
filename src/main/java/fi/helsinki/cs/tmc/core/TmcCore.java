@@ -1,29 +1,25 @@
 package fi.helsinki.cs.tmc.core;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
+
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getCourseCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getDownloadExercisesCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getDownloadModelSolutionCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getExerciseUpdatesCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getListCoursesCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getPasteWithCommentCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getRequestCodeReviewCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getRunCheckStyleCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getRunTestsCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getSendFeedbackCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getSendSpywareDiffsCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getSubmitCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getUnreadReviewsCmd;
+import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getVerifyCredentialsCmd;
+import static fi.helsinki.cs.tmc.core.util.ParameterTester.checkStringParameters;
 
 import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumFileCache;
-import fi.helsinki.cs.tmc.core.commands.DownloadExercises;
-import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
-import fi.helsinki.cs.tmc.core.commands.GetCourse;
-import fi.helsinki.cs.tmc.core.commands.GetExerciseUpdates;
-import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
-import fi.helsinki.cs.tmc.core.commands.ListCourses;
-import fi.helsinki.cs.tmc.core.commands.PasteWithComment;
-import fi.helsinki.cs.tmc.core.commands.RequestCodeReview;
-import fi.helsinki.cs.tmc.core.commands.RunCheckStyle;
-import fi.helsinki.cs.tmc.core.commands.RunTests;
-import fi.helsinki.cs.tmc.core.commands.SendFeedback;
-import fi.helsinki.cs.tmc.core.commands.SendSpywareDiffs;
-import fi.helsinki.cs.tmc.core.commands.Submit;
-import fi.helsinki.cs.tmc.core.commands.VerifyCredentials;
-import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
+import fi.helsinki.cs.tmc.core.commands.Command;
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
-import fi.helsinki.cs.tmc.core.communication.SubmissionPoller;
-import fi.helsinki.cs.tmc.core.communication.TmcApi;
-import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
-import fi.helsinki.cs.tmc.core.communication.updates.ExerciseUpdateHandler;
-import fi.helsinki.cs.tmc.core.communication.updates.ReviewHandler;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
@@ -31,15 +27,12 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-import fi.helsinki.cs.tmc.core.spyware.DiffSender;
-import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
-import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -100,33 +93,30 @@ public class TmcCore {
      * @return A future-object containing true or false on success or fail
      */
     public ListenableFuture<Boolean> verifyCredentials() throws TmcCoreException {
-        checkParameters(
+        checkStringParameters(
                 settings.getUsername(), settings.getPassword(), settings.getServerAddress());
-        VerifyCredentials login = new VerifyCredentials(settings, new UrlCommunicator(settings));
-        return threadPool.submit(login);
+
+        return threadPool.submit(getVerifyCredentialsCmd(settings));
     }
 
     /**
      * Fetch one course from tmc-server.
      *
      * @param url defines the url to course
-     *
      * @deprecated Use {@link #getCourse(String)} instead.
      */
     @Deprecated
     public ListenableFuture<Course> getCourse(URI url) throws TmcCoreException {
-        checkParameters(settings.getUsername(), settings.getPassword());
-        GetCourse getter = new GetCourse(settings, url);
-        return threadPool.submit(getter);
+        checkStringParameters(settings.getUsername(), settings.getPassword());
+        return threadPool.submit(getCourseCmd(settings, url));
     }
 
     /**
      * Returns course instance with given name.
      */
     public ListenableFuture<Course> getCourse(String courseName) throws TmcCoreException {
-        checkParameters(settings.getUsername(), settings.getPassword());
-        GetCourse getC = new GetCourse(settings, courseName);
-        return threadPool.submit(getC);
+        checkStringParameters(settings.getUsername(), settings.getPassword());
+        return threadPool.submit(getCourseCmd(settings, courseName));
     }
 
     /**
@@ -144,17 +134,29 @@ public class TmcCore {
      * files exist, overrides everything except the source folder and files specified in
      * .tmcproject.yml Requires login.
      *
-     * @param path where it downloads the exercises
+     * @param path     where it downloads the exercises
      * @param courseId ID of course to download
      * @param observer ProgressObserver will be informed about the progress of downloading
-     * exercises. Observer can print progress status to end-user.
+     *                 exercises. Observer can print progress status to end-user
      * @throws TmcCoreException if something in the given input was wrong
      */
     public ListenableFuture<List<Exercise>> downloadExercises(
             Path path, int courseId, ProgressObserver observer) throws TmcCoreException {
-        DownloadExercises downloadCommand =
-                new DownloadExercises(settings, path, courseId, observer, updateCache);
-        return threadPool.submit(downloadCommand);
+
+        Command<List<Exercise>> downloadExercisesCmd =
+                getDownloadExercisesCmd(settings, path, courseId, observer, updateCache);
+        return threadPool.submit(downloadExercisesCmd);
+    }
+
+    /**
+     * Downloads exercises.
+     */
+    public ListenableFuture<List<Exercise>> downloadExercises(
+            List<Exercise> exercises, ProgressObserver observer) throws TmcCoreException {
+
+        Command<List<Exercise>> downloadExercisesCmd =
+                getDownloadExercisesCmd(settings, observer, exercises, updateCache);
+        return threadPool.submit(downloadExercisesCmd);
     }
 
     /**
@@ -168,20 +170,11 @@ public class TmcCore {
         return this.downloadExercises(exercises, null);
     }
 
-    /**
-     * Downloads exercises.
-     */
-    public ListenableFuture<List<Exercise>> downloadExercises(
-            List<Exercise> exercises, ProgressObserver observer) throws TmcCoreException {
-        DownloadExercises downloadCommand =
-                new DownloadExercises(settings, exercises, observer, updateCache);
-        return threadPool.submit(downloadCommand);
-    }
 
     public ListenableFuture<Boolean> downloadModelSolution(Exercise exercise)
             throws TmcCoreException {
-        DownloadModelSolution downloadCommand = new DownloadModelSolution(settings, exercise);
-        return threadPool.submit(downloadCommand);
+        Command<Boolean> downloadModelSolutionCmd = getDownloadModelSolutionCmd(settings, exercise);
+        return threadPool.submit(downloadModelSolutionCmd);
     }
 
     /**
@@ -192,8 +185,7 @@ public class TmcCore {
      * @throws TmcCoreException if something went wrong
      */
     public ListenableFuture<List<Course>> listCourses() throws TmcCoreException {
-        ListCourses listCommand = new ListCourses(settings);
-        return threadPool.submit(listCommand);
+        return threadPool.submit(getListCoursesCmd(settings));
     }
 
     /**
@@ -203,7 +195,7 @@ public class TmcCore {
      * @param path inside any exercise directory
      * @return SubmissionResult object containing details of the tests run on server
      * @throws TmcCoreException if there was no course in the given path, no exercise in the given
-     * path, or not logged in
+     *                          path, or not logged in.
      */
     public ListenableFuture<SubmissionResult> submit(Path path) throws TmcCoreException {
         return submit(path, null);
@@ -213,34 +205,16 @@ public class TmcCore {
      * Submits an exercise in the given path to the TMC-server. Looks for a build.xml or equivalent
      * file upwards in the path to determine exercise folder. Requires login.
      *
-     * @param path inside any exercise directory
+     * @param path     inside any exercise directory
      * @param observer a {@link ProgressObserver} which will be informed of the submits progress
      * @return SubmissionResult object containing details of the tests run on server
      * @throws TmcCoreException if there was no course in the given path, no exercise in the given
-     * path, or not logged in
+     *                          path, or not logged in.
      */
     public ListenableFuture<SubmissionResult> submit(Path path, ProgressObserver observer)
             throws TmcCoreException {
-        UrlCommunicator communicator = new UrlCommunicator(settings);
-        TmcApi tmcApi = new TmcApi(communicator, settings);
 
-        ExerciseSubmitter exerciseSubmitter =
-                new ExerciseSubmitter(
-                        new ProjectRootFinder(tmcApi),
-                        new TaskExecutorImpl(),
-                        communicator,
-                        tmcApi,
-                        settings);
-
-        Submit submit =
-                new Submit(
-                        settings,
-                        exerciseSubmitter,
-                        new SubmissionPoller(tmcApi),
-                        path,
-                        observer);
-
-        return threadPool.submit(submit);
+        return threadPool.submit(getSubmitCmd(settings, path, observer));
     }
 
     /**
@@ -250,11 +224,10 @@ public class TmcCore {
      * @param path inside any exercise directory
      * @return RunResult object containing details of the tests run
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     * given path
+     *                          given path.
      */
     public ListenableFuture<RunResult> test(Path path) throws TmcCoreException {
-        RunTests testCommand = new RunTests(settings, path);
-        return threadPool.submit(testCommand);
+        return threadPool.submit(getRunTestsCmd(settings, path));
     }
 
     /**
@@ -264,12 +237,10 @@ public class TmcCore {
      * @param path inside any exercise directory
      * @return ValidationResult object containing details of the checkstyle validation
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     * given path
+     *                          given path.
      */
     public ListenableFuture<ValidationResult> runCheckstyle(Path path) throws TmcCoreException {
-
-        RunCheckStyle checkstyleCommand = new RunCheckStyle(path);
-        return threadPool.submit(checkstyleCommand);
+        return threadPool.submit(getRunCheckStyleCmd(path));
     }
 
     /**
@@ -279,9 +250,7 @@ public class TmcCore {
      * @return a list of unread reviews for the given course
      */
     public ListenableFuture<List<Review>> getNewReviews(Course course) throws TmcCoreException {
-        ReviewHandler reviewHandler = new ReviewHandler(new TmcApi(settings));
-        GetUnreadReviews command = new GetUnreadReviews(course, reviewHandler);
-        return threadPool.submit(command);
+        return threadPool.submit(getUnreadReviewsCmd(settings, course));
     }
 
     /**
@@ -293,62 +262,60 @@ public class TmcCore {
      * @param course the course whose exercises are checked
      * @return a list of exercises that are new or have updates
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     * given path
+     *                          given path.
      */
     public ListenableFuture<List<Exercise>> getNewAndUpdatedExercises(Course course)
             throws TmcCoreException {
-        ExerciseUpdateHandler updater =
-                new ExerciseUpdateHandler(updateCache, new TmcApi(settings));
-        GetExerciseUpdates command = new GetExerciseUpdates(course, updater);
-        return threadPool.submit(command);
+
+        Command<List<Exercise>> exerciseUpdatesCmd =
+                getExerciseUpdatesCmd(settings, updateCache, course);
+        return threadPool.submit(exerciseUpdatesCmd);
     }
 
     /**
      * Sends feedback answers to the TMC server.
      *
      * @param answers map of question_id -> answer
-     * @param url url that the answers will be sent to
+     * @param url     url that the answers will be sent to
      * @return a HttpResult of the servers reply. It should contain "{status:ok}" if everything goes
-     * well
+     * well.
      */
     public ListenableFuture<HttpResult> sendFeedback(Map<String, String> answers, URI url)
             throws TmcCoreException {
-        SendFeedback feedback = new SendFeedback(settings, answers, url);
-        return threadPool.submit(feedback);
+
+        return threadPool.submit(getSendFeedbackCmd(settings, answers, url));
     }
 
     /**
      * Submits the current exercise to the TMC-server and requests for a paste to be made, with
      * comment given by user.
      *
-     * @param path inside any exercise directory
+     * @param path    inside any exercise directory
      * @param comment comment given by user
      * @return URI object containing location of the paste
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     * given path
+     *                          given path.
      */
     public ListenableFuture<URI> pasteWithComment(Path path, String comment)
             throws TmcCoreException {
-        //checkParameters(path);
-        PasteWithComment paste = new PasteWithComment(settings, path, comment);
-        return threadPool.submit(paste);
+
+        return threadPool.submit(getPasteWithCommentCmd(settings, path, comment));
     }
 
     /**
      * Submits the current exercise to the TMC-server and requests for a code review, with a
      * message given by user.
      *
-     * @param path inside any exercise directory
+     * @param path    inside any exercise directory
      * @param message message given by user
      * @return URI object containing location of the submission
      * @throws TmcCoreException if there was no course in the given path, or no exercise in the
-     *     given path
+     *                          given path
      */
     public ListenableFuture<URI> requestCodeReview(Path path, String message)
             throws TmcCoreException {
-        //checkParameters(path);
-        RequestCodeReview request = new RequestCodeReview(settings, path, message);
-        return threadPool.submit(request);
+
+        return threadPool.submit(getRequestCodeReviewCmd(settings, path, message));
     }
 
     /**
@@ -360,16 +327,9 @@ public class TmcCore {
      */
     public ListenableFuture<List<HttpResult>> sendSpywareDiffs(byte[] spywareDiffs)
             throws TmcCoreException {
-        SendSpywareDiffs spyware =
-                new SendSpywareDiffs(settings, new DiffSender(settings), spywareDiffs);
-        return threadPool.submit(spyware);
-    }
 
-    private void checkParameters(String... params) throws TmcCoreException {
-        for (String param : params) {
-            if (isNullOrEmpty(param)) {
-                throw new TmcCoreException("Param empty or null.");
-            }
-        }
+        Command<List<HttpResult>> sendSpywareDiffsCmd =
+                getSendSpywareDiffsCmd(settings, spywareDiffs);
+        return threadPool.submit(sendSpywareDiffsCmd);
     }
 }

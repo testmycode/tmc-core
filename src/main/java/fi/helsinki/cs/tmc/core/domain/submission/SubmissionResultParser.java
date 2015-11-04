@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.domain.submission;
 
 import fi.helsinki.cs.tmc.langs.java.testrunner.StackTraceSerializer;
+import fi.helsinki.cs.tmc.stylerunner.validation.CheckstyleResult;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,7 +11,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import fi.helsinki.cs.tmc.stylerunner.validation.CheckstyleResult;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -24,23 +24,14 @@ public class SubmissionResultParser {
         }
 
         try {
-
-            Gson gson =
-                    new GsonBuilder()
-                            .registerTypeAdapter(
-                                    SubmissionResult.Status.class, new StatusDeserializer())
-                            .registerTypeAdapter(
-                                    StackTraceElement.class, new StackTraceSerializer())
-                            .create();
-
-            SubmissionResult result = gson.fromJson(json, SubmissionResult.class);
+            SubmissionResult result = getSubmissionResult(json);
 
             // Parse validations field from JSON
-            JsonObject output = new JsonParser().parse(json).getAsJsonObject();
-            JsonElement validationElement = output.get("validations");
+            JsonElement validationElement = getJsonElement(json);
 
             if (validationElement != null) {
-                result.setValidationResult(CheckstyleResult.build(validationElement.toString()));
+                CheckstyleResult checkstyleResult = CheckstyleResult.build(validationElement.toString());
+                result.setValidationResult(checkstyleResult);
             } else {
                 result.setValidationResult(CheckstyleResult.build("{}"));
             }
@@ -51,6 +42,23 @@ public class SubmissionResultParser {
             throw new RuntimeException(
                     "Failed to parse submission result: " + exception.getMessage(), exception);
         }
+    }
+
+    private JsonElement getJsonElement(String json) {
+        JsonObject output = new JsonParser().parse(json).getAsJsonObject();
+        return output.get("validations");
+    }
+
+    private SubmissionResult getSubmissionResult(String json) {
+        Gson gson =
+                new GsonBuilder()
+                        .registerTypeAdapter(
+                                SubmissionResult.Status.class, new StatusDeserializer())
+                        .registerTypeAdapter(
+                                StackTraceElement.class, new StackTraceSerializer())
+                        .create();
+
+        return gson.fromJson(json, SubmissionResult.class);
     }
 
     private static class StatusDeserializer implements JsonDeserializer<SubmissionResult.Status> {

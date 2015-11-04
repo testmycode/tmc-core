@@ -36,6 +36,12 @@ public class SendFeedback extends Command<HttpResult> {
     public HttpResult call() throws Exception {
         JsonArray feedbackAnswers = new JsonArray();
 
+        JsonObject jsonParent = appendFeedbacks(feedbackAnswers);
+
+        return new UrlCommunicator(settings).makePostWithJson(jsonParent, url);
+    }
+
+    private JsonObject appendFeedbacks(JsonArray feedbackAnswers) {
         for (Entry<String, String> entry : answers.entrySet()) {
             JsonObject jsonAnswer = new JsonObject();
             jsonAnswer.addProperty("question_id", entry.getKey());
@@ -45,7 +51,6 @@ public class SendFeedback extends Command<HttpResult> {
 
         JsonObject jsonParent = new JsonObject();
         jsonParent.add("answers", feedbackAnswers);
-
-        return new UrlCommunicator(settings).makePostWithJson(jsonParent, url);
+        return jsonParent;
     }
 }

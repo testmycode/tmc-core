@@ -16,13 +16,10 @@ public final class ExerciseKey {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof ExerciseKey) {
-            ExerciseKey that = (ExerciseKey) obj;
-            return Objects.equals(this.courseName, that.courseName)
-                    && Objects.equals(this.exerciseName, that.exerciseName);
-        } else {
-            return false;
-        }
+        if (!(obj instanceof ExerciseKey)) return false;
+        ExerciseKey that = (ExerciseKey) obj;
+        return Objects.equals(this.courseName, that.courseName)
+                && Objects.equals(this.exerciseName, that.exerciseName);
     }
 
     @Override

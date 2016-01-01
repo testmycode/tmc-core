@@ -43,7 +43,7 @@ public class ListCourses extends Command<List<Course>> {
         try {
             return tmcApi.getCourses();
         } catch (IOException ex) {
-            throw new TmcCoreException("Failed to fetch courses from server", ex);
+            throw new TmcCoreException("Failed to fetch courses from server. Check your credentials and server address.", ex);
         }
     }
 }

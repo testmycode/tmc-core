@@ -67,10 +67,9 @@ public class ListCoursesTest {
         List<Course> courses = new ListCourses(settings, tmcApi).call();
         assertEquals("test-course", courses.get(0).getName());
     }
-
-    @Test
+    
+    @Test(expected=TmcCoreException.class)
     public void listCoursesWillThrowExceptionIfAuthFailedOnServer() throws TmcCoreException {
-        expectedException.expectCause(IsInstanceOf.<Throwable>instanceOf(TmcServerException.class));
         wireMock.stubFor(
                 get(WireMock.urlPathEqualTo("/courses.json"))
                         .willReturn(WireMock.aResponse().withStatus(401)));

@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.core.communication;
 
+// TODO: why exist
 public class HttpResult {
 
     private String data;

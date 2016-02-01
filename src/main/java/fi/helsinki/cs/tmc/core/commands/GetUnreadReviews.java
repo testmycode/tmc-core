@@ -13,6 +13,7 @@ import java.util.List;
 public class GetUnreadReviews extends Command<List<Review>> {
 
     private final Course course;
+    // TODO: move hangler code here
     private final ReviewHandler handler;
 
     /**

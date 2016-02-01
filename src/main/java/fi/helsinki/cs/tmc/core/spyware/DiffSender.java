@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+// VALIDATE or just replace from NB
 public class DiffSender {
     private TmcSettings settings;
     private UrlCommunicator urlCommunicator;

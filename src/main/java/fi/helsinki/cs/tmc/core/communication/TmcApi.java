@@ -23,6 +23,7 @@ import java.util.List;
 /**
  * A Utility class for handling JSONs downloaded from the TMC-server.
  */
+// TODO: all 'keys', use objects Course, Exercise etc.
 public class TmcApi {
 
     private UrlCommunicator urlCommunicator;
@@ -47,6 +48,7 @@ public class TmcApi {
      * @param serverAddress address of the tmc server
      * @return List of Course-objects
      */
+    // TODO: extract gson + courses array to list?
     public List<Course> getCourses(String serverAddress) throws IOException {
         String coursesAddress = helper.allCoursesAddress(serverAddress);
         JsonObject jsonObject = getJsonFrom(URI.create(coursesAddress));
@@ -70,9 +72,11 @@ public class TmcApi {
      * @param url url from which the object data is fetched
      * @return JSON-object
      */
+    // TODO: WAT - private
     public JsonObject getJsonFrom(URI url) throws IOException {
         HttpResult httpResult = urlCommunicator.makeGetRequestWithAuthentication(url);
         if (httpResult == null) {
+            // TODO: log + exception?
             return null;
         }
         String data = httpResult.getData();
@@ -85,6 +89,7 @@ public class TmcApi {
      * @param url url from which the data is fetched
      * @return JSON-object
      */
+    // TODO:  can't we use get Json? -- or fix that - private?
     public String getRawTextFrom(URI url) throws IOException {
         HttpResult httpResult = urlCommunicator.makeGetRequestWithAuthentication(url);
         if (httpResult == null) {
@@ -99,6 +104,7 @@ public class TmcApi {
      * @param reviewUrl which is found from course-object
      * @return List of reviews
      */
+    // TODO: extract GSON + review[] -> List<>
     public List<Review> getReviews(URI reviewUrl) throws IOException, URISyntaxException {
         JsonObject jsonObject = getJsonFrom(helper.withParams(reviewUrl));
         Gson mapper = new Gson();
@@ -112,6 +118,7 @@ public class TmcApi {
      * @param courseUrl url of the course we are interested in
      * @return String of all exercise names separated by newlines
      */
+    // TODO: return List<> or rm
     public String getExerciseNames(URI courseUrl) throws IOException {
         List<Exercise> exercises = getExercises(courseUrl);
         StringBuilder asString = new StringBuilder();
@@ -125,6 +132,7 @@ public class TmcApi {
     /**
      * Reads courses from string.
      */
+    // TODO: deserialize json data to course objects + private + extract gson :)
     public List<Course> getCoursesFromString(String jsonString) {
         JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
         Gson mapper = new Gson();
@@ -135,6 +143,7 @@ public class TmcApi {
     /**
      * Reads one course from string.
      */
+    // TODO: deserialize json data to course objects + private + extract gson :)
     public Course getCourseFromString(String jsonString) {
         JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
         Gson mapper = new Gson();
@@ -146,6 +155,7 @@ public class TmcApi {
      *
      * @return an course Object (parsed from JSON)
      */
+    // TODO: make non optional? move out anyways -- courseDB
     public Optional<Course> getCourse(int courseId) throws IOException, URISyntaxException {
         List<Course> allCourses = getCourses();
         for (Course course : allCourses) {
@@ -162,6 +172,7 @@ public class TmcApi {
      * @param courseUrl URL path to course JSON
      * @return an Course object (parsed from JSON)
      */
+    // TODO: make non optional - extract GSON - preconditions -
     public Optional<Course> getCourse(URI courseUrl) throws IOException {
         JsonObject courseJson = getJsonFrom(courseUrl);
         if (courseJson == null) {
@@ -171,6 +182,7 @@ public class TmcApi {
         Course course = mapper.fromJson(courseJson.getAsJsonObject("course"), Course.class);
 
         if (course == null) {
+            // TODO: pois/precond?
             return Optional.fromNullable(course);
         }
 
@@ -181,6 +193,7 @@ public class TmcApi {
         return Optional.of(course);
     }
 
+    // TODO: rm - unused
     private boolean courseExists(int courseId) throws IOException, TmcCoreException {
         List<Course> allCourses = getCourses();
         for (Course course : allCourses) {
@@ -197,6 +210,7 @@ public class TmcApi {
      * @param course Course that we are interested in
      * @return List of all exercises as Exercise-objects
      */
+    // TODO: WAT - rm
     public List<Exercise> getExercisesFromServer(Course course)
             throws IOException, URISyntaxException {
         return getExercises(course.getId());
@@ -208,6 +222,7 @@ public class TmcApi {
      * @param id id of the course we are interested in
      * @return List of a all exercises as Exercise-objects
      */
+    // TODO: rename ID
     public List<Exercise> getExercises(int id) throws IOException, URISyntaxException {
         Optional<Course> courseOptional = getCourse(id);
         if (courseOptional.isPresent()) {
@@ -227,6 +242,7 @@ public class TmcApi {
      * @return List of all exercises as Exercise-objects. If no course is found, empty list will be
      *     returned.
      */
+    // TODO: same as above. refactor.
     public List<Exercise> getExercises(URI courseUrl) throws IOException {
         Optional<Course> courseOptional = getCourse(courseUrl);
         if (courseOptional.isPresent()) {
@@ -245,6 +261,7 @@ public class TmcApi {
      * @param url to make request to
      * @return A SubmissionResult object which contains data of submission.
      */
+    // TODO: gson. ya know
     public SubmissionResult getSubmissionResult(URI url) throws IOException {
         JsonObject submission = getJsonFrom(url);
         Gson mapper = new Gson();
@@ -257,6 +274,7 @@ public class TmcApi {
      * @param result HTTPResult containing JSON with submission url.
      * @return url where submission results are located.
      */
+    // TODO:  parse result, private?
     public URI getSubmissionUrl(HttpResult result) {
         return getPropertyFromResult(result, "submission_url");
     }
@@ -267,10 +285,12 @@ public class TmcApi {
      * @param result HTTPResult containing JSON with paste url.
      * @return url where paste is located.
      */
+    // TODO:  parse result, private?
     public URI getPasteUrl(HttpResult result) {
         return getPropertyFromResult(result, "paste_url");
     }
 
+    // TODO:  extract json parser?
     private URI getPropertyFromResult(HttpResult result, String property) {
         JsonElement jelement = new JsonParser().parse(result.getData());
         JsonObject jobject = jelement.getAsJsonObject();

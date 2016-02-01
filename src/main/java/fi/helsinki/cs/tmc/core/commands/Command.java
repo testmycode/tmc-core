@@ -14,11 +14,13 @@ import java.util.concurrent.Callable;
 public abstract class Command<E> implements Callable<E> {
 
     protected TmcSettings settings;
+    // TODO: Make it list, default empty.
     protected ProgressObserver observer;
 
     /**
      * Constructs a Command object.
      */
+    // TODO: fix constructors
     public Command() {}
 
     /**
@@ -43,12 +45,17 @@ public abstract class Command<E> implements Callable<E> {
      *
      * <p>If no progress observer is assigned, nothing happens.
      */
+
     protected void informObserver(double percentageDone, String message) {
         if (observer != null) {
             observer.progress(percentageDone, message);
         }
     }
 
+    // TODO: Just push text notifications with no numeric progress info see below:
+    // protected void informObserver(String message);
+
+    
     /**
      * Informs an associated {@link ProgressObserver} about the current status of the command.
      *

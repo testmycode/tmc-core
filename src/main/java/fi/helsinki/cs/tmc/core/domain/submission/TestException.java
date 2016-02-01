@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.core.domain.submission;
 
+// Replace from langs or langs-abstraction
 public class TestException {
 
     private String className;

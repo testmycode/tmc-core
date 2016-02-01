@@ -13,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+// Remove samples
 public class Exercise implements Serializable {
 
     private static final Logger log = LoggerFactory.getLogger(Exercise.class);
@@ -95,6 +96,7 @@ public class Exercise implements Serializable {
     }
 
     public void setName(String name) {
+        // TODO: preconfirions.checknull
         if (name == null) {
             throw new NullPointerException("name was null at Exercise.setName");
         }
@@ -130,9 +132,11 @@ public class Exercise implements Serializable {
 
     public Date getDeadlineDate() {
         try {
+            // TODO: extract SDF
             DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssX");
             return format.parse(this.getDeadline());
         } catch (ParseException ex) {
+            // TODO: logging
             System.out.println(ex.getMessage());
             return null;
         }
@@ -252,6 +256,7 @@ public class Exercise implements Serializable {
 
     private String courseName;
 
+    // TODO: Move + chek langs
     public enum ValgrindStrategy {
         @SerializedName("")
         NONE,
@@ -264,11 +269,13 @@ public class Exercise implements Serializable {
     }
 
     public boolean hasDeadlinePassedAt(Date time) {
+        // TODO: preconditions
         if (time == null) {
             throw new NullPointerException("Given time was null at Exercise.isDeadlineEnded");
         }
         if (deadline != null) {
             try {
+                // TODO: extract
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
                 Date deadlineDate = format.parse(deadline);
                 return deadlineDate.getTime() < time.getTime();
@@ -298,6 +305,7 @@ public class Exercise implements Serializable {
     }
 
     public void setDownloadUrl(URI downloadAddress) {
+        // TODO: preconditions
         if (downloadAddress == null) {
             throw new NullPointerException(
                     "downloadAddress was null at Exercise.setDownloadAddress");

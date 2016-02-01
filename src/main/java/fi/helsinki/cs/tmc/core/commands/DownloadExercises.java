@@ -24,8 +24,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * A {@link Command} for downloading exercises.
  */
+// TODO: why all these params
+// TODO: rewrite if feel like doing it.
 public class DownloadExercises extends Command<List<Exercise>> {
 
+    // TODO: sort and group by type+visibility or usage
     private ExerciseDownloader exerciseDownloader;
     private ExerciseChecksumCache cache;
     private TmcApi tmcApi;

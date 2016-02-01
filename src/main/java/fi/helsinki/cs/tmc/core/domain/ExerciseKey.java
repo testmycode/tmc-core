@@ -16,6 +16,7 @@ public final class ExerciseKey {
 
     @Override
     public boolean equals(Object obj) {
+        // TODO: nullcheck + rewrite?
         if (obj instanceof ExerciseKey) {
             ExerciseKey that = (ExerciseKey) obj;
             return Objects.equals(this.courseName, that.courseName)

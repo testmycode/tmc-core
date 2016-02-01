@@ -10,6 +10,7 @@ public interface TmcSettings {
 
     String getServerAddress();
 
+    // TODO:  abstract outh login + passwd as it may be login + oauth token soon
     String getPassword();
 
     String getUsername();
@@ -27,11 +28,13 @@ public interface TmcSettings {
 
     String clientVersion();
 
+    // TODO: fix, it returns: `username:password`
     String getFormattedUserData();
 
     /**
      * Return the directory where course directories will be located. Projects
      * will be placed as follows: maindirectory/courseName/exerciseName
      */
+    // TODO: rename
     Path getTmcMainDirectory();
 }

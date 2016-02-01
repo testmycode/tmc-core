@@ -13,6 +13,7 @@ import java.util.List;
 public class GetExerciseUpdates extends Command<List<Exercise>> {
 
     private final Course course;
+    // TODO:  move handler code here?
     private final ExerciseUpdateHandler handler;
 
     /**

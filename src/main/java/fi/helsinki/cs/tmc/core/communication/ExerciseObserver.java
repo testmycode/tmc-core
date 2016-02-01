@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.communication;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 
+// TODO: WAT
 public interface ExerciseObserver {
     ExerciseObserver NOP =
             new ExerciseObserver() {

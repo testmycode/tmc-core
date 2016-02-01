@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// TODO: relocate all HTTP API usage?
+// TODO: apidoc?
 public class ExerciseSubmitter {
 
     private RootFinder rootFinder;
@@ -38,8 +40,10 @@ public class ExerciseSubmitter {
     /**
      * Exercise deadline is checked with this date format.
      */
+    // TODO: multiple dateformats in same package - to SDF
     private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
 
+    // TODO: don't create multiple TMCApis
     public ExerciseSubmitter(TmcSettings settings) {
         this(
                 new ProjectRootFinder(new TaskExecutorImpl(), new TmcApi(settings)),
@@ -82,6 +86,8 @@ public class ExerciseSubmitter {
     /**
      * Compare two dates and tell if deadline has gone.
      */
+    // TODO: deadlinePassed?, extract/inline
+    // TODO: JodaTime?
     private boolean deadlineGone(Date current, Date deadline) {
         return current.getTime() > deadline.getTime();
     }
@@ -93,6 +99,8 @@ public class ExerciseSubmitter {
      * @return URI from which to get results or null if exercise was not found.
      * @throws IOException if zip creation fails
      */
+    // TODO: exceptions, plz...... puuh
+    // TODO: refactor, override NOP
     public URI submit(Path currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
@@ -123,6 +131,7 @@ public class ExerciseSubmitter {
      * @return URI from which to get paste URL or null if exercise was not found.
      * @throws IOException if zip creation fails
      */
+    // TODO: Call above
     public URI submitPaste(Path currentPath)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
@@ -138,6 +147,7 @@ public class ExerciseSubmitter {
      * @return URI from which to get paste URL or null if exercise was not found.
      * @throws IOException if failed to create zip.
      */
+    // TODO: refactor above.
     public URI submitPasteWithComment(Path currentPath, String comment)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
@@ -151,6 +161,7 @@ public class ExerciseSubmitter {
     /**
      * Requests a code review for a exercise.
      */
+    // TODO: refactor above.
     public URI submitWithCodeReviewRequest(Path currentPath, String message)
             throws IOException, ParseException, ExpiredException, IllegalArgumentException,
                     TmcCoreException, URISyntaxException, NoLanguagePluginFoundException {
@@ -169,6 +180,10 @@ public class ExerciseSubmitter {
      * @throws ParseException   to frontend
      * @throws ExpiredException to frontend
      */
+    // TODO: WATWATWAT!!!
+    // TODO: rename throwIfNotSubmittable
+    // TODO: softDeadline?
+    // TODO: params...
     private Exercise initExercise(Path currentPath)
             throws IllegalArgumentException, IOException, TmcCoreException, URISyntaxException,
                     ParseException, ExpiredException {
@@ -180,6 +195,7 @@ public class ExerciseSubmitter {
         return currentExercise;
     }
 
+    // TODO: WAT - rm
     private Exercise searchExercise(Path currentPath)
             throws IllegalArgumentException, IOException, TmcCoreException, URISyntaxException {
         Optional<Exercise> currentExercise = findExercise(currentPath);
@@ -189,6 +205,7 @@ public class ExerciseSubmitter {
         return currentExercise.get();
     }
 
+    // TODO: why here
     private URI sendSubmissionToServerWithPaste(byte[] file, URI url) throws IOException {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
@@ -196,6 +213,7 @@ public class ExerciseSubmitter {
         return tmcApi.getPasteUrl(result);
     }
 
+    // TODO: refactor
     private URI sendZipFile(Path currentPath, Exercise currentExercise, boolean paste)
             throws IOException, URISyntaxException, NoLanguagePluginFoundException {
         URI returnUrl = urlHelper.withParams(currentExercise.getReturnUrl());
@@ -209,6 +227,7 @@ public class ExerciseSubmitter {
         return resultUrl;
     }
 
+    // TODO: refactor
     private URI sendZipFile(
             Path currentPath, Exercise currentExercise, ProgressObserver observer, boolean paste)
             throws IOException, URISyntaxException, NoLanguagePluginFoundException {
@@ -226,6 +245,7 @@ public class ExerciseSubmitter {
         return resultUrl;
     }
 
+    // TODO: refactor
     private URI sendZipFileWithParams(
             Path currentPath, Exercise currentExercise, boolean paste, Map<String, String> params)
             throws IOException, URISyntaxException, NoLanguagePluginFoundException {
@@ -240,6 +260,7 @@ public class ExerciseSubmitter {
         return resultUrl;
     }
 
+    // TODO: refactor
     private URI sendSubmissionToServer(byte[] file, URI url) throws IOException {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
@@ -247,6 +268,7 @@ public class ExerciseSubmitter {
         return tmcApi.getSubmissionUrl(result);
     }
 
+    // TODO: refactor
     private URI sendSubmissionToServerWithParams(byte[] file, URI url, Map<String, String> params)
             throws IOException {
         HttpResult result =
@@ -255,6 +277,7 @@ public class ExerciseSubmitter {
         return tmcApi.getSubmissionUrl(result);
     }
 
+    // TODO: refactor
     private URI sendSubmissionToServerWithPasteAndParams(
             byte[] file, URI url, Map<String, String> params) throws IOException {
         HttpResult result =
@@ -263,11 +286,13 @@ public class ExerciseSubmitter {
         return tmcApi.getPasteUrl(result);
     }
 
+    // TODO: WAT + RM
     private Optional<Exercise> findExercise(Path currentPath)
             throws IllegalArgumentException, IOException, TmcCoreException, URISyntaxException {
         return findCurrentExercise(findCourseExercises(), currentPath);
     }
 
+    // TODO: refactor / rm
     private List<Exercise> findCourseExercises()
             throws IllegalArgumentException, IOException, URISyntaxException {
         Optional<Course> currentCourse = this.settings.getCurrentCourse();
@@ -277,6 +302,7 @@ public class ExerciseSubmitter {
         return tmcApi.getExercises(currentCourse.get().getId());
     }
 
+    // TODO: refactor / rm
     private Optional<Exercise> findCurrentExercise(List<Exercise> courseExercises, Path currentDir)
             throws IllegalArgumentException {
         Optional<Path> rootDir = rootFinder.getRootDirectory(currentDir);
@@ -287,6 +313,7 @@ public class ExerciseSubmitter {
         return getExerciseByName(name, courseExercises);
     }
 
+    // TODO: refactor / rm
     private Optional<Exercise> getExerciseByName(String name, List<Exercise> courseExercises) {
         for (Exercise exercise : courseExercises) {
             if (exercise.getName().contains(name)) {

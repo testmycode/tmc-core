@@ -25,10 +25,12 @@ public class GetCourse extends Command<Course> {
      * Constructs a new get course command with {@code settings} for fetching course details for
      * {@code courseName}.
      */
+    // TODO: why http requests
     public GetCourse(TmcSettings settings, String courseName) throws TmcCoreException {
         super(settings);
 
         this.tmcApi = new TmcApi(settings);
+        // TODO: get?
         this.url = pollServerForCourseUrl(courseName);
     }
 
@@ -57,6 +59,7 @@ public class GetCourse extends Command<Course> {
         return course.get();
     }
 
+    // TODO: make api always to add api version etc. no need to do it here
     private Optional<Course> getCourseOptional(URI urlWithApiVersion) throws TmcCoreException {
         Optional<Course> course;
         try {
@@ -93,6 +96,7 @@ public class GetCourse extends Command<Course> {
         throw new TmcCoreException(errorMessage);
     }
 
+    // TODO: preconditions and rm
     private void validate(String field, String message) throws TmcCoreException {
         if (field == null || field.isEmpty()) {
             throw new TmcCoreException("Failed to fetch course details:" + message);

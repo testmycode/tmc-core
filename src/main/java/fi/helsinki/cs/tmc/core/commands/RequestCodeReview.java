@@ -46,10 +46,12 @@ public class RequestCodeReview extends Command<URI> {
     /**
      * Entry point for launching this command.
      */
+    // TODO: exceptiom fun
     @Override
     public URI call()
             throws TmcCoreException, ExpiredException, ParseException, IOException,
                     URISyntaxException, IllegalArgumentException, NoLanguagePluginFoundException {
+        // TODO: do this check elsewhere/om settigs? make settings/api to thow it, whoever uses this.
         if (!settings.userDataExists()) {
             throw new TmcCoreException("Cannot request a code review. User must be authenticated.");
         }

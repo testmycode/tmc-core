@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// TODO: Relocate non http elsewhere.
 public class ExerciseUpdateHandler extends UpdateHandler<Exercise> {
 
     private ExerciseChecksumCache cache;

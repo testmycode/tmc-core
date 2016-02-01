@@ -15,6 +15,7 @@ import java.util.List;
 /**
  * A {@link Command} for sending spyware data to the server.
  */
+// TODO: Check from NB, rename at least diff to event
 public class SendSpywareDiffs extends Command<List<HttpResult>> {
 
     private byte[] spywareDiffs;
@@ -31,6 +32,7 @@ public class SendSpywareDiffs extends Command<List<HttpResult>> {
         this.sender = sender;
     }
 
+    // TODO: move validations?
     private void assertHasRequiredData() throws TmcCoreException {
         testUsername();
         testPassword();

@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: relocate?
 public class ReviewHandler extends UpdateHandler<Review> {
 
     public ReviewHandler(TmcApi tmcApi) {
@@ -26,6 +27,7 @@ public class ReviewHandler extends UpdateHandler<Review> {
     }
 
     @Override
+    // TODO: isUnread
     protected boolean isNew(Review review) {
         return !review.isMarkedAsRead();
     }

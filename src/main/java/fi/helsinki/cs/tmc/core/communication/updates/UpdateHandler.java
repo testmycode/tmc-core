@@ -6,6 +6,7 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO: relocate?
 public abstract class UpdateHandler<T> {
 
     protected TmcApi tmcApi;

@@ -144,6 +144,7 @@ public class Review {
         this.updatedAt = updatedAt;
     }
 
+    // TODO: extract and have fun
     public void markAs(boolean read, UrlCommunicator urlCommunicator)
             throws IOException, URISyntaxException {
         Map<String, String> headers = addHeaders(read);
@@ -153,6 +154,7 @@ public class Review {
         }
     }
 
+    // TODO: extract and have fun -- whyyyyyy
     private Map<String, String> addHeaders(boolean read) {
         Map<String, String> headers = new HashMap<>();
         String readUpdate = "mark_as_";

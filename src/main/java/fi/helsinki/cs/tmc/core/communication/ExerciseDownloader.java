@@ -24,6 +24,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+// TODO: threading to user/plugin - make threadsafe
 public class ExerciseDownloader {
 
     private static final Logger log = LoggerFactory.getLogger(ExerciseDownloader.class);

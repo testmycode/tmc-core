@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.domain.submission;
 import java.util.List;
 import java.util.Map;
 
+// Replace from langs or langs-abstraction
 public class Validations {
 
     private String strategy;

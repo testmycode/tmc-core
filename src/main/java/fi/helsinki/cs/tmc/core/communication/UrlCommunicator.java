@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+// TODO: Nuke from orbit? -- aand copypaste from NB and smile thou it's as bad
 public class UrlCommunicator {
 
     private static final Logger log = LoggerFactory.getLogger(UrlCommunicator.class);

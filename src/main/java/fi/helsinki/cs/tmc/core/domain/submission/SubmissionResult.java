@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Collections;
 import java.util.List;
 
+// Diff with tmc-nb
 public class SubmissionResult {
 
     public enum TestResultStatus {

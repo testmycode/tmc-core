@@ -15,6 +15,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
+// TODO: Slow start + Backoff aluks kiihtyvässä tahdissa requestit ja sit 1min tms kuluttua hitaammin koska loop + 3min timeout tms
+// TODO: check NB
+// TODO: Make it singleuse -- force thread safety
 public class SubmissionPoller {
 
     /**
@@ -27,6 +30,7 @@ public class SubmissionPoller {
      */
     private final int pollInterval = 1000;
 
+    // TODO: +
     private final String timeOutmessage =
             "Something went wrong. " + "Please check your internet connection.";
 
@@ -57,6 +61,7 @@ public class SubmissionPoller {
      * @return SubmissionResult containing details of submission. Null if timed out.
      * @throws InterruptedException if thread failed to sleep
      */
+    // TODO: refactor override NOP
     private Optional<SubmissionResult> pollSubmissionUrl(URI url)
             throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
@@ -94,6 +99,7 @@ public class SubmissionPoller {
     /**
      * Returns feedback questions from the latest submission result.
      */
+    // TODO: thread safe?
     public List<FeedbackQuestion> getFeedbackQuestions() {
         return latestResult.getFeedbackQuestions();
     }
@@ -104,6 +110,7 @@ public class SubmissionPoller {
      *
      * @param url the submission url
      */
+    // TODO: refactor NOP
     public SubmissionResult getSubmissionResult(URI url)
             throws InterruptedException, TmcCoreException, IOException {
         Optional<SubmissionResult> result = pollSubmissionUrl(url);
@@ -129,6 +136,7 @@ public class SubmissionPoller {
         return result.get();
     }
 
+    // TODO: refactor NOP
     private boolean isProcessing(String jsonResult) {
         if (jsonResult == null || jsonResult.trim().isEmpty()) {
             return false;

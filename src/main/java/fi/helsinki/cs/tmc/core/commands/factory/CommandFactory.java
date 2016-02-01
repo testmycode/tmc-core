@@ -47,6 +47,8 @@ import java.util.Map;
  * This class is utilized heavily on {@link fi.helsinki.cs.tmc.core.TmcCore}.
  * All methods here will return a type of {@link fi.helsinki.cs.tmc.core.commands.Command}.
  */
+// TODO: rename Cmd to Command or remove it from names...
+// TODO: final class?
 public class CommandFactory {
 
     public static Command<Boolean> getVerifyCredentialsCmd(

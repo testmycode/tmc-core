@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core.domain.submission;
 
 import com.google.gson.annotations.SerializedName;
 
+// Replace from langs or langs-abstraction
 public class TestCase {
 
     private boolean successful;

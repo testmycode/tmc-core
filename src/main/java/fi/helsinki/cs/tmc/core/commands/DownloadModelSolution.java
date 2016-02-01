@@ -21,6 +21,7 @@ public class DownloadModelSolution extends Command<Boolean> {
     public DownloadModelSolution(TmcSettings settings, Exercise exercise) {
         this.settings = settings;
         this.exercise = exercise;
+        // TODO: inline to the exdownloader
         TmcApi tmcApi = new TmcApi(settings);
         this.exerciseDownloader = new ExerciseDownloader(new UrlCommunicator(settings), tmcApi);
     }

@@ -20,6 +20,7 @@ public class UrlHelper {
 
     private final TmcSettings settings;
 
+    // TODO: refactor
     public UrlHelper(TmcSettings settings) {
         apiParam = "api_version=" + settings.apiVersion();
         String clientVersion = "&client_version=" + settings.clientVersion();

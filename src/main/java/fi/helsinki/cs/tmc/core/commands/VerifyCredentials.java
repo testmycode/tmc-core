@@ -34,6 +34,7 @@ public class VerifyCredentials extends Command<Boolean> {
         checkPassword();
     }
 
+    // TODO: consider OAUTH2
     private void checkPassword() throws TmcCoreException {
         if (isNullOrEmpty(settings.getPassword())) {
             throw new TmcCoreException("Cannot verify credentials when no password is set.");
@@ -53,8 +54,10 @@ public class VerifyCredentials extends Command<Boolean> {
     public Boolean call() throws TmcCoreException, IOException {
         assertHasRequiredData();
 
+        // TODO: ????
         String auth = settings.getUsername() + ":" + settings.getPassword();
 
+        // TODO: TMC-api endpoint for auth check.
         int response =
                 communicator
                         .makeGetRequest(

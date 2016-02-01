@@ -57,6 +57,9 @@ public class Submit extends Command<SubmissionResult> {
         super.observer = observer;
     }
 
+    // TODO: I hate this pattern for validations.
+    // TODO: just make api calls and let it return 40x.
+    // TODO: leave validations to api. for most of the cases.....
     private void assertHasRequiredData() throws TmcCoreException {
         checkUsername();
         checkPassword();
@@ -85,6 +88,7 @@ public class Submit extends Command<SubmissionResult> {
 
         assertHasRequiredData();
 
+        // TODO: List<Observer>....
         if (observer != null) {
             URI returnUrl = submitter.submit(this.path, observer);
             return submissionPoller.getSubmissionResult(returnUrl, observer);

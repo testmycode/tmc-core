@@ -17,11 +17,9 @@ after_success:
 jdk:
   - oraclejdk8
   - oraclejdk7
-  - openjdk6
 
 matrix:
   allow_failures:
-    - jdk: openjdk6
     - os: osx
 
 os:

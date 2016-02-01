@@ -5,9 +5,10 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
+import fi.helsinki.cs.tmc.core.exceptions.InvalidExerciseDirectoryException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
-import fi.helsinki.cs.tmc.core.zipping.RootFinder;
+import fi.helsinki.cs.tmc.core.util.ProjectRootFinder;
+import fi.helsinki.cs.tmc.core.util.RootFinder;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
@@ -279,11 +280,13 @@ public class ExerciseSubmitter {
 
     private Optional<Exercise> findCurrentExercise(List<Exercise> courseExercises, Path currentDir)
             throws IllegalArgumentException {
-        Optional<Path> rootDir = rootFinder.getRootDirectory(currentDir);
-        if (!rootDir.isPresent()) {
-            throw new IllegalArgumentException("Could not find exercise directory");
+        Path rootDir;
+        try {
+            rootDir = rootFinder.getExerciseRoot(currentDir);
+        } catch (InvalidExerciseDirectoryException ex) {
+            throw new IllegalArgumentException("Could not find exercise directory", ex);
         }
-        String name = rootDir.get().getFileName().toString();
+        String name = rootDir.getFileName().toString();
         return getExerciseByName(name, courseExercises);
     }
 

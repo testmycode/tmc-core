@@ -2,7 +2,7 @@ package fi.helsinki.cs.tmc.core.testhelpers;
 
 import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.zipping.RootFinder;
+import fi.helsinki.cs.tmc.core.util.RootFinder;
 
 import com.google.common.base.Optional;
 
@@ -43,11 +43,11 @@ public class ProjectRootFinderStub implements RootFinder {
     }
 
     @Override
-    public Optional<Path> getRootDirectory(Path zipRoot) {
-        return Optional.of(returnValue);
+    public Path getExerciseRoot(Path zipRoot) {
+        return returnValue;
     }
 
-    public Optional<Course> getCurrentCourse(Path path) {
+    public Optional<Course> getCourse(Path path) {
         String[] folders = path.toString().split("\\" + File.separator);
 
         for (String folder : folders) {

@@ -32,7 +32,7 @@ import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.spyware.DiffSender;
-import fi.helsinki.cs.tmc.core.zipping.ProjectRootFinder;
+import fi.helsinki.cs.tmc.core.util.ProjectRootFinder;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;

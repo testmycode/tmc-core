@@ -39,7 +39,7 @@ public class RunCheckStyle extends Command<ValidationResult> {
     public ValidationResult call() throws TmcCoreException {
         try {
             return tmcLangs.runCheckCodeStyle(path);
-        } catch ( ex) {
+        } catch (NoLanguagePluginFoundException ex) {
             throw new TmcCoreException("Unable to run code style validations on target path", ex);
         }
     }

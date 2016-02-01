@@ -13,7 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-// Remove samples
+// TODO: Remove samples
 public class Exercise implements Serializable {
 
     private static final Logger log = LoggerFactory.getLogger(Exercise.class);
@@ -25,7 +25,7 @@ public class Exercise implements Serializable {
     @SerializedName("deadline_description")
     private String deadlineDescription; //: null,
 
-    // todo make this Date?
+    // TODO:  make this Date?
     private String deadline; //: null,
 
     private String checksum; //: "406f2f0690550c6dea94f319b2b1580c",

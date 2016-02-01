@@ -5,7 +5,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
-// WTF, why it exists????
+// TODO: WTF, why it exists????
 public class ParameterTester {
 
     public static void checkStringParameters(String... params) throws TmcCoreException {

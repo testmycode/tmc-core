@@ -6,7 +6,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-// DIFF with nb
+// TODO: DIFF with nb
 public class Course {
 
     private int id;

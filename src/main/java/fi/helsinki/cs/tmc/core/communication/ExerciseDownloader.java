@@ -3,7 +3,7 @@ package fi.helsinki.cs.tmc.core.communication;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
-import fi.helsinki.cs.tmc.core.util.Folders;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
@@ -101,11 +101,16 @@ public class ExerciseDownloader {
      * @param exercise exercise which will be downloaded
      * @param path     path where single exercise will be downloaded
      */
-    public boolean handleSingleExercise(Exercise exercise, Path path) {
+    public boolean handleSingleExercise(Exercise exercise, Path path) throws TmcCoreException {
         if (exercise.isLocked()) {
             return false;
         }
-        Path filePath = Folders.tempFolder().resolve(exercise.getName() + ".zip");
+        Path filePath = null;
+        try {
+            filePath = Files.createTempDirectory("TMC-temp").resolve(exercise.getName() + ".zip");
+        } catch (IOException e) {
+            throw new TmcCoreException("Failed to create temporary directory for the download", e);
+        }
         if (!downloadExerciseZip(exercise.getZipUrl(), filePath)) {
             return false;
         }
@@ -120,8 +125,13 @@ public class ExerciseDownloader {
         return true;
     }
 
-    public boolean downloadModelSolution(Exercise exercise, Path targetPath) {
-        Path zipPath = Folders.tempFolder().resolve(exercise.getName() + "-solution.zip");
+    public boolean downloadModelSolution(Exercise exercise, Path targetPath) throws TmcCoreException {
+        Path zipPath = null;
+        try {
+            zipPath = Files.createTempDirectory("TMC-temp").resolve(exercise.getName() + "-solution.zip");
+        } catch (IOException e) {
+            throw new TmcCoreException("Failed to create temporary directory for the solution", e);
+        }
         if (!downloadExerciseZip(exercise.getSolutionDownloadUrl(), zipPath)) {
             return false;
         }
@@ -170,7 +180,7 @@ public class ExerciseDownloader {
         }
 
         @Override
-        public Boolean call() {
+        public Boolean call() throws Exception {
             return handleSingleExercise(exercise, coursePath);
         }
     }

@@ -14,7 +14,8 @@ import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getSendSpy
 import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getSubmitCmd;
 import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getUnreadReviewsCmd;
 import static fi.helsinki.cs.tmc.core.commands.factory.CommandFactory.getVerifyCredentialsCmd;
-import static fi.helsinki.cs.tmc.core.util.ParameterTester.checkStringParameters;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
 
 import fi.helsinki.cs.tmc.core.cache.ExerciseChecksumFileCache;
 import fi.helsinki.cs.tmc.core.commands.Command;
@@ -29,6 +30,7 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 
+import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -92,8 +94,15 @@ public class TmcCore {
      * @return A future-object containing true or false on success or fail
      */
     public ListenableFuture<Boolean> verifyCredentials() throws TmcCoreException {
-        checkStringParameters(
-                settings.getUsername(), settings.getPassword(), settings.getServerAddress());
+        Preconditions.checkArgument(
+                !isNullOrEmpty(settings.getPassword()),
+                "Param {" + settings.getPassword() + "} empty or null.");
+        Preconditions.checkArgument(
+                !isNullOrEmpty(settings.getUsername()),
+                "Param {" + settings.getUsername() + "} empty or null.");
+        Preconditions.checkArgument(
+                !isNullOrEmpty(settings.getServerAddress()),
+                "Param {" + settings.getServerAddress() + "} empty or null.");
 
         return threadPool.submit(getVerifyCredentialsCmd(settings));
     }
@@ -106,7 +115,12 @@ public class TmcCore {
      */
     @Deprecated
     public ListenableFuture<Course> getCourse(URI url) throws TmcCoreException {
-        checkStringParameters(settings.getUsername(), settings.getPassword());
+        Preconditions.checkArgument(
+                !isNullOrEmpty(settings.getPassword()),
+                "Param {" + settings.getPassword() + "} empty or null.");
+        Preconditions.checkArgument(
+                !isNullOrEmpty(settings.getUsername()),
+                "Param {" + settings.getUsername() + "} empty or null.");
         return threadPool.submit(getCourseCmd(settings, url));
     }
 
@@ -114,7 +128,12 @@ public class TmcCore {
      * Returns course instance with given name.
      */
     public ListenableFuture<Course> getCourse(String courseName) throws TmcCoreException {
-        checkStringParameters(settings.getUsername(), settings.getPassword());
+        Preconditions.checkArgument(
+                !isNullOrEmpty(settings.getPassword()),
+                "Param {" + settings.getPassword() + "} empty or null.");
+        Preconditions.checkArgument(
+                !isNullOrEmpty(settings.getUsername()),
+                "Param {" + settings.getUsername() + "} empty or null.");
         return threadPool.submit(getCourseCmd(settings, courseName));
     }
 

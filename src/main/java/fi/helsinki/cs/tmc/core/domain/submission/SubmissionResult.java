@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.domain.submission;
 
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
+import fi.helsinki.cs.tmc.langs.domain.TestCase;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -74,7 +75,7 @@ public class SubmissionResult {
     @SerializedName("solution_url")
     private String solutionUrl;
 
-    private Validations validations;
+    private ValidationResultImpl validations;
 
     private String valgrind;
 
@@ -104,11 +105,11 @@ public class SubmissionResult {
         this.error = error;
     }
 
-    public Validations getValidations() {
+    public ValidationResultImpl getValidations() {
         return validations;
     }
 
-    public void setValidations(Validations validations) {
+    public void setValidations(ValidationResultImpl validations) {
         this.validations = validations;
     }
 
@@ -188,7 +189,7 @@ public class SubmissionResult {
         int testsFailed = 0;
 
         for (TestCase test : testCases) {
-            if (!test.isSuccessful()) {
+            if (test.status != TestCase.Status.PASSED) {
                 testsFailed++;
             }
         }

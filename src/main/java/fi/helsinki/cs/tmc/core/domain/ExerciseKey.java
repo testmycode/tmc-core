@@ -15,14 +15,16 @@ public final class ExerciseKey {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ExerciseKey) {
-            ExerciseKey that = (ExerciseKey) obj;
-            return Objects.equals(this.courseName, that.courseName)
-                    && Objects.equals(this.exerciseName, that.exerciseName);
-        } else {
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
+        ExerciseKey that = (ExerciseKey) o;
+        return Objects.equals(courseName, that.courseName) &&
+                Objects.equals(exerciseName, that.exerciseName);
     }
 
     @Override

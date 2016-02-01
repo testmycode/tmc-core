@@ -18,6 +18,7 @@ import static org.mockito.Mockito.verify;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -217,7 +218,7 @@ public class ExerciseDownloaderTest {
     }
 
     @Test
-    public void downloadsModelSolution() throws IOException {
+    public void downloadsModelSolution() throws IOException, TmcCoreException {
         TaskExecutor executor = Mockito.mock(TaskExecutor.class);
         Mockito.doNothing()
                 .when(executor)

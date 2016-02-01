@@ -15,25 +15,27 @@ import java.util.Date;
 
 public class Exercise implements Serializable {
 
-    private static final Logger log = LoggerFactory.getLogger(Exercise.class);
+    private static final Logger logger = LoggerFactory.getLogger(Exercise.class);
+    private static final DateFormat DATE_FORMAT
+            = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
-    private int id; // = 284;
-    private String name; //": "viikko1-Viikko1_000.Hiekkalaatikko",
-    private boolean locked; // false,
+    private int id;
+    private String name;
+    private boolean locked;
 
     @SerializedName("deadline_description")
-    private String deadlineDescription; //: null,
+    private String deadlineDescription;
 
     // todo make this Date?
-    private String deadline; //: null,
+    private String deadline;
 
-    private String checksum; //: "406f2f0690550c6dea94f319b2b1580c",
+    private String checksum;
 
     @SerializedName("zip_url")
     private URI zipUrl;
 
     @SerializedName("return_url")
-    private URI returnUrl; //: "https://tmc.mooc.fi/staging/exercises/284/submissions.json",
+    private URI returnUrl;
 
     /**
      * The URL the solution can be downloaded from (admins only).
@@ -41,23 +43,23 @@ public class Exercise implements Serializable {
     @SerializedName("solution_zip_url")
     private URI solutionDownloadUrl;
 
-    private boolean returnable; //": true,
+    private boolean returnable;
 
     @SerializedName("requires_review")
-    private boolean requiresReview; //": false,
+    private boolean requiresReview;
 
-    private boolean attempted; //": false,
-    private boolean completed; //": false,
-    private boolean reviewed; //": false,
+    private boolean attempted;
+    private boolean completed;
+    private boolean reviewed;
 
     @SerializedName("all_review_points_given")
-    private boolean allReviewPointsGiven; //": true,
+    private boolean allReviewPointsGiven;
 
     @SerializedName("memory_limit")
-    private String memoryLimit; //": null,
+    private String memoryLimit;
 
     @SerializedName("runtime_params")
-    private String[] runtimeParams; //[ "-Xss8M" ]
+    private String[] runtimeParams;
 
     @SerializedName("valgrind_strategy")
     private ValgrindStrategy valgrindStrategy = ValgrindStrategy.FAIL;
@@ -130,10 +132,9 @@ public class Exercise implements Serializable {
 
     public Date getDeadlineDate() {
         try {
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssX");
-            return format.parse(this.getDeadline());
+            return DATE_FORMAT.parse(this.getDeadline());
         } catch (ParseException ex) {
-            System.out.println(ex.getMessage());
+            logger.warn("Failed to parse date {}", this.getDeadline(), ex);
             return null;
         }
     }
@@ -267,15 +268,9 @@ public class Exercise implements Serializable {
         if (time == null) {
             throw new NullPointerException("Given time was null at Exercise.isDeadlineEnded");
         }
-        if (deadline != null) {
-            try {
-                DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
-                Date deadlineDate = format.parse(deadline);
-                return deadlineDate.getTime() < time.getTime();
-            } catch (ParseException e) {
-                log.error("Could not parse date: {}", e);
-                return false;
-            }
+        Date deadlineDate = getDeadlineDate();
+        if (deadlineDate != null) {
+            return deadlineDate.getTime() < time.getTime();
         } else {
             return false;
         }

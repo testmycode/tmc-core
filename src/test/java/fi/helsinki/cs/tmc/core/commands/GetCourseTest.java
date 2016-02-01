@@ -79,13 +79,13 @@ public class GetCourseTest {
         return localSettings;
     }
 
-    @Test(expected = TmcCoreException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCheckDataPassword() throws Exception {
         core = new TmcCore(createSettingsWith("", "asdjh", "adsljads"));
         core.getCourse(finalUrl);
     }
 
-    @Test(expected = TmcCoreException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testCheckDataUsername() throws Exception {
         core = new TmcCore(createSettingsWith("asda", "", "asdasdjkhj"));
         core.getCourse(finalUrl);

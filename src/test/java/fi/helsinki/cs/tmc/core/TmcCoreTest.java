@@ -73,7 +73,7 @@ public class TmcCoreTest {
         verify(threadPool, times(1)).submit(any(VerifyCredentials.class));
     }
 
-    @Test(expected = TmcCoreException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void loginWithoutNumberFails() throws Exception {
         CoreTestSettings emptySettings = new CoreTestSettings("", "");
         emptySettings.setServerAddress(tmcServerAddress);
@@ -81,7 +81,7 @@ public class TmcCoreTest {
         tmcCore.verifyCredentials().get();
     }
 
-    @Test(expected = TmcCoreException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void loginWithoutServerAddrees() throws Exception {
         CoreTestSettings emptySettings = new CoreTestSettings("", "");
         emptySettings.setServerAddress("");

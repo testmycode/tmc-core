@@ -10,7 +10,7 @@ public class ParameterTester {
 
     public static void checkStringParameters(String... params) throws TmcCoreException {
         for (String param : params) {
-            Preconditions.checkArgument(isNullOrEmpty(param),"Param {" + param + "}empty or null.");
+            Preconditions.checkArgument(!isNullOrEmpty(param),"Param {" + param + "}empty or null.");
         }
     }
 }

@@ -11,5 +11,5 @@ public interface ProgressObserver {
      */
     void progress(String progressMessage);
 
-    void progress(Double procentDone, String progressMessage);
+    void progress(Double percentDone, String progressMessage);
 }

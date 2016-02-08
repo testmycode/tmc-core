@@ -257,7 +257,7 @@ public class TmcCore {
      *                          given path.
      */
     public ListenableFuture<ValidationResult> runCheckstyle(Path path) throws TmcCoreException {
-        return threadPool.submit(getRunCheckStyleCmd(path));
+        return threadPool.submit(getRunCheckStyleCmd(settings, path));
     }
 
     /**

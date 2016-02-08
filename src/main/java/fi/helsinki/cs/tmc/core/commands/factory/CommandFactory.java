@@ -126,8 +126,8 @@ public class CommandFactory {
         return new RunTests(settings, path);
     }
 
-    public static Command<ValidationResult> getRunCheckStyleCmd(Path path) {
-        return new RunCheckStyle(path);
+    public static Command<ValidationResult> getRunCheckStyleCmd(TmcSettings settings, Path path) {
+        return new RunCheckStyle(path, settings);
     }
 
     public static Command<List<Review>> getUnreadReviewsCmd(

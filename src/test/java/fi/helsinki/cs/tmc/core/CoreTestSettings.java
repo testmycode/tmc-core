@@ -6,6 +6,7 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import com.google.common.base.Optional;
 
 import java.nio.file.Path;
+import java.util.Locale;
 
 public class CoreTestSettings implements TmcSettings {
 
@@ -15,6 +16,7 @@ public class CoreTestSettings implements TmcSettings {
     private Course currentCourse;
     private String apiVersion;
     private Path mainDirectory;
+    private Locale locale;
 
     public CoreTestSettings() {
         apiVersion = "7";
@@ -103,6 +105,15 @@ public class CoreTestSettings implements TmcSettings {
     @Override
     public Path getTmcMainDirectory() {
         return this.mainDirectory;
+    }
+
+    @Override
+    public synchronized Locale getLocale() {
+        return locale;
+    }
+
+    public synchronized void setLocale(Locale locale) {
+        this.locale = locale;
     }
 
     public void setTmcMainDirectory(Path path) {

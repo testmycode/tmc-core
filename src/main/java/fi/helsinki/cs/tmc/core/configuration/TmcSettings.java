@@ -5,6 +5,7 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import com.google.common.base.Optional;
 
 import java.nio.file.Path;
+import java.util.Locale;
 
 public interface TmcSettings {
 
@@ -34,4 +35,6 @@ public interface TmcSettings {
      * will be placed as follows: maindirectory/courseName/exerciseName
      */
     Path getTmcMainDirectory();
+
+    Locale getLocale();
 }

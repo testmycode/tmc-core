@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.communication;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Matchers.any;
@@ -13,7 +12,6 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 
 import fi.helsinki.cs.tmc.core.CoreTestSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 
@@ -69,27 +67,6 @@ public class TmcApiTest {
     }
 
     @Test
-    public void getsExercisesCorrectlyFromCourseJson() throws IOException, TmcCoreException {
-        HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
-        Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(eq(URI.create("ankka"))))
-                .thenReturn(fakeResult);
-        String names = tmcApi.getExerciseNames(URI.create("ankka"));
-
-        assertTrue(names.contains("exercise1"));
-        assertTrue(names.contains("exercise2"));
-    }
-
-    @Test
-    public void getsLastExerciseOfCourseJson() throws IOException, TmcCoreException {
-        HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
-        Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(eq(URI.create("ankka"))))
-                .thenReturn(fakeResult);
-        String names = tmcApi.getExerciseNames(URI.create("ankka"));
-
-        assertTrue(names.contains("exercise2"));
-    }
-
-    @Test
     public void parsesSubmissionUrlFromJson() throws IOException {
         HttpResult fakeResult = new HttpResult(ExampleJson.submitResponse, 200, true);
         Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(any(URI.class)))
@@ -120,14 +97,6 @@ public class TmcApiTest {
     }
 
     @Test
-    public void getsLastExerciseOfCourseJson2() throws IOException, TmcCoreException {
-        mockCourse(realAddress);
-        String names = tmcApi.getExerciseNames(URI.create(realAddress));
-
-        assertTrue(names.contains("exercise2"));
-    }
-
-    @Test
     public void canFetchOneCourse() throws IOException, TmcCoreException, URISyntaxException {
         HttpResult fakeResult = new HttpResult(ExampleJson.courseExample, 200, true);
         Mockito.when(
@@ -138,13 +107,5 @@ public class TmcApiTest {
         Optional<Course> course = tmcApi.getCourse(3);
         assertTrue(course.isPresent());
         assertEquals("test-course", course.get().getName());
-    }
-
-    @Test
-    public void canFetchSubmissionData() throws IOException, TmcCoreException {
-        mockSubmissionUrl();
-        SubmissionResult result = tmcApi.getSubmissionResult(URI.create("http://real.address.fi"));
-        assertNotNull(result);
-        assertEquals("no-deadline", result.getCourse());
     }
 }

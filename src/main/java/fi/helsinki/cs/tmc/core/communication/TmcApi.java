@@ -55,21 +55,12 @@ public class TmcApi {
     }
 
     /**
-     * Get list of all the courses on the server specified by ServerData.
-     *
-     * @return List of Course-objects
-     */
-    public List<Course> getCourses() throws IOException {
-        return getCourses(settings.getServerAddress());
-    }
-
-    /**
      * Get JSON-data from url.
      *
      * @param url url from which the object data is fetched
      * @return JSON-object
      */
-    public JsonObject getJsonFrom(URI url) throws IOException {
+    private JsonObject getJsonFrom(URI url) throws IOException {
         HttpResult httpResult = urlCommunicator.makeGetRequestWithAuthentication(url);
         if (httpResult == null) {
             return null;
@@ -84,7 +75,9 @@ public class TmcApi {
      * @param url url from which the data is fetched
      * @return JSON-object
      */
+    @Deprecated
     public String getRawTextFrom(URI url) throws IOException {
+        // TODO: Remove
         HttpResult httpResult = urlCommunicator.makeGetRequestWithAuthentication(url);
         if (httpResult == null) {
             return null;
@@ -111,7 +104,7 @@ public class TmcApi {
      * @param courseUrl url of the course we are interested in
      * @return String of all exercise names separated by newlines
      */
-    public String getExerciseNames(URI courseUrl) throws IOException {
+    private String getExerciseNames(URI courseUrl) throws IOException {
         List<Exercise> exercises = getExercises(courseUrl);
         StringBuilder asString = new StringBuilder();
         for (Exercise exercise : exercises) {
@@ -124,6 +117,8 @@ public class TmcApi {
     /**
      * Reads courses from string.
      */
+    @Deprecated
+    //TODO: Remove
     public List<Course> getCoursesFromString(String jsonString) {
         JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
         Gson mapper = new Gson();
@@ -134,6 +129,8 @@ public class TmcApi {
     /**
      * Reads one course from string.
      */
+    @Deprecated
+    //TODO: Remove
     public Course getCourseFromString(String jsonString) {
         JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
         Gson mapper = new Gson();
@@ -161,6 +158,8 @@ public class TmcApi {
      * @param courseUrl URL path to course JSON
      * @return an Course object (parsed from JSON)
      */
+    //TODO: Replace with getCourse(int courseId) ?
+    @Deprecated
     public Optional<Course> getCourse(URI courseUrl) throws IOException {
         JsonObject courseJson = getJsonFrom(courseUrl);
         if (courseJson == null) {
@@ -178,16 +177,6 @@ public class TmcApi {
         }
 
         return Optional.of(course);
-    }
-
-    private boolean courseExists(int courseId) throws IOException, TmcCoreException {
-        List<Course> allCourses = getCourses();
-        for (Course course : allCourses) {
-            if (course.getId() == courseId) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -226,7 +215,9 @@ public class TmcApi {
      * @return List of all exercises as Exercise-objects. If no course is found, empty list will be
      *     returned.
      */
-    public List<Exercise> getExercises(URI courseUrl) throws IOException {
+    @Deprecated
+    //TODO: Remove
+    private List<Exercise> getExercises(URI courseUrl) throws IOException {
         Optional<Course> courseOptional = getCourse(courseUrl);
         if (courseOptional.isPresent()) {
             Course course = courseOptional.get();
@@ -244,7 +235,9 @@ public class TmcApi {
      * @param url to make request to
      * @return A SubmissionResult object which contains data of submission.
      */
-    public SubmissionResult getSubmissionResult(URI url) throws IOException {
+    @Deprecated
+    //TODO: Remove
+    private SubmissionResult getSubmissionResult(URI url) throws IOException {
         JsonObject submission = getJsonFrom(url);
         Gson mapper = new Gson();
         return mapper.fromJson(submission, SubmissionResult.class);
@@ -256,6 +249,7 @@ public class TmcApi {
      * @param result HTTPResult containing JSON with submission url.
      * @return url where submission results are located.
      */
+    //TODO: Extract
     public URI getSubmissionUrl(HttpResult result) {
         return getPropertyFromResult(result, "submission_url");
     }
@@ -266,10 +260,12 @@ public class TmcApi {
      * @param result HTTPResult containing JSON with paste url.
      * @return url where paste is located.
      */
+    //TODO: Extract
     public URI getPasteUrl(HttpResult result) {
         return getPropertyFromResult(result, "paste_url");
     }
 
+    //TODO: Extract
     private URI getPropertyFromResult(HttpResult result, String property) {
         JsonElement jelement = new JsonParser().parse(result.getData());
         JsonObject jobject = jelement.getAsJsonObject();

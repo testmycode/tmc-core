@@ -60,6 +60,7 @@ public class SubmissionPoller {
     private Optional<SubmissionResult> pollSubmissionUrl(URI url)
             throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
+            // TODO: Replace with tmcApi.getSubmissionResult()
             String json = tmcApi.getRawTextFrom(url);
             if (!isProcessing(json)) {
                 SubmissionResult result = submissionParser.parseFromJson(json);
@@ -81,6 +82,7 @@ public class SubmissionPoller {
     private Optional<SubmissionResult> pollSubmissionUrl(URI url, ProgressObserver observer)
             throws InterruptedException, IOException {
         for (int i = 0; i < timeOut; i++) {
+            //TODO: Replace with tmcApi.getSubmissionResult()
             String json = tmcApi.getRawTextFrom(url);
             if (!isProcessing(json, observer)) {
                 SubmissionResult result = submissionParser.parseFromJson(json);

@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
@@ -15,16 +16,15 @@ public class RunCheckStyle extends Command<ValidationResult> {
 
     private TaskExecutorImpl tmcLangs;
     private Path path;
-    private TmcSettings settings;
 
     /**
      * Constructs a new run check style command for running a code style check using
      * {@code tmcLangs} on the project at {@code path}.
      */
     public RunCheckStyle(Path path, TaskExecutorImpl tmcLangs, TmcSettings settings) {
+        super(settings, ProgressObserver.NULL_OBSERVER);
         this.path = path;
         this.tmcLangs = tmcLangs;
-        this.settings = settings;
     }
 
     /**

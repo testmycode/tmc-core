@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
@@ -38,7 +39,7 @@ public class PasteWithComment extends Command<URI> {
      */
     public PasteWithComment(
             TmcSettings settings, Path path, String comment, ExerciseSubmitter submitter) {
-        super(settings);
+        super(settings, ProgressObserver.NULL_OBSERVER);
 
         this.submitter = submitter;
         this.path = path;

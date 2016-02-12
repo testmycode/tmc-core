@@ -185,7 +185,7 @@ public class TmcCore {
      */
     public ListenableFuture<List<Exercise>> downloadExercises(List<Exercise> exercises)
             throws TmcCoreException {
-        return this.downloadExercises(exercises, null);
+        return this.downloadExercises(exercises, ProgressObserver.NULL_OBSERVER);
     }
 
     public ListenableFuture<Boolean> downloadModelSolution(Exercise exercise)

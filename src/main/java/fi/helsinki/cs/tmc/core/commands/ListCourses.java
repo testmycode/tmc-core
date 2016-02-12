@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class ListCourses extends Command<List<Course>> {
      * communicate with the server.
      */
     public ListCourses(TmcSettings settings, TmcApi tmcApi) {
-        super(settings);
+        super(settings, ProgressObserver.NULL_OBSERVER);
         this.tmcApi = tmcApi;
     }
 

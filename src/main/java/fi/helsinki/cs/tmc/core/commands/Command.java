@@ -19,14 +19,8 @@ public abstract class Command<E> implements Callable<E> {
     /**
      * Constructs a Command object.
      */
-    public Command() {}
-
-    /**
-     * Constructs a Command object with an associated {@link TmcSettings}.
-     */
-    public Command(TmcSettings settings) {
-        this();
-        this.settings = settings;
+    public Command(ProgressObserver observer) {
+        this(null, observer);
     }
 
     /**
@@ -34,7 +28,7 @@ public abstract class Command<E> implements Callable<E> {
      * {@link ProgressObserver}.
      */
     public Command(TmcSettings settings, ProgressObserver observer) {
-        this(settings);
+        this.settings = settings;
         this.observer = observer;
     }
 
@@ -44,9 +38,7 @@ public abstract class Command<E> implements Callable<E> {
      * <p>If no progress observer is assigned, nothing happens.
      */
     protected void informObserver(double percentageDone, String message) {
-        if (observer != null) {
-            observer.progress(percentageDone, message);
-        }
+        observer.progress(percentageDone, message);
     }
 
     /**

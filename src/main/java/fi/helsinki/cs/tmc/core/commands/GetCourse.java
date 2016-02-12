@@ -4,6 +4,7 @@ import fi.helsinki.cs.tmc.core.communication.TmcApi;
 import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
@@ -26,7 +27,7 @@ public class GetCourse extends Command<Course> {
      * {@code courseName}.
      */
     public GetCourse(TmcSettings settings, String courseName) throws TmcCoreException {
-        super(settings);
+        super(settings, ProgressObserver.NULL_OBSERVER);
 
         this.tmcApi = new TmcApi(settings);
         this.url = pollServerForCourseUrl(courseName);
@@ -37,7 +38,7 @@ public class GetCourse extends Command<Course> {
      * {@code courseUri}.
      */
     public GetCourse(TmcSettings settings, URI courseUri) {
-        super(settings);
+        super(settings, ProgressObserver.NULL_OBSERVER);
 
         this.tmcApi = new TmcApi(settings);
         this.url = courseUri;

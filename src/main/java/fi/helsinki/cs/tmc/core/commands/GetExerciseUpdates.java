@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.updates.ExerciseUpdateHandler;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class GetExerciseUpdates extends Command<List<Exercise>> {
      * {@code course} using {@code handler}.
      */
     public GetExerciseUpdates(Course course, ExerciseUpdateHandler handler) {
+        super(ProgressObserver.NULL_OBSERVER);
         this.course = course;
         this.handler = handler;
     }

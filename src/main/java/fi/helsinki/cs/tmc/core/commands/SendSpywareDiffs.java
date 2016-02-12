@@ -5,6 +5,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.spyware.DiffSender;
 
@@ -25,7 +26,7 @@ public class SendSpywareDiffs extends Command<List<HttpResult>> {
      * {@code spywareDiffs} to the server.
      */
     public SendSpywareDiffs(TmcSettings settings, DiffSender sender, byte[] spywareDiffs) {
-        super(settings);
+        super(settings, ProgressObserver.NULL_OBSERVER);
 
         this.spywareDiffs = spywareDiffs;
         this.sender = sender;

@@ -21,6 +21,7 @@ import fi.helsinki.cs.tmc.core.commands.Submit;
 import fi.helsinki.cs.tmc.core.commands.VerifyCredentials;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.FileWriterHelper;
 
@@ -91,7 +92,7 @@ public class TmcCoreTest {
 
     @Test
     public void downloadExercises() throws Exception {
-        tmcCore.downloadExercises(Paths.get("/polku/tiedostoille"), 21, null);
+        tmcCore.downloadExercises(Paths.get("/polku/tiedostoille"), 21, ProgressObserver.NULL_OBSERVER);
         verify(threadPool, times(1)).submit(any(DownloadExercises.class));
     }
 
@@ -212,7 +213,7 @@ public class TmcCoreTest {
     public void downloadExercisesUsesCacheIfSet() throws Exception {
         tmcCore.setExerciseChecksumCacheLocation(
                 Paths.get("src", "test", "resources", "cachefile"));
-        tmcCore.downloadExercises(Paths.get("asdf"), -1, null);
+        tmcCore.downloadExercises(Paths.get("asdf"), -1, ProgressObserver.NULL_OBSERVER);
         final ArgumentCaptor<DownloadExercises> argument =
                 ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());
@@ -220,7 +221,7 @@ public class TmcCoreTest {
 
     @Test
     public void downloadExercisesDoesNotUseCacheIfNotSet() throws Exception {
-        tmcCore.downloadExercises(Paths.get("asdf"), -1, null);
+        tmcCore.downloadExercises(Paths.get("asdf"), -1, ProgressObserver.NULL_OBSERVER);
         final ArgumentCaptor<DownloadExercises> argument =
                 ArgumentCaptor.forClass(DownloadExercises.class);
         verify(threadPool).submit(argument.capture());

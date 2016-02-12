@@ -35,7 +35,7 @@ public class Submit extends Command<SubmissionResult> {
             ExerciseSubmitter submitter,
             SubmissionPoller submissionPoller,
             Path path) {
-        this(settings, submitter, submissionPoller, path, null);
+        this(settings, submitter, submissionPoller, path, ProgressObserver.NULL_OBSERVER);
     }
 
     /**
@@ -49,12 +49,11 @@ public class Submit extends Command<SubmissionResult> {
             SubmissionPoller submissionPoller,
             Path path,
             ProgressObserver observer) {
-        super(settings);
+        super(settings, observer);
 
         this.path = path;
         this.submissionPoller = submissionPoller;
         this.submitter = submitter;
-        super.observer = observer;
     }
 
     private void assertHasRequiredData() throws TmcCoreException {
@@ -84,13 +83,7 @@ public class Submit extends Command<SubmissionResult> {
                     NoLanguagePluginFoundException {
 
         assertHasRequiredData();
-
-        if (observer != null) {
-            URI returnUrl = submitter.submit(this.path, observer);
-            return submissionPoller.getSubmissionResult(returnUrl, observer);
-        }
-
-        URI returnUrl = submitter.submit(this.path);
-        return submissionPoller.getSubmissionResult(returnUrl);
+        URI returnUrl = submitter.submit(this.path, observer);
+        return submissionPoller.getSubmissionResult(returnUrl, observer);
     }
 }

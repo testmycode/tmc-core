@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.HttpResult;
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -24,7 +25,7 @@ public class SendFeedback extends Command<HttpResult> {
      * {@code url}.
      */
     public SendFeedback(TmcSettings settings, Map<String, String> answers, URI url) {
-        super(settings);
+        super(settings, ProgressObserver.NULL_OBSERVER);
         this.answers = answers;
         this.url = url;
     }

@@ -130,7 +130,7 @@ public class DownloadExercisesTest {
 
     @Test(expected = TmcCoreException.class)
     public void settingsWithoutCurrentCourse() throws TmcCoreException, IOException {
-        new DownloadExercises(settings, new ArrayList<Exercise>(), null, null).call();
+        new DownloadExercises(settings, new ArrayList<Exercise>(), ProgressObserver.NULL_OBSERVER, null).call();
     }
 
     @Test(expected = TmcCoreException.class)
@@ -139,7 +139,7 @@ public class DownloadExercisesTest {
         CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setCurrentCourse(
                 new TmcApi(settings).getCourseFromString(ExampleJson.courseExample));
-        new DownloadExercises(localSettings, new ArrayList<Exercise>(), null, null).call();
+        new DownloadExercises(localSettings, new ArrayList<Exercise>(), ProgressObserver.NULL_OBSERVER, null).call();
     }
 
     @Test
@@ -173,7 +173,7 @@ public class DownloadExercisesTest {
         CoreTestSettings settings1 = createSettingsAndWiremock();
         core = new TmcCore(settings1);
         Path folder = Paths.get(System.getProperty("user.dir") + "/src/test/resources/");
-        ListenableFuture<List<Exercise>> download = core.downloadExercises(folder, 3, null);
+        ListenableFuture<List<Exercise>> download = core.downloadExercises(folder, 3, ProgressObserver.NULL_OBSERVER);
 
         List<Exercise> exercises = download.get();
         Path exercisePath = folder.resolve("test-course/viikko1/Viikko1_001.Nimi");

@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.updates.ReviewHandler;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
@@ -20,6 +21,7 @@ public class GetUnreadReviews extends Command<List<Review>> {
      * {@code course} using {@code handler}.
      */
     public GetUnreadReviews(Course course, ReviewHandler handler) {
+        super(ProgressObserver.NULL_OBSERVER);
         this.handler = handler;
         this.course = course;
     }

@@ -6,6 +6,7 @@ import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
@@ -19,15 +20,14 @@ public class DownloadModelSolution extends Command<Boolean> {
     private ExerciseDownloader exerciseDownloader;
 
     public DownloadModelSolution(TmcSettings settings, Exercise exercise) {
-        this.settings = settings;
-        this.exercise = exercise;
-        TmcApi tmcApi = new TmcApi(settings);
-        this.exerciseDownloader = new ExerciseDownloader(new UrlCommunicator(settings), tmcApi);
+        this(settings,
+                exercise,
+                new ExerciseDownloader(new UrlCommunicator(settings), new TmcApi(settings)));
     }
 
     public DownloadModelSolution(
             TmcSettings settings, Exercise exercise, ExerciseDownloader downloader) {
-        this.settings = settings;
+        super(settings, ProgressObserver.NULL_OBSERVER);
         this.exercise = exercise;
         this.exerciseDownloader = downloader;
     }

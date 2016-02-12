@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
@@ -21,7 +22,7 @@ public class RunTests extends Command<RunResult> {
      * located at {@code path}.
      */
     public RunTests(TmcSettings settings, Path path) {
-        super(settings);
+        super(settings, ProgressObserver.NULL_OBSERVER);
         this.path = path;
     }
 

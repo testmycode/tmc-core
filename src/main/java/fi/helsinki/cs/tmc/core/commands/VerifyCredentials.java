@@ -4,6 +4,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ public class VerifyCredentials extends Command<Boolean> {
      * in {@code settings} using {@code communicator}.
      */
     public VerifyCredentials(TmcSettings settings, UrlCommunicator communicator) {
-        super(settings);
+        super(settings, ProgressObserver.NULL_OBSERVER);
         this.communicator = communicator;
     }
 

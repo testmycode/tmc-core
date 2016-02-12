@@ -44,11 +44,10 @@ public class TmcApi {
     /**
      * Get list of all the courses on the server specified by ServerData.
      *
-     * @param serverAddress address of the tmc server
      * @return List of Course-objects
      */
-    public List<Course> getCourses(String serverAddress) throws IOException {
-        String coursesAddress = helper.allCoursesAddress(serverAddress);
+    public List<Course> getCourses() throws IOException {
+        String coursesAddress = helper.allCoursesAddress(settings.getServerAddress());
         JsonObject jsonObject = getJsonFrom(URI.create(coursesAddress));
         Gson mapper = new Gson();
         Course[] courses = mapper.fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);

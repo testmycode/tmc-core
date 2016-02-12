@@ -54,9 +54,11 @@ public class RunCheckStyleTest {
     @Test
     public void testCommandReturnsWhatTmcLangsReturns() throws Exception {
         ValidationResult expected = new ValidationResultImpl();
-        when(tmcLangsMock.runCheckCodeStyle(any(Path.class), eq(Locale.ENGLISH))).thenReturn(expected);
+        when(tmcLangsMock.runCheckCodeStyle(any(Path.class), eq(Locale.ENGLISH)))
+                .thenReturn(expected);
 
-        ValidationResult result = new RunCheckStyle(Paths.get("somePath"), tmcLangsMock, settings).call();
+        ValidationResult result = new RunCheckStyle(Paths.get("somePath"), tmcLangsMock, settings)
+                .call();
 
         assertEquals(expected, result);
     }

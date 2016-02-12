@@ -124,10 +124,12 @@ public class ExerciseDownloader {
         return true;
     }
 
-    public boolean downloadModelSolution(Exercise exercise, Path targetPath) throws TmcCoreException {
+    public boolean downloadModelSolution(Exercise exercise, Path targetPath)
+            throws TmcCoreException {
         Path zipPath = null;
         try {
-            zipPath = Files.createTempDirectory("TMC-temp").resolve(exercise.getName() + "-solution.zip");
+            zipPath = Files.createTempDirectory("TMC-temp")
+                    .resolve(exercise.getName() + "-solution.zip");
         } catch (IOException e) {
             throw new TmcCoreException("Failed to create temporary directory for the solution", e);
         }

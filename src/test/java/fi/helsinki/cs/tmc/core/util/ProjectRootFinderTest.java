@@ -79,7 +79,8 @@ public class ProjectRootFinderTest {
     }
 
     @Test(expected = InvalidExerciseDirectoryException.class)
-    public void failsToFindExerciseRootForNonProjectPath() throws InvalidExerciseDirectoryException, IOException {
+    public void failsToFindExerciseRootForNonProjectPath()
+            throws InvalidExerciseDirectoryException, IOException {
         Path tempDir = Files.createTempDirectory("TMC-Temp").resolve("IsNotProject");
         finder.getExerciseRoot(
                 tempDir

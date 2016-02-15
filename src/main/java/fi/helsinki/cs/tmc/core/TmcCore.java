@@ -215,7 +215,7 @@ public class TmcCore {
      *                          path, or not logged in.
      */
     public ListenableFuture<SubmissionResult> submit(Path path) throws TmcCoreException {
-        return submit(path, null);
+        return submit(path, ProgressObserver.NULL_OBSERVER);
     }
 
     /**

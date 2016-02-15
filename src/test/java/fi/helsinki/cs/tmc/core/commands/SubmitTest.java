@@ -11,7 +11,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -26,10 +25,8 @@ import fi.helsinki.cs.tmc.core.communication.UrlHelper;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
-import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
-import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -122,7 +119,7 @@ public class SubmitTest {
 
         path = Paths.get("polku", "kurssi", "kansioon", "src");
 
-        when(submitterMock.submit(any(Path.class)))
+        when(submitterMock.submit(any(Path.class), any(ProgressObserver.class)))
                 .thenReturn(URI.create(serverAddress + submissionUrl));
         submit =
                 new Submit(

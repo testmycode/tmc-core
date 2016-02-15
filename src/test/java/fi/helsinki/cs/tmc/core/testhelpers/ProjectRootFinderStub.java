@@ -28,7 +28,7 @@ public class ProjectRootFinderStub implements RootFinder {
 
     private void fillCourseStubs() {
         String allCourses = ExampleJson.allCoursesExample;
-        List<Course> courses = tmcApi.getCoursesFromString(allCourses);
+        List<Course> courses = JsonParser.getCoursesFromString(allCourses);
         for (Course c : courses) {
             courseStubs.put(c.getName(), c);
         }

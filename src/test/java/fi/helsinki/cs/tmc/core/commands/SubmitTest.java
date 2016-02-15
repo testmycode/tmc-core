@@ -27,6 +27,7 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
+import fi.helsinki.cs.tmc.core.testhelpers.JsonParser;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -174,7 +175,7 @@ public class SubmitTest {
 
         CoreTestSettings settings = new CoreTestSettings("test", "1234", serverAddress);
         TmcApi tmcApi = new TmcApi(settings);
-        Course course = tmcApi.getCourseFromString(ExampleJson.noDeadlineCourseExample);
+        Course course = JsonParser.getCourseFromString(ExampleJson.noDeadlineCourseExample);
         settings.setCurrentCourse(course);
         TmcCore core = new TmcCore(settings);
 

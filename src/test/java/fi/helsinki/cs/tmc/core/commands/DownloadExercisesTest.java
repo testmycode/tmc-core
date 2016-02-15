@@ -31,6 +31,7 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
+import fi.helsinki.cs.tmc.core.testhelpers.JsonParser;
 import fi.helsinki.cs.tmc.core.testhelpers.builders.ExerciseBuilder;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -138,7 +139,7 @@ public class DownloadExercisesTest {
             throws TmcCoreException, IOException, URISyntaxException {
         CoreTestSettings localSettings = new CoreTestSettings();
         localSettings.setCurrentCourse(
-                new TmcApi(settings).getCourseFromString(ExampleJson.courseExample));
+                JsonParser.getCourseFromString(ExampleJson.courseExample));
         new DownloadExercises(localSettings, new ArrayList<Exercise>(), ProgressObserver.NULL_OBSERVER, null).call();
     }
 

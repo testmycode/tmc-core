@@ -97,28 +97,6 @@ public class TmcApi {
         return Arrays.asList(reviews);
     }
 
-    /**
-     * Reads courses from string.
-     */
-    @Deprecated
-    //TODO: Remove
-    public List<Course> getCoursesFromString(String jsonString) {
-        JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-        Gson mapper = new Gson();
-        Course[] courses = mapper.fromJson(jsonObject.getAsJsonArray("courses"), Course[].class);
-        return Arrays.asList(courses);
-    }
-
-    /**
-     * Reads one course from string.
-     */
-    @Deprecated
-    //TODO: Remove
-    public Course getCourseFromString(String jsonString) {
-        JsonObject jsonObject = new JsonParser().parse(jsonString).getAsJsonObject();
-        Gson mapper = new Gson();
-        return mapper.fromJson(jsonObject.get("course"), Course.class);
-    }
 
     /**
      * Get information about course specified by the course ID.

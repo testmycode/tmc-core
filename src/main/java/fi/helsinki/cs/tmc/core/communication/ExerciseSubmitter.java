@@ -14,6 +14,8 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
 import com.google.common.base.Optional;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.net.URI;
@@ -194,7 +196,9 @@ public class ExerciseSubmitter {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), new HashMap<String, String>());
-        return tmcApi.getPasteUrl(result);
+
+        JsonObject json = new JsonParser().parse(result.getData()).getAsJsonObject();
+        return URI.create(json.get("paste_url").getAsString());
     }
 
     private URI sendZipFile(Path currentPath, Exercise currentExercise, boolean paste)
@@ -245,7 +249,8 @@ public class ExerciseSubmitter {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), new HashMap<String, String>());
-        return tmcApi.getSubmissionUrl(result);
+        JsonObject json = new JsonParser().parse(result.getData()).getAsJsonObject();
+        return URI.create(json.get("submission_url").getAsString());
     }
 
     private URI sendSubmissionToServerWithParams(byte[] file, URI url, Map<String, String> params)
@@ -253,7 +258,8 @@ public class ExerciseSubmitter {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), params);
-        return tmcApi.getSubmissionUrl(result);
+        JsonObject json = new JsonParser().parse(result.getData()).getAsJsonObject();
+        return URI.create(json.get("submission_url").getAsString());
     }
 
     private URI sendSubmissionToServerWithPasteAndParams(
@@ -261,7 +267,8 @@ public class ExerciseSubmitter {
         HttpResult result =
                 urlCommunicator.makePostWithByteArray(
                         url, file, new HashMap<String, String>(), params);
-        return tmcApi.getPasteUrl(result);
+        JsonObject json = new JsonParser().parse(result.getData()).getAsJsonObject();
+        return URI.create(json.get("paste_url").getAsString());
     }
 
     private Optional<Exercise> findExercise(Path currentPath)

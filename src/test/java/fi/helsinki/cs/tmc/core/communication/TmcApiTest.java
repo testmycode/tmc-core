@@ -17,6 +17,8 @@ import fi.helsinki.cs.tmc.core.testhelpers.ExampleJson;
 
 import com.google.common.base.Optional;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -71,9 +73,11 @@ public class TmcApiTest {
         HttpResult fakeResult = new HttpResult(ExampleJson.submitResponse, 200, true);
         Mockito.when(urlCommunicator.makeGetRequestWithAuthentication(any(URI.class)))
                 .thenReturn(fakeResult);
+        JsonObject json = new JsonParser().parse(fakeResult.getData()).getAsJsonObject();
+        URI submissionUrl = URI.create(json.get("submission_url").getAsString());
         assertEquals(
                 URI.create("https://example.com/staging/submissions/1781.json?api_version=7"),
-                tmcApi.getSubmissionUrl(fakeResult));
+                submissionUrl);
     }
 
     @Test
@@ -83,9 +87,13 @@ public class TmcApiTest {
                         urlCommunicator.makeGetRequest(
                                 URI.create(Mockito.anyString()), Mockito.anyString()))
                 .thenReturn(fakeResult);
+
+        JsonObject json = new JsonParser().parse(fakeResult.getData()).getAsJsonObject();
+        URI pasteUrl = URI.create(json.get("paste_url").getAsString());
+
         assertEquals(
                 URI.create("https://example.com/staging/paste/ynpw7_mZZGk3a9PPrMWOOQ"),
-                tmcApi.getPasteUrl(fakeResult));
+                pasteUrl);
     }
 
     String realAddress = "http://real.address.fi";

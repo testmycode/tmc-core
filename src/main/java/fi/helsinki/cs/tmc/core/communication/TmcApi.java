@@ -5,7 +5,6 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
-import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.base.Optional;
 import com.google.gson.Gson;
@@ -76,7 +75,7 @@ public class TmcApi {
      * @return JSON-object
      */
     @Deprecated
-    public String getRawTextFrom(URI url) throws IOException {
+    protected String getRawTextFrom(URI url) throws IOException {
         // TODO: Remove
         HttpResult httpResult = urlCommunicator.makeGetRequestWithAuthentication(url);
         if (httpResult == null) {
@@ -96,22 +95,6 @@ public class TmcApi {
         Gson mapper = new Gson();
         Review[] reviews = mapper.fromJson(jsonObject.getAsJsonArray("reviews"), Review[].class);
         return Arrays.asList(reviews);
-    }
-
-    /**
-     * Get all exercise names of a course specified by courseUrl.
-     *
-     * @param courseUrl url of the course we are interested in
-     * @return String of all exercise names separated by newlines
-     */
-    private String getExerciseNames(URI courseUrl) throws IOException {
-        List<Exercise> exercises = getExercises(courseUrl);
-        StringBuilder asString = new StringBuilder();
-        for (Exercise exercise : exercises) {
-            asString.append(exercise.getName());
-            asString.append("\n");
-        }
-        return asString.toString();
     }
 
     /**
@@ -206,69 +189,5 @@ public class TmcApi {
             return course.getExercises();
         }
         return new ArrayList<>();
-    }
-
-    /**
-     * Get all exercises of a course specified by courseUrl.
-     *
-     * @param courseUrl url of the course we are interested in
-     * @return List of all exercises as Exercise-objects. If no course is found, empty list will be
-     *     returned.
-     */
-    @Deprecated
-    //TODO: Remove
-    private List<Exercise> getExercises(URI courseUrl) throws IOException {
-        Optional<Course> courseOptional = getCourse(courseUrl);
-        if (courseOptional.isPresent()) {
-            Course course = courseOptional.get();
-            for (Exercise exercise : course.getExercises()) {
-                exercise.setCourseName(course.getName());
-            }
-            return course.getExercises();
-        }
-        return new ArrayList<>();
-    }
-
-    /**
-     * Parses JSON in url to create a SubmissionResult object.
-     *
-     * @param url to make request to
-     * @return A SubmissionResult object which contains data of submission.
-     */
-    @Deprecated
-    //TODO: Remove
-    private SubmissionResult getSubmissionResult(URI url) throws IOException {
-        JsonObject submission = getJsonFrom(url);
-        Gson mapper = new Gson();
-        return mapper.fromJson(submission, SubmissionResult.class);
-    }
-
-    /**
-     * Parses the submission result URL from a HttpResult with JSON.
-     *
-     * @param result HTTPResult containing JSON with submission url.
-     * @return url where submission results are located.
-     */
-    //TODO: Extract
-    public URI getSubmissionUrl(HttpResult result) {
-        return getPropertyFromResult(result, "submission_url");
-    }
-
-    /**
-     * Parses the submission result paste URL from a HttpResult with JSON.
-     *
-     * @param result HTTPResult containing JSON with paste url.
-     * @return url where paste is located.
-     */
-    //TODO: Extract
-    public URI getPasteUrl(HttpResult result) {
-        return getPropertyFromResult(result, "paste_url");
-    }
-
-    //TODO: Extract
-    private URI getPropertyFromResult(HttpResult result, String property) {
-        JsonElement jelement = new JsonParser().parse(result.getData());
-        JsonObject jobject = jelement.getAsJsonObject();
-        return URI.create(jobject.get(property).getAsString());
     }
 }

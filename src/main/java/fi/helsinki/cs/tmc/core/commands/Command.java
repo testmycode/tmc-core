@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcInterruptionException;
 
@@ -20,7 +21,7 @@ public abstract class Command<E> implements Callable<E> {
      * Constructs a Command object.
      */
     public Command(ProgressObserver observer) {
-        this(null, observer);
+        this(TmcSettingsHolder.get(), observer);
     }
 
     /**

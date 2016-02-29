@@ -1,17 +1,9 @@
 package fi.helsinki.cs.tmc.core.domain;
 
-import fi.helsinki.cs.tmc.core.communication.HttpResult;
-import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
-
-import com.google.common.base.Optional;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Review {
 
@@ -144,33 +136,10 @@ public class Review {
         this.updatedAt = updatedAt;
     }
 
-    public void markAs(boolean read, UrlCommunicator urlCommunicator)
-            throws IOException, URISyntaxException {
-        Map<String, String> headers = addHeaders(read);
-        HttpResult result = urlCommunicator.makePutRequest(putUrl(), Optional.of(headers));
-        if (result.getData().contains("OK")) {
-            this.markedAsRead = read;
-        }
-    }
-
-    private Map<String, String> addHeaders(boolean read) {
-        Map<String, String> headers = new HashMap<>();
-        String readUpdate = "mark_as_";
-        if (read) {
-            readUpdate += "read";
-        } else {
-            readUpdate += "unread";
-        }
-        headers.put(readUpdate, "1");
-        return headers;
-    }
-
-    private URI putUrl() {
-        return this.updateUrl;
-    }
-
     @Override
     public String toString() {
-        return exerciseName + " reviewed by " + reviewerName + ":\n" + reviewBody + "\n" + this.url;
+        return exerciseName + " reviewed by " + reviewerName + ":\n"
+                + reviewBody + "\n"
+                + this.url;
     }
 }

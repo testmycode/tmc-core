@@ -61,7 +61,8 @@ public class SubmissionResultParser {
         return gson.fromJson(json, SubmissionResult.class);
     }
 
-    private static class StatusDeserializer implements JsonDeserializer<SubmissionResult.Status> {
+    private static class StatusDeserializer
+            implements JsonDeserializer<SubmissionResult.Status> {
         @Override
         public SubmissionResult.Status deserialize(
                 JsonElement json, Type typeOfT, JsonDeserializationContext context)

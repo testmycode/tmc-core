@@ -1,12 +1,13 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.communication.TmcApi;
-import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
@@ -14,37 +15,19 @@ import java.util.List;
  */
 public class ListCourses extends Command<List<Course>> {
 
-    private TmcApi tmcApi;
+    private static final Logger logger = LoggerFactory.getLogger(ListCourses.class);
 
-    /**
-     * Constructs a new list courses command with {@code settings}.
-     */
-    public ListCourses(TmcSettings settings) {
-        this(settings, new TmcApi(settings));
+    public ListCourses(ProgressObserver observer) {
+        super(observer);
     }
 
-    /**
-     * Constructs a new list courses command with {@code settings} that uses {@code tmcApi} to
-     * communicate with the server.
-     */
-    public ListCourses(TmcSettings settings, TmcApi tmcApi) {
-        super(settings, ProgressObserver.NULL_OBSERVER);
-        this.tmcApi = tmcApi;
-    }
-
-    /**
-     * Entry point for launching this command.
-     */
     @Override
     public List<Course> call() throws TmcCoreException {
-        if (!settings.userDataExists()) {
-            throw new TmcCoreException("User must be authorized first");
-        }
-
         try {
-            return tmcApi.getCourses();
-        } catch (IOException ex) {
-            throw new TmcCoreException("Failed to fetch courses from server", ex);
+            return new TmcServerCommunicationTaskFactory().getDownloadingCourseListTask().call();
+        } catch (Exception ex) {
+            logger.warn("Failed to fetch courses from the server", ex);
+            throw new TmcCoreException("Failed to fetch courses from the server", ex);
         }
     }
 }

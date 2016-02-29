@@ -62,14 +62,15 @@ public class FeedbackQuestion {
     private void setRangeLimits() {
         String[] bounds = parseKind();
         if (bounds.length != 2) {
-            throw new IllegalStateException("Parsing kind failed, maybe not an intrange question?");
+            throw new IllegalStateException(
+                    "Parsing kind failed, maybe not an intrange question?");
         }
         min = Integer.parseInt(bounds[0]);
         max = Integer.parseInt(bounds[1]);
 
         if (min > max) {
-            String message = "Intrange lower bound must be smaller than upper bound. Got: " + kind;
-            throw new IllegalStateException(message);
+            throw new IllegalStateException(
+                    "Intrange lower bound must be smaller than upper bound. Got: " + kind);
         }
     }
 

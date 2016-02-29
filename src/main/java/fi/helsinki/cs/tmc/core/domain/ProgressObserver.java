@@ -20,7 +20,7 @@ public abstract class ProgressObserver {
         }
     }
 
-    public static ProgressObserver NULL_OBSERVER = new NullProgressObserver();
+    public static final  ProgressObserver NULL_OBSERVER = new NullProgressObserver();
 
 
     /**

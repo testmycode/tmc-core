@@ -1,89 +1,81 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
-import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
-import fi.helsinki.cs.tmc.core.communication.SubmissionPoller;
-import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
-import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResultParser;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.text.ParseException;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
+import java.util.concurrent.Callable;
 
 /**
  * A {@link Command} for submitting an exercise to the server.
  */
-public class Submit extends Command<SubmissionResult> {
+public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
 
-    private ExerciseSubmitter submitter;
-    private SubmissionPoller submissionPoller;
-    private Path path;
+    private static final Logger logger
+            = LoggerFactory.getLogger(AbstractSubmissionCommand.class);
+    private static final int DEFAULT_POLL_INTERVAL = 1000 * 2;
 
-    /**
-     * Creates a new submit command with {@code settings}, {@code submitter} and
-     * {@code submissionPoller} for submitting the exercise located at {@code path}.
-     */
-    public Submit(
-            TmcSettings settings,
-            ExerciseSubmitter submitter,
-            SubmissionPoller submissionPoller,
-            Path path) {
-        this(settings, submitter, submissionPoller, path, ProgressObserver.NULL_OBSERVER);
-    }
+    private Exercise exercise;
 
-    /**
-     * Creates a new submit command with {@code settings}, {@code submitter} and
-     * {@code submissionPoller} for submitting the exercise located at {@code path}. The
-     * {@code observer} will be notified of submission progress.
-     */
-    public Submit(
-            TmcSettings settings,
-            ExerciseSubmitter submitter,
-            SubmissionPoller submissionPoller,
-            Path path,
-            ProgressObserver observer) {
-        super(settings, observer);
-
-        this.path = path;
-        this.submissionPoller = submissionPoller;
-        this.submitter = submitter;
-    }
-
-    private void assertHasRequiredData() throws TmcCoreException {
-        checkUsername();
-        checkPassword();
-    }
-
-    private void checkPassword() throws TmcCoreException {
-        if (isNullOrEmpty(settings.getPassword())) {
-            throw new TmcCoreException("password must be set!");
-        }
-    }
-
-    private void checkUsername() throws TmcCoreException {
-        if (isNullOrEmpty(settings.getUsername())) {
-            throw new TmcCoreException("username must be set!");
-        }
+    public Submit(ProgressObserver observer, Exercise exercise) {
+        super(observer);
+        this.exercise = exercise;
     }
 
     /**
      * Entry point for launching this command.
      */
     @Override
-    public SubmissionResult call()
-            throws TmcCoreException, IOException, ParseException, ExpiredException,
-                    IllegalArgumentException, InterruptedException, URISyntaxException,
-                    NoLanguagePluginFoundException {
+    public SubmissionResult call() throws TmcCoreException {
 
-        assertHasRequiredData();
-        URI returnUrl = submitter.submit(this.path, observer);
-        return submissionPoller.getSubmissionResult(returnUrl, observer);
+        TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse
+                = submitToServer(exercise, new HashMap<String, String>());
+
+        Callable<String> submissionResultFetcher = new TmcServerCommunicationTaskFactory()
+                .getSubmissionFetchTask(submissionResponse.submissionUrl.toString());
+        SubmissionResultParser resultParser = new SubmissionResultParser();
+
+        while (true) {
+
+            checkInterrupt();
+
+            try {
+                String submissionStatus = submissionResultFetcher.call();
+                JsonElement submission = new JsonParser().parse(submissionStatus);
+                if (isProcessing(submission)) {
+                    // TODO: Update progress
+                    // TODO: Replace with variable interval polling
+                    Thread.sleep(DEFAULT_POLL_INTERVAL);
+                } else {
+                    return resultParser.parseFromJson(submissionStatus);
+                }
+            } catch (Exception ex) {
+                logger.warn(
+                        "Error while updating submission status from server, continuing",
+                        ex);
+            }
+        }
     }
+
+    private boolean isProcessing(JsonElement submissionStatus) {
+
+        return submissionStatus
+                .getAsJsonObject()
+                .get("status")
+                .getAsString()
+                .equals("processing");
+    }
+
+
+
+
 }

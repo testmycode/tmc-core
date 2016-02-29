@@ -1,65 +1,18 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.communication.ExerciseSubmitter;
-import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
-import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import fi.helsinki.cs.tmc.core.exceptions.ExpiredException;
-import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
-
-import com.google.common.base.Optional;
-
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.text.ParseException;
 
 /**
  * A {@link Command} for requesting a code review for code with a message.
  */
-public class RequestCodeReview extends Command<URI> {
+public class RequestCodeReview extends Command<Void> {
 
-    private ExerciseSubmitter submitter;
-    private String comment;
-    private Path path;
-
-    /**
-     * Constructs a new code review request with a message.
-     */
-    public RequestCodeReview(TmcSettings settings, Path path, String comment) {
-        this(settings, path, comment, new ExerciseSubmitter(settings));
+    public RequestCodeReview(ProgressObserver observer) {
+        super(observer);
     }
 
-    /**
-     * Constructs a new code review request with a message.
-     */
-    public RequestCodeReview(
-            TmcSettings settings, Path path, String comment, ExerciseSubmitter submitter) {
-        super(settings, ProgressObserver.NULL_OBSERVER);
-
-        this.submitter = submitter;
-        this.path = path;
-        this.comment = comment;
-    }
-
-    /**
-     * Entry point for launching this command.
-     */
     @Override
-    public URI call()
-            throws TmcCoreException, ExpiredException, ParseException, IOException,
-                    URISyntaxException, IllegalArgumentException, NoLanguagePluginFoundException {
-        if (!settings.userDataExists()) {
-            throw new TmcCoreException("Cannot request a code review. User must be authenticated.");
-        }
-
-        Optional<Course> currentCourse = settings.getCurrentCourse();
-        if (currentCourse.isPresent()) {
-            return submitter.submitWithCodeReviewRequest(this.path, this.comment);
-        } else {
-            throw new TmcCoreException("Cannot request a code review. Unable to determine course.");
-        }
+    public Void call() throws Exception {
+        throw new UnsupportedOperationException("Not supported before CORE MILESTONE 3");
     }
 }

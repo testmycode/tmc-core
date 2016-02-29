@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -253,6 +256,14 @@ public class Exercise implements Serializable {
 
     private String courseName;
 
+    public Path getExtractionTarget(Path tmcRoot) {
+        return tmcRoot.resolve(Paths.get(courseName, name));
+    }
+
+    public boolean isDownloaded(Path tmcRoot) {
+        return Files.exists(getExtractionTarget(tmcRoot));
+    }
+
     public enum ValgrindStrategy {
         @SerializedName("")
         NONE,
@@ -266,7 +277,7 @@ public class Exercise implements Serializable {
 
     public boolean hasDeadlinePassedAt(Date time) {
         if (time == null) {
-            throw new NullPointerException("Given time was null at Exercise.isDeadlineEnded");
+            throw new IllegalArgumentException("Received null date as parameter");
         }
         Date deadlineDate = getDeadlineDate();
         if (deadlineDate != null) {
@@ -324,5 +335,10 @@ public class Exercise implements Serializable {
     @Override
     public String toString() {
         return name;
+    }
+
+    public boolean isSameExercise(Exercise other) {
+        return this.getCourseName().equals(other.getCourseName())
+                && this.getName().equals(other.getName());
     }
 }

@@ -1,57 +1,48 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.communication.HttpResult;
-import fi.helsinki.cs.tmc.core.communication.UrlCommunicator;
-import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.net.URI;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.List;
 
 /**
  * A {@link Command} for sending user feedback to the server.
  */
-public class SendFeedback extends Command<HttpResult> {
+public class SendFeedback extends Command<Boolean> {
 
-    private Map<String, String> answers;
-    private URI url;
+    private List<FeedbackAnswer> answers;
+    private URI feedbackUri;
 
-    /**
-     * Constructs a send feedback command with {@code settings} for sending {@code answers} to
-     * {@code url}.
-     */
-    public SendFeedback(TmcSettings settings, Map<String, String> answers, URI url) {
-        super(settings, ProgressObserver.NULL_OBSERVER);
+    public SendFeedback(ProgressObserver observer, List<FeedbackAnswer> answers, URI feedbackUri) {
+        super(observer);
         this.answers = answers;
-        this.url = url;
+        this.feedbackUri = feedbackUri;
     }
 
-    /**
-     * Entry point for launching this command.
-     */
     @Override
-    public HttpResult call() throws Exception {
-        JsonArray feedbackAnswers = new JsonArray();
+    public Boolean call() throws Exception {
 
-        JsonObject jsonParent = appendFeedbacks(feedbackAnswers);
+        String response = new TmcServerCommunicationTaskFactory().getFeedbackAnsweringJob(
+                //TODO: Str -> URI
+                feedbackUri.toString(),
+                answers
+        ).call();
 
-        return new UrlCommunicator(settings).makePostWithJson(jsonParent, url);
+        return respondedSuccessfully(response);
+
     }
 
-    private JsonObject appendFeedbacks(JsonArray feedbackAnswers) {
-        for (Entry<String, String> entry : answers.entrySet()) {
-            JsonObject jsonAnswer = new JsonObject();
-            jsonAnswer.addProperty("question_id", entry.getKey());
-            jsonAnswer.addProperty("answer", entry.getValue());
-            feedbackAnswers.add(jsonAnswer);
-        }
-
-        JsonObject jsonParent = new JsonObject();
-        jsonParent.add("answers", feedbackAnswers);
-        return jsonParent;
+    private boolean respondedSuccessfully(String response) {
+        return new JsonParser()
+                .parse(response)
+                .getAsJsonObject()
+                .get("status")
+                .getAsString()
+                .equals("ok");
     }
+
 }

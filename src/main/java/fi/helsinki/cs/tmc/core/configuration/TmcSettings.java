@@ -41,4 +41,6 @@ public interface TmcSettings {
     Locale getLocale();
 
     SystemDefaultRoutePlanner proxy();
+
+    Path getConfigRoot();
 }

@@ -12,15 +12,20 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 
 public class SubmissionResultParser {
 
+    private static final Logger logger = LoggerFactory.getLogger(SubmissionResultParser.class);
+
     public SubmissionResult parseFromJson(final String json) {
 
         if (json.trim().isEmpty()) {
+            logger.info("Attempted to parse empty string as JSON");
             throw new IllegalArgumentException("Empty input");
         }
 
@@ -46,6 +51,7 @@ public class SubmissionResultParser {
             return result;
 
         } catch (RuntimeException | IOException runtimeException) {
+            logger.warn("Failed to parse submission result", runtimeException);
             throw new RuntimeException("Failed to parse submission result: "
                     + runtimeException.getMessage(), runtimeException);
         }
@@ -53,6 +59,9 @@ public class SubmissionResultParser {
 
     private static class StatusDeserializer
             implements JsonDeserializer<SubmissionResult.Status> {
+
+        private static final Logger logger = LoggerFactory.getLogger(StatusDeserializer.class);
+
         @Override
         public SubmissionResult.Status deserialize(
                 JsonElement json,
@@ -63,6 +72,7 @@ public class SubmissionResultParser {
             try {
                 return SubmissionResult.Status.valueOf(str.toUpperCase());
             } catch (IllegalArgumentException e) {
+                logger.warn("Attempted to parse unknown submission status " + str);
                 throw new JsonParseException("Unknown submission status: " + str);
             }
         }

@@ -5,14 +5,19 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
 public class CourseInfoParser {
+
     private static class CourseInfoContainer {
         public int apiVersion;
         public Course course;
     }
+
+    private static final Logger logger = LoggerFactory.getLogger(CourseInfoParser.class);
 
     public Course parseFromJson(String json) {
         if (json == null) {
@@ -36,7 +41,8 @@ public class CourseInfoParser {
 
             return course;
         } catch (RuntimeException ex) {
-            throw new RuntimeException("Failed to parse course list: " + ex.getMessage(), ex);
+            logger.warn("Failed to parse course info", ex);
+            throw new RuntimeException("Failed to parse course info: " + ex.getMessage(), ex);
         }
     }
 }

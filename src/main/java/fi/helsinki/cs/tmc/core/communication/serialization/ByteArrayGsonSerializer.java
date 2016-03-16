@@ -10,6 +10,8 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Type;
 
@@ -18,6 +20,9 @@ import java.lang.reflect.Type;
  */
 public class ByteArrayGsonSerializer
         implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
+
+    private static final Logger logger = LoggerFactory.getLogger(ByteArrayGsonSerializer.class);
+
     @Override
     public JsonElement serialize(byte[] data, Type type, JsonSerializationContext jsc) {
         if (data == null) {
@@ -35,6 +40,7 @@ public class ByteArrayGsonSerializer
         } else if (je.isJsonNull()) {
             return null;
         } else {
+            logger.warn("Byte array deserialization failed: not a base 64 string");
             throw new JsonParseException("Not a base64 string.");
         }
     }

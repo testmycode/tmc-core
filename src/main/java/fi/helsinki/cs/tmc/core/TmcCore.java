@@ -27,11 +27,16 @@ import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.Callable;
 
 public class TmcCore {
+
+    private static final Logger logger = LoggerFactory.getLogger(TmcCore.class);
 
     public TmcCore(TmcSettings settings, TaskExecutor tmcLangs) {
         TmcSettingsHolder.set(settings);
@@ -41,6 +46,7 @@ public class TmcCore {
     public Callable<List<Exercise>> downloadOrUpdateExercises(
             ProgressObserver observer,
             List<Exercise> exercises) {
+        logger.info("Creating new DownloadOrUpdateExercises command");
         return new DownloadOrUpdateExercises(observer, exercises);
     }
 
@@ -48,10 +54,12 @@ public class TmcCore {
     public Callable<Course> getCourseDetails(
             ProgressObserver observer,
             Course course) {
+        logger.info("Creating new GetCourseDetails command");
         return new GetCourseDetails(observer, course);
     }
 
     public Callable<List<Course>> listCourses(ProgressObserver observer) {
+        logger.info("Creating new ListCourses command");
         return new ListCourses(observer);
     }
 
@@ -59,18 +67,21 @@ public class TmcCore {
             ProgressObserver observer,
             Exercise exercise,
             String message) {
+        logger.info("Creating new PasteWithComment command");
         return new PasteWithComment(observer, exercise, message);
     }
 
     public Callable<ValidationResult> runCheckStyle(
             ProgressObserver observer,
             Exercise exercise) {
+        logger.info("Creating new RunCheckStyle command");
         return new RunCheckStyle(observer, exercise);
     }
 
     public Callable<RunResult> runTests(
             ProgressObserver observer,
             Exercise exercise) {
+        logger.info("Creating new RunTests command");
         return new RunTests(observer, exercise);
     }
 
@@ -78,6 +89,7 @@ public class TmcCore {
             ProgressObserver observer,
             List<FeedbackAnswer> answers,
             URI feedbackUri) {
+        logger.info("Creating new SendFeedback command");
         return new SendFeedback(observer, answers, feedbackUri);
     }
 
@@ -85,16 +97,19 @@ public class TmcCore {
             ProgressObserver observer,
             Course currentCourse,
             List<LoggableEvent> events) {
+        logger.info("Creating new SenSpywareEvents command");
         return new SendSpywareEvents(observer, currentCourse, events);
     }
 
     public Callable<SubmissionResult> submit(
             ProgressObserver observer,
             Exercise exercise) {
+        logger.info("Creating new Submit command");
         return new Submit(observer, exercise);
     }
 
     public Callable<List<Exercise>> getExerciseUpdates(ProgressObserver observer) {
+        logger.info("Creating new GetUpdatableExercises command");
         return new GetUpdatableExercises(observer);
     }
 
@@ -104,6 +119,7 @@ public class TmcCore {
      * <p>TARGET: CORE MILESTONE 2.
      */
     public Callable<Void> getUnreadReviews(ProgressObserver observer) {
+        logger.info("Creating new GetUnreadReviews command");
         return new GetUnreadReviews(observer);
     }
 
@@ -113,6 +129,7 @@ public class TmcCore {
      * <p>TARGET: CORE MILESTONE 2.
      */
     public Callable<Void> requestCodeReview(ProgressObserver observer) {
+        logger.info("Creating new RequestCodeReview command");
         return new RequestCodeReview(observer);
     }
 
@@ -122,6 +139,7 @@ public class TmcCore {
      * <p>TARGET: CORE MILESTONE 2.
      */
     public Callable<Void> downloadCompletedExercises(ProgressObserver observer) {
+        logger.info("Creating new DownloadCompletedExercises command");
         return new DownloadCompletedExercises(observer);
     }
 
@@ -131,6 +149,7 @@ public class TmcCore {
      * <p>TARGET: CORE MILESTONE 3.
      */
     public Callable<Void> downloadModelSolution(ProgressObserver observer) {
+        logger.info("Creating new DownloadModelSolution command");
         return new DownloadModelSolution(observer);
     }
 

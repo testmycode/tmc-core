@@ -5,6 +5,9 @@ import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcInterruptionException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.Callable;
 
 /**
@@ -13,6 +16,8 @@ import java.util.concurrent.Callable;
  * <p>Third parties should use these via {@link fi.helsinki.cs.tmc.core.TmcCore}.
  */
 public abstract class Command<E> implements Callable<E> {
+
+    private static final Logger logger = LoggerFactory.getLogger(Command.class);
 
     protected TmcSettings settings;
     protected ProgressObserver observer;
@@ -50,12 +55,15 @@ public abstract class Command<E> implements Callable<E> {
      * <p>If no progress observer is assigned, nothing happens.
      */
     protected void informObserver(int currentProgress, int maxProgress, String message) {
+        logger.info("Received notification of " + message
+                + "[" + currentProgress + "/" + maxProgress + "]");
         double percent = ((double) currentProgress) * 100 / maxProgress;
         informObserver(percent, message);
     }
 
     protected void checkInterrupt() throws TmcInterruptionException {
         if (Thread.currentThread().isInterrupted()) {
+            logger.info("Noticed interruption, throwing TmcInterruptionException");
             throw new TmcInterruptionException();
         }
     }

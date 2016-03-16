@@ -23,12 +23,12 @@ import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.concurrent.Callable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Downloads a single file over HTTP into memory while being cancellable.
@@ -40,13 +40,12 @@ import java.util.logging.Logger;
 /*package*/ class HttpRequestExecutor implements Callable<BufferedHttpEntity> {
 
     private static final int DEFAULT_TIMEOUT = 30 * 1000;
+    private static final Logger logger = LoggerFactory.getLogger(HttpRequestExecutor.class);
 
     private final Object shutdownLock = new Object();
 
     private int timeout = DEFAULT_TIMEOUT;
     private HttpUriRequest request;
-    private static final Logger log = Logger.getLogger(HttpRequestExecutor.class.getName());
-
     private UsernamePasswordCredentials credentials; // May be null
 
     /*package*/ HttpRequestExecutor(String url) {
@@ -109,7 +108,7 @@ import java.util.logging.Logger;
         try {
             httpClient.close();
         } catch (IOException ex) {
-            log.log(Level.WARNING, "Dispose of httpClient failed {0}", ex);
+            logger.warn("Dispose of httpClient failed {0}", ex);
         }
     }
 
@@ -125,14 +124,14 @@ import java.util.logging.Logger;
             }
             response = httpClient.execute(request);
         } catch (IOException ex) {
-            log.log(Level.INFO, "Executing http request failed: {0}", ex.toString());
+            logger.info("Executing http request failed: {0}", ex.toString());
             if (request.isAborted()) {
                 throw new InterruptedException();
             } else {
                 throw new IOException("Download failed: " + ex.getMessage(), ex);
             }
         } catch (AuthenticationException ex) {
-            log.log(Level.INFO, "Auth failed {0}", ex);
+            logger.info("Auth failed {0}", ex);
             throw new InterruptedException();
         }
 
@@ -151,6 +150,8 @@ import java.util.logging.Logger;
         if (200 <= responseCode && responseCode <= 299) {
             return entity;
         } else {
+            logger.info("Received http response with non 2xx response code " + responseCode
+            + " with body \"" + entity + "\"");
             throw new FailedHttpResponseException(responseCode, entity);
         }
     }

@@ -1,10 +1,10 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
+import fi.helsinki.cs.tmc.core.communication.serialization.SubmissionResultParser;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
-import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResultParser;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.gson.JsonElement;

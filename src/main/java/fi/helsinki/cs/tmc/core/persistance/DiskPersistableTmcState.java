@@ -114,6 +114,15 @@ public class DiskPersistableTmcState implements TmcState {
         return null;
     }
 
+    private Course getCourseByName(List<Course> courses, String courseName) {
+        for (Course course : courses) {
+            if (course.getName().equals(courseName)) {
+                return course;
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean isUnlockable(Exercise ex) {
         Course course = getCourseByName(ex.getCourseName());
@@ -125,7 +134,8 @@ public class DiskPersistableTmcState implements TmcState {
     }
 
     /**
-     * Returns all exercises from the current course that can be unlocked (and must be unlocked together).
+     * Returns all exercises from the current course that can be unlocked
+     * (and must be unlocked together).
      */
     @Override
     public List<Exercise> getCurrentCourseUnlockableExercises() {
@@ -155,8 +165,7 @@ public class DiskPersistableTmcState implements TmcState {
     /**
      * Informs the course database that the exercise is considered downloaded.
      *
-     * <p>
-     * Sets the downloaded checksum of the exercise to be the one reported by the server.
+     * <p>Sets the downloaded checksum of the exercise to be the one reported by the server.
      */
     @Override
     public void exerciseDownloaded(Exercise ex) {
@@ -164,7 +173,8 @@ public class DiskPersistableTmcState implements TmcState {
         save();
     }
 
-    //TODO: arrange for downloadedExerciseChecksums.put(..., null) when a project is deleted!
+    //TODO: arrange for downloadedExerciseChecksums.put(..., null) when
+    // a project is deleted!
 
     public void save() {
         try {
@@ -172,15 +182,6 @@ public class DiskPersistableTmcState implements TmcState {
         } catch (Exception e) {
             //TODO: Log
         }
-    }
-
-    private Course getCourseByName(List<Course> courses, String courseName) {
-        for (Course course : courses) {
-            if (course.getName().equals(courseName)) {
-                return course;
-            }
-        }
-        return null;
     }
 
     private static class StoredStuff {
@@ -194,11 +195,11 @@ public class DiskPersistableTmcState implements TmcState {
         stuff.availableCourses = this.availableCourses;
         stuff.currentCourseName = this.currentCourseName;
         stuff.downloadedExerciseChecksums = this.downloadedExerciseChecksums;
-        Writer w = configFile.getWriter();
+        Writer writer = configFile.getWriter();
         try {
-            getGson().toJson(stuff, w);
+            getGson().toJson(stuff, writer);
         } finally {
-            w.close();
+            writer.close();
         }
     }
 

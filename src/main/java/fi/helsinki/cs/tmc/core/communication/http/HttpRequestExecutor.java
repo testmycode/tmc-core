@@ -4,8 +4,8 @@ import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.AuthenticationException;
+import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
@@ -34,7 +34,7 @@ import java.util.concurrent.Callable;
 /**
  * Downloads a single file over HTTP into memory while being cancellable.
  *
- * If the response was not a successful one (status code 2xx) then a
+ * <p>If the response was not a successful one (status code 2xx) then a
  * {@link FailedHttpResponseException} with a preloaded buffered entity is
  * thrown.
  */
@@ -152,7 +152,7 @@ import java.util.concurrent.Callable;
             return entity;
         } else {
             logger.info("Received http response with non 2xx response code " + responseCode
-            + " with body \"" + entity + "\"");
+                    + " with body \"" + entity + "\"");
             throw new FailedHttpResponseException(responseCode, entity);
         }
     }

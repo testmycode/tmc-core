@@ -39,7 +39,7 @@ public class InMemoryTmcState implements TmcState {
 
     @Override
     public void putDetailedCourse(Course course) {
-        for(int i = 0; i < availableCourses.size(); i++) {
+        for (int i = 0; i < availableCourses.size(); i++) {
             if (course.getName().equals(availableCourses.get(i).getName())) {
                 availableCourses.set(i, course);
                 break;

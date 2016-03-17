@@ -23,7 +23,7 @@ import java.util.concurrent.Callable;
 /**
  * Convenient methods to start asynchronous HTTP tasks.
  * 
- * Tasks throw a {@link FailedHttpResponseException} when getting a response
+ * <p>Tasks throw a {@link FailedHttpResponseException} when getting a response
  * with a non-successful status code.
  */
 public class HttpTasks {

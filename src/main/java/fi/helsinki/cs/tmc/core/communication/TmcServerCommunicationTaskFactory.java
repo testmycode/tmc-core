@@ -1,22 +1,22 @@
 package fi.helsinki.cs.tmc.core.communication;
 
-import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
+import fi.helsinki.cs.tmc.core.communication.http.HttpTasks;
 import fi.helsinki.cs.tmc.core.communication.http.UriUtils;
+import fi.helsinki.cs.tmc.core.communication.serialization.ByteArrayGsonSerializer;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseInfoParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseListParser;
+import fi.helsinki.cs.tmc.core.communication.serialization.JsonMaker;
+import fi.helsinki.cs.tmc.core.communication.serialization.JsonMakerGsonSerializer;
 import fi.helsinki.cs.tmc.core.communication.serialization.ReviewListParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
+import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.exceptions.ObsoleteClientException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
-import fi.helsinki.cs.tmc.core.communication.http.HttpTasks;
 import fi.helsinki.cs.tmc.core.spyware.LoggableEvent;
-import fi.helsinki.cs.tmc.core.communication.serialization.JsonMaker;
-import fi.helsinki.cs.tmc.core.communication.serialization.ByteArrayGsonSerializer;
-import fi.helsinki.cs.tmc.core.communication.serialization.JsonMakerGsonSerializer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

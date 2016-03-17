@@ -38,12 +38,12 @@ public class ConfigFile {
         return Files.newBufferedReader(getFile(), Charset.forName("UTF-8"));
     }
 
-    public void writeContents(String s) throws IOException {
-        Writer w = getWriter();
+    public void writeContents(String content) throws IOException {
+        Writer writer = getWriter();
         try {
-            w.write(s);
+            writer.write(content);
         } finally {
-            w.close();
+            writer.close();
         }
     }
 

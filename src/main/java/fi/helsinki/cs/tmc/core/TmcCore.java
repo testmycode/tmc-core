@@ -1,11 +1,11 @@
 package fi.helsinki.cs.tmc.core;
 
 import fi.helsinki.cs.tmc.core.commands.DownloadCompletedExercises;
-import fi.helsinki.cs.tmc.core.commands.DownloadOrUpdateExercises;
 import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
+import fi.helsinki.cs.tmc.core.commands.DownloadOrUpdateExercises;
 import fi.helsinki.cs.tmc.core.commands.GetCourseDetails;
-import fi.helsinki.cs.tmc.core.commands.GetUpdatableExercises;
 import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
+import fi.helsinki.cs.tmc.core.commands.GetUpdatableExercises;
 import fi.helsinki.cs.tmc.core.commands.ListCourses;
 import fi.helsinki.cs.tmc.core.commands.PasteWithComment;
 import fi.helsinki.cs.tmc.core.commands.RequestCodeReview;

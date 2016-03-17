@@ -1,8 +1,8 @@
 package fi.helsinki.cs.tmc.core.spyware;
 
+import fi.helsinki.cs.tmc.core.communication.serialization.JsonMaker;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
-import fi.helsinki.cs.tmc.core.communication.serialization.JsonMaker;
 
 import java.util.List;
 import java.util.logging.Logger;

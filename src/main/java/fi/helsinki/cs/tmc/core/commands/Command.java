@@ -1,9 +1,9 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
-import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcInterruptionException;
+import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

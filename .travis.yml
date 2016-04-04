@@ -25,3 +25,7 @@ matrix:
 os:
   - linux
   # - osx
+
+cache:
+  directories:
+    - $HOME/.m2

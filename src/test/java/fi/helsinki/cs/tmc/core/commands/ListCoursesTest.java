@@ -1,8 +1,8 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import static com.google.common.truth.Truth.assertThat;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
@@ -12,8 +12,8 @@ import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import com.google.common.collect.ImmutableList;
 
-import org.junit.Test;
 import org.junit.Before;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 

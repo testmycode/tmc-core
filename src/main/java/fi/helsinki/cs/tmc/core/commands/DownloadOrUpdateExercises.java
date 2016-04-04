@@ -7,6 +7,8 @@ import fi.helsinki.cs.tmc.core.exceptions.TmcInterruptionException;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +23,21 @@ import java.util.List;
  */
 public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
 
-    private static final Logger logger
-            = LoggerFactory.getLogger(DownloadOrUpdateExercises.class);
+    private static final Logger logger = LoggerFactory.getLogger(DownloadOrUpdateExercises.class);
 
     private List<Exercise> exercises;
 
     public DownloadOrUpdateExercises(ProgressObserver observer, List<Exercise> exercises) {
         super(observer);
+        this.exercises = exercises;
+    }
+
+    @VisibleForTesting
+    DownloadOrUpdateExercises(
+            ProgressObserver observer,
+            List<Exercise> exercises,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+        super(observer, tmcServerCommunicationTaskFactory);
         this.exercises = exercises;
     }
 
@@ -41,12 +51,12 @@ public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
 
             checkInterrupt();
 
-
             byte[] zip;
             try {
-                zip = new TmcServerCommunicationTaskFactory()
-                        .getDownloadingExerciseZipTask(exercise)
-                        .call();
+                zip =
+                        tmcServerCommunicationTaskFactory
+                                .getDownloadingExerciseZipTask(exercise)
+                                .call();
             } catch (Exception ex) {
                 logger.warn("Failed to download project from TMC-server", ex);
                 continue;
@@ -69,8 +79,12 @@ public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
             try {
                 TmcLangsHolder.get().extractProject(exerciseZipTemporaryPath, target);
             } catch (Exception ex) {
-                logger.warn("Failed to extract project from " + exerciseZipTemporaryPath
-                        + " to " + target, ex);
+                logger.warn(
+                        "Failed to extract project from "
+                                + exerciseZipTemporaryPath
+                                + " to "
+                                + target,
+                        ex);
                 continue;
             } finally {
                 cleanUp(exerciseZipTemporaryPath);

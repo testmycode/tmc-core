@@ -21,10 +21,16 @@ public class ListCourses extends Command<List<Course>> {
         super(observer);
     }
 
+    public ListCourses(
+            ProgressObserver observer,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+        super(observer, tmcServerCommunicationTaskFactory);
+    }
+
     @Override
     public List<Course> call() throws TmcCoreException {
         try {
-            return new TmcServerCommunicationTaskFactory().getDownloadingCourseListTask().call();
+            return tmcServerCommunicationTaskFactory.getDownloadingCourseListTask().call();
         } catch (Exception ex) {
             logger.warn("Failed to fetch courses from the server", ex);
             throw new TmcCoreException("Failed to fetch courses from the server", ex);

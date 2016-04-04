@@ -99,3 +99,4 @@ local.properties
 **/log.txt
 tmc-langs.log
 tmc-core.log*
+/nbproject/

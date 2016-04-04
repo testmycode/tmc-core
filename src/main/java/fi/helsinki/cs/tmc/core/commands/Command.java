@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
+import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcInterruptionException;
@@ -22,6 +23,8 @@ public abstract class Command<E> implements Callable<E> {
     protected TmcSettings settings;
     protected ProgressObserver observer;
 
+    protected TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory;
+
     /**
      * Constructs a Command object.
      */
@@ -34,8 +37,22 @@ public abstract class Command<E> implements Callable<E> {
      * {@link ProgressObserver}.
      */
     public Command(TmcSettings settings, ProgressObserver observer) {
+        this(settings, observer, new TmcServerCommunicationTaskFactory());
+    }
+
+    public Command(
+            ProgressObserver observer,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+        this(TmcSettingsHolder.get(), observer, tmcServerCommunicationTaskFactory);
+    }
+
+    public Command(
+            TmcSettings settings,
+            ProgressObserver observer,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
         this.settings = settings;
         this.observer = observer;
+        this.tmcServerCommunicationTaskFactory = tmcServerCommunicationTaskFactory;
     }
 
     /**
@@ -55,8 +72,14 @@ public abstract class Command<E> implements Callable<E> {
      * <p>If no progress observer is assigned, nothing happens.
      */
     protected void informObserver(int currentProgress, int maxProgress, String message) {
-        logger.info("Received notification of " + message
-                + "[" + currentProgress + "/" + maxProgress + "]");
+        logger.info(
+                "Received notification of "
+                        + message
+                        + "["
+                        + currentProgress
+                        + "/"
+                        + maxProgress
+                        + "]");
         double percent = ((double) currentProgress) * 100 / maxProgress;
         informObserver(percent, message);
     }

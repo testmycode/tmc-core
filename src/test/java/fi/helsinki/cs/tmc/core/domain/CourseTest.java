@@ -21,15 +21,12 @@ public class CourseTest {
     private List<Exercise> exercises;
     private Exercise ex;
 
-    /**
-     * Setups an Course object for testing.
-     */
     @Before
     public void setUp() {
         course = new Course();
         course.setId(id);
         course.setName(name);
-        course.setDetailsUrl(URI.create("http://mooc.fi/"));
+        course.setDetailsUrl(URI.create("http://example.com/"));
 
         exercises = new ArrayList<>();
         ex = new Exercise();
@@ -76,7 +73,7 @@ public class CourseTest {
 
     @Test
     public void testGetDetailsUrl() {
-        assertEquals(URI.create("http://mooc.fi/"), course.getDetailsUrl());
+        assertEquals(URI.create("http://example.com/"), course.getDetailsUrl());
     }
 
     @Test

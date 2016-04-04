@@ -5,6 +5,8 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +26,19 @@ public class GetCourseDetails extends Command<Course> {
         this.course = course;
     }
 
+    @VisibleForTesting
+    GetCourseDetails(
+            ProgressObserver observer,
+            Course course,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+        super(observer, tmcServerCommunicationTaskFactory);
+        this.course = course;
+    }
+
     @Override
     public Course call() throws TmcCoreException, URISyntaxException {
         try {
-            return new TmcServerCommunicationTaskFactory().getFullCourseInfoTask(course).call();
+            return tmcServerCommunicationTaskFactory.getFullCourseInfoTask(course).call();
         } catch (Exception ex) {
             logger.warn("Failed to get course details for course " + course.getName(), ex);
             throw new TmcCoreException("Failed to get course details", ex);

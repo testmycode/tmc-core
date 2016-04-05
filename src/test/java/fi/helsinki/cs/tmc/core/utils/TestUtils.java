@@ -13,7 +13,7 @@ public final class TestUtils {
      */
     public static Path getProject(Class<?> clazz, String location) {
         try {
-            URL url = clazz.getResource("/__files" + location);
+            URL url = clazz.getResource("/__files/" + location);
 
             if (url != null) {
                 return Paths.get(url.toURI());

@@ -4,10 +4,11 @@ import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
 
 /**
  * A {@link Command} for sending a paste to the server with an attached comment.
@@ -23,6 +24,17 @@ public class PasteWithComment extends AbstractSubmissionCommand<URI> {
         this.message = message;
     }
 
+    @VisibleForTesting
+    PasteWithComment(
+            ProgressObserver observer,
+            Exercise exercise,
+            String message,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+        super(observer, tmcServerCommunicationTaskFactory);
+        this.exercise = exercise;
+        this.message = message;
+    }
+
     @Override
     public URI call() throws Exception {
 
@@ -32,8 +44,8 @@ public class PasteWithComment extends AbstractSubmissionCommand<URI> {
             extraParams.put("message_for_paste", message);
         }
 
-        TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse
-                = submitToServer(exercise, extraParams);
+        TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse =
+                submitToServer(exercise, extraParams);
 
         return submissionResponse.pasteUrl;
     }

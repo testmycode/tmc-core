@@ -8,6 +8,7 @@ import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,17 +19,21 @@ import java.util.Map;
 
 public abstract class AbstractSubmissionCommand<T> extends Command<T> {
 
-    private static final Logger logger
-            = LoggerFactory.getLogger(AbstractSubmissionCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractSubmissionCommand.class);
 
     public AbstractSubmissionCommand(ProgressObserver observer) {
         super(observer);
     }
 
+    @VisibleForTesting
+    AbstractSubmissionCommand(
+            ProgressObserver observer,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+        super(observer, tmcServerCommunicationTaskFactory);
+    }
+
     public TmcServerCommunicationTaskFactory.SubmissionResponse submitToServer(
-            Exercise exercise,
-            Map<String, String> extraParams)
-            throws TmcCoreException {
+            Exercise exercise, Map<String, String> extraParams) throws TmcCoreException {
 
         byte[] zippedProject;
 
@@ -40,13 +45,11 @@ public abstract class AbstractSubmissionCommand<T> extends Command<T> {
             logger.warn("Failed to compress project", ex);
             throw new TmcCoreException("Failed to compress project", ex);
         }
-
         extraParams.put("error_msg_locale", TmcSettingsHolder.get().getLocale().toString());
         try {
-            return new TmcServerCommunicationTaskFactory().getSubmittingExerciseTask(
-                    exercise,
-                    zippedProject,
-                    new HashMap<String, String>())
+            return tmcServerCommunicationTaskFactory
+                    .getSubmittingExerciseTask(
+                            exercise, zippedProject, new HashMap<String, String>())
                     .call();
         } catch (Exception ex) {
             logger.warn("Failed to submit exercise", ex);

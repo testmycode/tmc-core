@@ -49,8 +49,8 @@ public class GetUpdatableExercisesTest {
     @Mock Exercise updateableRefreshedExercise;
     @Mock Exercise newRefreshedExercise; // TODO: ?
 
-    TaskExecutor langs;
-    Path arithFuncsTempDir;
+    private TaskExecutor langs;
+    private Path arithFuncsTempDir;
 
     private Command<List<Exercise>> command;
 

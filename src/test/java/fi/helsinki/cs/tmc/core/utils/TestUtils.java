@@ -11,9 +11,9 @@ public final class TestUtils {
      * Returns a path to a resource residing in the ResourceDir of the given
      * class.
      */
-    public static Path getPath(Class<?> clazz, String location) {
+    public static Path getProject(Class<?> clazz, String location) {
         try {
-            URL url = clazz.getResource("/" + location);
+            URL url = clazz.getResource("/__files" + location);
 
             if (url != null) {
                 return Paths.get(url.toURI());

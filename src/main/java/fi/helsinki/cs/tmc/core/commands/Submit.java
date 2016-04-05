@@ -7,6 +7,7 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
@@ -21,8 +22,7 @@ import java.util.concurrent.Callable;
  */
 public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
 
-    private static final Logger logger
-            = LoggerFactory.getLogger(AbstractSubmissionCommand.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractSubmissionCommand.class);
     private static final int DEFAULT_POLL_INTERVAL = 1000 * 2;
 
     private Exercise exercise;
@@ -32,17 +32,27 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
         this.exercise = exercise;
     }
 
+    @VisibleForTesting
+    Submit(
+            ProgressObserver observer,
+            Exercise exercise,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+        super(observer, tmcServerCommunicationTaskFactory);
+        this.exercise = exercise;
+    }
+
     /**
      * Entry point for launching this command.
      */
     @Override
     public SubmissionResult call() throws TmcCoreException {
 
-        TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse
-                = submitToServer(exercise, new HashMap<String, String>());
+        TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse =
+                submitToServer(exercise, new HashMap<String, String>());
 
-        Callable<String> submissionResultFetcher = new TmcServerCommunicationTaskFactory()
-                .getSubmissionFetchTask(submissionResponse.submissionUrl.toString());
+        Callable<String> submissionResultFetcher =
+                new TmcServerCommunicationTaskFactory()
+                        .getSubmissionFetchTask(submissionResponse.submissionUrl.toString());
         SubmissionResultParser resultParser = new SubmissionResultParser();
 
         while (true) {
@@ -60,23 +70,13 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
                     return resultParser.parseFromJson(submissionStatus);
                 }
             } catch (Exception ex) {
-                logger.warn(
-                        "Error while updating submission status from server, continuing",
-                        ex);
+                logger.warn("Error while updating submission status from server, continuing", ex);
             }
         }
     }
 
     private boolean isProcessing(JsonElement submissionStatus) {
 
-        return submissionStatus
-                .getAsJsonObject()
-                .get("status")
-                .getAsString()
-                .equals("processing");
+        return submissionStatus.getAsJsonObject().get("status").getAsString().equals("processing");
     }
-
-
-
-
 }

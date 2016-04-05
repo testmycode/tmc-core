@@ -4,6 +4,7 @@ import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.JsonParser;
 
 import java.net.URI;
@@ -23,17 +24,28 @@ public class SendFeedback extends Command<Boolean> {
         this.feedbackUri = feedbackUri;
     }
 
+    @VisibleForTesting
+    SendFeedback(
+            ProgressObserver observer,
+            List<FeedbackAnswer> answers,
+            URI feedbackUri,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+        super(observer, tmcServerCommunicationTaskFactory);
+        this.answers = answers;
+        this.feedbackUri = feedbackUri;
+    }
+
     @Override
     public Boolean call() throws Exception {
 
-        String response = new TmcServerCommunicationTaskFactory().getFeedbackAnsweringJob(
-                //TODO: Str -> URI
-                feedbackUri.toString(),
-                answers
-        ).call();
+        String response =
+                tmcServerCommunicationTaskFactory
+                        .getFeedbackAnsweringJob(
+                                // TODO: Str -> URI
+                                feedbackUri.toString(), answers)
+                        .call();
 
         return respondedSuccessfully(response);
-
     }
 
     private boolean respondedSuccessfully(String response) {
@@ -44,5 +56,4 @@ public class SendFeedback extends Command<Boolean> {
                 .getAsString()
                 .equals("ok");
     }
-
 }

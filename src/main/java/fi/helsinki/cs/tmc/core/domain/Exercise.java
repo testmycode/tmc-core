@@ -256,7 +256,12 @@ public class Exercise implements Serializable {
 
     private String courseName;
 
+    // Zip contains folder for the exercise.
     public Path getExtractionTarget(Path tmcRoot) {
+        return tmcRoot.resolve(Paths.get(courseName));
+    }
+
+    public Path getExerciseDirectory(Path tmcRoot) {
         return tmcRoot.resolve(Paths.get(courseName, name));
     }
 

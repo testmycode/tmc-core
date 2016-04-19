@@ -30,6 +30,7 @@ public interface TmcSettings {
 
     String clientVersion();
 
+    // TODO: what is this even?
     String getFormattedUserData();
 
     /**

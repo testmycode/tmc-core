@@ -12,22 +12,16 @@ public final class TestUtils {
      * class.
      */
     public static Path getProject(Class<?> clazz, String location) {
-        try {
-            URL url = clazz.getResource("/__files/" + location);
-
-            if (url != null) {
-                return Paths.get(url.toURI());
-            }
-
-            return null;
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        return getResource(clazz, "/__files/" + location);
     }
 
     public static Path getZip(Class<?> clazz, String filename) {
+        return getResource(clazz, "/__files/" + filename);
+    }
+
+    private static Path getResource(Class<?> clazz, String filename) {
         try {
-            URL url = clazz.getResource("/__files/" + filename);
+            URL url = clazz.getResource(filename);
 
             if (url != null) {
                 return Paths.get(url.toURI());

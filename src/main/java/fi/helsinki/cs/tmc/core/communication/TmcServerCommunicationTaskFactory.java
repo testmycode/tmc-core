@@ -77,11 +77,11 @@ public class TmcServerCommunicationTaskFactory {
         this.settings = settings;
     }
 
-    private String getCourseListUrl() {
-        return addApiCallQueryParameters(settings.getServerAddress() + "/courses.json");
+    private URI getCourseListUrl() {
+        return addApiCallQueryParameters(URI.create(settings.getServerAddress() + "/courses.json"));
     }
 
-    private String addApiCallQueryParameters(String url) {
+    private URI addApiCallQueryParameters(URI url) {
         url = UriUtils.withQueryParam(url, "api_version", "" + API_VERSION);
         url = UriUtils.withQueryParam(url, "client", settings.clientName());
         url = UriUtils.withQueryParam(url, "client_version", clientVersion);
@@ -123,7 +123,7 @@ public class TmcServerCommunicationTaskFactory {
 
     public Callable<Course> getFullCourseInfoTask(Course courseStub) {
         //TODO: Str -> URL
-        String url = addApiCallQueryParameters(courseStub.getDetailsUrl().toString());
+        URI url = addApiCallQueryParameters(courseStub.getDetailsUrl());
         final Callable<String> download = createHttpTasks().getForText(url);
         return new Callable<Course>() {
             @Override
@@ -159,20 +159,17 @@ public class TmcServerCommunicationTaskFactory {
         };
     }
 
-    private String getUnlockUrl(Course course) {
-        //TODO: Str -> URL
-        return addApiCallQueryParameters(course.getUnlockUrl().toString());
+    private URI getUnlockUrl(Course course) {
+        return addApiCallQueryParameters(course.getUnlockUrl());
     }
 
     public Callable<byte[]> getDownloadingExerciseZipTask(Exercise exercise) {
-        //TODO: Str -> URL
-        String zipUrl = exercise.getDownloadUrl().toString();
+        URI zipUrl = exercise.getDownloadUrl();
         return createHttpTasks().getForBinary(zipUrl);
     }
 
     public Callable<byte[]> getDownloadingExerciseSolutionZipTask(Exercise exercise) {
-        //TODO: Str -> URL
-        String zipUrl = exercise.getSolutionDownloadUrl().toString();
+        URI zipUrl = exercise.getSolutionDownloadUrl();
         return createHttpTasks().getForBinary(zipUrl);
     }
 
@@ -180,8 +177,7 @@ public class TmcServerCommunicationTaskFactory {
             final Exercise exercise,
             final byte[] sourceZip,
             Map<String, String> extraParams) {
-        //TODO: Str -> URL
-        final String submitUrl = addApiCallQueryParameters(exercise.getReturnUrl().toString());
+        final URI submitUrl = addApiCallQueryParameters(exercise.getReturnUrl());
 
         Map<String, String> params = new LinkedHashMap<>();
         params.put("client_time", "" + (System.currentTimeMillis() / 1000L));
@@ -239,13 +235,12 @@ public class TmcServerCommunicationTaskFactory {
         }
     }
 
-    public Callable<String> getSubmissionFetchTask(String submissionUrl) {
+    public Callable<String> getSubmissionFetchTask(URI submissionUrl) {
         return createHttpTasks().getForText(submissionUrl);
     }
 
     public Callable<List<Review>> getDownloadingReviewListTask(Course course) {
-        //TODO: Str -> URL
-        String url = addApiCallQueryParameters(course.getReviewsUrl().toString());
+        URI url = addApiCallQueryParameters(course.getReviewsUrl());
         final Callable<String> download = createHttpTasks().getForText(url);
         return new Callable<List<Review>>() {
             @Override
@@ -263,7 +258,7 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<Void> getMarkingReviewAsReadTask(Review review, boolean read) {
-        String url = addApiCallQueryParameters(review.getUpdateUrl() + ".json");
+        URI url = addApiCallQueryParameters(URI.create(review.getUpdateUrl() + ".json"));
         Map<String, String> params = new HashMap<>();
         params.put("_method", "put");
         if (read) {
@@ -285,9 +280,9 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<String> getFeedbackAnsweringJob(
-            String answerUrl,
+            URI answerUrl,
             List<FeedbackAnswer> answers) {
-        final String submitUrl = addApiCallQueryParameters(answerUrl);
+        final URI submitUrl = addApiCallQueryParameters(answerUrl);
 
         Map<String, String> params = new HashMap<>();
         for (int i = 0; i < answers.size(); ++i) {
@@ -314,8 +309,8 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<Object> getSendEventLogJob(
-            String spywareServerUrl,
-            List<LoggableEvent> events) {
+        URI spywareServerUrl,
+        List<LoggableEvent> events) {
 
         Map<String, String> extraHeaders = new LinkedHashMap<>();
         extraHeaders.put("X-Tmc-Version", "1");
@@ -329,7 +324,7 @@ public class TmcServerCommunicationTaskFactory {
             throw new RuntimeException(e);
         }
 
-        String url = addApiCallQueryParameters(spywareServerUrl);
+        URI url = addApiCallQueryParameters(spywareServerUrl);
         final Callable<String> upload = createHttpTasks().rawPostForText(url, data, extraHeaders);
 
         return new Callable<Object>() {

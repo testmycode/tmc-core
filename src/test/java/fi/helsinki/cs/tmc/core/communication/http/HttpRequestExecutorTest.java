@@ -88,7 +88,7 @@ public class HttpRequestExecutorTest {
     public void testFollowingRedirectsAutomatically() throws Exception {
 
         wireMockRule.stubFor(get(urlEqualTo("/one")).willReturn(aResponse()
-            .withHeader("Location", getAddressFor("/two"))
+            .withHeader("Location", getAddressFor("/two").toString())
             .withStatus(302)
         ));
 
@@ -116,14 +116,14 @@ public class HttpRequestExecutorTest {
             .willReturn(aResponse().withBody("Yay"))
         );
 
-        URI uri = URI.create(getAddressFor("auth"));
+        URI uri = getAddressFor("auth");
         uri = new URI(uri.getScheme(), "theuser:thepassword", uri.getHost(), uri.getPort(), uri.getPath(), uri.getQuery(), uri.getFragment());
 
-        BufferedHttpEntity result = new HttpRequestExecutor(uri.toString()).setTimeout(5000).call();
+        BufferedHttpEntity result = new HttpRequestExecutor(uri).setTimeout(5000).call();
         assertEquals("Yay", EntityUtils.toString(result, "UTF-8"));
     }
 
-    private String getAddressFor(String path) {
-        return "http://127.0.0.1:" + wireMockRule.port() + "/" + path;
+    private URI getAddressFor(String path) {
+        return URI.create("http://127.0.0.1:" + wireMockRule.port() + "/" + path);
     }
 }

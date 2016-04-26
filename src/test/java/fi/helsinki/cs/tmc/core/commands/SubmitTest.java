@@ -87,7 +87,7 @@ public class SubmitTest {
                                 return STUB_RESPONSE;
                             }
                         });
-        when(factory.getSubmissionFetchTask(anyString())).thenReturn(new Callable<String>() {
+        when(factory.getSubmissionFetchTask(any(URI.class))).thenReturn(new Callable<String>() {
             @Override
             public String call() throws Exception {
                 return STUB_PROSESSING_RESPONSE;

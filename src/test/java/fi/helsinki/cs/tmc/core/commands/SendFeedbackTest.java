@@ -56,7 +56,7 @@ public class SendFeedbackTest {
     @Test
     public void testHappyPath() throws Exception {
         verifyZeroInteractions(mockObserver);
-        when(factory.getFeedbackAnsweringJob(anyString(), any(List.class)))
+        when(factory.getFeedbackAnsweringJob(any(URI.class), any(List.class)))
                 .thenReturn(
                         new Callable<String>() {
                             @Override
@@ -70,7 +70,7 @@ public class SendFeedbackTest {
     @Test
     public void testSadPath() throws Exception {
         verifyZeroInteractions(mockObserver);
-        when(factory.getFeedbackAnsweringJob(anyString(), any(List.class)))
+        when(factory.getFeedbackAnsweringJob(any(URI.class), any(List.class)))
                 .thenReturn(
                         new Callable<String>() {
                             @Override

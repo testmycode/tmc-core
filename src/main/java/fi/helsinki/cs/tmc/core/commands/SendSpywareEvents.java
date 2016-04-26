@@ -9,6 +9,7 @@ import fi.helsinki.cs.tmc.core.spyware.NoSpywareServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Random;
 
@@ -43,7 +44,7 @@ public class SendSpywareEvents extends Command<Void> {
 
         int serverId = new Random().nextInt(currentCourse.getSpywareUrls().size());
         //TODO: Str -> URI
-        String spywareServerUri = currentCourse.getSpywareUrls().get(serverId).toString();
+        URI spywareServerUri = currentCourse.getSpywareUrls().get(serverId);
 
         new TmcServerCommunicationTaskFactory()
                 .getSendEventLogJob(spywareServerUri, events)

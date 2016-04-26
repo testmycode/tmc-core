@@ -41,8 +41,7 @@ public class SendFeedback extends Command<Boolean> {
         String response =
                 tmcServerCommunicationTaskFactory
                         .getFeedbackAnsweringJob(
-                                // TODO: Str -> URI
-                                feedbackUri.toString(), answers)
+                                feedbackUri, answers)
                         .call();
 
         return respondedSuccessfully(response);

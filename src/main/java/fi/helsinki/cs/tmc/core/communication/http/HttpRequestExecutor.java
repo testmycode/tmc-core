@@ -3,7 +3,6 @@ package fi.helsinki.cs.tmc.core.communication.http;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.AuthScope;
@@ -11,6 +10,7 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.NoConnectionReuseStrategy;
@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.concurrent.Callable;
 
@@ -50,7 +51,7 @@ import java.util.concurrent.Callable;
     private HttpUriRequest request;
     private UsernamePasswordCredentials credentials; // May be null
 
-    /*package*/ HttpRequestExecutor(String url) {
+    /*package*/ HttpRequestExecutor(URI url) {
         this(new HttpGet(url));
     }
 

@@ -60,7 +60,7 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
             try {
                 Callable<String> submissionResultFetcher =
                     tmcServerCommunicationTaskFactory
-                        .getSubmissionFetchTask(submissionResponse.submissionUrl.toString());
+                        .getSubmissionFetchTask(submissionResponse.submissionUrl);
 
 
                 String submissionStatus = submissionResultFetcher.call();

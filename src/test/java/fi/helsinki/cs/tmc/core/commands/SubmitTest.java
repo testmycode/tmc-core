@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core.commands;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -49,6 +50,10 @@ public class SubmitTest {
     private static final TmcServerCommunicationTaskFactory.SubmissionResponse STUB_RESPONSE =
             new TmcServerCommunicationTaskFactory.SubmissionResponse(SUBMISSION_URI, PASTE_URI);
 
+    private static final String STUB_PROSESSING_RESPONSE = "{status: \"processing\"}";
+    private static final String STUB_PROSESSING_DONE_RESPONSE = "{status: \"OK\"}";
+
+
     private Command<SubmissionResult> command;
     private Path arithFuncsTempDir;
     private TaskExecutor langs;
@@ -68,7 +73,7 @@ public class SubmitTest {
         when(settings.getLocale()).thenReturn(new Locale("FI"));
     }
 
-    @Test
+    @Test(timeout = 10000)
     public void testCall() throws Exception {
         verifyZeroInteractions(mockObserver);
         doReturn(new byte[0]).when(langs).compressProject(any(Path.class));
@@ -82,8 +87,19 @@ public class SubmitTest {
                                 return STUB_RESPONSE;
                             }
                         });
+        when(factory.getSubmissionFetchTask(anyString())).thenReturn(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return STUB_PROSESSING_RESPONSE;
+            }
+        }).thenReturn(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                return STUB_PROSESSING_DONE_RESPONSE;
+            }
+        });
 
         SubmissionResult result = command.call();
-        assertEquals(result, STUB_RESPONSE);
+        assertEquals(result.getStatus(), SubmissionResult.Status.OK);
     }
 }

@@ -52,7 +52,6 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
 
         while (true) {
             checkInterrupt();
-            logger.trace("Soon sleeping");
             try {
                 Thread.sleep(DEFAULT_POLL_INTERVAL);
             } catch (InterruptedException e) {
@@ -60,12 +59,11 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
             }
             try {
                 Callable<String> submissionResultFetcher =
-                    new TmcServerCommunicationTaskFactory()
+                    tmcServerCommunicationTaskFactory
                         .getSubmissionFetchTask(submissionResponse.submissionUrl.toString());
 
 
                 String submissionStatus = submissionResultFetcher.call();
-                logger.trace("Submission status: " + submissionStatus);
                 JsonElement submission = new JsonParser().parse(submissionStatus);
                 if (isProcessing(submission)) {
                     // TODO: Update progress

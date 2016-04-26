@@ -11,7 +11,6 @@ import java.nio.file.Path;
 
 public class ConfigFile {
 
-
     private final String name;
     private Path file;
 

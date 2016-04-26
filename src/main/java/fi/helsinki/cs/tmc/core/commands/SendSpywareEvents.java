@@ -31,6 +31,7 @@ public class SendSpywareEvents extends Command<Void> {
         this.events = events;
     }
 
+    // TODO: test
     @Override
     public Void call() throws Exception {
         if (currentCourse.getSpywareUrls() == null

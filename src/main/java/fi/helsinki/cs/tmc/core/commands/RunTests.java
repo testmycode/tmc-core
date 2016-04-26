@@ -29,7 +29,7 @@ public class RunTests extends Command<RunResult> {
 
     @Override
     public RunResult call() throws TmcCoreException {
-        Path path = exercise.getExtractionTarget(TmcSettingsHolder.get().getTmcProjectDirectory());
+        Path path = exercise.getExerciseDirectory(TmcSettingsHolder.get().getTmcProjectDirectory());
         try {
             return TmcLangsHolder.get().runTests(path);
         } catch (NoLanguagePluginFoundException ex) {

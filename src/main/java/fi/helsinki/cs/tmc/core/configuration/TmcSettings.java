@@ -44,4 +44,7 @@ public interface TmcSettings {
     SystemDefaultRoutePlanner proxy();
 
     Path getConfigRoot();
+
+    // For testing at least
+    void setCourse(Course theCourse);
 }

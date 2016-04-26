@@ -50,23 +50,29 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
         TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse =
                 submitToServer(exercise, new HashMap<String, String>());
 
-        Callable<String> submissionResultFetcher =
-                new TmcServerCommunicationTaskFactory()
-                        .getSubmissionFetchTask(submissionResponse.submissionUrl.toString());
-        SubmissionResultParser resultParser = new SubmissionResultParser();
-
         while (true) {
-
             checkInterrupt();
-
+            logger.trace("Soon sleeping");
             try {
+                Thread.sleep(DEFAULT_POLL_INTERVAL);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                Callable<String> submissionResultFetcher =
+                    new TmcServerCommunicationTaskFactory()
+                        .getSubmissionFetchTask(submissionResponse.submissionUrl.toString());
+
+
                 String submissionStatus = submissionResultFetcher.call();
+                logger.trace("Submission status: " + submissionStatus);
                 JsonElement submission = new JsonParser().parse(submissionStatus);
                 if (isProcessing(submission)) {
                     // TODO: Update progress
                     // TODO: Replace with variable interval polling
                     Thread.sleep(DEFAULT_POLL_INTERVAL);
                 } else {
+                    SubmissionResultParser resultParser = new SubmissionResultParser();
                     return resultParser.parseFromJson(submissionStatus);
                 }
             } catch (Exception ex) {

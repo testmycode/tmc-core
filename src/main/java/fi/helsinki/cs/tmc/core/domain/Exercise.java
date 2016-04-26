@@ -266,7 +266,7 @@ public class Exercise implements Serializable {
     }
 
     public boolean isDownloaded(Path tmcRoot) {
-        return Files.exists(getExtractionTarget(tmcRoot));
+        return Files.exists(getExerciseDirectory(tmcRoot));
     }
 
     public enum ValgrindStrategy {

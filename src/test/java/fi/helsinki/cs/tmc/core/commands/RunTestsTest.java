@@ -51,7 +51,7 @@ public class RunTestsTest {
 
         command = new RunTests(mockObserver, mockExercise);
         when(settings.getTmcProjectDirectory()).thenReturn(testFolder.getRoot().toPath());
-        when(mockExercise.getExtractionTarget(any(Path.class))).thenReturn(project);
+        when(mockExercise.getExerciseDirectory(any(Path.class))).thenReturn(project);
         doCallRealMethod().when(langs).runTests(project);
     }
 

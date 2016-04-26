@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.communication.http;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
+import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.AuthScope;

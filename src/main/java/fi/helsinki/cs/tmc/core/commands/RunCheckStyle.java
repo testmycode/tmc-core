@@ -29,7 +29,7 @@ public class RunCheckStyle extends Command<ValidationResult> {
 
     @Override
     public ValidationResult call() throws TmcCoreException {
-        Path path = exercise.getExtractionTarget(TmcSettingsHolder.get().getTmcProjectDirectory());
+        Path path = exercise.getExerciseDirectory(TmcSettingsHolder.get().getTmcProjectDirectory());
         try {
             return TmcLangsHolder.get().runCheckCodeStyle(path, settings.getLocale());
         } catch (NoLanguagePluginFoundException ex) {

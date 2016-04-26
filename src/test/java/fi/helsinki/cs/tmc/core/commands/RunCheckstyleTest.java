@@ -60,7 +60,7 @@ public class RunCheckstyleTest {
 
         command = new RunCheckStyle(mockObserver, mockExercise);
         when(settings.getTmcProjectDirectory()).thenReturn(testFolder.getRoot().toPath());
-        when(mockExercise.getExtractionTarget(any(Path.class))).thenReturn(project);
+        when(mockExercise.getExerciseDirectory(any(Path.class))).thenReturn(project);
         doCallRealMethod().when(langs).runCheckCodeStyle(any(Path.class), any(Locale.class));
         when(settings.getLocale()).thenReturn(LOCALE);
     }

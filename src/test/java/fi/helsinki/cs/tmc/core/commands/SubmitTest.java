@@ -64,7 +64,7 @@ public class SubmitTest {
         command = new Submit(mockObserver, mockExercise, factory);
 
         arithFuncsTempDir = TestUtils.getProject(this.getClass(), "arith_funcs");
-        when(mockExercise.getExtractionTarget(any(Path.class))).thenReturn(arithFuncsTempDir);
+        when(mockExercise.getExerciseDirectory(any(Path.class))).thenReturn(arithFuncsTempDir);
         when(settings.getLocale()).thenReturn(new Locale("FI"));
     }
 

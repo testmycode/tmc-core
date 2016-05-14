@@ -2,14 +2,15 @@ package fi.helsinki.cs.tmc.core.spyware;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Iterables;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utilities.Cooldown;
 import fi.helsinki.cs.tmc.core.utilities.SingletonTask;
 import fi.helsinki.cs.tmc.core.utilities.TmcRequestProcessor;
+
+import com.google.common.base.Optional;
+import com.google.common.collect.Iterables;
 
 import java.io.IOException;
 import java.net.URI;

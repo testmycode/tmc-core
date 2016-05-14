@@ -101,7 +101,8 @@ public class TmcEventBus {
     }
 
     /**
-     * Subscribes a listener that is eventually removed after a given dependency is garbage-collected.
+     * Subscribes a listener that is eventually removed after a given dependency
+     * is garbage-collected.
      */
     public synchronized void subscribeDependent(TmcEventListener listener, Object dependency) {
         this.listeners.add(new DependentListener(listener, dependency));

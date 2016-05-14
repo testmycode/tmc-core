@@ -7,7 +7,7 @@ import java.util.HashMap;
 /**
  * Receives events related to the TMC plugin.
  *
- * Implement by overloading receive for different subclasses of {@link TmcEvent}.
+ * <p>Implement by overloading receive for different subclasses of {@link TmcEvent}.
  */
 public abstract class TmcEventListener {
     private HashMap<Class<?>, Method> receiverMethods;
@@ -24,10 +24,10 @@ public abstract class TmcEventListener {
     }
 
     public void receive(TmcEvent event) throws Throwable {
-        Method m = receiverMethods.get(event.getClass());
-        if (m != null) {
+        Method method = receiverMethods.get(event.getClass());
+        if (method != null) {
             try {
-                m.invoke(this, event);
+                method.invoke(this, event);
             } catch (InvocationTargetException ex) {
                 throw ex.getCause();
             }

@@ -1,10 +1,24 @@
 package fi.helsinki.cs.tmc.core.spyware;
 
-import com.google.common.base.Optional;
+import static org.mockito.Mockito.*;
+import static org.junit.Assert.*;
+
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.google.common.base.Optional;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -15,15 +29,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
 
 public class EventSendBufferTest {
 
@@ -31,7 +36,6 @@ public class EventSendBufferTest {
 
     @Mock TmcSettings tmcSettings;
     @Mock TmcServerCommunicationTaskFactory factory;
-
     @Mock private SpywareSettings settings;
 
     @Mock private EventStore eventStore;

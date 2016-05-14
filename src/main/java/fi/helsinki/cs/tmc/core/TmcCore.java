@@ -38,6 +38,18 @@ public class TmcCore {
 
     private static final Logger logger = LoggerFactory.getLogger(TmcCore.class);
 
+    private static TmcCore instance;
+
+    // Singleton
+    public static TmcCore get() {
+        return TmcCore.instance;
+    }
+
+    // Singleton
+    public static void setInstance(TmcCore instance) {
+        TmcCore.instance = instance;
+    }
+
     public TmcCore(TmcSettings settings, TaskExecutor tmcLangs) {
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(tmcLangs);

@@ -121,11 +121,7 @@
                             <ignore>fi.helsinki.cs.tmc.core.domain.submission</ignore>
                             <ignore>fi.helsinki.cs.tmc.core.exceptions</ignore>
                         </ignores>
-                        <excludes>
-                            <exclude>fi/helsinki/cs/tmc/core/domain/Exercise*.class</exclude>
-                            <exclude>fi/helsinki/cs/tmc/core/domain/submission/*</exclude>
-                            <exclude>fi/helsinki/cs/tmc/core/exceptions/*</exclude>
-                        </excludes>
+
                     </instrumentation>
                     <check/>
                 </configuration>

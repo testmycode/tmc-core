@@ -44,6 +44,7 @@
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>
                     <encoding>UTF-8</encoding>
                     <linkXRef>false</linkXRef>
+                    <excludes>**/name/fraser/neil/**/*</excludes>
                     <failOnViolation>false</failOnViolation>
                 </configuration>
                 <version>2.16</version>

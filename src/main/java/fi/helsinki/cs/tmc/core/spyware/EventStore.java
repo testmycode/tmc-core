@@ -1,9 +1,11 @@
 package fi.helsinki.cs.tmc.core.spyware;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import fi.helsinki.cs.tmc.core.persistance.ConfigFile;
 import fi.helsinki.cs.tmc.core.utilities.ByteArrayGsonSerializer;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

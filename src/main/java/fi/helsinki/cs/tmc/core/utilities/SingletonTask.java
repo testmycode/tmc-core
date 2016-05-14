@@ -58,7 +58,7 @@ public class SingletonTask {
     /**
      * Waits for the task to finish if it is currently running.
      *
-     * Note: this method does not indicate in any way whether the task succeeded or failed.
+     * <p>Note: this method does not indicate in any way whether the task succeeded or failed.
      *
      * @param timeout Maximum time in milliseconds to wait before throwing a TimeoutException.
      */

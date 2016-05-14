@@ -1,8 +1,9 @@
 package fi.helsinki.cs.tmc.core.spyware;
 
-import java.nio.charset.Charset;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.nio.charset.Charset;
 
 public class EventDeduplicaterTest extends EventForwardedTestBase {
     private EventDeduplicater dedup;

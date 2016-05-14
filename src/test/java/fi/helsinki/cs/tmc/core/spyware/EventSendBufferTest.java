@@ -8,6 +8,8 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
+import com.google.common.base.Optional;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,8 +18,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import com.google.common.base.Optional;
 
 import java.io.IOException;
 import java.net.URI;
@@ -97,8 +97,8 @@ public class EventSendBufferTest {
         sender.close();
     }
 
-    private LoggableEvent mkEvent(int n) {
-        return new LoggableEvent("foo" + n, "bar" + n, "baz" + n, new byte[0]);
+    private LoggableEvent mkEvent(int num) {
+        return new LoggableEvent("foo" + num, "bar" + num, "baz" + num, new byte[0]);
     }
 
     private LoggableEvent ev1 = mkEvent(1);

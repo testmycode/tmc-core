@@ -152,7 +152,9 @@
             <property name="allowedAbbreviationLength" value="1"/>
         </module>
         <module name="OverloadMethodsDeclarationOrder"/>
-        <module name="VariableDeclarationUsageDistance"/>
+        <module name="VariableDeclarationUsageDistance">
+            <property name="allowedDistance" value="5" />
+        </module>
         <module name="CustomImportOrder">
             <property name="thirdPartyPackageRegExp" value=".*"/>
             <property name="specialImportsRegExp" value="^fi.helsinki"/>

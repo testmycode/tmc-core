@@ -8,9 +8,11 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+
+import org.apache.commons.codec.binary.Base64;
+
 import java.lang.reflect.Type;
 import java.nio.charset.Charset;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  * Converts JsonMaker to byte[] to base64 in JSON.
@@ -28,6 +30,7 @@ public class JsonMakerGsonSerializer
         }
     }
 
+    //    TODO: figure out how to decerialize
     //    @Override
     //    public JsonMaker deserialize(JsonElement je, Type type, JsonDeserializationContext jdc) throws JsonParseException {
     //        return null;

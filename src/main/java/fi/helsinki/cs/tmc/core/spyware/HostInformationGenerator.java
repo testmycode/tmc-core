@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.spyware;
 
 import fi.helsinki.cs.tmc.core.utilities.JsonMaker;
+
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.nio.charset.Charset;
@@ -18,6 +19,7 @@ import java.util.logging.Logger;
  */
 public class HostInformationGenerator {
 
+    // TODO: use proper logging
     private static final Logger log = Logger.getLogger(HostInformationGenerator.class.getName());
     private static final Charset UTF8 = Charset.forName("UTF-8");
 

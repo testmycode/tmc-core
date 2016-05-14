@@ -16,15 +16,15 @@ public class LazyHashMap<K, V> extends HashMap<K, V> {
     @Override
     @SuppressWarnings("unchecked")
     public V get(Object key) {
-        V v = super.get(key);
-        if (v == null) {
+        V value = super.get(key);
+        if (value == null) {
             try {
-                v = factory.call();
+                value = factory.call();
             } catch (Exception ex) {
                 throw ExceptionUtils.toRuntimeException(ex);
             }
-            put((K) key, v);
+            put((K) key, value);
         }
-        return v;
+        return value;
     }
 }

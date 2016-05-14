@@ -60,9 +60,9 @@ public abstract class EventForwardedTestBase {
 
     protected void assertReceivedExactly(int... expectedSentMsgIndices) {
         int[] receivedIndices = new int[eventsReceived.size()];
-        int i = 0;
+        int idx = 0;
         for (LoggableEvent ev : eventsReceived) {
-            receivedIndices[i++] = eventsSent.indexOf(ev);
+            receivedIndices[idx++] = eventsSent.indexOf(ev);
         }
 
         assertArrayEquals("Wrong messages forwarded.", expectedSentMsgIndices, receivedIndices);

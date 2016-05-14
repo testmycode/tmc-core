@@ -7,14 +7,14 @@ import java.util.logging.Logger;
 
 // TODO: is this really to be used?
 public class ExceptionUtils {
-    public static String backtraceToString(Throwable t) {
+    public static String backtraceToString(Throwable throwable) {
         StringWriter sw = new StringWriter();
-        t.printStackTrace(new PrintWriter(sw));
+        throwable.printStackTrace(new PrintWriter(sw));
         return sw.toString();
     }
 
-    public static void logException(Throwable t, Logger log, Level level) {
-        String msg = t.getMessage() + "\n" + backtraceToString(t);
+    public static void logException(Throwable throwable, Logger log, Level level) {
+        String msg = throwable.getMessage() + "\n" + backtraceToString(throwable);
         log.log(level, msg);
     }
 

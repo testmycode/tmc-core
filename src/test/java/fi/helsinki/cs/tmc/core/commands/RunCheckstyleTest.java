@@ -30,17 +30,12 @@ import java.util.Locale;
 
 public class RunCheckstyleTest {
 
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
+    @Rule public TemporaryFolder testFolder = new TemporaryFolder();
 
-    @Mock
-    ProgressObserver mockObserver;
-    @Mock
-    TmcSettings settings;
-    @Mock
-    Course mockCourse;
-    @Mock
-    Exercise mockExercise;
+    @Mock ProgressObserver mockObserver;
+    @Mock TmcSettings settings;
+    @Mock Course mockCourse;
+    @Mock Exercise mockExercise;
 
     private Path project;
     private TaskExecutor langs;

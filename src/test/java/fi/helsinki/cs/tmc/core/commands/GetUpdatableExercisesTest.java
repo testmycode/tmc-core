@@ -33,7 +33,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-
 public class GetUpdatableExercisesTest {
 
     @Rule public TemporaryFolder testFolder = new TemporaryFolder();

@@ -12,7 +12,7 @@ public class ExceptionUtils {
         t.printStackTrace(new PrintWriter(sw));
         return sw.toString();
     }
-    
+
     public static void logException(Throwable t, Logger log, Level level) {
         String msg = t.getMessage() + "\n" + backtraceToString(t);
         log.log(level, msg);
@@ -20,7 +20,7 @@ public class ExceptionUtils {
 
     public static RuntimeException toRuntimeException(Exception ex) {
         if (ex instanceof RuntimeException) {
-            return (RuntimeException)ex;
+            return (RuntimeException) ex;
         } else {
             return new RuntimeException(ex);
         }

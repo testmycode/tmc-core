@@ -32,10 +32,13 @@ public class SubmissionResultParser {
 
         try {
 
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(SubmissionResult.Status.class, new StatusDeserializer())
-                    .registerTypeAdapter(StackTraceElement.class, new StackTraceSerializer())
-                    .create();
+            Gson gson =
+                    new GsonBuilder()
+                            .registerTypeAdapter(
+                                    SubmissionResult.Status.class, new StatusDeserializer())
+                            .registerTypeAdapter(
+                                    StackTraceElement.class, new StackTraceSerializer())
+                            .create();
 
             SubmissionResult result = gson.fromJson(json, SubmissionResult.class);
 
@@ -53,21 +56,19 @@ public class SubmissionResultParser {
 
         } catch (RuntimeException | IOException runtimeException) {
             logger.warn("Failed to parse submission result", runtimeException);
-            throw new RuntimeException("Failed to parse submission result: "
-                    + runtimeException.getMessage(), runtimeException);
+            throw new RuntimeException(
+                    "Failed to parse submission result: " + runtimeException.getMessage(),
+                    runtimeException);
         }
     }
 
-    private static class StatusDeserializer
-            implements JsonDeserializer<SubmissionResult.Status> {
+    private static class StatusDeserializer implements JsonDeserializer<SubmissionResult.Status> {
 
         private static final Logger logger = LoggerFactory.getLogger(StatusDeserializer.class);
 
         @Override
         public SubmissionResult.Status deserialize(
-                JsonElement json,
-                Type typeOfT,
-                JsonDeserializationContext context)
+                JsonElement json, Type typeOfT, JsonDeserializationContext context)
                 throws JsonParseException {
             String str = json.getAsJsonPrimitive().getAsString();
             try {

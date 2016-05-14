@@ -32,11 +32,11 @@ import java.util.logging.Logger;
 public class EventSendBuffer implements EventReceiver {
     private static final Logger log = Logger.getLogger(EventSendBuffer.class.getName());
 
-    public static final long DEFAULT_SEND_INTERVAL = 3*60*1000;
-    public static final long DEFAULT_SAVE_INTERVAL = 1*60*1000;
+    public static final long DEFAULT_SEND_INTERVAL = 3 * 60 * 1000;
+    public static final long DEFAULT_SAVE_INTERVAL = 1 * 60 * 1000;
     public static final int DEFAULT_MAX_EVENTS = 64 * 1024;
     public static final int DEFAULT_AUTOSEND_THREHSOLD = DEFAULT_MAX_EVENTS / 2;
-    public static final int DEFAULT_AUTOSEND_COOLDOWN = 30*1000;
+    public static final int DEFAULT_AUTOSEND_COOLDOWN = 30 * 1000;
     public static final int DEFAULT_MAX_EVENTS_PER_SEND = 500;
 
     private Random random = new Random();
@@ -49,11 +49,13 @@ public class EventSendBuffer implements EventReceiver {
     private int eventsToRemoveAfterSend = 0;
     private int maxEvents = DEFAULT_MAX_EVENTS;
     private int autosendThreshold = DEFAULT_AUTOSEND_THREHSOLD;
-    private int maxEventsPerSend = DEFAULT_MAX_EVENTS_PER_SEND;  // Servers have POST size limits
+    private int maxEventsPerSend = DEFAULT_MAX_EVENTS_PER_SEND; // Servers have POST size limits
     private Cooldown autosendCooldown;
 
-
-    public EventSendBuffer(SpywareSettings settings, TmcServerCommunicationTaskFactory serverAccess, EventStore eventStore) {
+    public EventSendBuffer(
+            SpywareSettings settings,
+            TmcServerCommunicationTaskFactory serverAccess,
+            EventStore eventStore) {
         this.settings = settings;
         this.serverAccess = serverAccess;
         this.eventStore = eventStore;
@@ -133,7 +135,8 @@ public class EventSendBuffer implements EventReceiver {
         savingTask.waitUntilFinished(timeout);
     }
 
-    public void waitUntilCurrentSendingFinished(long timeout) throws TimeoutException, InterruptedException {
+    public void waitUntilCurrentSendingFinished(long timeout)
+            throws TimeoutException, InterruptedException {
         sendingTask.waitUntilFinished(timeout);
     }
 
@@ -186,119 +189,135 @@ public class EventSendBuffer implements EventReceiver {
         }
     }
 
+    private SingletonTask sendingTask =
+            new SingletonTask(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            boolean shouldSendMore;
 
-    private SingletonTask sendingTask = new SingletonTask(new Runnable() {
-        @Override
-        public void run() {
-            boolean shouldSendMore;
+                            do {
+                                ArrayList<LoggableEvent> eventsToSend = copyEventsToSendFromQueue();
+                                if (eventsToSend.isEmpty()) {
+                                    return;
+                                }
 
-            do {
-                ArrayList<LoggableEvent> eventsToSend = copyEventsToSendFromQueue();
-                if (eventsToSend.isEmpty()) {
-                    return;
-                }
+                                synchronized (sendQueue) {
+                                    shouldSendMore = sendQueue.size() > eventsToSend.size();
+                                }
 
-                synchronized (sendQueue) {
-                    shouldSendMore = sendQueue.size() > eventsToSend.size();
-                }
+                                URI url = pickDestinationUrl();
+                                if (url == null) {
+                                    return;
+                                }
 
-                URI url = pickDestinationUrl();
-                if (url == null) {
-                    return;
-                }
+                                log.log(
+                                        Level.INFO,
+                                        "Sending {0} events to {1}",
+                                        new Object[] {eventsToSend.size(), url});
 
-                log.log(Level.INFO, "Sending {0} events to {1}", new Object[] { eventsToSend.size(), url });
+                                if (!tryToSend(eventsToSend, url)) {
+                                    shouldSendMore = false;
+                                }
+                            } while (shouldSendMore);
+                        }
 
-                if (!tryToSend(eventsToSend, url)) {
-                    shouldSendMore = false;
-                }
-            } while (shouldSendMore);
-        }
+                        private ArrayList<LoggableEvent> copyEventsToSendFromQueue() {
+                            synchronized (sendQueue) {
+                                ArrayList<LoggableEvent> eventsToSend =
+                                        new ArrayList<LoggableEvent>(sendQueue.size());
 
-        private ArrayList<LoggableEvent> copyEventsToSendFromQueue() {
-            synchronized (sendQueue) {
-                ArrayList<LoggableEvent> eventsToSend = new ArrayList<LoggableEvent>(sendQueue.size());
+                                Iterator<LoggableEvent> i = sendQueue.iterator();
+                                while (i.hasNext() && eventsToSend.size() < maxEventsPerSend) {
+                                    eventsToSend.add(i.next());
+                                }
 
-                Iterator<LoggableEvent> i = sendQueue.iterator();
-                while (i.hasNext() && eventsToSend.size() < maxEventsPerSend) {
-                    eventsToSend.add(i.next());
-                }
+                                eventsToRemoveAfterSend = eventsToSend.size();
 
-                eventsToRemoveAfterSend = eventsToSend.size();
+                                return eventsToSend;
+                            }
+                        }
 
-                return eventsToSend;
-            }
-        }
+                        private URI pickDestinationUrl() {
+                            Optional<Course> course = TmcSettingsHolder.get().getCurrentCourse();
+                            if (!course.isPresent()) {
+                                log.log(
+                                        Level.FINE,
+                                        "Not sending events because no course selected");
+                                return null;
+                            }
 
-        private URI pickDestinationUrl() {
-            Optional<Course> course = TmcSettingsHolder.get().getCurrentCourse();
-            if (!course.isPresent()) {
-                log.log(Level.FINE, "Not sending events because no course selected");
-                return null;
-            }
+                            List<URI> urls = course.get().getSpywareUrls();
+                            if (urls == null || urls.isEmpty()) {
+                                log.log(
+                                        Level.INFO,
+                                        "Not sending events because no URL provided by server");
+                                return null;
+                            }
 
-            List<URI> urls = course.get().getSpywareUrls();
-            if (urls == null || urls.isEmpty()) {
-                log.log(Level.INFO, "Not sending events because no URL provided by server");
-                return null;
-            }
+                            URI url = urls.get(random.nextInt(urls.size()));
 
-            URI url = urls.get(random.nextInt(urls.size()));
+                            return url;
+                        }
 
-            return url;
-        }
+                        private boolean tryToSend(
+                                final ArrayList<LoggableEvent> eventsToSend, final URI url) {
+                            Callable<Object> task =
+                                    serverAccess.getSendEventLogJob(url, eventsToSend);
+                            // TODO: BgTask??
+                            Future<Object> future = null; //BgTask.start("Sending stats", task);
 
-        private boolean tryToSend(final ArrayList<LoggableEvent> eventsToSend, final URI url) {
-            Callable<Object> task = serverAccess.getSendEventLogJob(url, eventsToSend);
-            // TODO: BgTask??
-            Future<Object> future = null; //BgTask.start("Sending stats", task);
+                            try {
+                                future.get();
+                            } catch (InterruptedException ex) {
+                                future.cancel(true);
+                            } catch (ExecutionException ex) {
+                                log.log(Level.INFO, "Sending failed", ex);
+                                return false;
+                            }
 
-            try {
-                future.get();
-            } catch (InterruptedException ex) {
-                future.cancel(true);
-            } catch (ExecutionException ex) {
-                log.log(Level.INFO, "Sending failed", ex);
-                return false;
-            }
+                            log.log(
+                                    Level.INFO,
+                                    "Sent {0} events successfully to {1}",
+                                    new Object[] {eventsToSend.size(), url});
 
-            log.log(Level.INFO, "Sent {0} events successfully to {1}", new Object[] { eventsToSend.size(), url });
+                            removeSentEventsFromQueue();
 
-            removeSentEventsFromQueue();
+                            // If saving fails now (or is already running and fails later)
+                            // then we may end up sending duplicate events later.
+                            // This will hopefully be very rare.
+                            savingTask.start();
+                            return true;
+                        }
 
-            // If saving fails now (or is already running and fails later)
-            // then we may end up sending duplicate events later.
-            // This will hopefully be very rare.
-            savingTask.start();
-            return true;
-        }
+                        private void removeSentEventsFromQueue() {
+                            synchronized (sendQueue) {
+                                assert (eventsToRemoveAfterSend <= sendQueue.size());
+                                while (eventsToRemoveAfterSend > 0) {
+                                    sendQueue.pop();
+                                    eventsToRemoveAfterSend--;
+                                }
+                            }
+                        }
+                    },
+                    TmcRequestProcessor.instance);
 
-        private void removeSentEventsFromQueue() {
-            synchronized (sendQueue) {
-                assert(eventsToRemoveAfterSend <= sendQueue.size());
-                while (eventsToRemoveAfterSend > 0) {
-                    sendQueue.pop();
-                    eventsToRemoveAfterSend--;
-                }
-            }
-        }
-
-    }, TmcRequestProcessor.instance);
-
-
-    private SingletonTask savingTask = new SingletonTask(new Runnable() {
-        @Override
-        public void run() {
-            try {
-                LoggableEvent[] eventsToSave;
-                synchronized (sendQueue) {
-                    eventsToSave = Iterables.toArray(sendQueue, LoggableEvent.class);
-                }
-                eventStore.save(eventsToSave);
-            } catch (IOException ex) {
-                log.log(Level.WARNING, "Failed to save events", ex);
-            }
-        }
-    }, TmcRequestProcessor.instance);
-
+    private SingletonTask savingTask =
+            new SingletonTask(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                LoggableEvent[] eventsToSave;
+                                synchronized (sendQueue) {
+                                    eventsToSave =
+                                            Iterables.toArray(sendQueue, LoggableEvent.class);
+                                }
+                                eventStore.save(eventsToSave);
+                            } catch (IOException ex) {
+                                log.log(Level.WARNING, "Failed to save events", ex);
+                            }
+                        }
+                    },
+                    TmcRequestProcessor.instance);
 }

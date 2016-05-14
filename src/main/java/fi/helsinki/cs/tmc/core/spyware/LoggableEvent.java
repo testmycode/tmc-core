@@ -43,11 +43,12 @@ public class LoggableEvent implements TmcEvent {
         this(courseName, exerciseName, eventType, data, null);
     }
 
-    public LoggableEvent(String courseName,
-                         String exerciseName,
-                         String eventType,
-                         byte[] data,
-                         JsonMaker metadata) {
+    public LoggableEvent(
+            String courseName,
+            String exerciseName,
+            String eventType,
+            byte[] data,
+            JsonMaker metadata) {
         this.courseName = courseName;
         this.exerciseName = exerciseName;
         this.eventType = eventType;
@@ -129,14 +130,22 @@ public class LoggableEvent implements TmcEvent {
     @Override
     public String toString() {
         return "LoggableEvent{"
-                    + "courseName=" + courseName
-                    + ", exerciseName=" + exerciseName
-                    + ", eventType=" + eventType
-                    + ", happenedAt=" + happenedAt
-                    + ", systemNanotime=" + systemNanotime
-                    + ", key=" + key
-                    + ", metadata=" + metadata
-                    + ", data=" + new String(data)
+                + "courseName="
+                + courseName
+                + ", exerciseName="
+                + exerciseName
+                + ", eventType="
+                + eventType
+                + ", happenedAt="
+                + happenedAt
+                + ", systemNanotime="
+                + systemNanotime
+                + ", key="
+                + key
+                + ", metadata="
+                + metadata
+                + ", data="
+                + new String(data)
                 + "}";
     }
 }

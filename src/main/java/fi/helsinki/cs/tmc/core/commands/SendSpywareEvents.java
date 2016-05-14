@@ -24,9 +24,7 @@ public class SendSpywareEvents extends Command<Void> {
     private List<LoggableEvent> events;
 
     public SendSpywareEvents(
-            ProgressObserver observer,
-            Course currentCourse,
-            List<LoggableEvent> events) {
+            ProgressObserver observer, Course currentCourse, List<LoggableEvent> events) {
         super(observer);
         this.currentCourse = currentCourse;
         this.events = events;
@@ -35,10 +33,8 @@ public class SendSpywareEvents extends Command<Void> {
     // TODO: test
     @Override
     public Void call() throws Exception {
-        if (currentCourse.getSpywareUrls() == null
-                || currentCourse.getSpywareUrls().isEmpty()) {
-            logger.info("Failed to send events: "
-                    + "Current course has no spyware servers set");
+        if (currentCourse.getSpywareUrls() == null || currentCourse.getSpywareUrls().isEmpty()) {
+            logger.info("Failed to send events: " + "Current course has no spyware servers set");
             throw new NoSpywareServerException("Current course has no spyware servers set");
         }
 
@@ -46,12 +42,8 @@ public class SendSpywareEvents extends Command<Void> {
         //TODO: Str -> URI
         URI spywareServerUri = currentCourse.getSpywareUrls().get(serverId);
 
-        new TmcServerCommunicationTaskFactory()
-                .getSendEventLogJob(spywareServerUri, events)
-                .call();
+        new TmcServerCommunicationTaskFactory().getSendEventLogJob(spywareServerUri, events).call();
 
         return null; // Can't instantiate Void
     }
 }
-
-

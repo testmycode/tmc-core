@@ -60,7 +60,6 @@ import java.util.concurrent.Callable;
         if (request.getURI().getUserInfo() != null) {
             credentials = new UsernamePasswordCredentials(request.getURI().getUserInfo());
         }
-
     }
 
     public HttpRequestExecutor setCredentials(String username, String password) {
@@ -97,11 +96,12 @@ import java.util.concurrent.Callable;
             credentialsProvider.setCredentials(AuthScope.ANY, credentials);
         }
 
-        HttpClientBuilder httpClientBuilder = HttpClients.custom()
-                .useSystemProperties()
-                .setConnectionReuseStrategy(new NoConnectionReuseStrategy())
-                .setDefaultCredentialsProvider(credentialsProvider)
-                .setRedirectStrategy(new DefaultRedirectStrategy());
+        HttpClientBuilder httpClientBuilder =
+                HttpClients.custom()
+                        .useSystemProperties()
+                        .setConnectionReuseStrategy(new NoConnectionReuseStrategy())
+                        .setDefaultCredentialsProvider(credentialsProvider)
+                        .setRedirectStrategy(new DefaultRedirectStrategy());
         maybeSetProxy(httpClientBuilder);
 
         return httpClientBuilder.build();
@@ -122,8 +122,9 @@ import java.util.concurrent.Callable;
 
         try {
             if (this.credentials != null) {
-                request.addHeader(new BasicScheme(Charset.forName("UTF-8"))
-                        .authenticate(this.credentials, request, context));
+                request.addHeader(
+                        new BasicScheme(Charset.forName("UTF-8"))
+                                .authenticate(this.credentials, request, context));
             }
             response = httpClient.execute(request);
         } catch (IOException ex) {
@@ -153,8 +154,12 @@ import java.util.concurrent.Callable;
         if (200 <= responseCode && responseCode <= 299) {
             return entity;
         } else {
-            logger.info("Received http response with non 2xx response code " + responseCode
-                    + " with body \"" + entity + "\"");
+            logger.info(
+                    "Received http response with non 2xx response code "
+                            + responseCode
+                            + " with body \""
+                            + entity
+                            + "\"");
             throw new FailedHttpResponseException(responseCode, entity);
         }
     }

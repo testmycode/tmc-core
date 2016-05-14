@@ -53,7 +53,6 @@ public class SubmitTest {
     private static final String STUB_PROSESSING_RESPONSE = "{status: \"processing\"}";
     private static final String STUB_PROSESSING_DONE_RESPONSE = "{status: \"OK\"}";
 
-
     private Command<SubmissionResult> command;
     private Path arithFuncsTempDir;
     private TaskExecutor langs;
@@ -87,17 +86,21 @@ public class SubmitTest {
                                 return STUB_RESPONSE;
                             }
                         });
-        when(factory.getSubmissionFetchTask(any(URI.class))).thenReturn(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return STUB_PROSESSING_RESPONSE;
-            }
-        }).thenReturn(new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return STUB_PROSESSING_DONE_RESPONSE;
-            }
-        });
+        when(factory.getSubmissionFetchTask(any(URI.class)))
+                .thenReturn(
+                        new Callable<String>() {
+                            @Override
+                            public String call() throws Exception {
+                                return STUB_PROSESSING_RESPONSE;
+                            }
+                        })
+                .thenReturn(
+                        new Callable<String>() {
+                            @Override
+                            public String call() throws Exception {
+                                return STUB_PROSESSING_DONE_RESPONSE;
+                            }
+                        });
 
         SubmissionResult result = command.call();
         assertEquals(result.getStatus(), SubmissionResult.Status.OK);

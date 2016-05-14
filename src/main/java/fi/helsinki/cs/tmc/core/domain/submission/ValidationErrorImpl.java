@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.domain.submission;
 
-public class ValidationErrorImpl
-        implements fi.helsinki.cs.tmc.langs.abstraction.ValidationError {
+public class ValidationErrorImpl implements fi.helsinki.cs.tmc.langs.abstraction.ValidationError {
 
     private int column;
     private int line;

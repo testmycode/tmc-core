@@ -62,8 +62,7 @@ public class FeedbackQuestion {
     private void setRangeLimits() {
         String[] bounds = parseKind();
         if (bounds.length != 2) {
-            throw new IllegalStateException(
-                    "Parsing kind failed, maybe not an intrange question?");
+            throw new IllegalStateException("Parsing kind failed, maybe not an intrange question?");
         }
         min = Integer.parseInt(bounds[0]);
         max = Integer.parseInt(bounds[1]);

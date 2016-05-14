@@ -9,22 +9,22 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Vector;
 
-
 public abstract class EventForwardedTestBase {
     protected ArrayList<LoggableEvent> eventsSent;
     protected Vector<LoggableEvent> eventsReceived;
 
-    protected final EventReceiver receiver = new EventReceiver() {
-        @Override
-        public void receiveEvent(LoggableEvent event) {
-            eventsReceived.add(event);
-        }
+    protected final EventReceiver receiver =
+            new EventReceiver() {
+                @Override
+                public void receiveEvent(LoggableEvent event) {
+                    eventsReceived.add(event);
+                }
 
-        @Override
-        public void close() throws IOException {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    };
+                @Override
+                public void close() throws IOException {
+                    throw new UnsupportedOperationException("Not supported yet.");
+                }
+            };
 
     protected abstract EventReceiver getSystemUnderTest();
 
@@ -41,12 +41,19 @@ public abstract class EventForwardedTestBase {
 
     protected void sendEvents(int count, String type) {
         for (int i = 0; i < count; ++i) {
-            LoggableEvent event = new LoggableEvent("course", "exercise", type, ("event" + eventsSent.size()).getBytes(Charset.forName("UTF-8"))) {
-                @Override
-                public String toString() {
-                    return this.getEventType() + "_" + new String(this.getData(), Charset.forName("UTF-8"));
-                }
-            };
+            LoggableEvent event =
+                    new LoggableEvent(
+                            "course",
+                            "exercise",
+                            type,
+                            ("event" + eventsSent.size()).getBytes(Charset.forName("UTF-8"))) {
+                        @Override
+                        public String toString() {
+                            return this.getEventType()
+                                    + "_"
+                                    + new String(this.getData(), Charset.forName("UTF-8"));
+                        }
+                    };
             sendEvent(event);
         }
     }
@@ -57,7 +64,7 @@ public abstract class EventForwardedTestBase {
         for (LoggableEvent ev : eventsReceived) {
             receivedIndices[i++] = eventsSent.indexOf(ev);
         }
-        
+
         assertArrayEquals("Wrong messages forwarded.", expectedSentMsgIndices, receivedIndices);
     }
 }

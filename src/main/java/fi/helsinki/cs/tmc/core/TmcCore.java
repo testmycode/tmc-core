@@ -56,16 +56,12 @@ public class TmcCore {
     }
 
     public Callable<List<Exercise>> downloadOrUpdateExercises(
-            ProgressObserver observer,
-            List<Exercise> exercises) {
+            ProgressObserver observer, List<Exercise> exercises) {
         logger.info("Creating new DownloadOrUpdateExercises command");
         return new DownloadOrUpdateExercises(observer, exercises);
     }
 
-
-    public Callable<Course> getCourseDetails(
-            ProgressObserver observer,
-            Course course) {
+    public Callable<Course> getCourseDetails(ProgressObserver observer, Course course) {
         logger.info("Creating new GetCourseDetails command");
         return new GetCourseDetails(observer, course);
     }
@@ -76,46 +72,34 @@ public class TmcCore {
     }
 
     public Callable<URI> pasteWithComment(
-            ProgressObserver observer,
-            Exercise exercise,
-            String message) {
+            ProgressObserver observer, Exercise exercise, String message) {
         logger.info("Creating new PasteWithComment command");
         return new PasteWithComment(observer, exercise, message);
     }
 
-    public Callable<ValidationResult> runCheckStyle(
-            ProgressObserver observer,
-            Exercise exercise) {
+    public Callable<ValidationResult> runCheckStyle(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new RunCheckStyle command");
         return new RunCheckStyle(observer, exercise);
     }
 
-    public Callable<RunResult> runTests(
-            ProgressObserver observer,
-            Exercise exercise) {
+    public Callable<RunResult> runTests(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new RunTests command");
         return new RunTests(observer, exercise);
     }
 
     public Callable<Boolean> sendFeedback(
-            ProgressObserver observer,
-            List<FeedbackAnswer> answers,
-            URI feedbackUri) {
+            ProgressObserver observer, List<FeedbackAnswer> answers, URI feedbackUri) {
         logger.info("Creating new SendFeedback command");
         return new SendFeedback(observer, answers, feedbackUri);
     }
 
     public Callable<Void> sendSpywareEvents(
-            ProgressObserver observer,
-            Course currentCourse,
-            List<LoggableEvent> events) {
+            ProgressObserver observer, Course currentCourse, List<LoggableEvent> events) {
         logger.info("Creating new SenSpywareEvents command");
         return new SendSpywareEvents(observer, currentCourse, events);
     }
 
-    public Callable<SubmissionResult> submit(
-            ProgressObserver observer,
-            Exercise exercise) {
+    public Callable<SubmissionResult> submit(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new Submit command");
         return new Submit(observer, exercise);
     }
@@ -164,6 +148,4 @@ public class TmcCore {
         logger.info("Creating new DownloadModelSolution command");
         return new DownloadModelSolution(observer);
     }
-
-
 }

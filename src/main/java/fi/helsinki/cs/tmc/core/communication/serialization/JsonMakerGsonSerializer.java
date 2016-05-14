@@ -14,8 +14,7 @@ import java.nio.charset.Charset;
 /**
  * Converts JsonMaker to byte[] to base64 in JSON.
  */
-
-public class JsonMakerGsonSerializer implements JsonSerializer<JsonMaker>  {
+public class JsonMakerGsonSerializer implements JsonSerializer<JsonMaker> {
     @Override
     public JsonElement serialize(JsonMaker data, Type type, JsonSerializationContext jsc) {
 
@@ -23,10 +22,7 @@ public class JsonMakerGsonSerializer implements JsonSerializer<JsonMaker>  {
             return JsonNull.INSTANCE;
         } else {
             return new JsonPrimitive(
-                    Base64.encodeBase64String(
-                            data.toString().getBytes(
-                                    Charset.forName("UTF-8"))));
+                    Base64.encodeBase64String(data.toString().getBytes(Charset.forName("UTF-8"))));
         }
     }
-
 }

@@ -19,8 +19,7 @@ import java.lang.reflect.Type;
 /**
  * Converts byte[] to/from base64 in JSON.
  */
-public class ByteArrayGsonSerializer
-        implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
+public class ByteArrayGsonSerializer implements JsonSerializer<byte[]>, JsonDeserializer<byte[]> {
 
     private static final Logger logger = LoggerFactory.getLogger(ByteArrayGsonSerializer.class);
 
@@ -36,7 +35,7 @@ public class ByteArrayGsonSerializer
     @Override
     public byte[] deserialize(JsonElement je, Type type, JsonDeserializationContext jdc)
             throws JsonParseException {
-        if (je.isJsonPrimitive() && ((JsonPrimitive)je).isString()) {
+        if (je.isJsonPrimitive() && ((JsonPrimitive) je).isString()) {
             return Base64.decodeBase64(je.getAsString());
         } else if (je.isJsonNull()) {
             return null;

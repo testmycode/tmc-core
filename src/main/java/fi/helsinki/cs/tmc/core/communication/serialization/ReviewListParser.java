@@ -20,7 +20,7 @@ public class ReviewListParser {
     }
 
     private static final Logger logger = LoggerFactory.getLogger(ReviewListParser.class);
-    
+
     public List<Review> parseFromJson(String json) {
         if (json == null) {
             logger.warn("Attempted to parse null as json");
@@ -31,10 +31,11 @@ public class ReviewListParser {
             throw new IllegalArgumentException("Empty input");
         }
         try {
-            Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(Date.class, new CustomDateDeserializer())
-                    .create();
-            
+            Gson gson =
+                    new GsonBuilder()
+                            .registerTypeAdapter(Date.class, new CustomDateDeserializer())
+                            .create();
+
             Review[] reviews = gson.fromJson(json, ReviewListContainer.class).reviews;
             return Arrays.asList(reviews);
         } catch (RuntimeException ex) {

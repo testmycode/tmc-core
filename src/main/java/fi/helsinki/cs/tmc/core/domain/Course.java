@@ -145,9 +145,9 @@ public class Course {
     @Override
     public String toString() {
         /*
-            TODO: this cannot return anything else until PreferencesPanel is fixed to...
-            not use toString() to present Course objects
-         */
+           TODO: this cannot return anything else until PreferencesPanel is fixed to...
+           not use toString() to present Course objects
+        */
         return name;
     }
 }

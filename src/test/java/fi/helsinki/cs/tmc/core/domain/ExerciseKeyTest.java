@@ -48,6 +48,4 @@ public class ExerciseKeyTest {
         ExerciseKey key = new ExerciseKey("course", "exercise");
         assertEquals("course/exercise", key.toString());
     }
-
-
 }

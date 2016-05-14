@@ -4,7 +4,6 @@ import com.google.common.util.concurrent.Futures;
 
 import java.util.concurrent.*;
 
-
 /**
  * A task that can be started repeatedly, but ensures only one instance is running at a time.
  */
@@ -27,7 +26,9 @@ public class SingletonTask {
     public synchronized void setInterval(long delay) {
         unsetInterval();
 
-        autostartTask = requestProcessor.scheduleWithFixedDelay(autostartRunnable, delay, delay, TimeUnit.MILLISECONDS);
+        autostartTask =
+                requestProcessor.scheduleWithFixedDelay(
+                        autostartRunnable, delay, delay, TimeUnit.MILLISECONDS);
     }
 
     public synchronized void unsetInterval() {
@@ -37,12 +38,13 @@ public class SingletonTask {
         }
     }
 
-    private final Runnable autostartRunnable = new Runnable() {
-        @Override
-        public void run() {
-            start();
-        }
-    };
+    private final Runnable autostartRunnable =
+            new Runnable() {
+                @Override
+                public void run() {
+                    start();
+                }
+            };
 
     /**
      * Starts the task unless it's already running.
@@ -60,7 +62,8 @@ public class SingletonTask {
      *
      * @param timeout Maximum time in milliseconds to wait before throwing a TimeoutException.
      */
-    public synchronized void waitUntilFinished(long timeout) throws TimeoutException, InterruptedException {
+    public synchronized void waitUntilFinished(long timeout)
+            throws TimeoutException, InterruptedException {
         try {
             task.get(timeout, TimeUnit.MILLISECONDS);
         } catch (ExecutionException ex) {

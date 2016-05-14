@@ -16,8 +16,8 @@ import java.util.Date;
 class CustomDateDeserializer implements JsonDeserializer<Date> {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomDateDeserializer.class);
-    private static final SimpleDateFormat DATE_TIME_PARSER
-            = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    private static final SimpleDateFormat DATE_TIME_PARSER =
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
     @Override
     public Date deserialize(JsonElement je, Type type, JsonDeserializationContext jdc)

@@ -23,13 +23,13 @@ import java.util.concurrent.Callable;
 
 /**
  * Convenient methods to start asynchronous HTTP tasks.
- * 
+ *
  * <p>Tasks throw a {@link FailedHttpResponseException} when getting a response
  * with a non-successful status code.
  */
 public class HttpTasks {
-    private static final ContentType UTF8_TEXT_CONTENT_TYPE
-            = ContentType.create("text/plain", "utf-8");
+    private static final ContentType UTF8_TEXT_CONTENT_TYPE =
+            ContentType.create("text/plain", "utf-8");
 
     private UsernamePasswordCredentials credentials = null;
 
@@ -37,27 +37,27 @@ public class HttpTasks {
         this.credentials = new UsernamePasswordCredentials(username, password);
         return this;
     }
-    
+
     private HttpRequestExecutor createExecutor(URI url) {
         return new HttpRequestExecutor(url).setCredentials(credentials);
     }
-    
+
     private HttpRequestExecutor createExecutor(HttpPost request) {
         return new HttpRequestExecutor(request).setCredentials(credentials);
     }
-    
+
     public Callable<byte[]> getForBinary(URI url) {
         return downloadToBinary(createExecutor(url));
     }
-    
+
     public Callable<String> getForText(URI url) {
         return downloadToText(createExecutor(url));
     }
-    
+
     public Callable<byte[]> postForBinary(URI url, Map<String, String> params) {
         return downloadToBinary(createExecutor(makePostRequest(url, params)));
     }
-    
+
     public Callable<String> postForText(URI url, Map<String, String> params) {
         return downloadToText(createExecutor(makePostRequest(url, params)));
     }
@@ -66,18 +66,12 @@ public class HttpTasks {
         return downloadToText(createExecutor(makeRawPostRequest(url, data)));
     }
 
-    public Callable<String> rawPostForText(
-        URI url,
-        byte[] data,
-        Map<String, String> extraHeaders) {
+    public Callable<String> rawPostForText(URI url, byte[] data, Map<String, String> extraHeaders) {
         return downloadToText(createExecutor(makeRawPostRequest(url, data, extraHeaders)));
     }
-    
+
     public Callable<String> uploadFileForTextDownload(
-        URI url,
-        Map<String, String> params,
-        String fileField,
-        byte[] data) {
+            URI url, Map<String, String> params, String fileField, byte[] data) {
         HttpPost request = makeFileUploadRequest(url, params, fileField, data);
         return downloadToText(createExecutor(request));
     }
@@ -89,11 +83,10 @@ public class HttpTasks {
                 return EntityUtils.toByteArray(download.call());
             }
 
-
             //TODO: Cancellable?
         };
     }
-    
+
     private Callable<String> downloadToText(final HttpRequestExecutor download) {
         return new Callable<String>() {
             @Override
@@ -104,15 +97,15 @@ public class HttpTasks {
             //TODO: Cancellable?
         };
     }
-    
+
     private HttpPost makePostRequest(URI url, Map<String, String> params) {
         HttpPost request = new HttpPost(url);
-        
+
         ArrayList<NameValuePair> pairs = new ArrayList<>(params.size());
         for (Map.Entry<String, String> param : params.entrySet()) {
             pairs.add(new BasicNameValuePair(param.getKey(), param.getValue()));
         }
-        
+
         try {
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(pairs, "UTF-8");
             request.setEntity(entity);
@@ -127,8 +120,7 @@ public class HttpTasks {
         return makeRawPostRequest(url, data, empty);
     }
 
-    private HttpPost makeRawPostRequest(
-        URI url, byte[] data, Map<String, String> extraHeaders) {
+    private HttpPost makeRawPostRequest(URI url, byte[] data, Map<String, String> extraHeaders) {
         HttpPost request = new HttpPost(url);
         for (Map.Entry<String, String> header : extraHeaders.entrySet()) {
             request.addHeader(header.getKey(), header.getValue());
@@ -140,10 +132,7 @@ public class HttpTasks {
     }
 
     private HttpPost makeFileUploadRequest(
-        URI url,
-        Map<String, String> params,
-        String fileField,
-        byte[] data) {
+            URI url, Map<String, String> params, String fileField, byte[] data) {
         MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
 
         entityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);

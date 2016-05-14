@@ -21,7 +21,7 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractSubmissionCommand.class);
 
-     AbstractSubmissionCommand(ProgressObserver observer) {
+    AbstractSubmissionCommand(ProgressObserver observer) {
         super(observer);
     }
 
@@ -32,7 +32,7 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
         super(observer, tmcServerCommunicationTaskFactory);
     }
 
-     TmcServerCommunicationTaskFactory.SubmissionResponse submitToServer(
+    TmcServerCommunicationTaskFactory.SubmissionResponse submitToServer(
             Exercise exercise, Map<String, String> extraParams) throws TmcCoreException {
 
         byte[] zippedProject;
@@ -48,8 +48,7 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
         extraParams.put("error_msg_locale", TmcSettingsHolder.get().getLocale().toString());
         try {
             return tmcServerCommunicationTaskFactory
-                    .getSubmittingExerciseTask(
-                            exercise, zippedProject, extraParams)
+                    .getSubmittingExerciseTask(exercise, zippedProject, extraParams)
                     .call();
         } catch (Exception ex) {
             logger.warn("Failed to submit exercise", ex);

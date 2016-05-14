@@ -59,9 +59,8 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
             }
             try {
                 Callable<String> submissionResultFetcher =
-                    tmcServerCommunicationTaskFactory
-                        .getSubmissionFetchTask(submissionResponse.submissionUrl);
-
+                        tmcServerCommunicationTaskFactory.getSubmissionFetchTask(
+                                submissionResponse.submissionUrl);
 
                 String submissionStatus = submissionResultFetcher.call();
                 JsonElement submission = new JsonParser().parse(submissionStatus);

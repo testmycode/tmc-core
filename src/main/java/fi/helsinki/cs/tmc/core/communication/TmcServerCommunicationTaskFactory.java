@@ -116,7 +116,7 @@ public class TmcServerCommunicationTaskFactory {
                     return checkForObsoleteClient(ex);
                 }
             }
-            
+
             //TODO: Cancellable?
         };
     }
@@ -135,15 +135,15 @@ public class TmcServerCommunicationTaskFactory {
                     return checkForObsoleteClient(ex);
                 }
             }
-            
+
             //TODO: Cancellable?
         };
     }
 
     public Callable<Void> getUnlockingTask(Course course) {
         Map<String, String> params = Collections.emptyMap();
-        final Callable<String> download = createHttpTasks()
-                .postForText(getUnlockUrl(course), params);
+        final Callable<String> download =
+                createHttpTasks().postForText(getUnlockUrl(course), params);
         return new Callable<Void>() {
             @Override
             public Void call() throws Exception {
@@ -174,9 +174,7 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<SubmissionResponse> getSubmittingExerciseTask(
-            final Exercise exercise,
-            final byte[] sourceZip,
-            Map<String, String> extraParams) {
+            final Exercise exercise, final byte[] sourceZip, Map<String, String> extraParams) {
         final URI submitUrl = addApiCallQueryParameters(exercise.getReturnUrl());
 
         Map<String, String> params = new LinkedHashMap<>();
@@ -185,11 +183,9 @@ public class TmcServerCommunicationTaskFactory {
         params.putAll(extraParams);
 
         final Callable<String> upload =
-                createHttpTasks().uploadFileForTextDownload(
-                        submitUrl,
-                        params,
-                        "submission[file]",
-                        sourceZip);
+                createHttpTasks()
+                        .uploadFileForTextDownload(
+                                submitUrl, params, "submission[file]", sourceZip);
 
         return new Callable<SubmissionResponse>() {
             @Override
@@ -203,17 +199,16 @@ public class TmcServerCommunicationTaskFactory {
 
                 JsonObject respJson = new JsonParser().parse(response).getAsJsonObject();
                 if (respJson.get("error") != null) {
-                    throw new RuntimeException("Server responded with error: "
-                            + respJson.get("error"));
+                    throw new RuntimeException(
+                            "Server responded with error: " + respJson.get("error"));
                 } else if (respJson.get("submission_url") != null) {
                     try {
-                        URI submissionUrl = new URI(respJson.get("submission_url")
-                                .getAsString());
+                        URI submissionUrl = new URI(respJson.get("submission_url").getAsString());
                         URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
                         return new SubmissionResponse(submissionUrl, pasteUrl);
                     } catch (Exception e) {
-                        throw new RuntimeException("Server responded with malformed "
-                                + "submission url");
+                        throw new RuntimeException(
+                                "Server responded with malformed " + "submission url");
                     }
                 } else {
                     throw new RuntimeException("Server returned unknown response");
@@ -279,9 +274,7 @@ public class TmcServerCommunicationTaskFactory {
         };
     }
 
-    public Callable<String> getFeedbackAnsweringJob(
-            URI answerUrl,
-            List<FeedbackAnswer> answers) {
+    public Callable<String> getFeedbackAnsweringJob(URI answerUrl, List<FeedbackAnswer> answers) {
         final URI submitUrl = addApiCallQueryParameters(answerUrl);
 
         Map<String, String> params = new HashMap<>();
@@ -308,9 +301,7 @@ public class TmcServerCommunicationTaskFactory {
         };
     }
 
-    public Callable<Object> getSendEventLogJob(
-        URI spywareServerUrl,
-        List<LoggableEvent> events) {
+    public Callable<Object> getSendEventLogJob(URI spywareServerUrl, List<LoggableEvent> events) {
 
         Map<String, String> extraHeaders = new LinkedHashMap<>();
         extraHeaders.put("X-Tmc-Version", "1");
@@ -343,13 +334,13 @@ public class TmcServerCommunicationTaskFactory {
         GZIPOutputStream gzos = new GZIPOutputStream(bufferBos);
         OutputStreamWriter bufferWriter = new OutputStreamWriter(gzos, Charset.forName("UTF-8"));
 
+        Gson gson =
+                new GsonBuilder()
+                        .registerTypeAdapter(byte[].class, new ByteArrayGsonSerializer())
+                        .registerTypeAdapter(JsonMaker.class, new JsonMakerGsonSerializer())
+                        .create();
 
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(byte[].class, new ByteArrayGsonSerializer())
-                .registerTypeAdapter(JsonMaker.class, new JsonMakerGsonSerializer())
-                .create();
-
-        gson.toJson(events, new TypeToken<List<LoggableEvent>>(){}.getType(), bufferWriter);
+        gson.toJson(events, new TypeToken<List<LoggableEvent>>() {}.getType(), bufferWriter);
         bufferWriter.close();
         gzos.close();
 
@@ -361,11 +352,12 @@ public class TmcServerCommunicationTaskFactory {
         if (ex.getStatusCode() == 404) {
             boolean obsolete;
             try {
-                obsolete = new JsonParser()
-                        .parse(ex.getEntityAsString())
-                        .getAsJsonObject()
-                        .get("obsolete_client")
-                        .getAsBoolean();
+                obsolete =
+                        new JsonParser()
+                                .parse(ex.getEntityAsString())
+                                .getAsJsonObject()
+                                .get("obsolete_client")
+                                .getAsBoolean();
             } catch (Exception ex2) {
                 obsolete = false;
             }

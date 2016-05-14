@@ -138,8 +138,6 @@ public class Review {
 
     @Override
     public String toString() {
-        return exerciseName + " reviewed by " + reviewerName + ":\n"
-                + reviewBody + "\n"
-                + this.url;
+        return exerciseName + " reviewed by " + reviewerName + ":\n" + reviewBody + "\n" + this.url;
     }
 }

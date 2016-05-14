@@ -19,8 +19,8 @@ import java.util.Date;
 public class Exercise implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(Exercise.class);
-    private static final DateFormat DATE_FORMAT
-            = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    private static final DateFormat DATE_FORMAT =
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
     private int id;
     private String name;

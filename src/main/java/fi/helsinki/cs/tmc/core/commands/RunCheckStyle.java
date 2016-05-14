@@ -34,9 +34,7 @@ public class RunCheckStyle extends Command<ValidationResult> {
             return TmcLangsHolder.get().runCheckCodeStyle(path, settings.getLocale());
         } catch (NoLanguagePluginFoundException ex) {
             logger.warn("Failed to run code style validations on target path", ex);
-            throw new TmcCoreException(
-                    "Unable to run code style validations on target path",
-                    ex);
+            throw new TmcCoreException("Unable to run code style validations on target path", ex);
         }
     }
 }

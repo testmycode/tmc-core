@@ -40,7 +40,6 @@ public class DiskPersistableTmcState implements TmcState {
         }
     }
 
-
     List<Course> getAvailableCourses() {
         return Collections.unmodifiableList(availableCourses);
     }
@@ -237,5 +236,4 @@ public class DiskPersistableTmcState implements TmcState {
                 .registerTypeAdapter(ExerciseKey.class, new ExerciseKey.GsonAdapter())
                 .create();
     }
-
 }

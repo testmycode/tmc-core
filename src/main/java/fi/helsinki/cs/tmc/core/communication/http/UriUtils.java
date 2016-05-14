@@ -10,12 +10,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 public class UriUtils {
     public static String withQueryParam(String uri, String name, String value) {
         return withQueryParam(URI.create(uri), name, value).toString();
     }
-    
+
     public static URI withQueryParam(URI uri, String name, String value) {
         List<NameValuePair> pairs = URLEncodedUtils.parse(uri, "UTF-8");
         Iterator<NameValuePair> iterator = pairs.iterator();
@@ -27,7 +26,7 @@ public class UriUtils {
         }
         List<NameValuePair> newPairs = new ArrayList<>(pairs.size() + 1);
         newPairs.addAll(pairs);
-        
+
         newPairs.add(new BasicNameValuePair(name, value));
         String newQuery = URLEncodedUtils.format(newPairs, "UTF-8");
         try {

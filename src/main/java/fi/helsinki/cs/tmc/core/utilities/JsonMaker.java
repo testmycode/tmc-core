@@ -62,6 +62,7 @@ public class JsonMaker {
     private JsonObject asJsonObject() {
         return toplevel;
     }
+
     public JsonMaker merge(JsonMaker merge) {
         if (merge == null) {
             return this;
@@ -71,5 +72,4 @@ public class JsonMaker {
         }
         return this;
     }
-
 }

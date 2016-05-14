@@ -28,8 +28,8 @@ public class HostInformationGenerator {
 
         data.add("hostId", hostId);
 
-        LoggableEvent event
-                = new LoggableEvent(
+        LoggableEvent event =
+                new LoggableEvent(
                         "host_information_update",
                         data.toString().getBytes(Charset.forName("UTF-8")));
         receiver.receiveEvent(event);
@@ -124,5 +124,4 @@ public class HostInformationGenerator {
         }
         return sb.toString();
     }
-
 }

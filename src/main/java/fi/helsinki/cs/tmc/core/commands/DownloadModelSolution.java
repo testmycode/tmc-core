@@ -7,9 +7,7 @@ import org.slf4j.LoggerFactory;
 
 public class DownloadModelSolution extends Command<Void> {
 
-    private static final Logger logger
-            = LoggerFactory.getLogger(DownloadModelSolution.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(DownloadModelSolution.class);
 
     public DownloadModelSolution(ProgressObserver observer) {
         super(observer);

@@ -90,8 +90,7 @@ public class DiskPersistableTmcState implements TmcState {
     /**
      * Returns the exercises from currently selected course.
      *
-     * <p>
-     * If no course is currently selected then returns the empty collection.
+     * <p>If no course is currently selected then returns the empty collection.
      */
     @Override
     public List<Exercise> getCurrentCourseExercises() {

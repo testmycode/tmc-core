@@ -1,10 +1,7 @@
 package fi.helsinki.cs.tmc.core.utilities;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
@@ -30,9 +27,5 @@ public class JsonMakerGsonSerializer
         }
     }
 
-    //    TODO: figure out how to decerialize
-    //    @Override
-    //    public JsonMaker deserialize(JsonElement je, Type type, JsonDeserializationContext jdc) throws JsonParseException {
-    //        return null;
-    //    }
+    //TODO: figure out how to decerialize
 }

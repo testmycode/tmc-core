@@ -4,8 +4,8 @@ import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.AuthenticationException;
+import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;

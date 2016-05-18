@@ -15,6 +15,7 @@ public class EventStore {
 
     private ConfigFile configFile;
 
+    // TODO: where the config file goes?
     public EventStore() {
         this.configFile = new ConfigFile("Events.json");
     }

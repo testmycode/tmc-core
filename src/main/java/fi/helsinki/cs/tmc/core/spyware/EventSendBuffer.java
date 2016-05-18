@@ -262,14 +262,12 @@ public class EventSendBuffer implements EventReceiver {
 
             private boolean tryToSend(final ArrayList<LoggableEvent> eventsToSend, final URI url) {
                 Callable<Object> task = serverAccess.getSendEventLogJob(url, eventsToSend);
-                // TODO: BgTask??
-                Future<Object> future = null; //BgTask.start("Sending stats", task);
+
+                // TODO: Should we still wrap this into bg task (future)
 
                 try {
-                    future.get();
-                } catch (InterruptedException ex) {
-                    future.cancel(true);
-                } catch (ExecutionException ex) {
+                    task.call();
+                } catch (Exception ex) {
                     log.log(Level.INFO, "Sending failed", ex);
                     return false;
                 }

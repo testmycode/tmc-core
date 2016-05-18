@@ -121,7 +121,7 @@ public class EventSendBufferTest {
         sender.sendNow();
 
         sender.waitUntilCurrentSendingFinished(1000);
-        assertEquals("http://example.com/", spywareServerUrl.getValue());
+        assertEquals(URI.create("http://example.com/"), spywareServerUrl.getValue());
         assertArrayEquals(new Object[] {ev1, ev2}, sentEvents.getValue().toArray());
     }
 

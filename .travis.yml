@@ -1,11 +1,6 @@
 language: java
 sudo: false
 
-before_install:
-  - git clone https://github.com/testmycode/tmc-langs.git
-  - mvn clean install -U -Dmaven.test.skip=true -f tmc-langs/pom.xml
-  - mvn install -Dmaven.test.skip=true
-
 script:
   - mvn test
   - mvn checkstyle:check

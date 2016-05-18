@@ -33,7 +33,7 @@ public class TmcEventBus {
         private WeakReference<TmcEventListener> weakRef;
 
         public WeakListener(TmcEventListener listener) {
-            this.weakRef = new WeakReference<TmcEventListener>(listener);
+            this.weakRef = new WeakReference<>(listener);
         }
 
         @Override
@@ -61,7 +61,7 @@ public class TmcEventBus {
 
         public DependentListener(TmcEventListener listener, Object dependency) {
             this.listener = listener;
-            this.weakRef = new WeakReference<Object>(dependency);
+            this.weakRef = new WeakReference<>(dependency);
         }
 
         @Override
@@ -81,8 +81,8 @@ public class TmcEventBus {
     }
 
     private TmcEventBus() {
-        this.listeners = new ArrayList<TmcEventListener>();
-        this.eventQueue = new ArrayDeque<TmcEvent>();
+        this.listeners = new ArrayList<>();
+        this.eventQueue = new ArrayDeque<>();
     }
 
     /**

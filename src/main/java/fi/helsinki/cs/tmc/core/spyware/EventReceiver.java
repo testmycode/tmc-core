@@ -13,5 +13,5 @@ public interface EventReceiver extends Closeable {
     /**
      * Receives an event. May be called from any thread non-EDT thread.
      */
-    public void receiveEvent(LoggableEvent event);
+    void receiveEvent(LoggableEvent event);
 }

@@ -21,8 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,9 +65,7 @@ public class EventSendBuffer implements EventReceiver {
             List<LoggableEvent> initialEvents = Arrays.asList(eventStore.load());
             initialEvents = initialEvents.subList(0, Math.min(maxEvents, initialEvents.size()));
             this.sendQueue.addAll(initialEvents);
-        } catch (IOException ex) {
-            log.log(Level.WARNING, "Failed to read events from event store", ex);
-        } catch (RuntimeException ex) {
+        } catch (IOException | RuntimeException ex) {
             log.log(Level.WARNING, "Failed to read events from event store", ex);
         }
 
@@ -228,8 +224,7 @@ public class EventSendBuffer implements EventReceiver {
 
             private ArrayList<LoggableEvent> copyEventsToSendFromQueue() {
                 synchronized (sendQueue) {
-                    ArrayList<LoggableEvent> eventsToSend =
-                            new ArrayList<LoggableEvent>(sendQueue.size());
+                    ArrayList<LoggableEvent> eventsToSend = new ArrayList<>(sendQueue.size());
 
                     Iterator<LoggableEvent> iterator = sendQueue.iterator();
                     while (iterator.hasNext() && eventsToSend.size() < maxEventsPerSend) {
@@ -255,9 +250,7 @@ public class EventSendBuffer implements EventReceiver {
                     return null;
                 }
 
-                URI url = urls.get(random.nextInt(urls.size()));
-
-                return url;
+                return urls.get(random.nextInt(urls.size()));
             }
 
             private boolean tryToSend(final ArrayList<LoggableEvent> eventsToSend, final URI url) {

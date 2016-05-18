@@ -13,7 +13,7 @@ public abstract class TmcEventListener {
     private HashMap<Class<?>, Method> receiverMethods;
 
     public TmcEventListener() {
-        receiverMethods = new HashMap<Class<?>, Method>();
+        receiverMethods = new HashMap<>();
         Method[] allMethods = this.getClass().getMethods();
         for (Method m : allMethods) {
             if (m.getName().equals("receive") && m.getParameterTypes().length == 1) {

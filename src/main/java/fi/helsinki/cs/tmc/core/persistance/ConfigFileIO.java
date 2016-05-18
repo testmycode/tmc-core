@@ -38,11 +38,8 @@ public class ConfigFileIO {
     }
 
     public void writeContents(String content) throws IOException {
-        Writer writer = getWriter();
-        try {
+        try (Writer writer = getWriter()) {
             writer.write(content);
-        } finally {
-            writer.close();
         }
     }
 

@@ -52,7 +52,7 @@ public class HostInformationGenerator {
 
         try {
             Enumeration<NetworkInterface> iterator = NetworkInterface.getNetworkInterfaces();
-            List<String> macs = new ArrayList<String>(2);
+            List<String> macs = new ArrayList<>(2);
             while (iterator.hasMoreElements()) {
                 NetworkInterface networkInterface = iterator.nextElement();
                 if (!networkInterface.isLoopback()) {
@@ -121,8 +121,8 @@ public class HostInformationGenerator {
             return "byte_to_hex_null";
         }
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            sb.append(String.format("%02X", bytes[i]));
+        for (byte b : bytes) {
+            sb.append(String.format("%02X", b));
         }
         return sb.toString();
     }

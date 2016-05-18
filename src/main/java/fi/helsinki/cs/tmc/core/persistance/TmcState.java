@@ -87,11 +87,7 @@ public class TmcState {
 
     public boolean isUnlockable(Exercise ex) throws TmcCoreException {
         Course course = getCourseByName(ex.getCourseName());
-        if (course != null) {
-            return course.getUnlockables().contains(ex.getName());
-        } else {
-            return false;
-        }
+        return course != null && course.getUnlockables().contains(ex.getName());
     }
 
     public List<Exercise> getCurrentCourseUnlockableExercises() throws TmcCoreException {

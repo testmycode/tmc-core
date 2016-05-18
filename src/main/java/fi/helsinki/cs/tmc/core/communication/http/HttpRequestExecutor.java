@@ -71,6 +71,7 @@ import java.util.concurrent.Callable;
     }
 
     public HttpRequestExecutor setTimeout(int timeoutMs) {
+        this.timeout = timeoutMs;
         return this;
     }
 
@@ -89,7 +90,7 @@ import java.util.concurrent.Callable;
         }
     }
 
-    private CloseableHttpClient makeHttpClient() throws IOException {
+    private CloseableHttpClient makeHttpClient() {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         if (credentials != null) {
             credentialsProvider.setCredentials(AuthScope.ANY, credentials);
@@ -142,7 +143,7 @@ import java.util.concurrent.Callable;
     }
 
     private BufferedHttpEntity handleResponse(HttpResponse response)
-            throws IOException, InterruptedException, FailedHttpResponseException {
+            throws IOException, FailedHttpResponseException {
         int responseCode = response.getStatusLine().getStatusCode();
         if (response.getEntity() == null) {
             throw new IOException("HTTP " + responseCode + " with no response");

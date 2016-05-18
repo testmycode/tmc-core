@@ -15,7 +15,7 @@ import java.util.Map;
 public class EventDeduplicater implements EventReceiver {
     private EventReceiver nextReceiver;
 
-    private Map<String, byte[]> lastHashByKey = new HashMap<String, byte[]>();
+    private Map<String, byte[]> lastHashByKey = new HashMap<>();
 
     public EventDeduplicater(EventReceiver nextReceiver) {
         this.nextReceiver = nextReceiver;

@@ -285,11 +285,7 @@ public class Exercise implements Serializable {
             throw new IllegalArgumentException("Received null date as parameter");
         }
         Date deadlineDate = getDeadlineDate();
-        if (deadlineDate != null) {
-            return deadlineDate.getTime() < time.getTime();
-        } else {
-            return false;
-        }
+        return deadlineDate != null && deadlineDate.getTime() < time.getTime();
     }
 
     public ExerciseKey getKey() {

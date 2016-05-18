@@ -61,7 +61,16 @@ public abstract class Command<E> implements Callable<E> {
      * <p>If no progress observer is assigned, nothing happens.
      */
     protected void informObserver(double percentageDone, String message) {
-        observer.progress(percentageDone, message);
+        observer.progress(0, percentageDone, message);
+    }
+
+    /**
+     * Informs an associated {@link ProgressObserver} about the current status of the command.
+     *
+     * <p>If no progress observer is assigned, nothing happens.
+     */
+    protected void informObserver(long id, double percentageDone, String message) {
+        observer.progress(id, percentageDone, message);
     }
 
     /**

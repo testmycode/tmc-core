@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.core.persistance;
 
+import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ExerciseKey;
@@ -97,11 +98,11 @@ public class TmcState {
         List<Exercise> result = new ArrayList<>();
         Course course = getCurrentCourse();
         if (course != null) {
-            List<URI> unlockables = course.getUnlockables();
+            List<String> unlockables = course.getUnlockables();
             if (unlockables == null) {
                 unlockables = Collections.emptyList();
             }
-            for (URI exerciseName : unlockables) {
+            for (String exerciseName : unlockables) {
                 for (Exercise ex : course.getExercises()) {
                     if (ex.getName().equals(exerciseName)) {
                         result.add(ex);

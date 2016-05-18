@@ -36,7 +36,7 @@ public class Course {
     @SerializedName("reviews_url")
     private URI reviewsUrl;
 
-    private List<URI> unlockables;
+    private List<String> unlockables;
 
     public Course() {
         this(null);
@@ -115,11 +115,11 @@ public class Course {
         this.exercisesLoaded = exercisesLoaded;
     }
 
-    public List<URI> getUnlockables() {
+    public List<String> getUnlockables() {
         return unlockables;
     }
 
-    public void setUnlockables(List<URI> unlockables) {
+    public void setUnlockables(List<String> unlockables) {
         this.unlockables = unlockables;
     }
 

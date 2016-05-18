@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core.configuration;
 
 import fi.helsinki.cs.tmc.core.domain.Course;
 
+import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
 
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
@@ -43,8 +44,12 @@ public interface TmcSettings {
 
     SystemDefaultRoutePlanner proxy();
 
-    Path getConfigRoot();
-
     // For testing at least
+    @Beta
     void setCourse(Course theCourse);
+
+    @Beta
+    void setConfigRoot(Path configRoot);
+
+    Path getConfigRoot();
 }

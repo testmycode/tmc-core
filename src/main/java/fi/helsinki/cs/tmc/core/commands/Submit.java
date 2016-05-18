@@ -46,6 +46,7 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
      */
     @Override
     public SubmissionResult call() throws TmcCoreException {
+        // TODO: Force send spyware
 
         TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse =
                 submitToServer(exercise, new HashMap<String, String>());

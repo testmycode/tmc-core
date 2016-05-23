@@ -27,6 +27,8 @@ import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 
+import com.google.common.annotations.Beta;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,11 +43,13 @@ public class TmcCore {
     private static TmcCore instance;
 
     // Singleton
+    @Beta
     public static TmcCore get() {
         return TmcCore.instance;
     }
 
     // Singleton
+    @Beta
     public static void setInstance(TmcCore instance) {
         TmcCore.instance = instance;
     }
@@ -61,6 +65,7 @@ public class TmcCore {
         return new DownloadOrUpdateExercises(observer, exercises);
     }
 
+    // TODO: returns new course.
     public Callable<Course> getCourseDetails(ProgressObserver observer, Course course) {
         logger.info("Creating new GetCourseDetails command");
         return new GetCourseDetails(observer, course);

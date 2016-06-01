@@ -10,10 +10,10 @@ public final class TmcSettingsHolder {
     private TmcSettingsHolder() {}
 
     public static synchronized TmcSettings get() {
-        if (settings == null) {
+        if (TmcSettingsHolder.settings == null) {
             throw new UninitializedHolderException();
         }
-        return settings;
+        return TmcSettingsHolder.settings;
     }
 
     public static synchronized void set(TmcSettings settings) {

@@ -45,13 +45,25 @@ public class TmcCore {
     // Singleton
     @Beta
     public static TmcCore get() {
+        if (TmcCore.instance == null) {
+            throw new IllegalStateException("tmc core singleton used before initialized");
+        }
         return TmcCore.instance;
     }
 
     // Singleton
     @Beta
     public static void setInstance(TmcCore instance) {
+        if (TmcCore.instance != null) {
+            throw new IllegalStateException("Multiple instanciations of tmc-core");
+        }
         TmcCore.instance = instance;
+    }
+
+    // TODO: remember to remind to instanciate Settings and Langs holders...
+    @Beta
+    public TmcCore() {
+
     }
 
     public TmcCore(TmcSettings settings, TaskExecutor tmcLangs) {

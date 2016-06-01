@@ -1,6 +1,7 @@
 
 package fi.helsinki.cs.tmc.core.domain;
 
+import com.google.common.base.Strings;
 import com.google.gson.annotations.SerializedName;
 
 import org.slf4j.Logger;
@@ -134,6 +135,9 @@ public class Exercise implements Serializable {
     }
 
     public Date getDeadlineDate() {
+        if (Strings.isNullOrEmpty(this.getDeadline())){
+            return null;
+        }
         try {
             return DATE_FORMAT.parse(this.getDeadline());
         } catch (ParseException ex) {

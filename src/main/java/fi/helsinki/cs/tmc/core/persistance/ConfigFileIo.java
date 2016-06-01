@@ -9,12 +9,12 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class ConfigFileIO {
+public class ConfigFileIo {
 
     private final String name;
     private Path file;
 
-    public ConfigFileIO(String name) {
+    public ConfigFileIo(String name) {
         this.name = name;
     }
 

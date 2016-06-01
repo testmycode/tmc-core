@@ -135,7 +135,7 @@ public class Exercise implements Serializable {
     }
 
     public Date getDeadlineDate() {
-        if (Strings.isNullOrEmpty(this.getDeadline())){
+        if (Strings.isNullOrEmpty(this.getDeadline())) {
             return null;
         }
         try {

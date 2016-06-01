@@ -1,6 +1,6 @@
 package fi.helsinki.cs.tmc.core.spyware;
 
-import fi.helsinki.cs.tmc.core.persistance.ConfigFileIO;
+import fi.helsinki.cs.tmc.core.persistance.ConfigFileIo;
 import fi.helsinki.cs.tmc.core.utilities.ByteArrayGsonSerializer;
 
 import com.google.gson.Gson;
@@ -13,11 +13,11 @@ import java.util.logging.Logger;
 public class EventStore {
     private static final Logger log = Logger.getLogger(EventStore.class.getName());
 
-    private ConfigFileIO configFile;
+    private ConfigFileIo configFile;
 
     // TODO: where the config file goes?
     public EventStore() {
-        this.configFile = new ConfigFileIO("Events.json");
+        this.configFile = new ConfigFileIo("Events.json");
     }
 
     public void save(LoggableEvent[] events) throws IOException {

@@ -1,7 +1,7 @@
 package fi.helsinki.cs.tmc.core.domain.submission;
 
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
-import fi.helsinki.cs.tmc.langs.domain.TestCase;
+import fi.helsinki.cs.tmc.langs.domain.TestResult;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -64,7 +64,7 @@ public class SubmissionResult {
     private List<String> missingReviewPoints;
 
     @SerializedName("test_cases")
-    private List<TestCase> testCases;
+    private List<TestResult> testCases;
 
     @SerializedName("feedback_questions")
     private List<FeedbackQuestion> feedbackQuestions;
@@ -113,11 +113,11 @@ public class SubmissionResult {
         this.validations = validations;
     }
 
-    public List<TestCase> getTestCases() {
+    public List<TestResult> getTestCases() {
         return testCases;
     }
 
-    public void setTestCases(List<TestCase> testCases) {
+    public void setTestCases(List<TestResult> testCases) {
         this.testCases = testCases;
     }
 
@@ -188,8 +188,8 @@ public class SubmissionResult {
 
         int testsFailed = 0;
 
-        for (TestCase test : testCases) {
-            if (test.status != TestCase.Status.PASSED) {
+        for (TestResult test : testCases) {
+            if (!test.isSuccessful()) {
                 testsFailed++;
             }
         }

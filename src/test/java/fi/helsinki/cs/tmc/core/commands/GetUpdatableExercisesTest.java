@@ -60,9 +60,7 @@ public class GetUpdatableExercisesTest {
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(langs);
         arithFuncsTempDir = testFolder.getRoot().toPath().resolve("arith_funcs");
-        command = new GetUpdatableExercises(mockObserver, factory);
-
-        when(settings.getCurrentCourse()).thenReturn(Optional.of(mockCurrentCourse));
+        command = new GetUpdatableExercises(mockObserver, factory, mockCurrentCourse);
 
         doCallRealMethod().when(langs).extractProject(any(Path.class), any(Path.class));
     }

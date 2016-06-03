@@ -121,9 +121,9 @@ public class TmcCore {
         return new Submit(observer, exercise);
     }
 
-    public Callable<List<Exercise>> getExerciseUpdates(ProgressObserver observer) {
+    public Callable<List<Exercise>> getExerciseUpdates(ProgressObserver observer, Course course) {
         logger.info("Creating new GetUpdatableExercises command");
-        return new GetUpdatableExercises(observer);
+        return new GetUpdatableExercises(observer, course);
     }
 
     /**

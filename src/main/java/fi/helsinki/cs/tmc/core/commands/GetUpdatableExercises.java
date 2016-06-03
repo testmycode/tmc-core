@@ -5,10 +5,10 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,29 +24,27 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
 
     private static final Logger logger = LoggerFactory.getLogger(GetUpdatableExercises.class);
 
-    public GetUpdatableExercises(ProgressObserver observer) {
+    private final Course course;
+
+    public GetUpdatableExercises(ProgressObserver observer, Course course) {
         super(observer);
+        Preconditions.checkNotNull(course);
+        this.course = course;
     }
 
     @VisibleForTesting
     GetUpdatableExercises(
             ProgressObserver observer,
-            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory, Course course) {
         super(observer, tmcServerCommunicationTaskFactory);
+        this.course = course;
     }
 
     // TODO(jamo,loezi): what about new exercises?
     @Override
     public List<Exercise> call() throws TmcCoreException {
-        Optional<Course> currentCourse = TmcSettingsHolder.get().getCurrentCourse();
-        if (!currentCourse.isPresent()) {
-            logger.warn("Attempted to check for updatable exercises without a current " + "course");
-            throw new TmcCoreException(
-                    "Can not check for exercise updates when no course " + "is selected");
-        }
-
         Callable<Course> fullCourseInfoTask =
-                tmcServerCommunicationTaskFactory.getFullCourseInfoTask(currentCourse.get());
+                tmcServerCommunicationTaskFactory.getFullCourseInfoTask(course);
 
         List<Exercise> newExercises;
         try {
@@ -58,7 +56,7 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
         }
 
         List<Exercise> updatableExercises = new ArrayList<>();
-        for (Exercise currentExercise : currentCourse.get().getExercises()) {
+        for (Exercise currentExercise : course.getExercises()) {
             Optional<Exercise> replacementExercise =
                     getReplacementExercise(currentExercise, newExercises);
             if (replacementExercise.isPresent()) {
@@ -69,7 +67,7 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
         return updatableExercises;
     }
 
-    // Maches exercise with same name and course name. Returns it if checksums differ
+    // Matches exercise with same name and course name. Returns it if checksums differ.
     private Optional<Exercise> getReplacementExercise(
             Exercise oldExercise, List<Exercise> newExercises) {
         for (Exercise newExercise : newExercises) {

@@ -23,9 +23,15 @@ import java.util.concurrent.Callable;
 public class GetUpdatableExercises extends Command<List<Exercise>> {
 
     private static final Logger logger = LoggerFactory.getLogger(GetUpdatableExercises.class);
+    private Course course;
 
     public GetUpdatableExercises(ProgressObserver observer) {
         super(observer);
+    }
+
+    public GetUpdatableExercises(ProgressObserver observer, Course course) {
+        super(observer);
+        course = course;
     }
 
     @VisibleForTesting
@@ -38,15 +44,19 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
     // TODO(jamo,loezi): what about new exercises?
     @Override
     public List<Exercise> call() throws TmcCoreException {
-        Optional<Course> currentCourse = TmcSettingsHolder.get().getCurrentCourse();
-        if (!currentCourse.isPresent()) {
-            logger.warn("Attempted to check for updatable exercises without a current " + "course");
-            throw new TmcCoreException(
-                    "Can not check for exercise updates when no course " + "is selected");
+        if (course == null) {
+            Optional<Course> currentCourse = TmcSettingsHolder.get().getCurrentCourse();
+
+            if (!currentCourse.isPresent()) {
+                logger.warn("Attempted to check for updatable exercises without a current " + "course");
+                throw new TmcCoreException(
+                        "Can not check for exercise updates when no course " + "is selected");
+            }
+            course = currentCourse.get();
         }
 
         Callable<Course> fullCourseInfoTask =
-                tmcServerCommunicationTaskFactory.getFullCourseInfoTask(currentCourse.get());
+                tmcServerCommunicationTaskFactory.getFullCourseInfoTask(course);
 
         List<Exercise> newExercises;
         try {
@@ -58,7 +68,7 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
         }
 
         List<Exercise> updatableExercises = new ArrayList<>();
-        for (Exercise currentExercise : currentCourse.get().getExercises()) {
+        for (Exercise currentExercise : course.getExercises()) {
             Optional<Exercise> replacementExercise =
                     getReplacementExercise(currentExercise, newExercises);
             if (replacementExercise.isPresent()) {

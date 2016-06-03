@@ -244,7 +244,7 @@ public class EventSendBufferTest {
         assertEquals(0, sendOperationsFinished.get());
     }
 
-    @Test // FIXME: this test appears to be flaky
+    @Test
     public void discardsOldestEventsOnOverflow() throws TimeoutException, InterruptedException {
         sender.setMaxEvents(3);
 
@@ -254,11 +254,12 @@ public class EventSendBufferTest {
         sender.receiveEvent(ev4);
         sender.saveNow(1000);
 
+        LoggableEvent[] expecteds = new LoggableEvent[] {ev2, ev3, ev4};
+        assertArrayEquals(expecteds, savedEvents.getValue());
+
         sender.sendNow();
         sender.waitUntilCurrentSendingFinished(1000);
 
-        LoggableEvent[] expecteds = new LoggableEvent[] {ev2, ev3, ev4};
-        assertArrayEquals(expecteds, savedEvents.getValue());
         assertArrayEquals(expecteds, sentEvents.getValue().toArray(new LoggableEvent[0]));
     }
 

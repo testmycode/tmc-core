@@ -2,7 +2,7 @@ language: java
 sudo: false
 
 script:
-  - mvn -Dsurefire.rerunFailingTestsCount=3 test
+  - mvn -Dsurefire.rerunFailingTestsCount=10 test
   - mvn checkstyle:check
 
 after_success:

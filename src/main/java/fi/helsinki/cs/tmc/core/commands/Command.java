@@ -6,6 +6,7 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcInterruptionException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
+import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +52,9 @@ public abstract class Command<E> implements Callable<E> {
             ProgressObserver observer,
             TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
         this.settings = settings;
+        Preconditions.checkNotNull(observer);
         this.observer = observer;
+        Preconditions.checkNotNull(tmcServerCommunicationTaskFactory);
         this.tmcServerCommunicationTaskFactory = tmcServerCommunicationTaskFactory;
     }
 
@@ -61,7 +64,7 @@ public abstract class Command<E> implements Callable<E> {
      * <p>If no progress observer is assigned, nothing happens.
      */
     protected void informObserver(double percentageDone, String message) {
-        observer.progress(0, percentageDone, message);
+        informObserver(0, percentageDone, message);
     }
 
     /**

@@ -45,6 +45,14 @@ public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
     public List<Exercise> call() throws TmcInterruptionException {
         List<Exercise> successfullyDownloaded = new ArrayList<>();
 
+        /*
+         * 3 states per exercise,
+         * 1) download zip
+         * 2) extract zip
+         * 3) done
+         */
+        double maxStatus = exercises.size() * 3.0;
+        int progress = 0;
         for (Exercise exercise : exercises) {
 
             //TODO: Multi-thread?
@@ -53,10 +61,13 @@ public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
 
             byte[] zip;
             try {
+                informObserver(
+                        progress++ / maxStatus, "Downloading exercise " + exercise.getName());
                 zip =
                         tmcServerCommunicationTaskFactory
                                 .getDownloadingExerciseZipTask(exercise)
                                 .call();
+
             } catch (Exception ex) {
                 logger.warn("Failed to download project from TMC-server", ex);
                 continue;
@@ -74,6 +85,7 @@ public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
 
             checkInterrupt();
 
+            informObserver(progress++ / maxStatus, "Extracting exercise " + exercise.getName());
             Path tmcRoot = TmcSettingsHolder.get().getTmcProjectDirectory();
             Path target = exercise.getExtractionTarget(tmcRoot);
             try {
@@ -91,6 +103,7 @@ public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
             }
 
             successfullyDownloaded.add(exercise);
+            informObserver(progress++ / maxStatus, "Downloaded exercise " + exercise.getName());
             //TODO: Update PluginState
 
             //TODO: Make into future / callable / something?

@@ -37,6 +37,7 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
 
         byte[] zippedProject;
 
+        informObserver(0, "Zipping project");
         Path tmcRoot = TmcSettingsHolder.get().getTmcProjectDirectory();
         Path projectPath = exercise.getExerciseDirectory(tmcRoot);
         try {
@@ -46,6 +47,7 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
             throw new TmcCoreException("Failed to compress project", ex);
         }
         extraParams.put("error_msg_locale", TmcSettingsHolder.get().getLocale().toString());
+        informObserver(0.5, "Submitting project");
         try {
             return tmcServerCommunicationTaskFactory
                     .getSubmittingExerciseTask(exercise, zippedProject, extraParams)

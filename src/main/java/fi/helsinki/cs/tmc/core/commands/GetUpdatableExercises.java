@@ -35,7 +35,8 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
     @VisibleForTesting
     GetUpdatableExercises(
             ProgressObserver observer,
-            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory, Course course) {
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory,
+            Course course) {
         super(observer, tmcServerCommunicationTaskFactory);
         this.course = course;
     }

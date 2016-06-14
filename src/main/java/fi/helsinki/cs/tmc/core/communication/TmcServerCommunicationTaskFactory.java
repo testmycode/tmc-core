@@ -41,6 +41,7 @@ import java.util.zip.GZIPOutputStream;
  * A frontend for the server.
  */
 public class TmcServerCommunicationTaskFactory {
+
     public static final int API_VERSION = 7;
 
     private TmcSettings settings;
@@ -115,14 +116,12 @@ public class TmcServerCommunicationTaskFactory {
                 } catch (FailedHttpResponseException ex) {
                     return checkForObsoleteClient(ex);
                 }
+                //TODO: Cancellable?
             }
-
-            //TODO: Cancellable?
         };
     }
 
     public Callable<Course> getFullCourseInfoTask(Course courseStub) {
-        //TODO: Str -> URL
         URI url = addApiCallQueryParameters(courseStub.getDetailsUrl());
         final Callable<String> download = createHttpTasks().getForText(url);
         return new Callable<Course>() {

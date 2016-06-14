@@ -346,4 +346,28 @@ public class Exercise implements Serializable {
         return this.getCourseName().equals(other.getCourseName())
                 && this.getName().equals(other.getName());
     }
+
+    /**
+     * The exercises are same if the name and the course are the same.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Exercise exercise = (Exercise) o;
+
+        if (!name.equals(exercise.name)) {
+            return false;
+        }
+        return courseName.equals(exercise.courseName);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name.hashCode();
+        result = 31 * result + courseName.hashCode();
+        return result;
+    }
 }

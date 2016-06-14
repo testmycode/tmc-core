@@ -60,7 +60,7 @@ public class TmcCore {
         TmcCore.instance = instance;
     }
 
-    // TODO: remember to remind to instanciate Settings and Langs holders...
+    // TODO: remember to remind to instantiate Settings and Langs holders...
     @Beta
     public TmcCore() {
 

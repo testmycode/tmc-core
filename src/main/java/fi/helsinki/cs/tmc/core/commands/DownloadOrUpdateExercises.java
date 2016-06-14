@@ -2,7 +2,11 @@ package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.Progress;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.exceptions.ExerciseDownloadFailedException;
+import fi.helsinki.cs.tmc.core.exceptions.ExtractingExericeFailedException;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcInterruptionException;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
@@ -17,11 +21,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A {@link Command} for downloading exercises.
  */
-public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
+public class DownloadOrUpdateExercises extends ExerciseDownloadingCommand<List<Exercise>> {
 
     private static final Logger logger = LoggerFactory.getLogger(DownloadOrUpdateExercises.class);
 
@@ -34,9 +39,9 @@ public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
 
     @VisibleForTesting
     DownloadOrUpdateExercises(
-            ProgressObserver observer,
-            List<Exercise> exercises,
-            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+        ProgressObserver observer,
+        List<Exercise> exercises,
+        TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
         super(observer, tmcServerCommunicationTaskFactory);
         this.exercises = exercises;
     }
@@ -51,8 +56,7 @@ public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
          * 2) extract zip
          * 3) done
          */
-        double maxStatus = exercises.size() * 3.0;
-        int progress = 0;
+        Progress progress = new Progress(exercises.size() * 3.0);
         for (Exercise exercise : exercises) {
 
             //TODO: Multi-thread?
@@ -61,13 +65,7 @@ public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
 
             byte[] zip;
             try {
-                informObserver(
-                        progress++ / maxStatus, "Downloading exercise " + exercise.getName());
-                zip =
-                        tmcServerCommunicationTaskFactory
-                                .getDownloadingExerciseZipTask(exercise)
-                                .call();
-
+                zip = downloadExercise(exercise, progress);
             } catch (Exception ex) {
                 logger.warn("Failed to download project from TMC-server", ex);
                 continue;
@@ -75,35 +73,16 @@ public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
 
             checkInterrupt();
 
-            Path exerciseZipTemporaryPath;
             try {
-                exerciseZipTemporaryPath = writeToTemp(zip);
-            } catch (IOException ex) {
-                logger.warn("Failed to write downloaded zip to disk", ex);
+                extractProject(zip, exercise, progress);
+            } catch (TmcCoreException e) {
+                logger.warn("Extracting project failed", e);
                 continue;
-            }
-
-            checkInterrupt();
-
-            informObserver(progress++ / maxStatus, "Extracting exercise " + exercise.getName());
-            Path tmcRoot = TmcSettingsHolder.get().getTmcProjectDirectory();
-            Path target = exercise.getExtractionTarget(tmcRoot);
-            try {
-                TmcLangsHolder.get().extractProject(exerciseZipTemporaryPath, target);
-            } catch (Exception ex) {
-                logger.warn(
-                        "Failed to extract project from "
-                                + exerciseZipTemporaryPath
-                                + " to "
-                                + target,
-                        ex);
-                continue;
-            } finally {
-                cleanUp(exerciseZipTemporaryPath);
             }
 
             successfullyDownloaded.add(exercise);
-            informObserver(progress++ / maxStatus, "Downloaded exercise " + exercise.getName());
+            informObserver(progress.incrementAndGet(), "Downloaded exercise " + exercise.getName());
+
             //TODO: Update PluginState
 
             //TODO: Make into future / callable / something?
@@ -111,17 +90,4 @@ public class DownloadOrUpdateExercises extends Command<List<Exercise>> {
         return successfullyDownloaded;
     }
 
-    private void cleanUp(Path zip) {
-        try {
-            Files.deleteIfExists(zip);
-        } catch (IOException ex) {
-            logger.warn("Failed to delete temporary exercise zip from " + zip, ex);
-        }
-    }
-
-    private Path writeToTemp(byte[] zip) throws IOException {
-        Path target = Files.createTempFile("tmc-exercise-", ".zip");
-        Files.write(target, zip);
-        return target;
-    }
 }

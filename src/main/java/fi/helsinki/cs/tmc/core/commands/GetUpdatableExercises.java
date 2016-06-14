@@ -44,17 +44,15 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
     // TODO(jamo,loezi): what about new exercises?
     @Override
     public List<Exercise> call() throws TmcCoreException {
-        Callable<Course> fullCourseInfoTask =
-                tmcServerCommunicationTaskFactory.getFullCourseInfoTask(course);
-
-        List<Exercise> newExercises;
+        Course updatedCourse;
         try {
-            // So we won't update anyting or the current course object?!
-            newExercises = fullCourseInfoTask.call().getExercises();
+            updatedCourse = new GetCourseDetails(observer, course, tmcServerCommunicationTaskFactory).call();
         } catch (Exception ex) {
             logger.warn("Failed to fetch exercises from server", ex);
             throw new TmcCoreException("Failed to fetch exercises from server", ex);
         }
+
+        List<Exercise> newExercises = updatedCourse.getExercises();
 
         List<Exercise> updatableExercises = new ArrayList<>();
         for (Exercise currentExercise : course.getExercises()) {

@@ -102,10 +102,7 @@ public class GetUpdatableExercisesTest {
         assertTrue(updateableLocalExercise.isSameExercise(updateableRefreshedExercise));
         List<Exercise> updateableExercises = command.call();
 
-        assertThat(updateableExercises).contains(updateableRefreshedExercise);
-        assertThat(updateableExercises).hasSize(1);
-        // TODO: when new exercise behaviour is fixed, remove two above and uncomment two below.
-        //assertThat(updateableExercises)
-        //.containsAllOf(updateableRefreshedExercise, newRefreshedExercise);
+        assertThat(updateableExercises)
+                .containsAllOf(updateableRefreshedExercise, newRefreshedExercise);
     }
 }

@@ -7,7 +7,6 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 import org.slf4j.Logger;
@@ -41,7 +40,6 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
         this.course = course;
     }
 
-    // TODO(jamo,loezi): what about new exercises?
     @Override
     public List<Exercise> call() throws TmcCoreException {
         Callable<Course> fullCourseInfoTask =
@@ -57,11 +55,9 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
         }
 
         List<Exercise> updatableExercises = new ArrayList<>();
-        for (Exercise currentExercise : course.getExercises()) {
-            Optional<Exercise> replacementExercise =
-                    getReplacementExercise(currentExercise, newExercises);
-            if (replacementExercise.isPresent()) {
-                updatableExercises.add(replacementExercise.get());
+        for (Exercise newExercise : newExercises) {
+            if (!hasMatchingExercise(newExercise, course.getExercises())) {
+                updatableExercises.add(newExercise);
             }
         }
 
@@ -69,15 +65,15 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
     }
 
     // Matches exercise with same name and course name. Returns it if checksums differ.
-    private Optional<Exercise> getReplacementExercise(
+    private boolean hasMatchingExercise(
             Exercise oldExercise, List<Exercise> newExercises) {
         for (Exercise newExercise : newExercises) {
             if (oldExercise.isSameExercise(newExercise)
-                    && !oldExercise.getChecksum().equals(newExercise.getChecksum())) {
-                return Optional.of(newExercise);
+                    && oldExercise.getChecksum().equals(newExercise.getChecksum())) {
+                return true;
             }
         }
 
-        return Optional.absent();
+        return false;
     }
 }

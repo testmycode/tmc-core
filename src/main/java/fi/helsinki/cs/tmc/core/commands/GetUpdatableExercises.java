@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 /**
  * A {@link Command} for retrieving exercise updates from TMC server.
@@ -62,13 +61,9 @@ public class GetUpdatableExercises extends Command<GetUpdatableExercises.UpdateR
 
     @Override
     public UpdateResult call() throws TmcCoreException {
-        Callable<Course> fullCourseInfoTask =
-                tmcServerCommunicationTaskFactory.getFullCourseInfoTask(course);
-
-        List<Exercise> newExercises;
+        Course updatedCourse;
         try {
-            // So we won't update anyting or the current course object?!
-            newExercises = fullCourseInfoTask.call().getExercises();
+            updatedCourse = new GetCourseDetails(observer, course, tmcServerCommunicationTaskFactory).call();
         } catch (Exception ex) {
             logger.warn("Failed to fetch exercises from server", ex);
             throw new TmcCoreException("Failed to fetch exercises from server", ex);
@@ -82,7 +77,7 @@ public class GetUpdatableExercises extends Command<GetUpdatableExercises.UpdateR
             exerciseMap.put(oldExercise.getName(), oldExercise);
         }
 
-        for (Exercise newExercise : newExercises) {
+        for (Exercise newExercise : updatedCourse.getExercises()) {
             Exercise oldExercise = exerciseMap.get(newExercise.getName());
             if (oldExercise == null) {
                 createExercises.add(newExercise);

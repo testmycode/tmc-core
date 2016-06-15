@@ -26,7 +26,6 @@ public class GetCourseDetails extends Command<Course> {
         this.course = course;
     }
 
-    @VisibleForTesting
     GetCourseDetails(
             ProgressObserver observer,
             Course course,

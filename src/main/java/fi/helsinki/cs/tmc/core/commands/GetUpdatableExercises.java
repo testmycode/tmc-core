@@ -7,24 +7,42 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.Callable;
+import java.util.Map;
 
 /**
  * A {@link Command} for retrieving exercise updates from TMC server.
  */
-public class GetUpdatableExercises extends Command<List<Exercise>> {
+public class GetUpdatableExercises extends Command<GetUpdatableExercises.UpdateResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(GetUpdatableExercises.class);
 
     private final Course course;
+
+    public class UpdateResult {
+        private final List<Exercise> created;
+        private final List<Exercise> updated;
+
+        private UpdateResult(List<Exercise> created, List<Exercise> updated) {
+            this.created = created;
+            this.updated = updated;
+        }
+
+        public List<Exercise> getNewExercises() {
+            return created;
+        }
+
+        public List<Exercise> getUpdatedExercises() {
+            return updated;
+        }
+    }
 
     public GetUpdatableExercises(ProgressObserver observer, Course course) {
         super(observer);
@@ -41,9 +59,8 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
         this.course = course;
     }
 
-    // TODO(jamo,loezi): what about new exercises?
     @Override
-    public List<Exercise> call() throws TmcCoreException {
+    public UpdateResult call() throws TmcCoreException {
         Course updatedCourse;
         try {
             updatedCourse = new GetCourseDetails(observer, course, tmcServerCommunicationTaskFactory).call();
@@ -52,30 +69,23 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
             throw new TmcCoreException("Failed to fetch exercises from server", ex);
         }
 
-        List<Exercise> newExercises = updatedCourse.getExercises();
+        List<Exercise> createExercises = new ArrayList<>();
+        List<Exercise> updatedExercises = new ArrayList<>();
+        Map<String, Exercise> oldExercises = new HashMap<>();
 
-        List<Exercise> updatableExercises = new ArrayList<>();
-        for (Exercise currentExercise : course.getExercises()) {
-            Optional<Exercise> replacementExercise =
-                    getReplacementExercise(currentExercise, newExercises);
-            if (replacementExercise.isPresent()) {
-                updatableExercises.add(replacementExercise.get());
+        for (Exercise oldExercise : course.getExercises()) {
+            oldExercises.put(oldExercise.getName(), oldExercise);
+        }
+
+        for (Exercise newExercise : updatedCourse.getExercises()) {
+            Exercise oldExercise = oldExercises.get(newExercise.getName());
+            if (oldExercise == null) {
+                createExercises.add(newExercise);
+            } else if (!oldExercise.getChecksum().equals(newExercise.getChecksum())) {
+                updatedExercises.add(newExercise);
             }
         }
 
-        return updatableExercises;
-    }
-
-    // Matches exercise with same name and course name. Returns it if checksums differ.
-    private Optional<Exercise> getReplacementExercise(
-            Exercise oldExercise, List<Exercise> newExercises) {
-        for (Exercise newExercise : newExercises) {
-            if (oldExercise.isSameExercise(newExercise)
-                    && !oldExercise.getChecksum().equals(newExercise.getChecksum())) {
-                return Optional.of(newExercise);
-            }
-        }
-
-        return Optional.absent();
+        return new UpdateResult(createExercises, updatedExercises);
     }
 }

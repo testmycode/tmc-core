@@ -119,8 +119,7 @@ public class GetUpdatableExercisesTest {
         when(mockRefreshedCourse.getExercises())
                 .thenReturn(
                         ImmutableList.of(
-                                uptodateRefreshedExercise,
-                                deletableLocalExercise));
+                                uptodateRefreshedExercise));
 
         // Note, the order of any and specific matcher matters!
         when(uptodateLocalExercise.getName()).thenReturn("e1");

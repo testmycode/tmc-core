@@ -13,17 +13,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
  * A {@link Command} for retrieving exercise updates from TMC server.
  */
-public class GetUpdatableExercises extends Command<List<Exercise>> {
+public class GetUpdatableExercises extends Command<GetUpdatableExercises.UpdateResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(GetUpdatableExercises.class);
 
     private final Course course;
+
+    public class UpdateResult {
+        private final List<Exercise> created;
+        private final List<Exercise> updated;
+
+        private UpdateResult(List<Exercise> created, List<Exercise> updated) {
+            this.created = created;
+            this.updated = updated;
+        }
+
+        public List<Exercise> getCreated() {
+            return created;
+        }
+
+        public List<Exercise> getUpdated() {
+            return updated;
+        }
+    }
 
     public GetUpdatableExercises(ProgressObserver observer, Course course) {
         super(observer);
@@ -41,7 +61,7 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
     }
 
     @Override
-    public List<Exercise> call() throws TmcCoreException {
+    public UpdateResult call() throws TmcCoreException {
         Callable<Course> fullCourseInfoTask =
                 tmcServerCommunicationTaskFactory.getFullCourseInfoTask(course);
 
@@ -54,26 +74,23 @@ public class GetUpdatableExercises extends Command<List<Exercise>> {
             throw new TmcCoreException("Failed to fetch exercises from server", ex);
         }
 
-        List<Exercise> updatableExercises = new ArrayList<>();
+        List<Exercise> createExercises = new ArrayList<>();
+        List<Exercise> updatedExercises = new ArrayList<>();
+        Map<String, Exercise> exerciseMap = new HashMap<>();
+
+        for (Exercise oldExercise : course.getExercises()) {
+            exerciseMap.put(oldExercise.getName(), oldExercise);
+        }
+
         for (Exercise newExercise : newExercises) {
-            if (!hasMatchingExercise(newExercise, course.getExercises())) {
-                updatableExercises.add(newExercise);
+            Exercise oldExercise = exerciseMap.get(newExercise.getName());
+            if (oldExercise == null) {
+                createExercises.add(newExercise);
+            } else if (!oldExercise.getChecksum().equals(newExercise.getChecksum())) {
+                updatedExercises.add(newExercise);
             }
         }
 
-        return updatableExercises;
-    }
-
-    // Matches exercise with same name and course name. Returns it if checksums differ.
-    private boolean hasMatchingExercise(
-            Exercise oldExercise, List<Exercise> newExercises) {
-        for (Exercise newExercise : newExercises) {
-            if (oldExercise.isSameExercise(newExercise)
-                    && oldExercise.getChecksum().equals(newExercise.getChecksum())) {
-                return true;
-            }
-        }
-
-        return false;
+        return new UpdateResult(createExercises, updatedExercises);
     }
 }

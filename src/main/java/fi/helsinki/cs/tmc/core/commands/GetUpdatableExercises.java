@@ -35,11 +35,11 @@ public class GetUpdatableExercises extends Command<GetUpdatableExercises.UpdateR
             this.updated = updated;
         }
 
-        public List<Exercise> getCreated() {
+        public List<Exercise> getNewExercises() {
             return created;
         }
 
-        public List<Exercise> getUpdated() {
+        public List<Exercise> getUpdatedExercises() {
             return updated;
         }
     }
@@ -71,14 +71,14 @@ public class GetUpdatableExercises extends Command<GetUpdatableExercises.UpdateR
 
         List<Exercise> createExercises = new ArrayList<>();
         List<Exercise> updatedExercises = new ArrayList<>();
-        Map<String, Exercise> exerciseMap = new HashMap<>();
+        Map<String, Exercise> oldExercises = new HashMap<>();
 
         for (Exercise oldExercise : course.getExercises()) {
-            exerciseMap.put(oldExercise.getName(), oldExercise);
+            oldExercises.put(oldExercise.getName(), oldExercise);
         }
 
         for (Exercise newExercise : updatedCourse.getExercises()) {
-            Exercise oldExercise = exerciseMap.get(newExercise.getName());
+            Exercise oldExercise = oldExercises.get(newExercise.getName());
             if (oldExercise == null) {
                 createExercises.add(newExercise);
             } else if (!oldExercise.getChecksum().equals(newExercise.getChecksum())) {

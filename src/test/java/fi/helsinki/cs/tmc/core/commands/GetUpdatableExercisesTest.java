@@ -101,8 +101,8 @@ public class GetUpdatableExercisesTest {
         assertEquals(updateableLocalExercise.getName(), updateableRefreshedExercise.getName());
         GetUpdatableExercises.UpdateResult updateResults = command.call();
 
-        assertThat(updateResults.getCreated()).containsExactly(newRefreshedExercise);
-        assertThat(updateResults.getUpdated()).containsExactly(updateableRefreshedExercise);
+        assertThat(updateResults.getNewExercises()).containsExactly(newRefreshedExercise);
+        assertThat(updateResults.getUpdatedExercises()).containsExactly(updateableRefreshedExercise);
     }
 
     @Test
@@ -138,7 +138,7 @@ public class GetUpdatableExercisesTest {
         assertEquals(updateableLocalExercise.getName(), updateableRefreshedExercise.getName());
         GetUpdatableExercises.UpdateResult updateResults = command.call();
 
-        assertThat(updateResults.getCreated()).isEmpty();
-        assertThat(updateResults.getUpdated()).isEmpty();
+        assertThat(updateResults.getNewExercises()).isEmpty();
+        assertThat(updateResults.getUpdatedExercises()).isEmpty();
     }
 }

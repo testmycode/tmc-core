@@ -6,6 +6,8 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ExerciseKey;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
+import com.google.common.annotations.Beta;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Beta
 public class TmcState {
 
     private String currentCourseName;

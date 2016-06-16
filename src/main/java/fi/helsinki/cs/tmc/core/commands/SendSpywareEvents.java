@@ -39,7 +39,6 @@ public class SendSpywareEvents extends Command<Void> {
         }
 
         int serverId = new Random().nextInt(currentCourse.getSpywareUrls().size());
-        //TODO: Str -> URI
         URI spywareServerUri = currentCourse.getSpywareUrls().get(serverId);
 
         new TmcServerCommunicationTaskFactory().getSendEventLogJob(spywareServerUri, events).call();

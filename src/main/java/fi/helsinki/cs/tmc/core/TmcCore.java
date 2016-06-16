@@ -8,6 +8,7 @@ import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
 import fi.helsinki.cs.tmc.core.commands.GetUpdatableExercises;
 import fi.helsinki.cs.tmc.core.commands.ListCourses;
 import fi.helsinki.cs.tmc.core.commands.PasteWithComment;
+import fi.helsinki.cs.tmc.core.commands.RealExerciseChecksumCommand;
 import fi.helsinki.cs.tmc.core.commands.RequestCodeReview;
 import fi.helsinki.cs.tmc.core.commands.RunCheckStyle;
 import fi.helsinki.cs.tmc.core.commands.RunTests;
@@ -23,6 +24,7 @@ import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.spyware.LoggableEvent;
+import fi.helsinki.cs.tmc.langs.abstraction.Strategy;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
@@ -33,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -127,6 +130,11 @@ public class TmcCore {
         return new GetUpdatableExercises(observer, course);
     }
 
+    public Callable<String> calculateStudentFileChecksum(ProgressObserver observer, Path project) {
+        logger.info("Creating new RealExerciseChecksumCommand command");
+        return new RealExerciseChecksumCommand(observer, project);
+    }
+
     /**
      * NOT IMPLEMENTED!
      *
@@ -157,13 +165,8 @@ public class TmcCore {
         return new DownloadCompletedExercises(observer);
     }
 
-    /**
-     * NOT IMPLEMENTED!
-     *
-     * <p>TARGET: CORE MILESTONE 3.
-     */
-    public Callable<Void> downloadModelSolution(ProgressObserver observer) {
+    public Callable<Exercise> downloadModelSolution(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new DownloadModelSolution command");
-        return new DownloadModelSolution(observer);
+        return new DownloadModelSolution(observer, exercise);
     }
 }

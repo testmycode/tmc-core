@@ -24,7 +24,8 @@ public class DownloadModelSolution extends ExerciseDownloadingCommand<Exercise> 
 
     @VisibleForTesting
     DownloadModelSolution(ProgressObserver observer,
-                          TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory, Exercise exercise) {
+                          TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory,
+                          Exercise exercise) {
         super(observer, tmcServerCommunicationTaskFactory);
         this.exercise = exercise;
     }
@@ -32,7 +33,9 @@ public class DownloadModelSolution extends ExerciseDownloadingCommand<Exercise> 
     @Override
     public Exercise call() throws Exception {
         Progress progress = new Progress(3);
-        Callable<byte[]> downloadingExerciseSolutionZipTask = tmcServerCommunicationTaskFactory.getDownloadingExerciseSolutionZipTask(exercise);
+        Callable<byte[]> downloadingExerciseSolutionZipTask
+                = tmcServerCommunicationTaskFactory
+                    .getDownloadingExerciseSolutionZipTask(exercise);
         byte[] zip = downloadingExerciseSolutionZipTask.call();
         extractProject(zip, exercise, progress);
         return exercise;

@@ -19,7 +19,8 @@ import java.util.Map;
 
 abstract class AbstractSubmissionCommand<T> extends Command<T> {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractSubmissionCommand.class);
+    private static final Logger logger
+            = LoggerFactory.getLogger(AbstractSubmissionCommand.class);
 
     AbstractSubmissionCommand(ProgressObserver observer) {
         super(observer);

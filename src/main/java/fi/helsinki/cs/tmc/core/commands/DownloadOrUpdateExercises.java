@@ -28,7 +28,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DownloadOrUpdateExercises extends ExerciseDownloadingCommand<List<Exercise>> {
 
-    private static final Logger logger = LoggerFactory.getLogger(DownloadOrUpdateExercises.class);
+    private static final Logger logger
+            = LoggerFactory.getLogger(DownloadOrUpdateExercises.class);
 
     private List<Exercise> exercises;
 
@@ -39,10 +40,10 @@ public class DownloadOrUpdateExercises extends ExerciseDownloadingCommand<List<E
 
     @VisibleForTesting
     DownloadOrUpdateExercises(
-        ProgressObserver observer,
-        List<Exercise> exercises,
-        TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
-        super(observer, tmcServerCommunicationTaskFactory);
+            ProgressObserver observer,
+            List<Exercise> exercises,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+            super(observer, tmcServerCommunicationTaskFactory);
         this.exercises = exercises;
     }
 
@@ -81,7 +82,8 @@ public class DownloadOrUpdateExercises extends ExerciseDownloadingCommand<List<E
             }
 
             successfullyDownloaded.add(exercise);
-            informObserver(progress.incrementAndGet(), "Downloaded exercise " + exercise.getName());
+            informObserver(progress.incrementAndGet(),
+                           "Downloaded exercise " + exercise.getName());
 
             //TODO: Update PluginState
 

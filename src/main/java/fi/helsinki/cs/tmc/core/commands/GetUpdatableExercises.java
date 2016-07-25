@@ -63,7 +63,10 @@ public class GetUpdatableExercises extends Command<GetUpdatableExercises.UpdateR
     public UpdateResult call() throws TmcCoreException {
         Course updatedCourse;
         try {
-            updatedCourse = new GetCourseDetails(observer, course, tmcServerCommunicationTaskFactory).call();
+            updatedCourse = new GetCourseDetails(
+                    observer,
+                    course,
+                    tmcServerCommunicationTaskFactory).call();
         } catch (Exception ex) {
             logger.warn("Failed to fetch exercises from server", ex);
             throw new TmcCoreException("Failed to fetch exercises from server", ex);

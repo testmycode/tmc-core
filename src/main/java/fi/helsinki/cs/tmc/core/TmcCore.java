@@ -24,16 +24,15 @@ import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.spyware.LoggableEvent;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
+import fi.helsinki.cs.tmc.langs.domain.RunResult;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 
 import com.google.common.annotations.Beta;
 
-import fi.helsinki.cs.tmc.langs.domain.RunResult;
-import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -122,7 +121,7 @@ public class TmcCore {
         return new Submit(observer, exercise);
     }
 
-    public Callable<GetUpdatableExercises.UpdateResult>getExerciseUpdates(
+    public Callable<GetUpdatableExercises.UpdateResult> getExerciseUpdates(
             ProgressObserver observer, Course course) {
         logger.info("Creating new GetUpdatableExercises command");
         return new GetUpdatableExercises(observer, course);

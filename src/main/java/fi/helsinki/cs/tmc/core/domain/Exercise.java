@@ -351,11 +351,15 @@ public class Exercise implements Serializable {
      * The exercises are same if the name and the course are the same.
      */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
 
-        Exercise exercise = (Exercise) o;
+        Exercise exercise = (Exercise) other;
 
         if (!name.equals(exercise.name)) {
             return false;

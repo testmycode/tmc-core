@@ -18,6 +18,7 @@ public class RequestCodeReview extends Command<Void> {
 
     @Override
     public Void call() throws Exception {
+        informObserver(1, "Completed (nothing was done)");
         logger.warn("Received call to unsupported action, doing nothing");
         throw new UnsupportedOperationException("Not supported before CORE MILESTONE 3");
     }

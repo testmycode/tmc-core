@@ -49,6 +49,7 @@ abstract class ExerciseDownloadingCommand<T> extends Command<T> {
 
     protected byte[] downloadExercise(Exercise exercise, Progress progress) throws Exception {
         informObserver(progress.incrementAndGet(), "Downloading exercise " + exercise.getName());
+        logger.info("Downloading exercise {}", exercise.getName());
 
         return tmcServerCommunicationTaskFactory
                 .getDownloadingExerciseZipTask(exercise)
@@ -56,15 +57,18 @@ abstract class ExerciseDownloadingCommand<T> extends Command<T> {
     }
 
     protected void extractSolution(byte[] zip, Exercise exercise, Progress progress)
-        throws TmcInterruptionException, TmcCoreException {
+            throws TmcInterruptionException, TmcCoreException {
+        logger.info("Extracting solution of exercise {}", exercise.getName());
+
         Path exerciseZipTemporaryPath = writeToTmp(zip, exercise, progress);
         Path target = exercise.getExtractionTarget(
                 TmcSettingsHolder.get().getTmcProjectDirectory());
 
-        Path target = exercise.getExtractionTarget(TmcSettingsHolder.get().getTmcProjectDirectory());
+        logger.debug("Target path for {} is {}", exercise.getName(), target);
 
         try {
             TmcLangsHolder.get().extractAndRewriteEveryhing(exerciseZipTemporaryPath, target);
+            logger.debug("Successfully extracted");
         } catch (Exception ex) {
             logger.warn(
                     "Failed to extract project from "
@@ -79,7 +83,8 @@ abstract class ExerciseDownloadingCommand<T> extends Command<T> {
     }
 
     private Path writeToTmp(byte[] zip, Exercise exercise, Progress progress)
-        throws ExerciseDownloadFailedException, TmcInterruptionException {
+            throws ExerciseDownloadFailedException, TmcInterruptionException {
+        logger.debug("Writing zip to temporary location");
         Path exerciseZipTemporaryPath;
         try {
             exerciseZipTemporaryPath = writeToTemp(zip);
@@ -87,21 +92,25 @@ abstract class ExerciseDownloadingCommand<T> extends Command<T> {
             logger.warn("Failed to write downloaded zip to disk", ex);
             throw new ExerciseDownloadFailedException(exercise, ex);
         }
+
         checkInterrupt();
 
+        logger.debug("Zip file successfully written");
         informObserver(progress.incrementAndGet(), "Extracting exercise " + exercise.getName());
+
         return exerciseZipTemporaryPath;
     }
 
     protected void extractProject(byte[] zip, Exercise exercise, Progress progress)
-        throws TmcInterruptionException, TmcCoreException {
+            throws TmcInterruptionException, TmcCoreException {
+        logger.info("Extracting project");
         Path exerciseZipTemporaryPath = writeToTmp(zip, exercise, progress);
-
         Path target = exercise
                 .getExtractionTarget(TmcSettingsHolder.get().getTmcProjectDirectory());
 
         try {
             TmcLangsHolder.get().extractProject(exerciseZipTemporaryPath, target);
+            logger.info("Successfully extracted project");
         } catch (Exception ex) {
             logger.warn(
                     "Failed to extract project from "
@@ -118,6 +127,7 @@ abstract class ExerciseDownloadingCommand<T> extends Command<T> {
     private void cleanUp(Path zip) {
         try {
             Files.deleteIfExists(zip);
+            logger.debug("Cleaned up temporary files");
         } catch (IOException ex) {
             logger.warn("Failed to delete temporary exercise zip from " + zip, ex);
         }

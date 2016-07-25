@@ -46,6 +46,9 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
      */
     @Override
     public SubmissionResult call() throws TmcCoreException {
+        logger.info("Submitting exercise {}", exercise.getName());
+        informObserver(0, "Submitting exercise to server");
+
         // TODO: Force send spyware
 
         TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse =
@@ -55,10 +58,11 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
             checkInterrupt();
             try {
                 Thread.sleep(DEFAULT_POLL_INTERVAL);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (InterruptedException ex) {
+                logger.debug("Interrupted while sleeping", ex);
             }
             try {
+                logger.debug("Checking if server is done processing submission");
                 Callable<String> submissionResultFetcher =
                         tmcServerCommunicationTaskFactory.getSubmissionFetchTask(
                                 submissionResponse.submissionUrl);
@@ -66,21 +70,30 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
                 String submissionStatus = submissionResultFetcher.call();
                 JsonElement submission = new JsonParser().parse(submissionStatus);
                 if (isProcessing(submission)) {
-                    // TODO: Update progress
+                    logger.debug("Server not done, sleeping for {}", DEFAULT_POLL_INTERVAL);
+                    informObserver(0.3, "Waiting for response from server");
                     // TODO: Replace with variable interval polling
                     Thread.sleep(DEFAULT_POLL_INTERVAL);
                 } else {
+                    logger.debug("Server done, parsing results");
+                    informObserver(0.6, "Reading submission result");
+
                     SubmissionResultParser resultParser = new SubmissionResultParser();
-                    return resultParser.parseFromJson(submissionStatus);
+                    SubmissionResult result = resultParser.parseFromJson(submissionStatus);
+
+                    logger.debug("Done parsing server response");
+                    informObserver(1, "Successfully read submission results");
+
+                    return result;
                 }
             } catch (Exception ex) {
+                informObserver(1, "Error while waiting for response from server");
                 logger.warn("Error while updating submission status from server, continuing", ex);
             }
         }
     }
 
     private boolean isProcessing(JsonElement submissionStatus) {
-
         return submissionStatus.getAsJsonObject().get("status").getAsString().equals("processing");
     }
 }

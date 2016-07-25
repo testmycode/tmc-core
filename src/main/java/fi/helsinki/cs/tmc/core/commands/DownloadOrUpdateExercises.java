@@ -51,6 +51,9 @@ public class DownloadOrUpdateExercises extends ExerciseDownloadingCommand<List<E
     public List<Exercise> call() throws TmcInterruptionException {
         List<Exercise> successfullyDownloaded = new ArrayList<>();
 
+
+        logger.info("Downloading/updating {} exercises", exercises.size());
+
         /*
          * 3 states per exercise,
          * 1) download zip
@@ -89,6 +92,9 @@ public class DownloadOrUpdateExercises extends ExerciseDownloadingCommand<List<E
 
             //TODO: Make into future / callable / something?
         }
+
+        logger.info("Successfully downloaded and extracted {} exercises",
+                successfullyDownloaded.size());
         return successfullyDownloaded;
     }
 

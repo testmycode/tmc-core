@@ -36,11 +36,18 @@ public class GetCourseDetails extends Command<Course> {
 
     @Override
     public Course call() throws TmcCoreException, URISyntaxException {
+        logger.info("Fetching course details");
         informObserver(0, "Refreshing course.");
         try {
-            return tmcServerCommunicationTaskFactory.getFullCourseInfoTask(course).call();
+            Course result = tmcServerCommunicationTaskFactory
+                                .getFullCourseInfoTask(course)
+                                .call();
+            logger.info("Successfully got course details");
+            informObserver(1, "Course refresh completed successfully");
+            return result;
         } catch (Exception ex) {
             logger.warn("Failed to get course details for course " + course.getName(), ex);
+            informObserver(1, "Failed to refresh course");
             throw new TmcCoreException("Failed to get course details", ex);
         }
     }

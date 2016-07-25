@@ -33,6 +33,8 @@ public class SendSpywareEvents extends Command<Void> {
     // TODO: test
     @Override
     public Void call() throws Exception {
+        logger.info("Sending usage data");
+        informObserver(0, "Sending usage data");
         if (currentCourse.getSpywareUrls() == null || currentCourse.getSpywareUrls().isEmpty()) {
             logger.info("Failed to send events: " + "Current course has no spyware servers set");
             throw new NoSpywareServerException("Current course has no spyware servers set");
@@ -42,6 +44,9 @@ public class SendSpywareEvents extends Command<Void> {
         URI spywareServerUri = currentCourse.getSpywareUrls().get(serverId);
 
         new TmcServerCommunicationTaskFactory().getSendEventLogJob(spywareServerUri, events).call();
+
+        logger.debug("Usage data sent");
+        informObserver(1, "Done sending usage data");
 
         return null; // Can't instantiate Void
     }

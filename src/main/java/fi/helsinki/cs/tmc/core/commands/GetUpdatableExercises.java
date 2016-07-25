@@ -61,16 +61,22 @@ public class GetUpdatableExercises extends Command<GetUpdatableExercises.UpdateR
 
     @Override
     public UpdateResult call() throws TmcCoreException {
+        logger.info("Looking for updatedable exercises");
+        informObserver(0, "Downloading course details from server");
         Course updatedCourse;
         try {
             updatedCourse = new GetCourseDetails(
-                    observer,
+                    ProgressObserver.NULL_OBSERVER,
                     course,
                     tmcServerCommunicationTaskFactory).call();
         } catch (Exception ex) {
             logger.warn("Failed to fetch exercises from server", ex);
             throw new TmcCoreException("Failed to fetch exercises from server", ex);
         }
+
+        checkInterrupt();
+        logger.debug("Parsing results");
+        informObserver(0.5, "Parsing response");
 
         List<Exercise> createExercises = new ArrayList<>();
         List<Exercise> updatedExercises = new ArrayList<>();
@@ -80,7 +86,14 @@ public class GetUpdatableExercises extends Command<GetUpdatableExercises.UpdateR
             oldExercises.put(oldExercise.getName(), oldExercise);
         }
 
-        for (Exercise newExercise : updatedCourse.getExercises()) {
+        List<Exercise> exercises = updatedCourse.getExercises();
+        int totalExercises = exercises.size();
+        for (int i = 0; i < totalExercises; i++) {
+            Exercise newExercise = exercises.get(i);
+
+            checkInterrupt();
+            informObserver(totalExercises + i, totalExercises * 2, "Parsing downloaded data");
+
             Exercise oldExercise = oldExercises.get(newExercise.getName());
             if (oldExercise == null) {
                 createExercises.add(newExercise);
@@ -88,6 +101,9 @@ public class GetUpdatableExercises extends Command<GetUpdatableExercises.UpdateR
                 updatedExercises.add(newExercise);
             }
         }
+
+        logger.debug("Parsing done");
+        informObserver(1, "Done checking for updatable exercises");
 
         return new UpdateResult(createExercises, updatedExercises);
     }

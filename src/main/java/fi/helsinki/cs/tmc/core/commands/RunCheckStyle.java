@@ -29,10 +29,21 @@ public class RunCheckStyle extends Command<ValidationResult> {
 
     @Override
     public ValidationResult call() throws TmcCoreException {
+        logger.info("Running code style validation for exercise {}", exercise.getName());
+        informObserver(0, "Running code style validation");
+
         Path path = exercise.getExerciseDirectory(TmcSettingsHolder.get().getTmcProjectDirectory());
+        logger.debug("Determined exercise path: {}", path);
+
         try {
-            return TmcLangsHolder.get().runCheckCodeStyle(path, settings.getLocale());
+            logger.debug("Calling TMC langs");
+            ValidationResult result = TmcLangsHolder.get()
+                                            .runCheckCodeStyle(path, settings.getLocale());
+            logger.debug("Received validation result");
+            informObserver(1, "Finished running code style validation");
+            return result;
         } catch (NoLanguagePluginFoundException ex) {
+            informObserver(1, "Failed to run code style validation");
             logger.warn("Failed to run code style validations on target path", ex);
             throw new TmcCoreException("Unable to run code style validations on target path", ex);
         }

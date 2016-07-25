@@ -14,6 +14,10 @@ import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.spyware.EventSendBuffer;
+import fi.helsinki.cs.tmc.spyware.EventStore;
+import fi.helsinki.cs.tmc.spyware.LoggableEvent;
+import fi.helsinki.cs.tmc.spyware.SpywareSettings;
 
 import com.google.common.base.Optional;
 

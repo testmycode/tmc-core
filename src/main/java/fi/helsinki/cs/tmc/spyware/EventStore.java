@@ -1,4 +1,4 @@
-package fi.helsinki.cs.tmc.core.spyware;
+package fi.helsinki.cs.tmc.spyware;
 
 import fi.helsinki.cs.tmc.core.persistance.ConfigFileIo;
 import fi.helsinki.cs.tmc.core.utilities.ByteArrayGsonSerializer;

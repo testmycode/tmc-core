@@ -3,8 +3,8 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import fi.helsinki.cs.tmc.core.spyware.LoggableEvent;
-import fi.helsinki.cs.tmc.core.spyware.NoSpywareServerException;
+import fi.helsinki.cs.tmc.spyware.LoggableEvent;
+import fi.helsinki.cs.tmc.spyware.NoSpywareServerException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

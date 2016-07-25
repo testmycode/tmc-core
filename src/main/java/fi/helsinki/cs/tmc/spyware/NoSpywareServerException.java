@@ -1,4 +1,4 @@
-package fi.helsinki.cs.tmc.core.spyware;
+package fi.helsinki.cs.tmc.spyware;
 
 public class NoSpywareServerException extends Exception {
 

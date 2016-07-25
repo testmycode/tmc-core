@@ -22,7 +22,7 @@ import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
-import fi.helsinki.cs.tmc.core.spyware.LoggableEvent;
+import fi.helsinki.cs.tmc.spyware.LoggableEvent;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;

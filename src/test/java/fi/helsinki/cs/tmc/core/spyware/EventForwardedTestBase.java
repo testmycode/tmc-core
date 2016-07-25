@@ -2,6 +2,9 @@ package fi.helsinki.cs.tmc.core.spyware;
 
 import static org.junit.Assert.assertArrayEquals;
 
+import fi.helsinki.cs.tmc.spyware.EventReceiver;
+import fi.helsinki.cs.tmc.spyware.LoggableEvent;
+
 import org.junit.Before;
 
 import java.io.IOException;

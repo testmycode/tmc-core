@@ -1,4 +1,4 @@
-package fi.helsinki.cs.tmc.core.spyware;
+package fi.helsinki.cs.tmc.spyware;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -51,6 +51,13 @@ public class EventSendBuffer implements EventReceiver {
     private int autosendThreshold = DEFAULT_AUTOSEND_THREHSOLD;
     private int maxEventsPerSend = DEFAULT_MAX_EVENTS_PER_SEND; // Servers have POST size limits
     private Cooldown autosendCooldown;
+
+
+    public EventSendBuffer(
+        SpywareSettings settings,
+        EventStore eventStore) {
+        this(settings,  new TmcServerCommunicationTaskFactory(), eventStore);
+    }
 
     public EventSendBuffer(
             SpywareSettings settings,

@@ -1,5 +1,9 @@
 package fi.helsinki.cs.tmc.core.spyware;
 
+import fi.helsinki.cs.tmc.spyware.EventDeduplicater;
+import fi.helsinki.cs.tmc.spyware.EventReceiver;
+import fi.helsinki.cs.tmc.spyware.LoggableEvent;
+
 import org.junit.Before;
 import org.junit.Test;
 

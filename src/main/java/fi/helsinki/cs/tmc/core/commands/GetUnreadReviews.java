@@ -26,6 +26,7 @@ public class GetUnreadReviews extends Command<Void> {
      */
     @Override
     public Void call() throws TmcCoreException {
+        informObserver(1, "Completed (nothing was done)");
         logger.warn("Received call to unsupported action, doing nothing");
         throw new UnsupportedOperationException("Not supported before CORE MILESTONE 2");
     }

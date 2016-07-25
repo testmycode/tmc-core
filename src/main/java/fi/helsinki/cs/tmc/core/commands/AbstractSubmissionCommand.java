@@ -19,7 +19,8 @@ import java.util.Map;
 
 abstract class AbstractSubmissionCommand<T> extends Command<T> {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractSubmissionCommand.class);
+    private static final Logger logger
+            = LoggerFactory.getLogger(AbstractSubmissionCommand.class);
 
     AbstractSubmissionCommand(ProgressObserver observer) {
         super(observer);
@@ -38,21 +39,39 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
         byte[] zippedProject;
 
         informObserver(0, "Zipping project");
+
         Path tmcRoot = TmcSettingsHolder.get().getTmcProjectDirectory();
         Path projectPath = exercise.getExerciseDirectory(tmcRoot);
+
+        checkInterrupt();
+        logger.info("Submitting project from path {}", projectPath);
+
         try {
             zippedProject = TmcLangsHolder.get().compressProject(projectPath);
         } catch (IOException | NoLanguagePluginFoundException ex) {
+            informObserver(1, "Failed to compress project");
             logger.warn("Failed to compress project", ex);
             throw new TmcCoreException("Failed to compress project", ex);
         }
+
         extraParams.put("error_msg_locale", TmcSettingsHolder.get().getLocale().toString());
+
+        checkInterrupt();
         informObserver(0.5, "Submitting project");
+        logger.info("Submitting project to server");
+
         try {
-            return tmcServerCommunicationTaskFactory
-                    .getSubmittingExerciseTask(exercise, zippedProject, extraParams)
-                    .call();
+            TmcServerCommunicationTaskFactory.SubmissionResponse response
+                    = tmcServerCommunicationTaskFactory
+                            .getSubmittingExerciseTask(exercise, zippedProject, extraParams)
+                            .call();
+
+            informObserver(1, "Submission successfully completed");
+            logger.info("Submission successfully completed");
+
+            return response;
         } catch (Exception ex) {
+            informObserver(1, "Failed to submit exercise");
             logger.warn("Failed to submit exercise", ex);
             throw new TmcCoreException("Failed to submit exercise", ex);
         }

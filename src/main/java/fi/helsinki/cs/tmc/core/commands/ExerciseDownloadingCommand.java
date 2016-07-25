@@ -23,7 +23,8 @@ import java.nio.file.Path;
 
 abstract class ExerciseDownloadingCommand<T> extends Command<T> {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExerciseDownloadingCommand.class);
+    private static final Logger logger
+            = LoggerFactory.getLogger(ExerciseDownloadingCommand.class);
 
     public ExerciseDownloadingCommand(ProgressObserver observer) {
         super(observer);
@@ -33,42 +34,57 @@ abstract class ExerciseDownloadingCommand<T> extends Command<T> {
         super(settings, observer);
     }
 
-    public ExerciseDownloadingCommand(ProgressObserver observer, TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+    public ExerciseDownloadingCommand(
+            ProgressObserver observer,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
         super(observer, tmcServerCommunicationTaskFactory);
     }
 
-    public ExerciseDownloadingCommand(TmcSettings settings, ProgressObserver observer, TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+    public ExerciseDownloadingCommand(
+                TmcSettings settings,
+                ProgressObserver observer,
+                TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
         super(settings, observer, tmcServerCommunicationTaskFactory);
     }
 
     protected byte[] downloadExercise(Exercise exercise, Progress progress) throws Exception {
         informObserver(progress.incrementAndGet(), "Downloading exercise " + exercise.getName());
+        logger.info("Downloading exercise {}", exercise.getName());
 
-        return tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
+        return tmcServerCommunicationTaskFactory
+                .getDownloadingExerciseZipTask(exercise)
+                .call();
     }
 
-    protected void extractSolution(byte[] zip, Exercise exercise, Progress progress) throws
-        TmcInterruptionException, TmcCoreException {
-        Path exerciseZipTemporaryPath = writeToTmp(zip, exercise, progress);
+    protected void extractSolution(byte[] zip, Exercise exercise, Progress progress)
+            throws TmcInterruptionException, TmcCoreException {
+        logger.info("Extracting solution of exercise {}", exercise.getName());
 
-        Path target = exercise.getExtractionTarget(TmcSettingsHolder.get().getTmcProjectDirectory());
+        Path exerciseZipTemporaryPath = writeToTmp(zip, exercise, progress);
+        Path target = exercise.getExtractionTarget(
+                TmcSettingsHolder.get().getTmcProjectDirectory());
+
+        logger.debug("Target path for {} is {}", exercise.getName(), target);
 
         try {
             TmcLangsHolder.get().extractAndRewriteEveryhing(exerciseZipTemporaryPath, target);
+            logger.debug("Successfully extracted");
         } catch (Exception ex) {
             logger.warn(
-                "Failed to extract project from "
-                    + exerciseZipTemporaryPath
-                    + " to "
-                    + target,
-                ex);
+                    "Failed to extract project from "
+                        + exerciseZipTemporaryPath
+                        + " to "
+                        + target,
+                    ex);
             throw new ExtractingExericeFailedException(exercise, ex);
         } finally {
             cleanUp(exerciseZipTemporaryPath);
         }
     }
 
-    private Path writeToTmp(byte[] zip, Exercise exercise, Progress progress) throws ExerciseDownloadFailedException, TmcInterruptionException {
+    private Path writeToTmp(byte[] zip, Exercise exercise, Progress progress)
+            throws ExerciseDownloadFailedException, TmcInterruptionException {
+        logger.debug("Writing zip to temporary location");
         Path exerciseZipTemporaryPath;
         try {
             exerciseZipTemporaryPath = writeToTemp(zip);
@@ -76,27 +92,32 @@ abstract class ExerciseDownloadingCommand<T> extends Command<T> {
             logger.warn("Failed to write downloaded zip to disk", ex);
             throw new ExerciseDownloadFailedException(exercise, ex);
         }
+
         checkInterrupt();
 
+        logger.debug("Zip file successfully written");
         informObserver(progress.incrementAndGet(), "Extracting exercise " + exercise.getName());
+
         return exerciseZipTemporaryPath;
     }
 
-    protected void extractProject(byte[] zip, Exercise exercise, Progress progress) throws
-        TmcInterruptionException, TmcCoreException{
+    protected void extractProject(byte[] zip, Exercise exercise, Progress progress)
+            throws TmcInterruptionException, TmcCoreException {
+        logger.info("Extracting project");
         Path exerciseZipTemporaryPath = writeToTmp(zip, exercise, progress);
-
-        Path target = exercise.getExtractionTarget(TmcSettingsHolder.get().getTmcProjectDirectory());
+        Path target = exercise
+                .getExtractionTarget(TmcSettingsHolder.get().getTmcProjectDirectory());
 
         try {
             TmcLangsHolder.get().extractProject(exerciseZipTemporaryPath, target);
+            logger.info("Successfully extracted project");
         } catch (Exception ex) {
             logger.warn(
-                "Failed to extract project from "
-                    + exerciseZipTemporaryPath
-                    + " to "
-                    + target,
-                ex);
+                    "Failed to extract project from "
+                        + exerciseZipTemporaryPath
+                        + " to "
+                        + target,
+                    ex);
             throw new ExtractingExericeFailedException(exercise, ex);
         } finally {
             cleanUp(exerciseZipTemporaryPath);
@@ -106,6 +127,7 @@ abstract class ExerciseDownloadingCommand<T> extends Command<T> {
     private void cleanUp(Path zip) {
         try {
             Files.deleteIfExists(zip);
+            logger.debug("Cleaned up temporary files");
         } catch (IOException ex) {
             logger.warn("Failed to delete temporary exercise zip from " + zip, ex);
         }

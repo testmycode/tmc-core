@@ -28,7 +28,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class DownloadOrUpdateExercises extends ExerciseDownloadingCommand<List<Exercise>> {
 
-    private static final Logger logger = LoggerFactory.getLogger(DownloadOrUpdateExercises.class);
+    private static final Logger logger
+            = LoggerFactory.getLogger(DownloadOrUpdateExercises.class);
 
     private List<Exercise> exercises;
 
@@ -39,16 +40,19 @@ public class DownloadOrUpdateExercises extends ExerciseDownloadingCommand<List<E
 
     @VisibleForTesting
     DownloadOrUpdateExercises(
-        ProgressObserver observer,
-        List<Exercise> exercises,
-        TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
-        super(observer, tmcServerCommunicationTaskFactory);
+            ProgressObserver observer,
+            List<Exercise> exercises,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+            super(observer, tmcServerCommunicationTaskFactory);
         this.exercises = exercises;
     }
 
     @Override
     public List<Exercise> call() throws TmcInterruptionException {
         List<Exercise> successfullyDownloaded = new ArrayList<>();
+
+
+        logger.info("Downloading/updating {} exercises", exercises.size());
 
         /*
          * 3 states per exercise,
@@ -81,12 +85,16 @@ public class DownloadOrUpdateExercises extends ExerciseDownloadingCommand<List<E
             }
 
             successfullyDownloaded.add(exercise);
-            informObserver(progress.incrementAndGet(), "Downloaded exercise " + exercise.getName());
+            informObserver(progress.incrementAndGet(),
+                           "Downloaded exercise " + exercise.getName());
 
             //TODO: Update PluginState
 
             //TODO: Make into future / callable / something?
         }
+
+        logger.info("Successfully downloaded and extracted {} exercises",
+                successfullyDownloaded.size());
         return successfullyDownloaded;
     }
 

@@ -102,7 +102,8 @@ public class GetUpdatableExercisesTest {
         GetUpdatableExercises.UpdateResult updateResults = command.call();
 
         assertThat(updateResults.getNewExercises()).containsExactly(newRefreshedExercise);
-        assertThat(updateResults.getUpdatedExercises()).containsExactly(updateableRefreshedExercise);
+        assertThat(updateResults.getUpdatedExercises())
+                .containsExactly(updateableRefreshedExercise);
     }
 
     @Test

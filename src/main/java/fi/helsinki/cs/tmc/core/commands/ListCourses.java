@@ -33,10 +33,18 @@ public class ListCourses extends Command<List<Course>> {
 
     @Override
     public List<Course> call() throws TmcCoreException {
+        logger.info("Retrieving course list");
+        informObserver(0, "Retrieving course list");
         try {
-            return tmcServerCommunicationTaskFactory.getDownloadingCourseListTask().call();
+            List<Course> result = tmcServerCommunicationTaskFactory
+                                        .getDownloadingCourseListTask()
+                                        .call();
+            informObserver(1, "Successfully fetched course list");
+            logger.debug("Successfully fetched course list");
+            return result;
         } catch (Exception ex) {
             logger.warn("Failed to fetch courses from the server", ex);
+            informObserver(1, "Failed to fetch courses from the server");
             throw new TmcCoreException("Failed to fetch courses from the server", ex);
         }
     }

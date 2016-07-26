@@ -43,7 +43,7 @@ public class DownloadModelSolution extends ExerciseDownloadingCommand<Exercise> 
 
         checkInterrupt();
 
-        extractProject(zip, exercise, progress);
+        extractSolution(zip, exercise, progress);
         return exercise;
     }
 }

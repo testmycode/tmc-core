@@ -59,7 +59,6 @@ abstract class ExerciseDownloadingCommand<T> extends Command<T> {
     protected void extractSolution(byte[] zip, Exercise exercise, Progress progress)
             throws TmcInterruptionException, TmcCoreException {
         logger.info("Extracting solution of exercise {}", exercise.getName());
-
         Path exerciseZipTemporaryPath = writeToTmp(zip, exercise, progress);
         Path target = exercise.getExtractionTarget(
                 TmcSettingsHolder.get().getTmcProjectDirectory());

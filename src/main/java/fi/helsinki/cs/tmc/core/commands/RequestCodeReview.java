@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * A {@link Command} for requesting a code review for code with a message.
  */
-public class RequestCodeReview extends AbstractSubmissionCommand<Void> {
+public class RequestCodeReview extends AbstractSubmissionCommand<TmcServerCommunicationTaskFactory.SubmissionResponse> {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestCodeReview.class);
     private final Exercise exercise;
@@ -27,7 +27,7 @@ public class RequestCodeReview extends AbstractSubmissionCommand<Void> {
     }
 
     @Override
-    public Void call() throws Exception {
+    public TmcServerCommunicationTaskFactory.SubmissionResponse call() throws Exception {
         logger.info("Creating a TMC paste");
         informObserver(0, "Requesting review");
 
@@ -44,6 +44,6 @@ public class RequestCodeReview extends AbstractSubmissionCommand<Void> {
         logger.debug("Successfully requested review");
         informObserver(1, "Successfully requested review");
 
-        return null;
+        return submissionResponse;
     }
 }

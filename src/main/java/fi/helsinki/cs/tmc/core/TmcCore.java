@@ -15,6 +15,7 @@ import fi.helsinki.cs.tmc.core.commands.RunTests;
 import fi.helsinki.cs.tmc.core.commands.SendFeedback;
 import fi.helsinki.cs.tmc.core.commands.SendSpywareEvents;
 import fi.helsinki.cs.tmc.core.commands.Submit;
+import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
@@ -134,24 +135,19 @@ public class TmcCore {
         return new MarkReviewAsRead(observer, review);
     }
 
-    /**
-     * NOT IMPLEMENTED!
-     *
-     * <p>TARGET: CORE MILESTONE 2.
-     */
-    public Callable<Void> getUnreadReviews(ProgressObserver observer) {
+    public Callable<List<Review>> getUnreadReviews(ProgressObserver observer, Course course) {
         logger.info("Creating new GetUnreadReviews command");
-        return new GetUnreadReviews(observer);
+        return new GetUnreadReviews(observer, course);
     }
 
-    /**
-     * NOT IMPLEMENTED!
-     *
-     * <p>TARGET: CORE MILESTONE 2.
-     */
-    public Callable<Void> requestCodeReview(ProgressObserver observer, Exercise exercise, String messageForReviewer) {
+    public Callable<TmcServerCommunicationTaskFactory.SubmissionResponse> requestCodeReview(ProgressObserver observer, Exercise exercise, String messageForReviewer) {
         logger.info("Creating new RequestCodeReview command");
         return new RequestCodeReview(observer, exercise, messageForReviewer);
+    }
+
+    public Callable<Exercise> downloadModelSolution(ProgressObserver observer, Exercise exercise) {
+        logger.info("Creating new DownloadModelSolution command");
+        return new DownloadModelSolution(observer, exercise);
     }
 
     /**
@@ -164,8 +160,4 @@ public class TmcCore {
         return new DownloadCompletedExercises(observer);
     }
 
-    public Callable<Exercise> downloadModelSolution(ProgressObserver observer, Exercise exercise) {
-        logger.info("Creating new DownloadModelSolution command");
-        return new DownloadModelSolution(observer, exercise);
-    }
 }

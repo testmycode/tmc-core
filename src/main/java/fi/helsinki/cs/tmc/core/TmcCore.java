@@ -7,6 +7,7 @@ import fi.helsinki.cs.tmc.core.commands.GetCourseDetails;
 import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
 import fi.helsinki.cs.tmc.core.commands.GetUpdatableExercises;
 import fi.helsinki.cs.tmc.core.commands.ListCourses;
+import fi.helsinki.cs.tmc.core.commands.MarkReviewAsRead;
 import fi.helsinki.cs.tmc.core.commands.PasteWithComment;
 import fi.helsinki.cs.tmc.core.commands.RequestCodeReview;
 import fi.helsinki.cs.tmc.core.commands.RunCheckStyle;
@@ -18,6 +19,7 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
@@ -127,6 +129,11 @@ public class TmcCore {
         return new GetUpdatableExercises(observer, course);
     }
 
+    public Callable<Void> markReviewAsRead(ProgressObserver observer, Review review) {
+        logger.info("Creating new MarkReviewAsRead command");
+        return new MarkReviewAsRead(observer, review);
+    }
+
     /**
      * NOT IMPLEMENTED!
      *
@@ -142,9 +149,9 @@ public class TmcCore {
      *
      * <p>TARGET: CORE MILESTONE 2.
      */
-    public Callable<Void> requestCodeReview(ProgressObserver observer) {
+    public Callable<Void> requestCodeReview(ProgressObserver observer, Exercise exercise, String messageForReviewer) {
         logger.info("Creating new RequestCodeReview command");
-        return new RequestCodeReview(observer);
+        return new RequestCodeReview(observer, exercise, messageForReviewer);
     }
 
     /**

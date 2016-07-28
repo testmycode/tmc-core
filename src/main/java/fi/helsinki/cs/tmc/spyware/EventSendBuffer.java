@@ -52,11 +52,8 @@ public class EventSendBuffer implements EventReceiver {
     private int maxEventsPerSend = DEFAULT_MAX_EVENTS_PER_SEND; // Servers have POST size limits
     private Cooldown autosendCooldown;
 
-
-    public EventSendBuffer(
-        SpywareSettings settings,
-        EventStore eventStore) {
-        this(settings,  new TmcServerCommunicationTaskFactory(), eventStore);
+    public EventSendBuffer(SpywareSettings settings, EventStore eventStore) {
+        this(settings, new TmcServerCommunicationTaskFactory(), eventStore);
     }
 
     public EventSendBuffer(

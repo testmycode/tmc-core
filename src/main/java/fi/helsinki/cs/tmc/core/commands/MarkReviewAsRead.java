@@ -7,9 +7,7 @@ import fi.helsinki.cs.tmc.core.domain.Review;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
-public class MarkReviewAsRead extends Command<Void>  {
-
+public class MarkReviewAsRead extends Command<Void> {
 
     private static final Logger logger = LoggerFactory.getLogger(MarkReviewAsRead.class);
 
@@ -21,9 +19,9 @@ public class MarkReviewAsRead extends Command<Void>  {
     }
 
     MarkReviewAsRead(
-        ProgressObserver observer,
-        Review review,
-        TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+            ProgressObserver observer,
+            Review review,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
         super(observer, tmcServerCommunicationTaskFactory);
         this.review = review;
     }

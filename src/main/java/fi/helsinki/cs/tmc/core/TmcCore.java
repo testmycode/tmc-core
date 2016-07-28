@@ -25,10 +25,10 @@ import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
-import fi.helsinki.cs.tmc.spyware.LoggableEvent;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
+import fi.helsinki.cs.tmc.spyware.LoggableEvent;
 
 import com.google.common.annotations.Beta;
 
@@ -65,9 +65,7 @@ public class TmcCore {
 
     // TODO: remember to remind to instantiate Settings and Langs holders...
     @Beta
-    public TmcCore() {
-
-    }
+    public TmcCore() {}
 
     public TmcCore(TmcSettings settings, TaskExecutor tmcLangs) {
         TmcSettingsHolder.set(settings);
@@ -140,7 +138,8 @@ public class TmcCore {
         return new GetUnreadReviews(observer, course);
     }
 
-    public Callable<TmcServerCommunicationTaskFactory.SubmissionResponse> requestCodeReview(ProgressObserver observer, Exercise exercise, String messageForReviewer) {
+    public Callable<TmcServerCommunicationTaskFactory.SubmissionResponse> requestCodeReview(
+            ProgressObserver observer, Exercise exercise, String messageForReviewer) {
         logger.info("Creating new RequestCodeReview command");
         return new RequestCodeReview(observer, exercise, messageForReviewer);
     }
@@ -159,5 +158,4 @@ public class TmcCore {
         logger.info("Creating new DownloadCompletedExercises command");
         return new DownloadCompletedExercises(observer);
     }
-
 }

@@ -14,7 +14,8 @@ import java.util.Map;
 /**
  * A {@link Command} for requesting a code review for code with a message.
  */
-public class RequestCodeReview extends AbstractSubmissionCommand<TmcServerCommunicationTaskFactory.SubmissionResponse> {
+public class RequestCodeReview
+        extends AbstractSubmissionCommand<TmcServerCommunicationTaskFactory.SubmissionResponse> {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestCodeReview.class);
     private final Exercise exercise;
@@ -39,7 +40,7 @@ public class RequestCodeReview extends AbstractSubmissionCommand<TmcServerCommun
         }
 
         TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse =
-            submitToServer(exercise, extraParams);
+                submitToServer(exercise, extraParams);
 
         logger.debug("Successfully requested review");
         informObserver(1, "Successfully requested review");

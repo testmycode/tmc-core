@@ -35,9 +35,10 @@ public class GetUnreadReviews extends Command<List<Review>> {
     public List<Review> call() throws Exception {
         logger.info("Checking for new code reviews");
         informObserver(0, "Checking for new reviews");
-        Callable<List<Review>> a = tmcServerCommunicationTaskFactory.getDownloadingReviewListTask(course);
+        Callable<List<Review>> downloadReviews =
+                tmcServerCommunicationTaskFactory.getDownloadingReviewListTask(course);
 
-        List<Review> reviews = a.call();
+        List<Review> reviews = downloadReviews.call();
 
         informObserver(1, "Done checking for new reviews");
         logger.info("Checking for new reviews done");

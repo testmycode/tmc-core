@@ -9,7 +9,7 @@ import com.google.common.annotations.Beta;
  */
 public abstract class ProgressObserver {
 
-    public static class NullProgressObserver extends ProgressObserver {
+    public static final ProgressObserver NULL_OBSERVER = new ProgressObserver() {
 
         @Override
         public void progress(long id, String progressMessage) {
@@ -30,9 +30,7 @@ public abstract class ProgressObserver {
         public void end(long id) {
             // NOP
         }
-    }
-
-    public static final ProgressObserver NULL_OBSERVER = new NullProgressObserver();
+    };
 
     /**
      * Tells user-interface that some progress is done.

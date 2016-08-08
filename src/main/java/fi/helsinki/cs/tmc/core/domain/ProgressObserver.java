@@ -9,7 +9,7 @@ import com.google.common.annotations.Beta;
  */
 public abstract class ProgressObserver {
 
-    private static class NullProgressObserver extends ProgressObserver {
+    public static class NullProgressObserver extends ProgressObserver {
 
         @Override
         public void progress(long id, String progressMessage) {

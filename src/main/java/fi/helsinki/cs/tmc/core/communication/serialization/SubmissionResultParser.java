@@ -4,6 +4,9 @@ import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.stylerunner.validation.CheckstyleResult;
 import fi.helsinki.cs.tmc.testrunner.StackTraceSerializer;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.reflect.TypeParameter;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
@@ -17,7 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
 
 public class SubmissionResultParser {
 
@@ -36,8 +41,10 @@ public class SubmissionResultParser {
                     new GsonBuilder()
                             .registerTypeAdapter(
                                     SubmissionResult.Status.class, new StatusDeserializer())
+                            // TODO: is this needed anymore?
                             .registerTypeAdapter(
                                     StackTraceElement.class, new StackTraceSerializer())
+                            .registerTypeAdapter(ImmutableList.class, new ImmutableListJsonDeserializer())
                             .create();
 
             SubmissionResult result = gson.fromJson(json, SubmissionResult.class);
@@ -77,6 +84,21 @@ public class SubmissionResultParser {
                 logger.warn("Attempted to parse unknown submission status " + str);
                 throw new JsonParseException("Unknown submission status: " + str);
             }
+        }
+    }
+
+    private class ImmutableListJsonDeserializer implements JsonDeserializer<ImmutableList<?>> {
+        @Override
+        public ImmutableList<?> deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
+            final Type[] typeArguments = ((ParameterizedType) type).getActualTypeArguments();
+            final Type parametrizedType = listOf(typeArguments[0]).getType();
+            final List<?> list = context.deserialize(json, parametrizedType);
+            return ImmutableList.copyOf(list);
+        }
+
+        private <E> TypeToken<List<E>> listOf(final Type arg) {
+            return new TypeToken<List<E>>() {}
+                .where(new TypeParameter<E>() {}, (TypeToken<E>) TypeToken.of(arg));
         }
     }
 }

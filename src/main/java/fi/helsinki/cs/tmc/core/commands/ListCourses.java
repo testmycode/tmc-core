@@ -43,7 +43,7 @@ public class ListCourses extends Command<List<Course>> {
             logger.debug("Successfully fetched course list");
             return result;
         } catch (Exception ex) {
-            logger.warn("Failed to fetch courses from the server", ex);
+            logger.info("Failed to fetch courses from the server", ex);
             informObserver(1, "Failed to fetch courses from the server");
             throw new TmcCoreException("Failed to fetch courses from the server", ex);
         }

@@ -2,8 +2,10 @@ package fi.helsinki.cs.tmc.core.communication.serialization;
 
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.stylerunner.validation.CheckstyleResult;
+import fi.helsinki.cs.tmc.testrunner.CaughtException;
 import fi.helsinki.cs.tmc.testrunner.StackTraceSerializer;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
@@ -90,10 +92,25 @@ public class SubmissionResultParser {
     private class ImmutableListJsonDeserializer implements JsonDeserializer<ImmutableList<?>> {
         @Override
         public ImmutableList<?> deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
-            final Type[] typeArguments = ((ParameterizedType) type).getActualTypeArguments();
-            final Type parametrizedType = listOf(typeArguments[0]).getType();
-            final List<?> list = context.deserialize(json, parametrizedType);
-            return ImmutableList.copyOf(list);
+            // This might really be a Java Exception / stack trace element list :D but of objects
+            if (json.isJsonObject()) {
+                Gson gson =
+                    new GsonBuilder()
+                        // TODO: is this needed anymore?
+                        .registerTypeAdapter(
+                            StackTraceElement.class, new StackTraceSerializer())
+                        .create();
+
+                CaughtException result = gson.fromJson(json, CaughtException.class);
+                return ImmutableList.of(Splitter.on("\n").splitToList(result.toString()));
+            } else if (json.isJsonArray()) {
+                final Type[] typeArguments = ((ParameterizedType) type).getActualTypeArguments();
+                final Type parametrizedType = listOf(typeArguments[0]).getType();
+                final List<?> list = context.deserialize(json, parametrizedType);
+                return ImmutableList.copyOf(list);
+            } else {
+                throw new JsonParseException("What");
+            }
         }
 
         private <E> TypeToken<List<E>> listOf(final Type arg) {

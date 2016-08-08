@@ -1,7 +1,13 @@
 package fi.helsinki.cs.tmc.core.utils;
 
+import com.google.common.base.Joiner;
+import com.google.common.io.Files;
+
+import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -31,5 +37,11 @@ public final class TestUtils {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String readJsonFile(Class<?> clazz, String filename) throws IOException {
+        File file = getResource(clazz, "/json/" + filename).toFile();
+        System.out.println(file);
+        return Joiner.on("\n").join(Files.readLines(file, Charset.forName("utf-8")));
     }
 }

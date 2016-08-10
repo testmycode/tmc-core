@@ -3,7 +3,7 @@
 
     <groupId>fi.helsinki.cs.tmc</groupId>
     <artifactId>core</artifactId>
-    <version>0.8.2-SNAPSHOT</version>
+    <version>0.8.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>tmc-core</name>
     <url>http://testmycode.net</url>
@@ -89,6 +89,18 @@
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -254,7 +266,7 @@
         <dependency>
             <groupId>fi.helsinki.cs.tmc</groupId>
             <artifactId>tmc-langs-util</artifactId>
-            <version>0.5.2-SNAPSHOT</version>
+            <version>0.5.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>

@@ -46,7 +46,8 @@ public class SubmissionResultParser {
                             // TODO: is this needed anymore?
                             .registerTypeAdapter(
                                     StackTraceElement.class, new StackTraceSerializer())
-                            .registerTypeAdapter(ImmutableList.class, new ImmutableListJsonDeserializer())
+                            .registerTypeAdapter(
+                                    ImmutableList.class, new ImmutableListJsonDeserializer())
                             .create();
 
             SubmissionResult result = gson.fromJson(json, SubmissionResult.class);
@@ -91,15 +92,17 @@ public class SubmissionResultParser {
 
     private class ImmutableListJsonDeserializer implements JsonDeserializer<ImmutableList<?>> {
         @Override
-        public ImmutableList<?> deserialize(JsonElement json, Type type, JsonDeserializationContext context) throws JsonParseException {
+        public ImmutableList<?> deserialize(
+                JsonElement json, Type type, JsonDeserializationContext context)
+                throws JsonParseException {
             // This might really be a Java Exception / stack trace element list :D but of objects
             if (json.isJsonObject()) {
                 Gson gson =
-                    new GsonBuilder()
-                        // TODO: is this needed anymore?
-                        .registerTypeAdapter(
-                            StackTraceElement.class, new StackTraceSerializer())
-                        .create();
+                        new GsonBuilder()
+                                // TODO: is this needed anymore?
+                                .registerTypeAdapter(
+                                        StackTraceElement.class, new StackTraceSerializer())
+                                .create();
 
                 CaughtException result = gson.fromJson(json, CaughtException.class);
                 return ImmutableList.of(Splitter.on("\n").splitToList(result.toString()));
@@ -114,8 +117,8 @@ public class SubmissionResultParser {
         }
 
         private <E> TypeToken<List<E>> listOf(final Type arg) {
-            return new TypeToken<List<E>>() {}
-                .where(new TypeParameter<E>() {}, (TypeToken<E>) TypeToken.of(arg));
+            return new TypeToken<List<E>>() {}.where(
+                    new TypeParameter<E>() {}, (TypeToken<E>) TypeToken.of(arg));
         }
     }
 }

@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SubmissionResultParser {
@@ -105,7 +106,17 @@ public class SubmissionResultParser {
                                 .create();
 
                 CaughtException result = gson.fromJson(json, CaughtException.class);
-                return ImmutableList.of(Splitter.on("\n").splitToList(result.toString()));
+
+
+                List<String> exception = new ArrayList<>();
+
+                if (result.message != null) {
+                    exception.add(result.message);
+                }
+                for (StackTraceElement stackTrace : result.stackTrace) {
+                    exception.add(stackTrace.toString());
+                }
+                return ImmutableList.copyOf(exception);
             } else if (json.isJsonArray()) {
                 final Type[] typeArguments = ((ParameterizedType) type).getActualTypeArguments();
                 final Type parametrizedType = listOf(typeArguments[0]).getType();

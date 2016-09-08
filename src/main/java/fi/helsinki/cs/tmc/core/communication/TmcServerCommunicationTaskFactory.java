@@ -79,7 +79,14 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     private URI getCourseListUrl() {
-        return addApiCallQueryParameters(URI.create(settings.getServerAddress() + "/courses.json"));
+        String serverAddress = settings.getServerAddress();
+        String url;
+        if (serverAddress.endsWith("/")) {
+            url = settings.getServerAddress() + "courses.json";
+        } else {
+            url = settings.getServerAddress() + "/courses.json";
+        }
+        return addApiCallQueryParameters(URI.create(url));
     }
 
     private URI addApiCallQueryParameters(URI url) {

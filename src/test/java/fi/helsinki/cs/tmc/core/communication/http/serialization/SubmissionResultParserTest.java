@@ -52,9 +52,9 @@ public class SubmissionResultParserTest {
         List<TestResult> tests = result.getTestCases();
         assertThat(tests.size()).isEqualTo(1);
         TestResult test = tests.get(0);
-        assertThat(test.getException()).isInstanceOf(ImmutableList.class);
-        assertThat(test.getException().size()).isEqualTo(27);
-        for (String str : test.getException()){
+        assertThat(test.getDetailedMessage()).isInstanceOf(ImmutableList.class);
+        assertThat(test.getDetailedMessage().size()).isEqualTo(26);
+        for (String str : test.getDetailedMessage()){
             assertThat(str).isInstanceOf(String.class);
         }
     }

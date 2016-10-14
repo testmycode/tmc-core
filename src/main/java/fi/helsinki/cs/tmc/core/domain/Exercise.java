@@ -20,8 +20,7 @@ import java.util.Date;
 public class Exercise implements Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(Exercise.class);
-    private static final DateFormat DATE_FORMAT =
-            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSX";
 
     private int id;
     private String name;
@@ -138,8 +137,9 @@ public class Exercise implements Serializable {
         if (Strings.isNullOrEmpty(this.getDeadline())) {
             return null;
         }
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
         try {
-            return DATE_FORMAT.parse(this.getDeadline());
+            return dateFormatter.parse(this.getDeadline());
         } catch (ParseException ex) {
             logger.warn("Failed to parse date {}", this.getDeadline(), ex);
             return null;

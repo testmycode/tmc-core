@@ -14,11 +14,6 @@ import java.util.List;
 
 public class ReviewListParser {
 
-    private static class ReviewListContainer {
-        public int apiVersion;
-        public Review[] reviews;
-    }
-
     private static final Logger logger = LoggerFactory.getLogger(ReviewListParser.class);
 
     public List<Review> parseFromJson(String json) {
@@ -36,7 +31,7 @@ public class ReviewListParser {
                             .registerTypeAdapter(Date.class, new CustomDateDeserializer())
                             .create();
 
-            Review[] reviews = gson.fromJson(json, ReviewListContainer.class).reviews;
+            Review[] reviews = gson.fromJson(json, Review[].class);
             return Arrays.asList(reviews);
         } catch (RuntimeException ex) {
             logger.warn("Failed to parse review list", ex);

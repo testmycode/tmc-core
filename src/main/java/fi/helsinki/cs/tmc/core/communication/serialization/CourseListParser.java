@@ -15,11 +15,6 @@ import java.util.List;
 
 public class CourseListParser {
 
-    private static class CourseListContainer {
-        public int apiVersion;
-        public Course[] courses;
-    }
-
     private static final Logger logger = LoggerFactory.getLogger(CourseListParser.class);
 
     public List<Course> parseFromJson(String json) {
@@ -35,7 +30,7 @@ public class CourseListParser {
                             .registerTypeAdapter(Date.class, new CustomDateDeserializer())
                             .create();
 
-            Course[] courses = gson.fromJson(json, CourseListContainer.class).courses;
+            Course[] courses = gson.fromJson(json, Course[].class);
 
             List<Course> courseList = new ArrayList<>();
             for (Course course : courses) {

@@ -47,9 +47,9 @@ import java.util.zip.GZIPOutputStream;
  */
 public class TmcServerCommunicationTaskFactory {
 
-    public static final int API_VERSION = 7;
     private static final Logger LOG = Logger.getLogger(
             TmcServerCommunicationTaskFactory.class.getName());
+    public static final int API_VERSION = 8;
 
     private TmcSettings settings;
     private Oauth oauth;

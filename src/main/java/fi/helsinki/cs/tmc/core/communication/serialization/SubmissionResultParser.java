@@ -1,6 +1,8 @@
 package fi.helsinki.cs.tmc.core.communication.serialization;
 
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.ValidationErrorImpl;
+import fi.helsinki.cs.tmc.langs.abstraction.ValidationError;
 import fi.helsinki.cs.tmc.stylerunner.validation.CheckstyleResult;
 import fi.helsinki.cs.tmc.testrunner.CaughtException;
 import fi.helsinki.cs.tmc.testrunner.StackTraceSerializer;
@@ -10,6 +12,7 @@ import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.InstanceCreator;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -54,6 +57,11 @@ public class SubmissionResultParser {
                                      * Map<File, List<ValidationError>, but Gson doesn't know
                                      * how to deserialize a string into a File */
                                     File.class, new FileDeserializer())
+                            .registerTypeAdapter(
+                                    /* Needed because ValidationResultImpl stores errors in
+                                     * abstract ValidationErrors which obviously don't have a
+                                     * default constructor for Gson to use */
+                                    ValidationError.class, new ValidationErrorInstanceCreator())
                             .create();
 
             SubmissionResult result = gson.fromJson(json, SubmissionResult.class);
@@ -93,6 +101,13 @@ public class SubmissionResultParser {
                 logger.warn("Attempted to parse unknown submission status " + str);
                 throw new JsonParseException("Unknown submission status: " + str);
             }
+        }
+    }
+
+    private static class ValidationErrorInstanceCreator implements InstanceCreator<ValidationError> {
+        @Override
+        public ValidationError createInstance(Type type) {
+            return new ValidationErrorImpl();
         }
     }
 

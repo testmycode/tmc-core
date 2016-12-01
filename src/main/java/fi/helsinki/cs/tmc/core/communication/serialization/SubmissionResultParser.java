@@ -104,7 +104,8 @@ public class SubmissionResultParser {
         }
     }
 
-    private static class ValidationErrorInstanceCreator implements InstanceCreator<ValidationError> {
+    private static class ValidationErrorInstanceCreator
+            implements InstanceCreator<ValidationError> {
         @Override
         public ValidationError createInstance(Type type) {
             return new ValidationErrorImpl();
@@ -114,14 +115,15 @@ public class SubmissionResultParser {
     private static class FileDeserializer implements JsonDeserializer<File> {
         @Override
         public File deserialize(
-                JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext)
+                JsonElement jsonElement, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
             String filePath = jsonElement.getAsString();
             return new File(filePath);
         }
     }
 
-    private static class ImmutableListJsonDeserializer implements JsonDeserializer<ImmutableList<?>> {
+    private static class ImmutableListJsonDeserializer
+            implements JsonDeserializer<ImmutableList<?>> {
         @Override
         public ImmutableList<?> deserialize(
                 JsonElement json, Type type, JsonDeserializationContext context)

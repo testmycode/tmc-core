@@ -205,7 +205,7 @@
                 "strategy": "FAIL",
                 "validationErrors":
                         {
-                            "eRror/errorMessages.java":
+                            "error/errorMessages.java":
                                     [
                                         {
                                             "column": 0,

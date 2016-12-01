@@ -1,16 +1,18 @@
 package fi.helsinki.cs.tmc.core.communication.serialization;
 
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.ValidationErrorImpl;
+import fi.helsinki.cs.tmc.langs.abstraction.ValidationError;
 import fi.helsinki.cs.tmc.stylerunner.validation.CheckstyleResult;
 import fi.helsinki.cs.tmc.testrunner.CaughtException;
 import fi.helsinki.cs.tmc.testrunner.StackTraceSerializer;
 
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeParameter;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.InstanceCreator;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -21,6 +23,7 @@ import com.google.gson.JsonParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -49,6 +52,16 @@ public class SubmissionResultParser {
                                     StackTraceElement.class, new StackTraceSerializer())
                             .registerTypeAdapter(
                                     ImmutableList.class, new ImmutableListJsonDeserializer())
+                            .registerTypeAdapter(
+                                    /* Needed because ValidationResultImpl stores filenames in
+                                     * Map<File, List<ValidationError>, but Gson doesn't know
+                                     * how to deserialize a string into a File */
+                                    File.class, new FileDeserializer())
+                            .registerTypeAdapter(
+                                    /* Needed because ValidationResultImpl stores errors in
+                                     * abstract ValidationErrors which obviously don't have a
+                                     * default constructor for Gson to use */
+                                    ValidationError.class, new ValidationErrorInstanceCreator())
                             .create();
 
             SubmissionResult result = gson.fromJson(json, SubmissionResult.class);
@@ -91,7 +104,26 @@ public class SubmissionResultParser {
         }
     }
 
-    private class ImmutableListJsonDeserializer implements JsonDeserializer<ImmutableList<?>> {
+    private static class ValidationErrorInstanceCreator
+            implements InstanceCreator<ValidationError> {
+        @Override
+        public ValidationError createInstance(Type type) {
+            return new ValidationErrorImpl();
+        }
+    }
+
+    private static class FileDeserializer implements JsonDeserializer<File> {
+        @Override
+        public File deserialize(
+                JsonElement jsonElement, Type type, JsonDeserializationContext context)
+                throws JsonParseException {
+            String filePath = jsonElement.getAsString();
+            return new File(filePath);
+        }
+    }
+
+    private static class ImmutableListJsonDeserializer
+            implements JsonDeserializer<ImmutableList<?>> {
         @Override
         public ImmutableList<?> deserialize(
                 JsonElement json, Type type, JsonDeserializationContext context)

@@ -75,8 +75,6 @@ public class SubmissionResult {
     @SerializedName("solution_url")
     private String solutionUrl;
 
-    private ValidationResultImpl validations;
-
     private String valgrind;
 
     private boolean reviewed;
@@ -103,14 +101,6 @@ public class SubmissionResult {
 
     public void setError(String error) {
         this.error = error;
-    }
-
-    public ValidationResultImpl getValidations() {
-        return validations;
-    }
-
-    public void setValidations(ValidationResultImpl validations) {
-        this.validations = validations;
     }
 
     public List<TestResult> getTestCases() {
@@ -322,8 +312,6 @@ public class SubmissionResult {
                 + feedbackAnswerUrl
                 + ", solutionUrl="
                 + solutionUrl
-                + ", validations="
-                + validations
                 + ", \n valgrind="
                 + valgrind
                 + ", reviewed="

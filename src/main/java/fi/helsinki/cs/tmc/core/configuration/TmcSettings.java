@@ -58,4 +58,10 @@ public interface TmcSettings {
     String hostProgramVersion();
 
     boolean getSendDiagnostics();
+
+    String getOauthTokenUrl();
+
+    String getOauthApplicationId();
+
+    String getOauthSecret();
 }

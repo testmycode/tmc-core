@@ -25,8 +25,9 @@ public class OauthTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        this.oauth = new Oauth(flow);
         when(flow.getToken()).thenReturn("one", "two");
+        this.oauth = new OauthMock();
+        this.oauth.setFlow(flow);
     }
 
     @Test

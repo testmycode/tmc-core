@@ -4,12 +4,25 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 public class Oauth {
+    
+    private static Oauth oauth;
 
-    private final OauthFlow flow;
+    private OauthFlow flow;
     private String token;
 
-    public Oauth(OauthFlow flow) {
-        this.flow = flow;
+    /**
+     * Returns the Oauth instance.
+     * 
+     * @return single oauth instance
+     */
+    public static synchronized Oauth getInstance() {
+        if (oauth == null) {
+            oauth = new Oauth();
+        }
+        return oauth;
+    }
+    
+    protected Oauth() {
     }
 
     /**
@@ -25,6 +38,9 @@ public class Oauth {
      *     getting token
      */
     public String getToken() throws OAuthSystemException, OAuthProblemException {
+        if (flow == null) {
+            throw new OAuthSystemException("Oauth flow is null");
+        }
         if (!hasToken()) {
             token = flow.getToken();
         }
@@ -53,7 +69,19 @@ public class Oauth {
      *     getting token
      */
     public String refreshToken() throws OAuthSystemException, OAuthProblemException {
+        if (flow == null) {
+            throw new OAuthSystemException("Oauth flow is null");
+        }
         token = flow.getToken();
         return token;
+    }
+    
+    /**
+     * Changes the oauth flow.
+     * 
+     * @param authflow an oauth flow
+     */
+    public void setFlow(OauthFlow authflow) {
+        this.flow = authflow;
     }
 }

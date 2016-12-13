@@ -26,7 +26,6 @@ import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
-import fi.helsinki.cs.tmc.core.holders.TmcOauthHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
@@ -73,7 +72,7 @@ public class TmcCore {
     public TmcCore(TmcSettings settings, TaskExecutor tmcLangs) {
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(tmcLangs);
-        TmcOauthHolder.set(new Oauth(new PasswordFlow(settings)));
+        Oauth.getInstance().setFlow(new PasswordFlow(settings));
     }
 
     public Callable<List<Exercise>> downloadOrUpdateExercises(

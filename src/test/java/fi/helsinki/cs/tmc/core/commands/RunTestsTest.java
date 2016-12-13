@@ -13,7 +13,6 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
-import fi.helsinki.cs.tmc.core.holders.TmcOauthHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utils.TestUtils;
 import fi.helsinki.cs.tmc.langs.domain.RunResult.Status;
@@ -51,7 +50,6 @@ public class RunTestsTest {
         MockitoAnnotations.initMocks(this);
 
         TmcSettingsHolder.set(settings);
-        TmcOauthHolder.set(new Oauth(new PasswordFlow(settings)));
         langs = spy(new TaskExecutorImpl());
         TmcLangsHolder.set(langs);
         project = TestUtils.getProject(RunTestsTest.class, "arith_funcs");

@@ -14,7 +14,6 @@ import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.exceptions.ObsoleteClientException;
-import fi.helsinki.cs.tmc.core.holders.TmcOauthHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utilities.JsonMaker;
 import fi.helsinki.cs.tmc.core.utilities.JsonMakerGsonSerializer;
@@ -60,7 +59,7 @@ public class TmcServerCommunicationTaskFactory {
     private String clientVersion;
 
     public TmcServerCommunicationTaskFactory() {
-        this(TmcSettingsHolder.get(), TmcOauthHolder.get());
+        this(TmcSettingsHolder.get(), Oauth.getInstance());
     }
 
     public TmcServerCommunicationTaskFactory(TmcSettings settings, Oauth oauth) {

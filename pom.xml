@@ -424,6 +424,11 @@
             <artifactId>tmc-junit-runner</artifactId>
             <version>0.2.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.client</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
 
     <profiles>

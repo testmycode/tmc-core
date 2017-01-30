@@ -1,7 +1,9 @@
 package fi.helsinki.cs.tmc.core.utilities;
 
+import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import com.google.common.annotations.Beta;
 
@@ -16,7 +18,14 @@ public class ServerErrorHelper {
                 || throwable instanceof TmcCoreException) {
             if (throwable instanceof TmcCoreException
                     || ((FailedHttpResponseException)throwable).getStatusCode() == 401) {
-                return "Check your username, password and server address in TMC -> Settings.";
+                TmcSettings tmcSettings = TmcSettingsHolder.get();
+                String errorMessage
+                        = "Check your username, password and server address in TMC -> Settings.";
+                if (tmcSettings.getUsername().contains("@")) {
+                    return errorMessage
+                        + "\nNote that you must log in with your username, not your email address.";
+                }
+                return errorMessage;
             }
         }
         return throwable.getMessage();

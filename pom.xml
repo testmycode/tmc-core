@@ -3,7 +3,7 @@
 
     <groupId>fi.helsinki.cs.tmc</groupId>
     <artifactId>core</artifactId>
-    <version>0.9.7-SNAPSHOT</version>
+    <version>0.9.8-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>tmc-core</name>
     <url>http://testmycode.net</url>
@@ -240,7 +240,7 @@
         <dependency>
             <groupId>fi.helsinki.cs.tmc</groupId>
             <artifactId>tmc-langs-util</artifactId>
-            <version>0.7.5-SNAPSHOT</version>
+            <version>0.7.6-SNAPSHOT</version>
         </dependency>
 
         <dependency>

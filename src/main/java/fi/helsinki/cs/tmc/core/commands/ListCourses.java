@@ -4,6 +4,7 @@ import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.utilities.ServerErrorHelper;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -11,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.concurrent.Callable;
 
 /**
  * A {@link Command} for retrieving the course list from the server.
@@ -45,7 +45,8 @@ public class ListCourses extends Command<List<Course>> {
         } catch (Exception ex) {
             logger.info("Failed to fetch courses from the server", ex);
             informObserver(1, "Failed to fetch courses from the server");
-            throw new TmcCoreException("Failed to fetch courses from the server", ex);
+            throw new TmcCoreException("Failed to fetch courses from the server. \n"
+                + ServerErrorHelper.getServerExceptionMsg(ex), ex);
         }
     }
 }

@@ -5,6 +5,7 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.utilities.ServerErrorHelper;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
@@ -71,7 +72,8 @@ public class GetUpdatableExercises extends Command<GetUpdatableExercises.UpdateR
                     tmcServerCommunicationTaskFactory).call();
         } catch (Exception ex) {
             logger.warn("Failed to fetch exercises from server", ex);
-            throw new TmcCoreException("Failed to fetch exercises from server", ex);
+            throw new TmcCoreException("Failed to fetch exercises from server. \n"
+                + ServerErrorHelper.getServerExceptionMsg(ex), ex);
         }
 
         checkInterrupt();

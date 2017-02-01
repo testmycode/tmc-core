@@ -13,6 +13,7 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
+import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.ObsoleteClientException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utilities.JsonMaker;
@@ -106,16 +107,16 @@ public class TmcServerCommunicationTaskFactory {
                 try {
                     return callable.call();
                 } catch (FailedHttpResponseException e) {
-                    LOG.log(Level.INFO,
-                            "Callable call failed, refreshing oauth token and trying again");
-                    oauth.refreshToken();
-                    return callable.call();
+                    LOG.log(Level.WARNING,
+                            "Communication with the server failed!");
+                    throw new NotLoggedInException();
                 }
             }
         };
     }
 
-    private URI getCourseListUrl() throws OAuthSystemException, OAuthProblemException {
+    private URI getCourseListUrl()
+        throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
         String serverAddress = settings.getServerAddress();
         String url;
         if (serverAddress.endsWith("/")) {
@@ -126,29 +127,13 @@ public class TmcServerCommunicationTaskFactory {
         return addApiCallQueryParameters(URI.create(url));
     }
 
-    private URI addApiCallQueryParameters(URI url) throws OAuthSystemException,
-            OAuthProblemException {
+    private URI addApiCallQueryParameters(URI url) throws NotLoggedInException {
         url = UriUtils.withQueryParam(url, "api_version", "" + API_VERSION);
         url = UriUtils.withQueryParam(url, "client", settings.clientName());
         url = UriUtils.withQueryParam(url, "client_version", clientVersion);
-        url = UriUtils.withQueryParam(url, "access_token", oauth.getToken());
+        String token = oauth.getToken();
+        url = UriUtils.withQueryParam(url, "access_token", token);
         return url;
-    }
-
-    private HttpTasks createHttpTasks() {
-        return new HttpTasks().setCredentials(settings.getUsername(), settings.getPassword());
-    }
-
-    public boolean hasEnoughSettings() {
-        return !settings.getUsername().isEmpty()
-                && !settings.getPassword().isEmpty()
-                && !settings.getServerAddress().isEmpty();
-    }
-
-    public boolean needsOnlyPassword() {
-        return !settings.getUsername().isEmpty()
-                && settings.getPassword().isEmpty()
-                && !settings.getServerAddress().isEmpty();
     }
 
     public Callable<List<Course>> getDownloadingCourseListTask() {
@@ -156,7 +141,7 @@ public class TmcServerCommunicationTaskFactory {
             @Override
             public List<Course> call() throws Exception {
                 try {
-                    Callable<String> download = createHttpTasks().getForText(getCourseListUrl());
+                    Callable<String> download = new HttpTasks().getForText(getCourseListUrl());
                     String text = download.call();
                     return courseListParser.parseFromJson(text);
                 } catch (FailedHttpResponseException ex) {
@@ -173,7 +158,7 @@ public class TmcServerCommunicationTaskFactory {
             public Course call() throws Exception {
                 try {
                     URI url = addApiCallQueryParameters(courseStub.getDetailsUrl());
-                    final Callable<String> download = createHttpTasks().getForText(url);
+                    final Callable<String> download = new HttpTasks().getForText(url);
                     String text = download.call();
                     return courseInfoParser.parseFromJson(text);
                 } catch (FailedHttpResponseException ex) {
@@ -191,7 +176,7 @@ public class TmcServerCommunicationTaskFactory {
             @Override
             public Void call() throws Exception {
                 try {
-                    final Callable<String> download = createHttpTasks()
+                    final Callable<String> download = new HttpTasks()
                             .postForText(getUnlockUrl(course), params);
                     download.call();
                     return null;
@@ -204,18 +189,18 @@ public class TmcServerCommunicationTaskFactory {
         });
     }
 
-    private URI getUnlockUrl(Course course) throws OAuthSystemException, OAuthProblemException {
+    private URI getUnlockUrl(Course course) throws NotLoggedInException {
         return addApiCallQueryParameters(course.getUnlockUrl());
     }
 
     public Callable<byte[]> getDownloadingExerciseZipTask(Exercise exercise) {
         URI zipUrl = exercise.getDownloadUrl();
-        return createHttpTasks().getForBinary(zipUrl);
+        return new HttpTasks().getForBinary(zipUrl);
     }
 
     public Callable<byte[]> getDownloadingExerciseSolutionZipTask(Exercise exercise) {
         URI zipUrl = exercise.getSolutionDownloadUrl();
-        return createHttpTasks().getForBinary(zipUrl);
+        return new HttpTasks().getForBinary(zipUrl);
     }
 
     public Callable<SubmissionResponse> getSubmittingExerciseTask(
@@ -232,7 +217,7 @@ public class TmcServerCommunicationTaskFactory {
                 String response;
                 try {
                     final URI submitUrl = addApiCallQueryParameters(exercise.getReturnUrl());
-                    final Callable<String> upload = createHttpTasks()
+                    final Callable<String> upload = new HttpTasks()
                             .uploadFileForTextDownload(submitUrl, params,
                                     "submission[file]", sourceZip);
                     response = upload.call();
@@ -274,7 +259,7 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<String> getSubmissionFetchTask(URI submissionUrl) {
-        return createHttpTasks().getForText(submissionUrl);
+        return new HttpTasks().getForText(submissionUrl);
     }
 
     public Callable<List<Review>> getDownloadingReviewListTask(final Course course) {
@@ -283,7 +268,7 @@ public class TmcServerCommunicationTaskFactory {
             public List<Review> call() throws Exception {
                 try {
                     URI url = addApiCallQueryParameters(course.getReviewsUrl());
-                    final Callable<String> download = createHttpTasks().getForText(url);
+                    final Callable<String> download = new HttpTasks().getForText(url);
                     String text = download.call();
                     return reviewListParser.parseFromJson(text);
                 } catch (FailedHttpResponseException ex) {
@@ -308,7 +293,7 @@ public class TmcServerCommunicationTaskFactory {
             @Override
             public Void call() throws Exception {
                 URI url = addApiCallQueryParameters(URI.create(review.getUpdateUrl() + ".json"));
-                final Callable<String> task = createHttpTasks().postForText(url, params);
+                final Callable<String> task = new HttpTasks().postForText(url, params);
                 task.call();
                 return null;
             }
@@ -332,7 +317,7 @@ public class TmcServerCommunicationTaskFactory {
             public String call() throws Exception {
                 try {
                     final URI submitUrl = addApiCallQueryParameters(answerUrl);
-                    final Callable<String> upload = createHttpTasks()
+                    final Callable<String> upload = new HttpTasks()
                             .postForText(submitUrl, params);
                     return upload.call();
                 } catch (FailedHttpResponseException ex) {
@@ -345,12 +330,11 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<Object> getSendEventLogJob(final URI spywareServerUrl,
-            List<LoggableEvent> events) {
-
+            List<LoggableEvent> events) throws NotLoggedInException {
         final Map<String, String> extraHeaders = new LinkedHashMap<>();
         extraHeaders.put("X-Tmc-Version", "1");
         extraHeaders.put("X-Tmc-Username", settings.getUsername());
-        extraHeaders.put("X-Tmc-Password", settings.getPassword());
+        extraHeaders.put("X-Tmc-SESSION-ID", oauth.getToken());
 
         final byte[] data;
         try {
@@ -363,7 +347,7 @@ public class TmcServerCommunicationTaskFactory {
             @Override
             public Object call() throws Exception {
                 URI url = addApiCallQueryParameters(spywareServerUrl);
-                final Callable<String> upload = createHttpTasks()
+                final Callable<String> upload = new HttpTasks()
                         .rawPostForText(url, data, extraHeaders);
                 upload.call();
                 return null;

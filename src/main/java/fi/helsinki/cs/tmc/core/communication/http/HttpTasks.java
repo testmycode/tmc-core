@@ -5,7 +5,6 @@ import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import com.google.gson.Gson;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
@@ -36,19 +35,12 @@ public class HttpTasks {
             ContentType.create("text/plain", "utf-8");
     private static final Gson gson = new Gson();
 
-    private UsernamePasswordCredentials credentials = null;
-
-    public HttpTasks setCredentials(String username, String password) {
-        this.credentials = new UsernamePasswordCredentials(username, password);
-        return this;
-    }
-
     private HttpRequestExecutor createExecutor(URI url) {
-        return new HttpRequestExecutor(url).setCredentials(credentials);
+        return new HttpRequestExecutor(url);
     }
 
     private HttpRequestExecutor createExecutor(HttpPost request) {
-        return new HttpRequestExecutor(request).setCredentials(credentials);
+        return new HttpRequestExecutor(request);
     }
 
     /**

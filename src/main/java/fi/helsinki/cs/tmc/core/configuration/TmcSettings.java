@@ -14,7 +14,12 @@ public interface TmcSettings {
 
     String getServerAddress();
 
-    String getPassword();
+    /**
+     * Used for old login credentials, new ones use oauth.
+     */
+    Optional<String> getPassword();
+
+    void setPassword(Optional<String> password);
 
     String getUsername();
 
@@ -64,4 +69,8 @@ public interface TmcSettings {
     String getOauthApplicationId();
 
     String getOauthSecret();
+
+    void setToken(String token);
+
+    Optional<String> getToken();
 }

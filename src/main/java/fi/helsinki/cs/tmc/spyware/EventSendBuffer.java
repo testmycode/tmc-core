@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utilities.Cooldown;
 import fi.helsinki.cs.tmc.core.utilities.SingletonTask;
@@ -220,8 +221,13 @@ public class EventSendBuffer implements EventReceiver {
                             "Sending {0} events to {1}",
                             new Object[] {eventsToSend.size(), url});
 
-                    if (!tryToSend(eventsToSend, url)) {
-                        shouldSendMore = false;
+                    try {
+                        if (!tryToSend(eventsToSend, url)) {
+                            shouldSendMore = false;
+                        }
+                    } catch (NotLoggedInException e) {
+                        throw new RuntimeException(
+                            "Could not send analytics because not logged in.", e);
                     }
                 } while (shouldSendMore);
             }
@@ -257,7 +263,8 @@ public class EventSendBuffer implements EventReceiver {
                 return urls.get(random.nextInt(urls.size()));
             }
 
-            private boolean tryToSend(final ArrayList<LoggableEvent> eventsToSend, final URI url) {
+            private boolean tryToSend(final ArrayList<LoggableEvent> eventsToSend, final URI url)
+                throws NotLoggedInException {
                 Callable<Object> task = serverAccess.getSendEventLogJob(url, eventsToSend);
 
                 // TODO: Should we still wrap this into bg task (future)

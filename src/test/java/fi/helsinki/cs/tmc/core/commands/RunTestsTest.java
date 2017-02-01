@@ -6,8 +6,6 @@ import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
-import fi.helsinki.cs.tmc.core.communication.oauth2.PasswordFlow;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;

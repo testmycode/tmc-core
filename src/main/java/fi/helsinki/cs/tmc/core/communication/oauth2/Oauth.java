@@ -1,15 +1,27 @@
 package fi.helsinki.cs.tmc.core.communication.oauth2;
 
+import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+
+import org.apache.oltu.oauth2.client.OAuthClient;
+import org.apache.oltu.oauth2.client.URLConnectionClient;
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.apache.oltu.oauth2.common.message.types.GrantType;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Oauth {
     
     private static Oauth oauth;
+    private static final Logger log = LoggerFactory.getLogger(Oauth.class);
 
-    private OauthFlow flow;
-    private String token;
-
+    private TmcSettings settings;
     /**
      * Returns the Oauth instance.
      * 
@@ -23,6 +35,7 @@ public class Oauth {
     }
     
     protected Oauth() {
+        settings = TmcSettingsHolder.get();
     }
 
     /**
@@ -32,19 +45,13 @@ public class Oauth {
      * Gets the token from cache or uses the known flow to fetch the it.</p>
      *
      * @return oauth token
-     * @throws org.apache.oltu.oauth2.common.exception.OAuthSystemException an error occurred with
-     *     getting token
-     * @throws org.apache.oltu.oauth2.common.exception.OAuthProblemException an error occurred with
-     *     getting token
+     * @throws TmcCoreException when an oauth token hasn't been fetched yet
      */
-    public String getToken() throws OAuthSystemException, OAuthProblemException {
-        if (flow == null) {
-            throw new OAuthSystemException("Oauth flow is null");
-        }
+    public String getToken() throws NotLoggedInException {
         if (!hasToken()) {
-            token = flow.getToken();
+            throw new NotLoggedInException();
         }
-        return token;
+        return settings.getToken().get();
     }
 
     /**
@@ -53,35 +60,36 @@ public class Oauth {
      * @return has token
      */
     public boolean hasToken() {
-        return token != null;
+        return settings.getToken().isPresent();
     }
 
     /**
-     * Returns the oauth token.
-     *
-     * <p>
-     * Uses the known flow to fetch the token and caches it.</p>
-     *
-     * @return oauth token
-     * @throws org.apache.oltu.oauth2.common.exception.OAuthSystemException an error occurred with
-     *     getting token
-     * @throws org.apache.oltu.oauth2.common.exception.OAuthProblemException an error occurred with
-     *     getting token
+     * Fetches a new oauth token from server using settings' parameters in request.
+     * @param password for fetching correct token
+     * @throws OAuthSystemException an error occurred with getting token
+     * @throws OAuthProblemException an error occurred with getting token
      */
-    public String refreshToken() throws OAuthSystemException, OAuthProblemException {
-        if (flow == null) {
-            throw new OAuthSystemException("Oauth flow is null");
-        }
-        token = flow.getToken();
-        return token;
+    public void fetchNewToken(String password) throws OAuthSystemException, OAuthProblemException {
+        log.info("Fetching new oauth token from server");
+        OAuthClientRequest request = OAuthClientRequest
+                .tokenLocation(settings.getOauthTokenUrl())
+                .setGrantType(GrantType.PASSWORD)
+                .setClientId(settings.getOauthApplicationId())
+                .setClientSecret(settings.getOauthSecret())
+                .setUsername(settings.getUsername())
+                .setPassword(password)
+                .buildQueryMessage();
+        OAuthClient client = new OAuthClient(new URLConnectionClient());
+        String token = client.accessToken(request, OAuthJSONAccessTokenResponse.class)
+                .getAccessToken();
+        setToken(token);
     }
-    
+
     /**
-     * Changes the oauth flow.
-     * 
-     * @param authflow an oauth flow
+     * Sets given oauth token to TmcSettings.
+     * @param token to be set to settings
      */
-    public void setFlow(OauthFlow authflow) {
-        this.flow = authflow;
+    private void setToken(String token) {
+        settings.setToken(token);
     }
 }

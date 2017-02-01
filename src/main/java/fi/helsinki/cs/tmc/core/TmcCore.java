@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.core;
 
+import fi.helsinki.cs.tmc.core.commands.AuthenticateUser;
 import fi.helsinki.cs.tmc.core.commands.DownloadCompletedExercises;
 import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
 import fi.helsinki.cs.tmc.core.commands.DownloadOrUpdateExercises;
@@ -18,7 +19,6 @@ import fi.helsinki.cs.tmc.core.commands.SendSpywareEvents;
 import fi.helsinki.cs.tmc.core.commands.Submit;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
-import fi.helsinki.cs.tmc.core.communication.oauth2.PasswordFlow;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
@@ -74,7 +74,11 @@ public class TmcCore {
     public TmcCore(TmcSettings settings, TaskExecutor tmcLangs) {
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(tmcLangs);
-        Oauth.getInstance().setFlow(new PasswordFlow(settings));
+    }
+
+    public Callable<Void> authenticate(ProgressObserver observer, String password) {
+        logger.info("Creating new AuthenticateUser command");
+        return new AuthenticateUser(observer, password, Oauth.getInstance());
     }
 
     public Callable<Void> sendDiagnostics(

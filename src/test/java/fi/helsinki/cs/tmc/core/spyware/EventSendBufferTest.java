@@ -13,6 +13,7 @@ import static org.mockito.Mockito.when;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.spyware.EventSendBuffer;
 import fi.helsinki.cs.tmc.spyware.EventStore;
@@ -65,7 +66,7 @@ public class EventSendBufferTest {
     private EventSendBuffer sender;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, NotLoggedInException {
         MockitoAnnotations.initMocks(this);
 
         TmcSettingsHolder.set(tmcSettings);

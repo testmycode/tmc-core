@@ -4,62 +4,71 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
+import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.utils.MockSettings;
 
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
+
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.lang.reflect.Field;
 
 public class OauthTest {
 
-    private Oauth oauth;
+    private TmcSettings settings;
 
-    @Mock
-    private OauthFlow flow;
+    private Oauth oauth;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        when(flow.getToken()).thenReturn("one", "two");
-        this.oauth = new OauthMock();
-        this.oauth.setFlow(flow);
+        settings = new MockSettings();
+        TmcSettingsHolder.set(settings);
+        oauth = spy(Oauth.getInstance());
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                settings.setToken("testToken");
+                return null;
+            }
+        }).when(oauth).fetchNewToken(anyString());
+    }
+
+    @After
+    public void tearDown() throws NoSuchFieldException, IllegalAccessException {
+        Field oauth = Oauth.class.getDeclaredField("oauth");
+        oauth.setAccessible(true);
+        oauth.set(null, null);
+    }
+
+    @Test
+    public void hasTokenWhenFetched() {
+        try {
+            oauth.fetchNewToken("password");
+            assertTrue(oauth.hasToken());
+            assertEquals("testToken", settings.getToken().get());
+        } catch (OAuthSystemException | OAuthProblemException ex) {
+            fail("Got exception: " + ex.toString());
+        }
     }
 
     @Test
     public void hasNoTokenWhenInitialized() throws Exception {
         assertFalse(oauth.hasToken());
-        verify(flow, times(0)).getToken();
-    }
-
-    @Test
-    public void hasTokenWhenFetchedAndCallsFlow() {
-        try {
-            String token = oauth.getToken();
-            verify(flow).getToken();
-            assertTrue(oauth.hasToken());
-            assertEquals("one", token);
-        } catch (OAuthSystemException | OAuthProblemException ex) {
-            fail("Got exception: " + ex.toString());
-        }
-    }
-
-    @Test
-    public void refreshTokenCallsFlowAndGetsNewToken() {
-        try {
-            String token = oauth.getToken();
-            assertEquals("one", token);
-            verify(flow, times(1)).getToken();
-            String token2 = oauth.refreshToken();
-            assertEquals("two", token2);
-            verify(flow, times(2)).getToken();
-            assertTrue(oauth.hasToken());
-        } catch (OAuthSystemException | OAuthProblemException ex) {
-            fail("Got exception: " + ex.toString());
-        }
+        verify(oauth, times(0)).fetchNewToken(anyString());
     }
 }

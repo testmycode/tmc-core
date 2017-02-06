@@ -2,7 +2,6 @@ package fi.helsinki.cs.tmc.core.commands;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -17,6 +16,7 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.utils.MockSettings;
 import fi.helsinki.cs.tmc.core.utils.TestUtils;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
@@ -28,6 +28,7 @@ import org.junit.rules.TemporaryFolder;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import java.net.URI;
 import java.nio.file.Path;
@@ -40,7 +41,7 @@ public class SubmitTest {
     @Rule public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Mock ProgressObserver mockObserver;
-    @Mock TmcSettings settings;
+    @Spy TmcSettings settings = new MockSettings();
     @Mock TmcServerCommunicationTaskFactory factory;
     @Mock Course mockCourse;
     @Mock Exercise mockExercise;

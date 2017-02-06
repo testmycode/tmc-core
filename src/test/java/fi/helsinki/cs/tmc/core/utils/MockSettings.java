@@ -26,7 +26,7 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public Optional<String> getPassword() {
-        throw new UnsupportedOperationException();
+        return Optional.absent();
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public Optional<Course> getCurrentCourse() {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override
@@ -71,17 +71,17 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public Path getTmcProjectDirectory() {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override
     public Locale getLocale() {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override
     public SystemDefaultRoutePlanner proxy() {
-        throw new UnsupportedOperationException();
+        return null;
     }
 
     @Override

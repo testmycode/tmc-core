@@ -4,18 +4,19 @@ import static org.junit.Assert.assertEquals;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.UninitializedHolderException;
+import fi.helsinki.cs.tmc.core.utils.MockSettings;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 public class TmcSettingsHolderTest {
 
     private TmcSettingsHolder holder;
 
-    @Mock private TmcSettings settings;
+    @Spy private TmcSettings settings = new MockSettings();
 
     @Before
     public void setUp() {

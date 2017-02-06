@@ -6,10 +6,10 @@ import static com.github.tomakehurst.wiremock.client.WireMock.matching;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.utils.MockSettings;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
@@ -23,15 +23,15 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import java.net.URI;
 import java.nio.charset.Charset;
 
 public class HttpRequestExecutorTest {
 
-    @Mock TmcSettings settings;
+    @Spy TmcSettings settings = new MockSettings();
 
     @Rule public WireMockRule wireMockRule = new WireMockRule(0);
 
@@ -39,7 +39,8 @@ public class HttpRequestExecutorTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         TmcSettingsHolder.set(settings);
-        verifyNoMoreInteractions(settings);
+//        TODO uncomment this after removing migration from TmcSettingsHolder
+//        verifyNoMoreInteractions(settings);
         wireMockRule.start();
     }
 

@@ -3,7 +3,6 @@ package fi.helsinki.cs.tmc.core.commands;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
@@ -15,6 +14,7 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackQuestion;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.utils.MockSettings;
 
 import com.google.common.collect.ImmutableList;
 
@@ -25,6 +25,7 @@ import org.junit.rules.TemporaryFolder;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import java.net.URI;
 import java.util.List;
@@ -35,7 +36,7 @@ public class SendFeedbackTest {
     @Rule public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Mock ProgressObserver mockObserver;
-    @Mock TmcSettings settings;
+    @Spy TmcSettings settings = new MockSettings();
     @Mock TmcServerCommunicationTaskFactory factory;
     @Mock Course mockCourse;
     @Mock Exercise mockExercise;

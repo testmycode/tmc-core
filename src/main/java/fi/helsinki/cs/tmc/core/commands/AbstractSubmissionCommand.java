@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
@@ -71,6 +72,9 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
 
             return response;
         } catch (Exception ex) {
+            if (ex instanceof NotLoggedInException) {
+                throw (NotLoggedInException)ex;
+            }
             informObserver(1, "Failed to submit exercise");
             logger.warn("Failed to submit exercise", ex);
             throw new TmcCoreException("Failed to submit exercise", ex);

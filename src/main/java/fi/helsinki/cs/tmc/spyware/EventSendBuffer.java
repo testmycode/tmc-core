@@ -221,14 +221,9 @@ public class EventSendBuffer implements EventReceiver {
                             "Sending {0} events to {1}",
                             new Object[] {eventsToSend.size(), url});
 
-                    try {
                         if (!tryToSend(eventsToSend, url)) {
                             shouldSendMore = false;
                         }
-                    } catch (NotLoggedInException e) {
-                        throw new RuntimeException(
-                            "Could not send analytics because not logged in.", e);
-                    }
                 } while (shouldSendMore);
             }
 
@@ -263,13 +258,11 @@ public class EventSendBuffer implements EventReceiver {
                 return urls.get(random.nextInt(urls.size()));
             }
 
-            private boolean tryToSend(final ArrayList<LoggableEvent> eventsToSend, final URI url)
-                throws NotLoggedInException {
-                Callable<Object> task = serverAccess.getSendEventLogJob(url, eventsToSend);
-
+            private boolean tryToSend(final ArrayList<LoggableEvent> eventsToSend, final URI url) {
                 // TODO: Should we still wrap this into bg task (future)
 
                 try {
+                    Callable<Object> task = serverAccess.getSendEventLogJob(url, eventsToSend);
                     task.call();
                 } catch (Exception ex) {
                     log.log(Level.INFO, "Sending failed", ex);

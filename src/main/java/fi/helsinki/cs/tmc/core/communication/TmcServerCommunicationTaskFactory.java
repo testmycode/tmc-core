@@ -100,7 +100,7 @@ public class TmcServerCommunicationTaskFactory {
      * @param callable Callable to be wrapped
      * @return The given Callable wrapped in another Callable
      */
-    private <T> Callable<T> wrapWithTokenRefresh(final Callable<T> callable) {
+    private <T> Callable<T> wrapWithNotLoggedInException(final Callable<T> callable) {
         return new Callable<T>() {
             @Override
             public T call() throws Exception {
@@ -120,9 +120,9 @@ public class TmcServerCommunicationTaskFactory {
         String serverAddress = settings.getServerAddress();
         String url;
         if (serverAddress.endsWith("/")) {
-            url = settings.getServerAddress() + "courses.json";
+            url = serverAddress + "courses.json";
         } else {
-            url = settings.getServerAddress() + "/courses.json";
+            url = serverAddress + "/courses.json";
         }
         return addApiCallQueryParameters(URI.create(url));
     }
@@ -137,7 +137,7 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<List<Course>> getDownloadingCourseListTask() {
-        return wrapWithTokenRefresh(new Callable<List<Course>>() {
+        return wrapWithNotLoggedInException(new Callable<List<Course>>() {
             @Override
             public List<Course> call() throws Exception {
                 try {
@@ -153,7 +153,7 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<Course> getFullCourseInfoTask(final Course courseStub) {
-        return wrapWithTokenRefresh(new Callable<Course>() {
+        return wrapWithNotLoggedInException(new Callable<Course>() {
             @Override
             public Course call() throws Exception {
                 try {
@@ -172,7 +172,7 @@ public class TmcServerCommunicationTaskFactory {
 
     public Callable<Void> getUnlockingTask(final Course course) {
         final Map<String, String> params = Collections.emptyMap();
-        return wrapWithTokenRefresh(new Callable<Void>() {
+        return wrapWithNotLoggedInException(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 try {
@@ -211,7 +211,7 @@ public class TmcServerCommunicationTaskFactory {
         params.put("client_nanotime", "" + System.nanoTime());
         params.putAll(extraParams);
 
-        return wrapWithTokenRefresh(new Callable<SubmissionResponse>() {
+        return wrapWithNotLoggedInException(new Callable<SubmissionResponse>() {
             @Override
             public SubmissionResponse call() throws Exception {
                 String response;
@@ -263,7 +263,7 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<List<Review>> getDownloadingReviewListTask(final Course course) {
-        return wrapWithTokenRefresh(new Callable<List<Review>>() {
+        return wrapWithNotLoggedInException(new Callable<List<Review>>() {
             @Override
             public List<Review> call() throws Exception {
                 try {
@@ -289,7 +289,7 @@ public class TmcServerCommunicationTaskFactory {
             params.put("mark_as_unread", "1");
         }
 
-        return wrapWithTokenRefresh(new Callable<Void>() {
+        return wrapWithNotLoggedInException(new Callable<Void>() {
             @Override
             public Void call() throws Exception {
                 URI url = addApiCallQueryParameters(URI.create(review.getUpdateUrl() + ".json"));
@@ -312,7 +312,7 @@ public class TmcServerCommunicationTaskFactory {
             params.put(keyPrefix + "[answer]", answer.getAnswer());
         }
 
-        return wrapWithTokenRefresh(new Callable<String>() {
+        return wrapWithNotLoggedInException(new Callable<String>() {
             @Override
             public String call() throws Exception {
                 try {
@@ -343,7 +343,7 @@ public class TmcServerCommunicationTaskFactory {
             throw new RuntimeException(e);
         }
 
-        return wrapWithTokenRefresh(new Callable<Object>() {
+        return wrapWithNotLoggedInException(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
                 URI url = addApiCallQueryParameters(spywareServerUrl);

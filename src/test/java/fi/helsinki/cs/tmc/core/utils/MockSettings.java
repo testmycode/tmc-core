@@ -7,6 +7,7 @@ import com.google.common.base.Optional;
 
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 
+import java.lang.UnsupportedOperationException;
 import java.nio.file.Path;
 import java.util.Locale;
 
@@ -20,12 +21,12 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public String getServerAddress() {
-        return null;
+        return "testAddress";
     }
 
     @Override
     public Optional<String> getPassword() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -35,7 +36,7 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public String getUsername() {
-        return null;
+        return "testUsername";
     }
 
     @Override
@@ -45,42 +46,42 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public Optional<Course> getCurrentCourse() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String apiVersion() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String clientName() {
-        return null;
+        return "testClient";
     }
 
     @Override
     public String clientVersion() {
-        return null;
+        return "testClient";
     }
 
     @Override
     public String getFormattedUserData() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Path getTmcProjectDirectory() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Locale getLocale() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public SystemDefaultRoutePlanner proxy() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -95,22 +96,22 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public Path getConfigRoot() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String getOauthTokenUrl() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String getOauthApplicationId() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String getOauthSecret() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override

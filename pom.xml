@@ -3,7 +3,7 @@
 
     <groupId>fi.helsinki.cs.tmc</groupId>
     <artifactId>core</artifactId>
-    <version>0.9.8-SNAPSHOT</version>
+    <version>0.9.9-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>tmc-core</name>
     <url>http://testmycode.net</url>
@@ -226,12 +226,6 @@
             <version>2.9</version>
         </dependency>
         <dependency>
-            <groupId>com.puppycrawl.tools</groupId>
-            <artifactId>checkstyle</artifactId>
-            <version>6.17</version>
-        </dependency>
-
-        <dependency>
             <groupId>fi.helsinki.cs.tmc</groupId>
             <artifactId>tmc-langs-abstraction</artifactId>
             <version>1.0.0</version>
@@ -240,7 +234,7 @@
         <dependency>
             <groupId>fi.helsinki.cs.tmc</groupId>
             <artifactId>tmc-langs-util</artifactId>
-            <version>0.7.6-SNAPSHOT</version>
+            <version>0.7.7-SNAPSHOT</version>
         </dependency>
 
         <dependency>

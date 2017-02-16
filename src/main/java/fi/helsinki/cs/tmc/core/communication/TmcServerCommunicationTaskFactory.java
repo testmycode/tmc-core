@@ -10,6 +10,7 @@ import fi.helsinki.cs.tmc.core.communication.serialization.ReviewListParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
@@ -25,6 +26,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import java.net.MalformedURLException;
+import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
@@ -355,6 +358,10 @@ public class TmcServerCommunicationTaskFactory {
 
             //TODO: Cancellable?
         });
+    }
+
+    public Callable<Void> getOauthCredentialsTask(URI credentialsUrl) throws IOException {
+        OauthCredentials credentials = new Gson().fromJson(IOUtils.toString(credentialsUrl.toURL()), OauthCredentials.class);
     }
 
     private byte[] eventListToPostBody(List<LoggableEvent> events) throws IOException {

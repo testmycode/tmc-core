@@ -68,7 +68,11 @@ public interface TmcSettings {
 
     String getOauthApplicationId();
 
+    void setOauthApplicationId(String oauthApplicationId);
+
     String getOauthSecret();
+
+    void setOauthSecret(String oauthSecret);
 
     void setToken(String token);
 

@@ -12,6 +12,7 @@ import fi.helsinki.cs.tmc.core.commands.PasteWithComment;
 import fi.helsinki.cs.tmc.core.commands.RequestCodeReview;
 import fi.helsinki.cs.tmc.core.commands.RunCheckStyle;
 import fi.helsinki.cs.tmc.core.commands.RunTests;
+import fi.helsinki.cs.tmc.core.commands.SendDiagnostics;
 import fi.helsinki.cs.tmc.core.commands.SendFeedback;
 import fi.helsinki.cs.tmc.core.commands.SendSpywareEvents;
 import fi.helsinki.cs.tmc.core.commands.Submit;
@@ -25,6 +26,7 @@ import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.utilities.ExceptionTrackingCallable;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
@@ -72,81 +74,88 @@ public class TmcCore {
         TmcLangsHolder.set(tmcLangs);
     }
 
+    public Callable<Void> sendDiagnostics(
+            ProgressObserver observer) {
+        logger.info("Creating new SendDiagnostics command");
+        return new SendDiagnostics(observer);
+    }
+
     public Callable<List<Exercise>> downloadOrUpdateExercises(
             ProgressObserver observer, List<Exercise> exercises) {
         logger.info("Creating new DownloadOrUpdateExercises command");
-        return new DownloadOrUpdateExercises(observer, exercises);
+        return new ExceptionTrackingCallable<>(new DownloadOrUpdateExercises(observer, exercises));
     }
 
     // TODO: returns new course.
     public Callable<Course> getCourseDetails(ProgressObserver observer, Course course) {
         logger.info("Creating new GetCourseDetails command");
-        return new GetCourseDetails(observer, course);
+        return new ExceptionTrackingCallable<>(new GetCourseDetails(observer, course));
     }
 
     public Callable<List<Course>> listCourses(ProgressObserver observer) {
         logger.info("Creating new ListCourses command");
-        return new ListCourses(observer);
+        return new ExceptionTrackingCallable<>(new ListCourses(observer));
     }
 
     public Callable<URI> pasteWithComment(
             ProgressObserver observer, Exercise exercise, String message) {
         logger.info("Creating new PasteWithComment command");
-        return new PasteWithComment(observer, exercise, message);
+        return new ExceptionTrackingCallable<>(new PasteWithComment(observer, exercise, message));
     }
 
     public Callable<ValidationResult> runCheckStyle(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new RunCheckStyle command");
-        return new RunCheckStyle(observer, exercise);
+        return new ExceptionTrackingCallable<>(new RunCheckStyle(observer, exercise));
     }
 
     public Callable<RunResult> runTests(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new RunTests command");
-        return new RunTests(observer, exercise);
+        return new ExceptionTrackingCallable<>(new ExceptionTrackingCallable<>(new RunTests(observer, exercise)));
     }
 
     public Callable<Boolean> sendFeedback(
             ProgressObserver observer, List<FeedbackAnswer> answers, URI feedbackUri) {
         logger.info("Creating new SendFeedback command");
-        return new SendFeedback(observer, answers, feedbackUri);
+        return new ExceptionTrackingCallable<>(new SendFeedback(observer, answers, feedbackUri));
     }
 
     public Callable<Void> sendSpywareEvents(
-            ProgressObserver observer, Course currentCourse, List<LoggableEvent> events) {
+            final ProgressObserver observer, final Course currentCourse, final List<LoggableEvent> events) {
         logger.info("Creating new SenSpywareEvents command");
-        return new SendSpywareEvents(observer, currentCourse, events);
+        return new ExceptionTrackingCallable<>(new SendSpywareEvents(observer, currentCourse, events));
+
     }
 
     public Callable<SubmissionResult> submit(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new Submit command");
-        return new Submit(observer, exercise);
+        return new ExceptionTrackingCallable<>(new Submit(observer, exercise));
     }
 
     public Callable<GetUpdatableExercises.UpdateResult> getExerciseUpdates(
             ProgressObserver observer, Course course) {
         logger.info("Creating new GetUpdatableExercises command");
-        return new GetUpdatableExercises(observer, course);
+        return new ExceptionTrackingCallable<>(new GetUpdatableExercises(observer, course));
     }
 
     public Callable<Void> markReviewAsRead(ProgressObserver observer, Review review) {
         logger.info("Creating new MarkReviewAsRead command");
-        return new MarkReviewAsRead(observer, review);
+        return new ExceptionTrackingCallable<>(new MarkReviewAsRead(observer, review));
     }
 
     public Callable<List<Review>> getUnreadReviews(ProgressObserver observer, Course course) {
         logger.info("Creating new GetUnreadReviews command");
-        return new GetUnreadReviews(observer, course);
+        return new ExceptionTrackingCallable<>(new GetUnreadReviews(observer, course));
     }
 
     public Callable<TmcServerCommunicationTaskFactory.SubmissionResponse> requestCodeReview(
             ProgressObserver observer, Exercise exercise, String messageForReviewer) {
         logger.info("Creating new RequestCodeReview command");
-        return new RequestCodeReview(observer, exercise, messageForReviewer);
+        return new ExceptionTrackingCallable<>(new RequestCodeReview(observer, exercise, messageForReviewer));
     }
 
     public Callable<Exercise> downloadModelSolution(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new DownloadModelSolution command");
-        return new DownloadModelSolution(observer, exercise);
+        return new ExceptionTrackingCallable<>(new DownloadModelSolution(observer, exercise));
     }
 
     /**
@@ -156,6 +165,6 @@ public class TmcCore {
      */
     public Callable<Void> downloadCompletedExercises(ProgressObserver observer) {
         logger.info("Creating new DownloadCompletedExercises command");
-        return new DownloadCompletedExercises(observer);
+        return new ExceptionTrackingCallable<>(new DownloadCompletedExercises(observer));
     }
 }

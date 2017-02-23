@@ -39,6 +39,12 @@ public class HostInformationGenerator {
         return hostId;
     }
 
+    public static String getHostId() {
+        JsonMaker data = getStaticHostInformation();
+        String hostId = trySecureHash(data.toString());
+        return hostId;
+    }
+
     private static JsonMaker getStaticHostInformation() {
         JsonMaker builder = JsonMaker.create();
 

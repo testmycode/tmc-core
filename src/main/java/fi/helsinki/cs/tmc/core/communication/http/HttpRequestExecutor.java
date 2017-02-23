@@ -77,7 +77,7 @@ import java.util.concurrent.Callable;
 
     @Override
     public BufferedHttpEntity call()
-            throws IOException, InterruptedException, FailedHttpResponseException {
+        throws IOException, InterruptedException, FailedHttpResponseException {
         CloseableHttpClient httpClient = makeHttpClient();
 
         try {

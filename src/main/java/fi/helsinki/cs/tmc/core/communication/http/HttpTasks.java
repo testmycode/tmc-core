@@ -2,18 +2,22 @@ package fi.helsinki.cs.tmc.core.communication.http;
 
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 
+import com.google.gson.Gson;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.util.ArrayList;
@@ -30,6 +34,7 @@ import java.util.concurrent.Callable;
 public class HttpTasks {
     private static final ContentType UTF8_TEXT_CONTENT_TYPE =
             ContentType.create("text/plain", "utf-8");
+    private static final Gson gson = new Gson();
 
     private UsernamePasswordCredentials credentials = null;
 
@@ -44,6 +49,24 @@ public class HttpTasks {
 
     private HttpRequestExecutor createExecutor(HttpPost request) {
         return new HttpRequestExecutor(request).setCredentials(credentials);
+    }
+
+    /**
+     * Posts json to a url without authentication.
+     */
+    public Callable<String> postJson(final URI uri, final Serializable json) {
+        return new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                String string = gson.toJson(json);
+                StringEntity content = new StringEntity(string, "UTF-8");
+                HttpPost httpPost = new HttpPost(uri);
+                httpPost.setHeader("content-type", "application/json");
+                httpPost.setEntity(content);
+                HttpRequestExecutor executor = new HttpRequestExecutor(httpPost);
+                return EntityUtils.toString(executor.call());
+            }
+        };
     }
 
     public Callable<byte[]> getForBinary(URI url) {

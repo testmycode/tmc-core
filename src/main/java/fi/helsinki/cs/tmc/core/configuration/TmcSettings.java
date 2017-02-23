@@ -52,4 +52,8 @@ public interface TmcSettings {
     void setConfigRoot(Path configRoot);
 
     Path getConfigRoot();
+
+    String hostProgramName();
+
+    String hostProgramVersion();
 }

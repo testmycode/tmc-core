@@ -112,38 +112,38 @@
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.7.2" level="project" />
     <orderEntry type="library" name="Maven: commons-lang:commons-lang:2.6" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.wagon:wagon-provider-api:2.9" level="project" />
-    <orderEntry type="library" name="Maven: com.puppycrawl.tools:checkstyle:6.17" level="project" />
-    <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
-    <orderEntry type="library" name="Maven: org.antlr:antlr4-runtime:4.5.2-1" level="project" />
-    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.2" level="project" />
-    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
+    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-abstraction:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.4.1.3" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.4.0" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.4.1.1" level="project" />
+    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-util:0.7.7-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-framework:0.7.7-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-compress:1.9" level="project" />
+    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-java:0.7.7-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.ant:ant:1.9.6" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.ant:ant-launcher:1.9.6" level="project" />
+    <orderEntry type="library" name="Maven: org.rauschig:jarchivelib:0.7.1" level="project" />
+    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-checkstyle-runner:3.0.3-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.1" level="project" />
     <orderEntry type="module-library">
-      <library name="Maven: com.sun:tools:1.7.0">
+      <library name="Maven: com.sun:tools:1.6.0">
         <CLASSES>
-          <root url="jar:///usr/lib/jvm/java-8-jdk/jre/../lib/tools.jar!/" />
+          <root url="jar:///usr/lib/jvm/java-8-jdk/lib/tools.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-abstraction:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.4.1.3" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.4.0" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.4.1.1" level="project" />
-    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-util:0.7.5-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-framework:0.7.5-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-compress:1.9" level="project" />
-    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-java:0.7.5-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.ant:ant:1.9.6" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.ant:ant-launcher:1.9.6" level="project" />
-    <orderEntry type="library" name="Maven: org.rauschig:jarchivelib:0.7.1" level="project" />
-    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-checkstyle-runner:3.0.1" level="project" />
-    <orderEntry type="library" name="Maven: com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.4.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.maven.shared:maven-invoker:2.2" level="project" />
-    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-make:0.7.5-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-python3:0.7.5-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-notests:0.7.5-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-make:0.7.7-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-python3:0.7.7-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: fi.helsinki.cs.tmc:tmc-langs-notests:0.7.7-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.github.stefanbirkner:system-rules:1.12.1" level="project" />
+    <orderEntry type="library" name="Maven: com.puppycrawl.tools:checkstyle:6.17" level="project" />
+    <orderEntry type="library" name="Maven: antlr:antlr:2.7.7" level="project" />
+    <orderEntry type="library" name="Maven: org.antlr:antlr4-runtime:4.5.2-1" level="project" />
+    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.2" level="project" />
+    <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.5" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-jdk14:1.7.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.slf4j:slf4j-nop:1.7.12" level="project" />
@@ -162,14 +162,14 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.maven.plugin-tools:maven-plugin-annotations:3.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.maven.surefire:surefire-api:2.18.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.maven.surefire:surefire-booter:2.18.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-descriptor:2.2.1" level="project" />
-    <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-container-default:1.0-alpha-9-stable-1" level="project" />
-    <orderEntry type="library" name="Maven: classworlds:classworlds:1.1-alpha-2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.maven:maven-project:2.2.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.maven:maven-profile:2.2.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.maven:maven-artifact-manager:2.2.1" level="project" />
-    <orderEntry type="library" name="Maven: backport-util-concurrent:backport-util-concurrent:3.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.maven:maven-plugin-registry:2.2.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.apache.maven:maven-plugin-descriptor:2.2.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.plexus:plexus-container-default:1.0-alpha-9-stable-1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: classworlds:classworlds:1.1-alpha-2" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.apache.maven:maven-project:2.2.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.apache.maven:maven-profile:2.2.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.apache.maven:maven-artifact-manager:2.2.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: backport-util-concurrent:backport-util-concurrent:3.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.apache.maven:maven-plugin-registry:2.2.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.maven:maven-toolchain:2.2.1" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:19.0" level="project" />

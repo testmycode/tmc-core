@@ -110,8 +110,18 @@ public class MockSettings implements TmcSettings {
     }
 
     @Override
+    public void setOauthApplicationId(String oauthApplicationId) {
+
+    }
+
+    @Override
     public String getOauthSecret() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void setOauthSecret(String oauthSecret) {
+
     }
 
     @Override

@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.domain;
 
 import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class OauthCredentials implements Serializable {

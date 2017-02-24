@@ -30,8 +30,6 @@ public interface TmcSettings {
 
     Optional<Course> getCurrentCourse();
 
-    String apiVersion();
-
     String clientName();
 
     String clientVersion();

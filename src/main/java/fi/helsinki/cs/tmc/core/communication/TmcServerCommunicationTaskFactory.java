@@ -26,7 +26,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import java.net.MalformedURLException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
@@ -360,8 +360,14 @@ public class TmcServerCommunicationTaskFactory {
         });
     }
 
-    public Callable<Void> getOauthCredentialsTask(URI credentialsUrl) throws IOException {
-        OauthCredentials credentials = new Gson().fromJson(IOUtils.toString(credentialsUrl.toURL()), OauthCredentials.class);
+    public Callable<Void> getOauthCredentialsTask() throws IOException {
+        URI credentialsUrl = URI.create(
+                settings.getServerAddress() + "/api/v" + API_VERSION
+                        + "/application/" + settings.clientName() + "credentials");
+        OauthCredentials credentials =
+                new Gson().fromJson(
+                        IOUtils.toString(credentialsUrl.toURL()), OauthCredentials.class);
+        return null;
     }
 
     private byte[] eventListToPostBody(List<LoggableEvent> events) throws IOException {

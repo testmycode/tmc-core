@@ -361,9 +361,16 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<Void> getOauthCredentialsTask() throws IOException {
-        URI credentialsUrl = URI.create(
+        URI credentialsUrl;
+        if (settings.getServerAddress().endsWith("/")) {
+            credentialsUrl = URI.create(
+                settings.getServerAddress() + "api/v" + API_VERSION
+                    + "/application/" + settings.clientName() + "/credentials");
+        } else {
+            credentialsUrl = URI.create(
                 settings.getServerAddress() + "/api/v" + API_VERSION
-                        + "/application/" + settings.clientName() + "credentials");
+                    + "/application/" + settings.clientName() + "/credentials");
+        }
         OauthCredentials credentials =
                 new Gson().fromJson(
                         IOUtils.toString(credentialsUrl.toURL()), OauthCredentials.class);

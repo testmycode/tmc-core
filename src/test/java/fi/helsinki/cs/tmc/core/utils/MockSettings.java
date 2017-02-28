@@ -50,11 +50,6 @@ public class MockSettings implements TmcSettings {
     }
 
     @Override
-    public String apiVersion() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public String clientName() {
         return "testClient";
     }

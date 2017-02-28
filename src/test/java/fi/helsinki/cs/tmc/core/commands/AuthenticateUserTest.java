@@ -3,7 +3,9 @@ package fi.helsinki.cs.tmc.core.commands;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.when;
 
+import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
@@ -22,6 +24,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import java.io.IOException;
+
 public class AuthenticateUserTest {
     @Mock
     ProgressObserver mockObserver;
@@ -29,11 +33,13 @@ public class AuthenticateUserTest {
     TmcSettings settings;
     @Mock
     Oauth oauth;
+    @Mock
+    TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory;
 
     private Command<Void> command;
 
     @Before
-    public void setUp() throws OAuthProblemException, OAuthSystemException {
+    public void setUp() throws OAuthProblemException, OAuthSystemException, IOException {
         MockitoAnnotations.initMocks(this);
         settings = new MockSettings();
         TmcSettingsHolder.set(settings);
@@ -50,11 +56,13 @@ public class AuthenticateUserTest {
                 throw new OAuthSystemException();
             }
         }).when(oauth).fetchNewToken("wrongPassword");
+        when(tmcServerCommunicationTaskFactory.getOauthCredentialsTask()).thenReturn(null);
     }
 
     @Test
     public void testCallSucceeds() throws Exception {
-        command = new AuthenticateUser(mockObserver, "password", oauth);
+        command = new AuthenticateUser(mockObserver, "password",
+                                        oauth, tmcServerCommunicationTaskFactory);
         command.call();
         assertTrue(settings.getToken().isPresent());
         assertEquals(settings.getToken().get(), "testToken");
@@ -62,7 +70,8 @@ public class AuthenticateUserTest {
 
     @Test(expected = AuthenticationFailedException.class)
     public void testCallFails() throws Exception {
-        command = new AuthenticateUser(mockObserver, "wrongPassword", oauth);
+        command = new AuthenticateUser(mockObserver, "wrongPassword",
+                                        oauth, tmcServerCommunicationTaskFactory);
         command.call();
     }
 }

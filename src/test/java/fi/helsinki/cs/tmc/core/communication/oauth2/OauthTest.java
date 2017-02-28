@@ -38,7 +38,7 @@ public class OauthTest {
         MockitoAnnotations.initMocks(this);
         settings = new MockSettings();
         TmcSettingsHolder.set(settings);
-        oauth = spy(Oauth.getInstance());
+        oauth = spy(new Oauth());
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {

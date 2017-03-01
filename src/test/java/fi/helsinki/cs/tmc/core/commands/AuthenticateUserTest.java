@@ -3,6 +3,8 @@ package fi.helsinki.cs.tmc.core.commands;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
@@ -73,5 +75,13 @@ public class AuthenticateUserTest {
         command = new AuthenticateUser(mockObserver, "wrongPassword",
                                         oauth, tmcServerCommunicationTaskFactory);
         command.call();
+    }
+
+    @Test
+    public void callsTmcServerCommunicationTaskFactorysGetOauthCredentialsTask() throws Exception {
+        command = new AuthenticateUser(mockObserver, "password",
+                                        oauth, tmcServerCommunicationTaskFactory);
+        command.call();
+        verify(tmcServerCommunicationTaskFactory, times(1)).getOauthCredentialsTask();
     }
 }

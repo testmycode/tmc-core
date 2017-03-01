@@ -71,8 +71,16 @@ public class Oauth {
      */
     public void fetchNewToken(String password) throws OAuthSystemException, OAuthProblemException {
         log.info("Fetching new oauth token from server");
+
+        String oauthTokenUrl;
+        if (settings.getServerAddress().endsWith("/")) {
+            oauthTokenUrl = settings.getServerAddress() + "oauth/token";
+        } else {
+            oauthTokenUrl = settings.getServerAddress() + "/oauth/token";
+        }
+
         OAuthClientRequest request = OAuthClientRequest
-                .tokenLocation(settings.getOauthTokenUrl())
+                .tokenLocation(oauthTokenUrl)
                 .setGrantType(GrantType.PASSWORD)
                 .setClientId(settings.getOauthApplicationId())
                 .setClientSecret(settings.getOauthSecret())
@@ -82,14 +90,6 @@ public class Oauth {
         OAuthClient client = new OAuthClient(new URLConnectionClient());
         String token = client.accessToken(request, OAuthJSONAccessTokenResponse.class)
                 .getAccessToken();
-        setToken(token);
-    }
-
-    /**
-     * Sets given oauth token to TmcSettings.
-     * @param token to be set to settings
-     */
-    private void setToken(String token) {
         settings.setToken(token);
     }
 }

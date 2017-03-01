@@ -62,8 +62,6 @@ public interface TmcSettings {
 
     boolean getSendDiagnostics();
 
-    String getOauthTokenUrl();
-
     String getOauthApplicationId();
 
     void setOauthApplicationId(String oauthApplicationId);

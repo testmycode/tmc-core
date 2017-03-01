@@ -11,6 +11,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utils.MockSettings;
 
@@ -36,7 +37,7 @@ public class OauthTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        settings = new MockSettings();
+        settings = spy(new MockSettings());
         TmcSettingsHolder.set(settings);
         oauth = spy(new Oauth());
         doAnswer(new Answer() {
@@ -56,11 +57,11 @@ public class OauthTest {
     }
 
     @Test
-    public void hasTokenWhenFetched() {
+    public void hasTokenWhenFetched() throws NotLoggedInException {
         try {
             oauth.fetchNewToken("password");
             assertTrue(oauth.hasToken());
-            assertEquals("testToken", settings.getToken().get());
+            assertEquals("testToken", oauth.getToken());
         } catch (OAuthSystemException | OAuthProblemException ex) {
             fail("Got exception: " + ex.toString());
         }
@@ -70,5 +71,11 @@ public class OauthTest {
     public void hasNoTokenWhenInitialized() throws Exception {
         assertFalse(oauth.hasToken());
         verify(oauth, times(0)).fetchNewToken(anyString());
+    }
+
+    @Test
+    public void setsTokenToSettings() throws OAuthProblemException, OAuthSystemException {
+        oauth.fetchNewToken("password");
+        verify(settings, times(1)).setToken(anyString());
     }
 }

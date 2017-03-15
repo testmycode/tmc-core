@@ -21,14 +21,14 @@ public class Crash implements Serializable {
         this.message = throwable.getMessage();
         stacktrace = new ArrayList<>();
         this.diagnostics = new Diagnostics();
-        Optional<String> cause = Optional.fromNullable(throwable.getCause())
-                .transform(new Function<Throwable, String>() {
-                    @Override
-                    public String apply(Throwable throwable) {
-                        return throwable.getMessage();
-                    }
-                });
-        this.cause = cause.orNull();
+        Optional<Throwable> cause = Optional.fromNullable(throwable.getCause());
+
+        if (cause.isPresent()) {
+            this.cause = cause.get().getMessage();
+        } else {
+            this.cause = null;
+        }
+
         for (StackTraceElement s : throwable.getStackTrace()) {
             stacktrace.add(s.toString());
         }

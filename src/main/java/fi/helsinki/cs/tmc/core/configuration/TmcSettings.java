@@ -56,4 +56,6 @@ public interface TmcSettings {
     String hostProgramName();
 
     String hostProgramVersion();
+
+    boolean getSendDiagnostics();
 }

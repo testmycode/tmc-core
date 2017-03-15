@@ -31,6 +31,7 @@ public class ExceptionTrackingCallableTest {
         when(settings.hostProgramName()).thenReturn("testHostProgram");
         when(settings.hostProgramVersion()).thenReturn("testHostProgramVersion");
         when(settings.getLocale()).thenReturn(new Locale("en"));
+        when(settings.getSendDiagnostics()).thenReturn(true);
     }
 
 

@@ -110,7 +110,7 @@ public class TmcCore {
 
     public Callable<RunResult> runTests(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new RunTests command");
-        return new ExceptionTrackingCallable<>(new ExceptionTrackingCallable<>(new RunTests(observer, exercise)));
+        return new ExceptionTrackingCallable<>(new RunTests(observer, exercise));
     }
 
     public Callable<Boolean> sendFeedback(

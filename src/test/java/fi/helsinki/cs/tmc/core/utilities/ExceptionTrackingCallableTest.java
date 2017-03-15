@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core.utilities;
 
 import static org.mockito.Mockito.when;
 
+import fi.helsinki.cs.tmc.core.communication.TmcBandicootCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
@@ -15,7 +16,10 @@ import java.util.concurrent.Callable;
 
 public class ExceptionTrackingCallableTest {
 
-    @Mock TmcSettings settings;
+    @Mock
+    TmcSettings settings;
+    @Mock
+    TmcBandicootCommunicationTaskFactory factory;
 
     @Before
     public void setUp() {
@@ -32,7 +36,7 @@ public class ExceptionTrackingCallableTest {
 
     @Test(expected = Exception.class)
     public void testCall() throws Exception {
-        new ExceptionTrackingCallable<>(new ExceptionThrowingCallable<Void>()).call();
+        new ExceptionTrackingCallable<>(new ExceptionThrowingCallable<Void>(), factory).call();
     }
 
     class ExceptionThrowingCallable<T> implements Callable<T> {

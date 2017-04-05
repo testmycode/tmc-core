@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.communication.oauth2;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
@@ -79,13 +80,15 @@ public class Oauth {
             oauthTokenUrl = settings.getServerAddress() + "/oauth/token";
         }
 
+        OauthCredentials credentials = settings.getOauthCredentials();
         OAuthClientRequest request = OAuthClientRequest
                 .tokenLocation(oauthTokenUrl)
                 .setGrantType(GrantType.PASSWORD)
-                .setClientId(settings.getOauthApplicationId())
-                .setClientSecret(settings.getOauthSecret())
+                .setClientId(credentials.getOauthApplicationId())
+                .setClientSecret(credentials.getOauthSecret())
                 .setUsername(settings.getUsername())
                 .setPassword(password)
+                .setRedirectURI("urn:ietf:wg:oauth:2.0:oob")
                 .buildQueryMessage();
         OAuthClient client = new OAuthClient(new URLConnectionClient());
         String token = client.accessToken(request, OAuthJSONAccessTokenResponse.class)

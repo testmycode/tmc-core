@@ -16,6 +16,11 @@ public class OauthCredentials implements Serializable {
 
     }
 
+    public OauthCredentials(String oauthApplicationId, String oauthSecret) {
+        this.oauthApplicationId = oauthApplicationId;
+        this.oauthSecret = oauthSecret;
+    }
+
     public void setOauthApplicationId(String oauthApplicationId) {
         this.oauthApplicationId = oauthApplicationId;
     }

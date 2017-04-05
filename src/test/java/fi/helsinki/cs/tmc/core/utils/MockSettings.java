@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core.utils;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
 
 import com.google.common.base.Optional;
 
@@ -22,6 +23,11 @@ public class MockSettings implements TmcSettings {
     @Override
     public String getServerAddress() {
         return "testAddress";
+    }
+
+    @Override
+    public void setServerAddress(String address) {
+
     }
 
     @Override
@@ -56,7 +62,7 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public String clientVersion() {
-        return "testClient";
+        return "testVersion";
     }
 
     @Override
@@ -71,7 +77,7 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public Locale getLocale() {
-        return null;
+        return new Locale("en");
     }
 
     @Override
@@ -95,22 +101,30 @@ public class MockSettings implements TmcSettings {
     }
 
     @Override
-    public String getOauthApplicationId() {
-        throw new UnsupportedOperationException();
+    public String hostProgramName() {
+        return "testHostProgram";
     }
 
     @Override
-    public void setOauthApplicationId(String oauthApplicationId) {
-
+    public String hostProgramVersion() {
+        return "testHostProgramVersion";
     }
 
     @Override
-    public String getOauthSecret() {
-        throw new UnsupportedOperationException();
+    public boolean getSendDiagnostics() {
+        return true;
     }
 
     @Override
-    public void setOauthSecret(String oauthSecret) {
+    public OauthCredentials getOauthCredentials() {
+        OauthCredentials credentials = new OauthCredentials();
+        credentials.setOauthApplicationId("testOauthApplicationId");
+        credentials.setOauthSecret("testOauthSecret");
+        return credentials;
+    }
+
+    @Override
+    public void setOauthCredentials(OauthCredentials credentials) {
 
     }
 
@@ -122,5 +136,14 @@ public class MockSettings implements TmcSettings {
     @Override
     public Optional<String> getToken() {
         return token;
+    }
+
+    @Override
+    public String getOrganization() {
+        return "testOrganization";
+    }
+
+    @Override
+    public void setOrganization(String organization) {
     }
 }

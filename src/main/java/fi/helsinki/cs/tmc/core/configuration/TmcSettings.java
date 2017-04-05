@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.configuration;
 
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
@@ -13,6 +14,8 @@ import java.util.Locale;
 public interface TmcSettings {
 
     String getServerAddress();
+
+    void setServerAddress(String address);
 
     /**
      * Used for old login credentials, new ones use oauth.
@@ -62,15 +65,15 @@ public interface TmcSettings {
 
     boolean getSendDiagnostics();
 
-    String getOauthApplicationId();
+    OauthCredentials getOauthCredentials();
 
-    void setOauthApplicationId(String oauthApplicationId);
-
-    String getOauthSecret();
-
-    void setOauthSecret(String oauthSecret);
+    void setOauthCredentials(OauthCredentials credentials);
 
     void setToken(String token);
 
     Optional<String> getToken();
+
+    String getOrganization();
+
+    void setOrganization(String organization);
 }

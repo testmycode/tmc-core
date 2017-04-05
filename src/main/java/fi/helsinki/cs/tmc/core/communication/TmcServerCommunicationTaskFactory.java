@@ -122,20 +122,19 @@ public class TmcServerCommunicationTaskFactory {
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
         String serverAddress = settings.getServerAddress();
         String url;
+        String urlLastPart = "api/v" + API_VERSION + "/core/org/" + settings.getOrganization() + "/courses.json";
         if (serverAddress.endsWith("/")) {
-            url = serverAddress + "courses.json";
+            url = serverAddress + urlLastPart;
         } else {
-            url = serverAddress + "/courses.json";
+            url = serverAddress + "/" + urlLastPart;
         }
         return addApiCallQueryParameters(URI.create(url));
     }
 
     private URI addApiCallQueryParameters(URI url) throws NotLoggedInException {
-        url = UriUtils.withQueryParam(url, "api_version", "" + API_VERSION);
         url = UriUtils.withQueryParam(url, "client", settings.clientName());
         url = UriUtils.withQueryParam(url, "client_version", clientVersion);
-        String token = oauth.getToken();
-        url = UriUtils.withQueryParam(url, "access_token", token);
+        url = UriUtils.withQueryParam(url, "access_token", oauth.getToken());
         return url;
     }
 
@@ -374,6 +373,7 @@ public class TmcServerCommunicationTaskFactory {
         OauthCredentials credentials =
                 new Gson().fromJson(
                         IOUtils.toString(credentialsUrl.toURL()), OauthCredentials.class);
+        settings.setOauthCredentials(credentials);
         return null;
     }
 

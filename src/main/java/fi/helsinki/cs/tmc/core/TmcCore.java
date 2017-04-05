@@ -29,6 +29,7 @@ import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utilities.ExceptionTrackingCallable;
+import fi.helsinki.cs.tmc.core.utilities.TmcServerAddressNormalizer;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
@@ -74,6 +75,7 @@ public class TmcCore {
     public TmcCore(TmcSettings settings, TaskExecutor tmcLangs) {
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(tmcLangs);
+        TmcServerAddressNormalizer.normalize();
     }
 
     public Callable<Void> authenticate(ProgressObserver observer, String password) {

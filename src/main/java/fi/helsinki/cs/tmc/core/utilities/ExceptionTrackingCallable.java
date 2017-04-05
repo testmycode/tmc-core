@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.utilities;
 import fi.helsinki.cs.tmc.core.communication.TmcBandicootCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.bandicoot.Crash;
+import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -33,7 +34,7 @@ public class ExceptionTrackingCallable<T> implements Callable<T> {
         try {
             return command.call();
         } catch (Exception ex) {
-            if (settings.getSendDiagnostics()) {
+            if (settings.getSendDiagnostics() && !(ex instanceof NotLoggedInException)) {
                 tmcBandicootCommunicationTaskFactory.sendCrash(new Crash(ex)).call();
             }
             throw ex;

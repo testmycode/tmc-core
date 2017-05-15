@@ -2,7 +2,6 @@ package fi.helsinki.cs.tmc.core.configuration;
 
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
-import fi.helsinki.cs.tmc.core.domain.Organization;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
@@ -70,7 +69,7 @@ public interface TmcSettings {
 
     void setOauthCredentials(OauthCredentials credentials);
 
-    void setToken(String token);
+    void setToken(Optional<String> token);
 
     Optional<String> getToken();
 

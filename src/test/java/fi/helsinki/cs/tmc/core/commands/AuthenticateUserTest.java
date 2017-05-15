@@ -15,6 +15,8 @@ import fi.helsinki.cs.tmc.core.exceptions.AuthenticationFailedException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utils.MockSettings;
 
+import com.google.common.base.Optional;
+
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
@@ -48,7 +50,7 @@ public class AuthenticateUserTest {
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                settings.setToken("testToken");
+                settings.setToken(Optional.of("testToken"));
                 return null;
             }
         }).when(oauth).fetchNewToken("password");

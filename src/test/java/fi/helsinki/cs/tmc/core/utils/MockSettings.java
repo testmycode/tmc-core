@@ -130,8 +130,8 @@ public class MockSettings implements TmcSettings {
     }
 
     @Override
-    public void setToken(String token) {
-        this.token = Optional.of(token);
+    public void setToken(Optional<String> token) {
+        this.token = token;
     }
 
     @Override

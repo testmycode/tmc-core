@@ -5,6 +5,7 @@ import fi.helsinki.cs.tmc.core.commands.DownloadCompletedExercises;
 import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
 import fi.helsinki.cs.tmc.core.commands.DownloadOrUpdateExercises;
 import fi.helsinki.cs.tmc.core.commands.GetCourseDetails;
+import fi.helsinki.cs.tmc.core.commands.GetOrganizations;
 import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
 import fi.helsinki.cs.tmc.core.commands.GetUpdatableExercises;
 import fi.helsinki.cs.tmc.core.commands.ListCourses;
@@ -22,6 +23,7 @@ import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
@@ -76,6 +78,11 @@ public class TmcCore {
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(tmcLangs);
         TmcServerAddressNormalizer.normalize();
+    }
+
+    public Callable<List<Organization>> getOrganizations(ProgressObserver observer) {
+        logger.info("Creating new GetOrganizations command");
+        return new GetOrganizations(observer);
     }
 
     public Callable<Void> authenticate(ProgressObserver observer, String password) {

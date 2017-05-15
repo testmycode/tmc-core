@@ -11,6 +11,7 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
+import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
@@ -375,6 +376,20 @@ public class TmcServerCommunicationTaskFactory {
                         IOUtils.toString(credentialsUrl.toURL()), OauthCredentials.class);
         settings.setOauthCredentials(credentials);
         return null;
+    }
+
+    public List<Organization> getOrganizationListTask() throws IOException {
+        String url;
+        String serverAddress = settings.getServerAddress();
+        String urlLastPart = "api/v" + API_VERSION + "/org";
+        if (serverAddress.endsWith("/")) {
+            url = settings.getServerAddress() + urlLastPart;
+        } else {
+            url = serverAddress + "/" + urlLastPart;
+        }
+        URI organizationUrl = URI.create(url);
+        List<Organization> organizations = new Gson().fromJson(IOUtils.toString(organizationUrl.toURL()), new TypeToken<List<Organization>>(){}.getType());
+        return organizations;
     }
 
     private byte[] eventListToPostBody(List<LoggableEvent> events) throws IOException {

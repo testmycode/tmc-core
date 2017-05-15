@@ -10,6 +10,8 @@ public class Course {
 
     private int id;
     private String name;
+    private String title;
+    private String description;
 
     private List<Exercise> exercises;
 
@@ -79,6 +81,22 @@ public class Course {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public URI getDetailsUrl() {

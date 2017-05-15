@@ -6,6 +6,7 @@ import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
+import com.google.common.base.Optional;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
@@ -93,6 +94,6 @@ public class Oauth {
         OAuthClient client = new OAuthClient(new URLConnectionClient());
         String token = client.accessToken(request, OAuthJSONAccessTokenResponse.class)
                 .getAccessToken();
-        settings.setToken(token);
+        settings.setToken(Optional.of(token));
     }
 }

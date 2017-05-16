@@ -132,6 +132,19 @@ public class TmcServerCommunicationTaskFactory {
         return addApiCallQueryParameters(URI.create(url));
     }
 
+    /**
+         *  Test for returning skillifier stuff.
+         *
+        * @return next.json URI
+        * @throws OAuthSystemException
+        * @throws OAuthProblemException
+        * @throws NotLoggedInException 
+        */
+    private URI getNextJson() 
+        throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
+        return addApiCallQueryParameters(URI.create("localhost:3200/next.json"));
+    }
+    
     private URI addApiCallQueryParameters(URI url) throws NotLoggedInException {
         url = UriUtils.withQueryParam(url, "client", settings.clientName());
         url = UriUtils.withQueryParam(url, "client_version", clientVersion);

@@ -131,7 +131,14 @@ public class TmcServerCommunicationTaskFactory {
         }
         return addApiCallQueryParameters(URI.create(url));
     }
-
+    
+    private URI addApiCallQueryParameters(URI url) throws NotLoggedInException {
+        url = UriUtils.withQueryParam(url, "client", settings.clientName());
+        url = UriUtils.withQueryParam(url, "client_version", clientVersion);
+        url = UriUtils.withQueryParam(url, "access_token", oauth.getToken());
+        return url;
+    }
+    
     /**
          *  Test for returning skillifier stuff.
          *
@@ -140,16 +147,14 @@ public class TmcServerCommunicationTaskFactory {
         * @throws OAuthProblemException
         * @throws NotLoggedInException 
         */
-    private URI getNextJson() 
+    public Callable<Boolean> getNextJson() 
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
-        return addApiCallQueryParameters(URI.create("localhost:3200/next.json"));
-    }
-    
-    private URI addApiCallQueryParameters(URI url) throws NotLoggedInException {
-        url = UriUtils.withQueryParam(url, "client", settings.clientName());
-        url = UriUtils.withQueryParam(url, "client_version", clientVersion);
-        url = UriUtils.withQueryParam(url, "access_token", oauth.getToken());
-        return url;
+        return wrapWithNotLoggedInException(new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return false;
+            }
+        });
     }
 
     public Callable<List<Course>> getDownloadingCourseListTask() {

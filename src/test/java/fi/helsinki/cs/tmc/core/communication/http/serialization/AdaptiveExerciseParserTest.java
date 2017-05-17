@@ -9,24 +9,29 @@ import fi.helsinki.cs.tmc.core.communication.serialization.AdaptiveExerciseParse
 
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
- *
  * @author sakuolin
  */
 public class AdaptiveExerciseParserTest {
-    
+
     private AdaptiveExerciseParser aep;
-    
+
     @Before
     public void setUp() {
         this.aep = new AdaptiveExerciseParser();
     }
-    
+
     @Test
-    public void testAvailability() {
+    public void testAvailabilityTrue() {
         assertTrue(aep.parseBooleanFromJson("{ available: true }"));
     }
-    
+
+    @Test
+    public void testAvailabilityFalse() {
+        assertFalse(aep.parseBooleanFromJson("{ available: false }"));
+    }
+
 }

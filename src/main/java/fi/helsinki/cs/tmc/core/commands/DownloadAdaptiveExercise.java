@@ -5,7 +5,9 @@
  */
 package fi.helsinki.cs.tmc.core.commands;
 
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,19 +15,19 @@ import org.slf4j.LoggerFactory;
  *
  * @author sakuolin
  */
-public class GetAdaptiveExerciseAvailability extends Command<Boolean> {
+public class DownloadAdaptiveExercise extends Command<Exercise> {
     
     private static final Logger logger = LoggerFactory.getLogger(SendFeedback.class);
 
-    public GetAdaptiveExerciseAvailability(ProgressObserver observer) {
+    public DownloadAdaptiveExercise(ProgressObserver observer) {
         super(observer);
     }
 
     @Override
-    public Boolean call() throws Exception {
+    public Exercise call() throws Exception {
         logger.info("Checking adaptive exercises availability");
         //informObserver()
-        return tmcServerCommunicationTaskFactory.getNextJson().call();
+        return tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
     }
     
 }

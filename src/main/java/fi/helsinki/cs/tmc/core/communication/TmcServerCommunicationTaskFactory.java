@@ -1,5 +1,7 @@
 package fi.helsinki.cs.tmc.core.communication;
 
+import fi.helsinki.cs.tmc.core.commands.*;
+
 import fi.helsinki.cs.tmc.core.communication.http.HttpTasks;
 import fi.helsinki.cs.tmc.core.communication.http.UriUtils;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
@@ -28,6 +30,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
@@ -38,6 +41,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -151,24 +157,30 @@ public class TmcServerCommunicationTaskFactory {
         * @throws OAuthProblemException
         * @throws NotLoggedInException 
         */
-    public Callable<Exercise> getAdaptiveExercise() 
+    public Callable<Void> downloadAndExtractAdaptiveExercise() 
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
-        return wrapWithNotLoggedInException(new Callable<Exercise>() {
+        return wrapWithNotLoggedInException(new Callable<Void>() {
             @Override
-            public Exercise call() throws Exception {
+            public Void call() throws Exception {
                 try {
                     Callable<String> download = new HttpTasks().
                         getForText(URI.create("localhost:3200/next.json"));
                     String json = download.call();
                     Exercise ex = adaptiveExerciseParser.parseFromJson(json);
-                    Callable<byte[]> b = getDownloadingExerciseZipTask(ex);
+                    byte[] b = getDownloadingExerciseZipTask(ex).call();
+                    Path temp = Files.createTempFile("tmc-exercise-", ".zip"); 
+                    Files.write(temp, b);
+                    Path target = TmcSettingsHolder.get().getTmcProjectDirectory().resolve("target-example");
+                    TmcLangsHolder.get().extractAndRewriteEveryhing(temp, target);
+                    
                 }
                 catch (Exception ex) {
-                    return null;
                 }
+                return null;
             }
         });
     }
+    
 
     public Callable<List<Course>> getDownloadingCourseListTask() {
         return wrapWithNotLoggedInException(new Callable<List<Course>>() {

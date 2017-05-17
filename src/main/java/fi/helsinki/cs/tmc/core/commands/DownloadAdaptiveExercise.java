@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author sakuolin
  */
-public class DownloadAdaptiveExercise extends Command<Exercise> {
+public class DownloadAdaptiveExercise extends Command<Void> {
     
     private static final Logger logger = LoggerFactory.getLogger(SendFeedback.class);
 
@@ -24,10 +24,11 @@ public class DownloadAdaptiveExercise extends Command<Exercise> {
     }
 
     @Override
-    public Exercise call() throws Exception {
+    public Void call() throws Exception {
         logger.info("Checking adaptive exercises availability");
         //informObserver()
-        return tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
+        tmcServerCommunicationTaskFactory.downloadAndExtractAdaptiveExercise().call();
+        return null;
     }
     
 }

@@ -152,6 +152,10 @@ public class TmcServerCommunicationTaskFactory {
         return wrapWithNotLoggedInException(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
+                // suoraan json?
+                Callable<String> json = new HttpTasks().
+                    getForText(URI.create("localhost:3200/next.json"));
+                // return AdaptiveExerciseParser.parseFromJson();
                 return false;
             }
         });

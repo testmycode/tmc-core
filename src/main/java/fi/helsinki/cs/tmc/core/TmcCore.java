@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core;
 
 import fi.helsinki.cs.tmc.core.commands.AuthenticateUser;
 import fi.helsinki.cs.tmc.core.commands.DownloadCompletedExercises;
+import fi.helsinki.cs.tmc.core.commands.DownloadExerciseByZipString;
 import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
 import fi.helsinki.cs.tmc.core.commands.DownloadOrUpdateExercises;
 import fi.helsinki.cs.tmc.core.commands.GetAdaptiveExerciseAvailability;
@@ -39,6 +40,7 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.spyware.LoggableEvent;
 
 import com.google.common.annotations.Beta;
+import fi.helsinki.cs.tmc.core.commands.Command;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -179,7 +181,11 @@ public class TmcCore {
         logger.info("Creating new GetStatusOfExercises command");
         return new ExceptionTrackingCallable<>(new GetAdaptiveExerciseAvailability(observer));
     }
-
+    
+    public Callable<Exercise> downloadExerciseByZipString(ProgressObserver observer, String zip) {
+        return new ExceptionTrackingCallable<>(new DownloadExerciseByZipString(observer,zip));
+    }
+    
     /**
      * NOT IMPLEMENTED!
      *

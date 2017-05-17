@@ -6,10 +6,8 @@
 package fi.helsinki.cs.tmc.core.communication.http.serialization;
 
 import fi.helsinki.cs.tmc.core.communication.serialization.AdaptiveExerciseParser;
-import org.junit.After;
-import org.junit.AfterClass;
+
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -28,7 +26,7 @@ public class AdaptiveExerciseParserTest {
     
     @Test
     public void testAvailability() {
-        assertFalse(aep.parseFromJson("ögodfogdfog"));
+        assertTrue(aep.parseBooleanFromJson("dgnsfogjdpfog"));
     }
     
 }

@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import java.util.Date;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +25,7 @@ public class AdaptiveExerciseParser {
     
     private static final Logger logger = LoggerFactory.getLogger(AdaptiveExerciseParser.class);
 
-    // miksi static?
-    public Boolean parseFromJson(String json) {
+    private Boolean parseFromJson(String json) {
         if (json == null) {
             throw new NullPointerException("Json string is null");
         }
@@ -34,11 +34,18 @@ public class AdaptiveExerciseParser {
         }
         try {
             System.out.println(json);
-            return true;
+            JSONObject obj = new JSONObject(json);
+            return obj.getBoolean("available");
         } catch (RuntimeException ex) {
             logger.warn("Failed to parse adaptive course availability", ex);
             throw new RuntimeException("Failed to parse adaptive course availability: " + ex.getMessage(), ex);
         }    
+    }
+    
+    public Boolean parseBooleanFromJson(String json) {
+        Boolean availability = parseFromJson(json);
+        if (availability) return true;
+        else return false;
     }
     
 }

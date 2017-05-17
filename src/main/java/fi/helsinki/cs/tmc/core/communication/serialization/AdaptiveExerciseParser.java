@@ -7,8 +7,11 @@ package fi.helsinki.cs.tmc.core.communication.serialization;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import java.net.URI;
 import java.util.Date;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -31,18 +34,27 @@ public class AdaptiveExerciseParser {
         if (json.trim().isEmpty()) {
             throw new IllegalArgumentException("Empty input");
         }
-        try {
-            JSONObject obj = new JSONObject(json);
+        try {;
+            Gson gson = new Gson();
+            JsonParser parser = new JsonParser();
+            JsonArray array = parser.parse(json).getAsJsonArray();
+            Boolean availability = gson.fromJson(array.get(0), Boolean.class);
+            //JSONObject obj = new JSONObject(json);
             // Check status
-            if (obj.getBoolean("available")) {
-                // Zip exercise
+            if (availability) {
+                String zip_url = gson.fromJson(array.get(1), String.class);
+                Exercise ex = new Exercise();
+                ex.setDownloadUrl(URI.create(zip_url));
+                return ex;
+                
                 // ...
-                byte[] zip;
+                
+                //byte[] zip;
                 // Gson
-                Gson gson = new GsonBuilder().create();
-                //Exercise exercise = gson.fromJson(zip, Exercise.class);
+                //gson = new GsonBuilder().create();
+                //ercise exercise = gson.fromJson(array.get(1), Exercise.class);
                 //return exercise;
-                return null;
+                //return zip_url;
             }
             return null;
         } catch (RuntimeException ex) {

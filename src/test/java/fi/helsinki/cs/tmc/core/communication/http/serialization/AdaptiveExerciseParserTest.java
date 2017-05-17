@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 public class AdaptiveExerciseParserTest {
 
     private AdaptiveExerciseParser aep;
-
+/*
     @Before
     public void setUp() {
         this.aep = new AdaptiveExerciseParser();
@@ -28,5 +28,5 @@ public class AdaptiveExerciseParserTest {
     public void parseFromJson() {
         assertEquals(aep.parseFromJson("ögjdojgdpog"), null);
     }
-
+ */
 }

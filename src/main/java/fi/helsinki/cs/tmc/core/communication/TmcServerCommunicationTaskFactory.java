@@ -151,6 +151,25 @@ public class TmcServerCommunicationTaskFactory {
         * @throws OAuthProblemException
         * @throws NotLoggedInException 
         */
+    
+    public Callable<String> getJsonString(){
+        return wrapWithNotLoggedInException(new Callable<String>(){
+            @Override
+            public String call() throws Exception {
+                try{
+                    Callable<String> download = new HttpTasks().
+                        getForText(URI.create("localhost:3200/next.json"));
+                    String json = download.call();
+                    return json;
+                   }
+                catch (Exception ex) {
+                    return null;
+                }
+            }
+    });
+        
+        
+    }
     public Callable<Exercise> getAdaptiveExercise() 
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
         return wrapWithNotLoggedInException(new Callable<Exercise>() {
@@ -162,6 +181,7 @@ public class TmcServerCommunicationTaskFactory {
                     String json = download.call();
                     Exercise ex = adaptiveExerciseParser.parseFromJson(json);
                     Callable<byte[]> b = getDownloadingExerciseZipTask(ex);
+                    return ex;
                 }
                 catch (Exception ex) {
                     return null;

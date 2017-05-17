@@ -25,8 +25,8 @@ public class AdaptiveExerciseParserTest {
     }
     
     @Test
-    public void testAvailability() {
-        assertTrue(aep.parseFromJson("{ available: true }"));
+    public void parseFromJson() {
+        assertEquals(aep.parseFromJson("ögjdojgdpog"), null);
     }
     
 }

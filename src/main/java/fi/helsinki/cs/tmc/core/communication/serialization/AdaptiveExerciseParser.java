@@ -36,8 +36,11 @@ public class AdaptiveExerciseParser {
             // Check status
             if (obj.getBoolean("available")) {
                 // Gson
-                
+                Gson gson = new GsonBuilder().create();
+                Exercise exercise = gson.fromJson(json, Exercise.class);
+                return exercise;
             }
+            return null;
         } catch (RuntimeException ex) {
             logger.warn("Failed to parse adaptive course availability", ex);
             throw new RuntimeException("Failed to parse adaptive course availability: " + ex.getMessage(), ex);

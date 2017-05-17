@@ -32,6 +32,10 @@ import org.mockito.Spy;
 
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
+import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.mockito.Matchers.any;
 
 public class GetUpdatableExercisesTest {
 

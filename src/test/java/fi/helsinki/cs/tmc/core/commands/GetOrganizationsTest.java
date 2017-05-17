@@ -20,6 +20,7 @@ import org.mockito.MockitoAnnotations;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import static org.mockito.Mockito.verify;
 
 public class GetOrganizationsTest {
     @Mock

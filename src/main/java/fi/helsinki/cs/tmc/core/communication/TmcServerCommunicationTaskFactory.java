@@ -151,11 +151,11 @@ public class TmcServerCommunicationTaskFactory {
         * @throws OAuthProblemException
         * @throws NotLoggedInException 
         */
-    public Callable<Boolean> getNextJson() 
+    public Callable<Exercise> getAdaptiveExercise() 
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
-        return wrapWithNotLoggedInException(new Callable<Boolean>() {
+        return wrapWithNotLoggedInException(new Callable<Exercise>() {
             @Override
-            public Boolean call() throws Exception {
+            public Exercise call() throws Exception {
                 try {
                     Callable<String> download = new HttpTasks().
                         getForText(URI.create("localhost:3200/next.json"));
@@ -163,8 +163,7 @@ public class TmcServerCommunicationTaskFactory {
                     return adaptiveExerciseParser.parseFromJson(json);
                 }
                 catch (Exception ex) {
-                    return false;
-                    // do things
+                    return null;
                 }
             }
         });

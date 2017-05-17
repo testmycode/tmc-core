@@ -4,7 +4,7 @@ import fi.helsinki.cs.tmc.core.commands.AuthenticateUser;
 import fi.helsinki.cs.tmc.core.commands.DownloadCompletedExercises;
 import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
 import fi.helsinki.cs.tmc.core.commands.DownloadOrUpdateExercises;
-import fi.helsinki.cs.tmc.core.commands.GetAdaptiveExerciseAvailability;
+import fi.helsinki.cs.tmc.core.commands.DownloadAdaptiveExercise;
 import fi.helsinki.cs.tmc.core.commands.GetCourseDetails;
 import fi.helsinki.cs.tmc.core.commands.GetOrganizations;
 import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
@@ -175,9 +175,9 @@ public class TmcCore {
         return new ExceptionTrackingCallable<>(new DownloadModelSolution(observer, exercise));
     }
     
-    public Callable<Boolean> getStatusOfExercises(ProgressObserver observer) {
-        logger.info("Creating new GetStatusOfExercises command");
-        return new ExceptionTrackingCallable<>(new GetAdaptiveExerciseAvailability(observer));
+    public Callable<Exercise> downloadAdaptiveExercise(ProgressObserver observer) {
+        logger.info("Creating new DownloadAdaptiveExercise command");
+        return new ExceptionTrackingCallable<>(new DownloadAdaptiveExercise(observer));
     }
 
     /**

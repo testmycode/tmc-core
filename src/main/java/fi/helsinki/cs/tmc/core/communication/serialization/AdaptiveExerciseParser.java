@@ -21,11 +21,10 @@ import org.slf4j.LoggerFactory;
 public class AdaptiveExerciseParser {
     
     // TODO: Parse exercise from address
-    // TODO: Parse Boolean from JSON
     
     private static final Logger logger = LoggerFactory.getLogger(AdaptiveExerciseParser.class);
 
-    public Boolean parseFromJson(String json) {
+    public Exercise parseFromJson(String json) {
         if (json == null) {
             throw new NullPointerException("Json string is null");
         }
@@ -34,7 +33,11 @@ public class AdaptiveExerciseParser {
         }
         try {
             JSONObject obj = new JSONObject(json);
-            return obj.getBoolean("available");
+            // Check status
+            if (obj.getBoolean("available")) {
+                // Gson
+                
+            }
         } catch (RuntimeException ex) {
             logger.warn("Failed to parse adaptive course availability", ex);
             throw new RuntimeException("Failed to parse adaptive course availability: " + ex.getMessage(), ex);

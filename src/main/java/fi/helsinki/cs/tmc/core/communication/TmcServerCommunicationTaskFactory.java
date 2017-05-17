@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.communication;
 import fi.helsinki.cs.tmc.core.communication.http.HttpTasks;
 import fi.helsinki.cs.tmc.core.communication.http.UriUtils;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
+import fi.helsinki.cs.tmc.core.communication.serialization.AdaptiveExerciseParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.ByteArrayGsonSerializer;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseInfoParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseListParser;
@@ -58,6 +59,7 @@ public class TmcServerCommunicationTaskFactory {
 
     private TmcSettings settings;
     private Oauth oauth;
+    private AdaptiveExerciseParser adaptiveExerciseParser;
     private CourseListParser courseListParser;
     private CourseInfoParser courseInfoParser;
     private ReviewListParser reviewListParser;
@@ -68,18 +70,20 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public TmcServerCommunicationTaskFactory(TmcSettings settings, Oauth oauth) {
-        this(settings, oauth, new CourseListParser(),
+        this(settings, oauth, new AdaptiveExerciseParser(), new CourseListParser(),
                 new CourseInfoParser(), new ReviewListParser());
     }
 
     public TmcServerCommunicationTaskFactory(
             TmcSettings settings,
             Oauth oauth,
+            AdaptiveExerciseParser adaptiveExerciseParser,
             CourseListParser courseListParser,
             CourseInfoParser courseInfoParser,
             ReviewListParser reviewListParser) {
         this.settings = settings;
         this.oauth = oauth;
+        this.adaptiveExerciseParser = adaptiveExerciseParser;
         this.courseListParser = courseListParser;
         this.courseInfoParser = courseInfoParser;
         this.reviewListParser = reviewListParser;
@@ -152,11 +156,16 @@ public class TmcServerCommunicationTaskFactory {
         return wrapWithNotLoggedInException(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                // suoraan json?
-                Callable<String> json = new HttpTasks().
-                    getForText(URI.create("localhost:3200/next.json"));
-                // return AdaptiveExerciseParser.parseFromJson();
-                return false;
+                try {
+                    Callable<String> download = new HttpTasks().
+                        getForText(URI.create("localhost:3200/next.json"));
+                    String json = download.call();
+                    return adaptiveExerciseParser.parseFromJson(json);
+                }
+                catch (Exception ex) {
+                    return false;
+                    // do things
+                }
             }
         });
     }

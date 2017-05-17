@@ -19,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
 import java.util.concurrent.Callable;
+import static com.google.common.truth.Truth.assertThat;
 
 public class GetCourseDetailsTest {
 

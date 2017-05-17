@@ -24,6 +24,7 @@ public class AdaptiveExerciseParserTest {
         this.aep = new AdaptiveExerciseParser();
     }
 
+    /*
     @Test
     public void testAvailabilityTrue() {
         assertTrue(aep.parseBooleanFromJson("{ available: true }"));
@@ -33,5 +34,6 @@ public class AdaptiveExerciseParserTest {
     public void testAvailabilityFalse() {
         assertFalse(aep.parseBooleanFromJson("{ available: false }"));
     }
+    */
 
 }

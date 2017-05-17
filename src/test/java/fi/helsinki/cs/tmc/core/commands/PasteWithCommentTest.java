@@ -33,6 +33,8 @@ import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 
 public class PasteWithCommentTest {
 

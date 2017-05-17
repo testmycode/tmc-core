@@ -22,6 +22,7 @@ import org.mockito.Spy;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import static com.google.common.truth.Truth.assertThat;
 
 public class ListCoursesTest {
 

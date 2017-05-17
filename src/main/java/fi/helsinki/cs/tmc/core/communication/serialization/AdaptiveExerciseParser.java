@@ -25,7 +25,7 @@ public class AdaptiveExerciseParser {
     
     private static final Logger logger = LoggerFactory.getLogger(AdaptiveExerciseParser.class);
 
-    private Boolean parseFromJson(String json) {
+    public Boolean parseFromJson(String json) {
         if (json == null) {
             throw new NullPointerException("Json string is null");
         }
@@ -39,12 +39,6 @@ public class AdaptiveExerciseParser {
             logger.warn("Failed to parse adaptive course availability", ex);
             throw new RuntimeException("Failed to parse adaptive course availability: " + ex.getMessage(), ex);
         }    
-    }
-    
-    public Boolean parseBooleanFromJson(String json) {
-        Boolean availability = parseFromJson(json);
-        if (availability) return true;
-        else return false;
     }
     
 }

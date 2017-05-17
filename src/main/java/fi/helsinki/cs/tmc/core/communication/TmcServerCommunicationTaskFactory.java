@@ -160,7 +160,7 @@ public class TmcServerCommunicationTaskFactory {
                     Callable<String> download = new HttpTasks().
                         getForText(URI.create("localhost:3200/next.json"));
                     String json = download.call();
-                    return adaptiveExerciseParser.parseBooleanFromJson(json);
+                    return adaptiveExerciseParser.parseFromJson(json);
                 }
                 catch (Exception ex) {
                     return false;

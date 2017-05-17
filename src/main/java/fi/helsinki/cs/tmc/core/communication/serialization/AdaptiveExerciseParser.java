@@ -33,7 +33,6 @@ public class AdaptiveExerciseParser {
             throw new IllegalArgumentException("Empty input");
         }
         try {
-            System.out.println(json);
             JSONObject obj = new JSONObject(json);
             return obj.getBoolean("available");
         } catch (RuntimeException ex) {

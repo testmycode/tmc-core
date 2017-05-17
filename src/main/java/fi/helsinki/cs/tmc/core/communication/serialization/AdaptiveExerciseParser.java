@@ -35,10 +35,14 @@ public class AdaptiveExerciseParser {
             JSONObject obj = new JSONObject(json);
             // Check status
             if (obj.getBoolean("available")) {
+                // Zip exercise
+                // ...
+                byte[] zip;
                 // Gson
                 Gson gson = new GsonBuilder().create();
-                Exercise exercise = gson.fromJson(json, Exercise.class);
-                return exercise;
+                //Exercise exercise = gson.fromJson(zip, Exercise.class);
+                //return exercise;
+                return null;
             }
             return null;
         } catch (RuntimeException ex) {

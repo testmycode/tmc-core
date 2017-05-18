@@ -48,7 +48,7 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
         byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
         System.out.println(zipb.length);
         //checkInterrupt();
-        //extractProject(zipb, exercise, progress);
+        extractProject(zipb, exercise, progress);
         return exercise;
     }
 }

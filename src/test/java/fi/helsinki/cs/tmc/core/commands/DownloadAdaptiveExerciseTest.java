@@ -77,7 +77,6 @@ public class DownloadAdaptiveExerciseTest {
         langs = spy(new TaskExecutorImpl());
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(langs);
-        command = new DownloadAdaptiveExercise(mockObserver);
         arithFuncsTempDir = testFolder.getRoot().toPath().resolve("arith_funcs");
         command = new DownloadAdaptiveExercise(mockObserver, factory);
 
@@ -87,7 +86,6 @@ public class DownloadAdaptiveExerciseTest {
 
     }
 
-    //pari kohtaa kommentoitu pois koska tehtavia ei pureta DownloadAdaptiveExercise: ssa (viela)
     @Test
     public void checkExerciseZipUrl() throws Exception {
         setUpMocks();
@@ -106,7 +104,7 @@ public class DownloadAdaptiveExerciseTest {
 
         verifyNoMoreInteractions(factory);
 
-        //assertTrue(Files.exists(arithFuncsTempDir));
+        assertTrue(Files.exists(arithFuncsTempDir));
         // TODO: check for contents?
     }
 

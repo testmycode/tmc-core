@@ -52,10 +52,11 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
         
         //extractProject(zipb, exercise, progress);
 
-        // säättää kurssi nimet puratun polun perusteella
         Path exerciseDirectory = TmcSettingsHolder.get().getTmcProjectDirectory();      // menee exercise directory (mihin unzippattu)
         
         Path unzippedFolderTemp = extractToTempFolder(zipb, exercise, progress);
+        // säättää kurssi nimet puratun polun perusteella
+        // unzip temp pois
         cleanExtractedExerciseWithTempNames(exercise, unzippedFolderTemp, exerciseDirectory);
         
         return exercise;
@@ -116,7 +117,7 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
         //File unzipTempFolder = unzipTempExnameNanotime.toFile();
         //File superFolderWithNameOsaa = unzipTempFolder.listFiles()[0]; // menee ainoaan kansioon, esim. "osaa01"
         File superFolderWithNameOsaa = unzipFolderTemp.toFile().listFiles()[0]; // menee ainoaan kansioon, esim. "osaa01"
-        exercise.setCourseName(superFolderWithNameOsaa.getName());  // set course name "osaa01" //tai???
+        //exercise.setCourseName(superFolderWithNameOsaa.getName());  // set course name "osaa01" //tai???
         File exerciseFolder = superFolderWithNameOsaa.listFiles()[0]; // menee ainoaan tehtävän kansioon, esim. "Osaa01_01.AdaLovelace"
         exercise.setName(exerciseFolder.getName()); // exercise.setName(exer.getName().split(".")[1]); // set exercise name "AdaLovelace" //tai??
         try {

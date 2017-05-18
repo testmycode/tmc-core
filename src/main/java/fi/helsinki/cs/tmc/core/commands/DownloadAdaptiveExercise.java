@@ -34,9 +34,9 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
         //ex.setName = "jotain"
         //ex.setCourseName = "Jotain
         //Tallennuspolku riippuu edellämainituista nimistä (TMCroot)
-        byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
+        //byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
         //checkInterrupt();
-        extractProject(zipb, exercise, progress);
+        //extractProject(zipb, exercise, progress);
         return exercise;
        // byte[] zip =  tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
     }

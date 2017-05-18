@@ -32,22 +32,13 @@ public class AdaptiveExerciseParser {
         if (json.trim().isEmpty()) {
             throw new IllegalArgumentException("Empty input");
         }
-        try {;
+        try {
             JSONObject obj = new JSONObject(json);
             // Check status
-            if (obj.getBoolean("available")) {
+            if (obj.getBoolean("available")) {                
                 String zip_url = obj.getString("zip_url");
                 Exercise ex = new Exercise();
-                ex.setDownloadUrl(URI.create(zip_url));
-                // Käytä GSonia parseemaan kuin Course
-                Gson gson =
-                        new GsonBuilder()
-                                .registerTypeAdapter(Date.class, new CustomDateDeserializer())
-                                .create();
-                Exercise exercise = gson.fromJson(json, Exercise.class);
-                // vanha return
-                // tyhjä kommentti koska branch llälä
-                // posdjgpofpgdfojofgjpofgjhfgojhgogf
+                ex.setZipUrl(URI.create("localhost:3200/"+zip_url));//localhost
                 return ex;
             }
             return null;

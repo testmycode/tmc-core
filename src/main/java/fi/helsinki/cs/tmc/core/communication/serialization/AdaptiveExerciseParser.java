@@ -48,6 +48,7 @@ public class AdaptiveExerciseParser {
                                 .create();
                 Exercise exercise = gson.fromJson(json, Exercise.class);
                 // vanha return
+                // tyhjä kommentti koska branch llälä
                 return ex;
             }
             return null;

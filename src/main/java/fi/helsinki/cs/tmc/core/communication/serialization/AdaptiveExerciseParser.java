@@ -37,18 +37,23 @@ public class AdaptiveExerciseParser {
             // Check status
             if (obj.getBoolean("available")) {
                 String zip_url = obj.getString("zip_url");
-                Exercise ex = new Exercise();
-                ex.setDownloadUrl(URI.create(zip_url));
-                // Käytä GSonia parseemaan kuin Course
-                Gson gson =
-                        new GsonBuilder()
-                                .registerTypeAdapter(Date.class, new CustomDateDeserializer())
-                                .create();
-                Exercise exercise = gson.fromJson(json, Exercise.class);
-                // vanha return
-                // tyhjä kommentti koska branch llälä
-                // posdjgpofpgdfojofgjpofgjhfgojhgogf
-                return ex;
+                
+                if (true){
+                    Exercise ex = new Exercise();
+                    ex.setDownloadUrl(URI.create(zip_url));
+                    return ex;
+                }else{
+                    // Käytä GSonia parseemaan kuin Course
+                    Gson gson =
+                            new GsonBuilder()
+                                    .registerTypeAdapter(Date.class, new CustomDateDeserializer())
+                                    .create();
+                    Exercise exercise = gson.fromJson(json, Exercise.class);
+                    // vanha return
+                    // tyhjä kommentti koska branch llälä
+                    // posdjgpofpgdfojofgjpofgjhfgojhgogf
+                    return exercise;
+                }
             }
             return null;
         } catch (RuntimeException ex) {

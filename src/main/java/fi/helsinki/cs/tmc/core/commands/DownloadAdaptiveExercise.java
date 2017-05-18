@@ -31,14 +31,34 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
         //informObserver
         Exercise exercise = 
             tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
-        //ex.setName = "jotain"
-        //ex.setCourseName = "Jotain
+
+        //long nanotime = System.nanoTime();          
+        //exercise.setName("exname " + nanotime);     // set temp exercise name
+        //exercise.setCourseName("coname " + nanotime);   // set temp course name
         //Tallennuspolku riippuu edellämainituista nimistä (TMCroot)
+        
         byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
-        //checkInterrupt();
+        //checkInterrupt(); // jos tarvi???
+        
         extractProject(zipb, exercise, progress);
+
+        // säättää kurssi nimet puratun polun perusteella
+        //Path exerciseDirectory = TmcSettingsHolder.get().getTmcProjectDirectory();      // menee exercise directory (mihin unzippattu)
+        //Path unzipTempConameNanotime = exerciseDirectory.resolve(exercise.getCourseName()); // menee kansioon "coname " + nanotime
+        //Path unzipTempExnameNanotime = unzipTempConameNanotime.resolve(exercise.getName()); // menee kansioon "exname " + nanotime
+        //File unzipTempFolder = unzipTempExnameNanotime.toFile();
+        //File superFolderWithNameOsaa = unzipTempFolder.listFiles()[0]; // menee ainoaan kansioon, esim. "osaa01"
+        //exercise.setCourseName(superFolderWithNameOsaa.getName());  // set course name "osaa01" //tai???
+        //File exerciseFolder = superFolderWithNameOsaa.listFiles()[0]; // menee ainoaan tehtävän kansioon, esim. "Osaa01_01.AdaLovelace"
+        //exercise.setName(exerciseFolder.getName()); // exercise.setName(exer.getName().split(".")[1]); // set exercise name "AdaLovelace" //tai??
+        
+        // siirtää purattu tiedosto exercise directoryyn
+        // mv exercise_directory/"coname "+ nanotime / "exname " + nanotime / "osaa01" exercise_directocty 
+        //Files.move(superFolderWithNameOsaa.toPath(), exerciseDirectory);
+        // cleanup temp
+        // rmdir "coname " + nanotime
+        //Files.deleteIfExists(unzipTempConameNanotime);    
+        
         return exercise;
-       // byte[] zip =  tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
     }
-    
 }

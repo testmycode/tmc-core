@@ -61,7 +61,6 @@ public class DownloadAdaptiveExerciseTest {
     public void checkExerciseZipUrl() throws Exception {
         DownloadAdaptiveExercise e = new DownloadAdaptiveExercise(mockObserver);
         Exercise exercise = e.call();
-        System.out.println(exercise.getZipUrl().toString());
     }
 
 

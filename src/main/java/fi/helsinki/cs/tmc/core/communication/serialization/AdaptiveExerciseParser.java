@@ -38,7 +38,7 @@ public class AdaptiveExerciseParser {
             if (obj.getBoolean("available")) {                
                 String zip_url = obj.getString("zip_url");
                 Exercise ex = new Exercise();
-                ex.setZipUrl(URI.create("localhost:3200/"+zip_url));//localhost
+                ex.setDownloadUrl(URI.create("http://localhost:3200"+zip_url));//localhost
                 return ex;
             }
             return null;

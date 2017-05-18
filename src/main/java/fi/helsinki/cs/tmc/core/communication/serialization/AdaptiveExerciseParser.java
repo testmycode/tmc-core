@@ -37,7 +37,7 @@ public class AdaptiveExerciseParser {
         try {;
             JSONObject obj = new JSONObject(json);
             // Check status
-            if (obj.getBoolean("availability")) {
+            if (obj.getBoolean("available")) {
                 String zip_url = obj.getString("zip_url");
                 Exercise ex = new Exercise();
                 ex.setDownloadUrl(URI.create(zip_url));

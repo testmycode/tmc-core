@@ -42,11 +42,11 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
         //informObserver
         Exercise exercise = 
             tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
-
-        //exercise.setName(jotain);     // set temp exercise name
-        //exercise.setCourseName(jotain);   // set temp course name
+        exercise.setName("ass!");
+        exercise.setCourseName("porsk!");
         //Tallennuspolku riippuu edellämainituista nimistä, polku: maindirectory/courseName/exerciseName
-        //byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
+        byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
+        System.out.println(zipb.length);
         //checkInterrupt();
         //extractProject(zipb, exercise, progress);
         return exercise;

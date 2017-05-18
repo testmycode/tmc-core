@@ -47,7 +47,7 @@ import java.util.concurrent.Callable;
     private final Object shutdownLock = new Object();
 
     private int timeout = DEFAULT_TIMEOUT;
-    private HttpUriRequest request;
+    public HttpUriRequest request;
     private UsernamePasswordCredentials credentials; // May be null
 
     /*package*/ HttpRequestExecutor(URI url) {

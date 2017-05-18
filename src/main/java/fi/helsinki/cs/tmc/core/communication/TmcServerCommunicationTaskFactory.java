@@ -159,7 +159,7 @@ public class TmcServerCommunicationTaskFactory {
                     //Testit menee lävitse generaattorilla luodulla json tiedostolla.
                     //Seuraavaksi pitäisi ajaa skillifier lokaalisesti ja tarkistaa että metodi toimii next.jsonilla
                     Callable<String> download = new HttpTasks().
-                                        getForText(URI.create("http://www.json-generator.com/api/json/get/bRTQibwrNe?indent=2"));
+                                        getForText(URI.create("http://localhost:3200/next.json"));
                     String json = download.call();
                     return adaptiveExerciseParser.parseFromJson(json);
                 }
@@ -232,7 +232,7 @@ public class TmcServerCommunicationTaskFactory {
         URI zipUrl = exercise.getDownloadUrl();
         return new HttpTasks().getForBinary(zipUrl);
     }
-
+    
     public Callable<byte[]> getDownloadingExerciseSolutionZipTask(Exercise exercise) {
         URI zipUrl = exercise.getSolutionDownloadUrl();
         return new HttpTasks().getForBinary(zipUrl);

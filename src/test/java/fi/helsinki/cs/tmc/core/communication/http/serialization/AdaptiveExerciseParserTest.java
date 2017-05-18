@@ -39,7 +39,7 @@ public class AdaptiveExerciseParserTest {
     public void exerciseHasZipUrl() {
         Exercise exercise = adaptiveParser.parseFromJson("{ available: true, zip_url: not-empty }");
         System.out.println(exercise.getZipUrl());
-        assertEquals(exercise.getZipUrl(), "not-empty");
+        assertEquals(exercise.getZipUrl().toString(), "not-empty");
     }
     
     @Test

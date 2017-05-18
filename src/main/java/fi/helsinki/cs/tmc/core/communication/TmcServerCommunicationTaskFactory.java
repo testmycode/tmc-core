@@ -149,32 +149,6 @@ public class TmcServerCommunicationTaskFactory {
         return url;
     }
     
-    /**
-         *  Test for returning skillifier stuff.
-         *
-        * @return next.json URI
-        * @throws OAuthSystemException
-        * @throws OAuthProblemException
-        * @throws NotLoggedInException 
-        */
-    public Callable<String> getJsonString(){
-        return wrapWithNotLoggedInException(new Callable<String>(){
-            @Override
-            public String call() throws Exception {
-                try {
-                    Callable<String> download = new HttpTasks().
-                        getForText(URI.create("localhost:3200/next.json"));
-                    String json = download.call();
-                    return json;
-                    }
-                catch (Exception ex) {
-                    return "{}";
-                }
-            }
-    });
-        
-        
-    }
     public Callable<Exercise> getAdaptiveExercise() 
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
         return wrapWithNotLoggedInException(new Callable<Exercise>() {
@@ -184,12 +158,11 @@ public class TmcServerCommunicationTaskFactory {
                     Callable<String> download = new HttpTasks().
                         getForText(URI.create("localhost:3200/next.json"));
                     String json = download.call();
-                    Exercise ex = adaptiveExerciseParser.parseFromJson(json);
-                    return ex;
+                    return adaptiveExerciseParser.parseFromJson(json);
                 }
                 catch (Exception ex) {
+                    return null;
                 }
-                return null;
             }
         });
     }

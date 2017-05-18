@@ -6,6 +6,7 @@
 package fi.helsinki.cs.tmc.core.communication.http.serialization;
 
 import fi.helsinki.cs.tmc.core.communication.serialization.AdaptiveExerciseParser;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import org.junit.Before;
@@ -20,22 +21,31 @@ import static org.junit.Assert.*;
  */
 public class AdaptiveExerciseParserTest {
 
-    private AdaptiveExerciseParser aep;
-
+    private AdaptiveExerciseParser adaptiveParser;
+    
     @Before
     public void setUp() {
-        this.aep = new AdaptiveExerciseParser();
+        this.adaptiveParser = new AdaptiveExerciseParser();
     }
 
+    @Test(expected = NullPointerException.class)
+    public void jsonEmptyException() {
+        adaptiveParser.parseFromJson(null);
+    }
+    
+    @Test(expected = IllegalArgumentException.class)
+    public void jsonIllegalException() {
+        adaptiveParser.parseFromJson(" ");
+    }
+    
+    public void exerciseHasZipUrl() {
+        Exercise exercise = adaptiveParser.parseFromJson("{ available: true, zip_url: not-empty }");
+        assertEquals(exercise.getZipUrl(), "not-empty");
+    }
+    
     @Test
-    public void adaptiveParserReturnsNullWhenNotAvailable() {
-        assertEquals(aep.parseFromJson("{ available: false }"), null);
+    public void exerciseNotAvailable() {
+        Exercise exercise = adaptiveParser.parseFromJson("{ available: false, zip_url: not-empty }");
+        assertEquals(exercise.getZipUrl(), "not-empty");
     }
-
-    @Test
-    public void adaptiveParserReturnsExerciseWhenAvailable() {
-        Exercise ex = aep.parseFromJson("{ available: true, zip_url: \"/path/to/zip\" }");
-        assertEquals(URI.create("/path/to/zip"), ex.getZipUrl());
-    }
-
 }

@@ -6,6 +6,7 @@
 package fi.helsinki.cs.tmc.core.communication.http.serialization;
 
 import fi.helsinki.cs.tmc.core.communication.serialization.AdaptiveExerciseParser;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,16 +18,26 @@ import static org.junit.Assert.*;
  */
 public class AdaptiveExerciseParserTest {
 
-    private AdaptiveExerciseParser aep;
-/*
+    private AdaptiveExerciseParser adaptiveParser;
+    
     @Before
     public void setUp() {
-        this.aep = new AdaptiveExerciseParser();
+        this.adaptiveParser = new AdaptiveExerciseParser();
     }
 
     @Test
-    public void parseFromJson() {
-        assertEquals(aep.parseFromJson("ögjdojgdpog"), null);
+    public void jsonEmptyException() {
+        assertEquals(null, new NullPointerException("Json string is null"));
     }
- */
+    
+    @Test
+    public void jsonIllegalException() {
+        assertEquals(" ", new IllegalArgumentException("Empty input"));
+    }
+    
+    @Test
+    public void exerciseHasZipUrl() {
+        Exercise exercise = adaptiveParser.parseFromJson("{ zip_url: not-empty }");
+        assertEquals(exercise.getZipUrl(), "not-empty");
+    }
 }

@@ -27,12 +27,12 @@ public class AdaptiveExerciseParserTest {
 
     @Test
     public void jsonEmptyException() {
-        assertEquals(null, new NullPointerException("Json string is null"));
+        assertEquals(adaptiveParser.parseFromJson(null), new NullPointerException("Json string is null"));
     }
     
     @Test
     public void jsonIllegalException() {
-        assertEquals(" ", new IllegalArgumentException("Empty input"));
+        assertEquals(adaptiveParser.parseFromJson(" "), new IllegalArgumentException("Empty input"));
     }
     
     @Test

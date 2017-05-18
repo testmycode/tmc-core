@@ -58,8 +58,8 @@ public class AdaptiveExerciseParser {
             }
             return null;
         } catch (RuntimeException ex) {
-            logger.warn("Failed to parse adaptive course availability", ex);
-            throw new RuntimeException("Failed to parse adaptive course availability: " + ex.getMessage(), ex);
+            logger.warn("Failed to parse an adaptive course from URL", ex);
+            throw new RuntimeException("Failed to parse an adaptive course from URL: " + ex.getMessage(), ex);
         }    
     }
     

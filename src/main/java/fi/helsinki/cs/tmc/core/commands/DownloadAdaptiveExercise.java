@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author sakuolin
  */
-public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Object> {
+public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercise> {
     
     private static final Logger logger = LoggerFactory.getLogger(SendFeedback.class);
 

@@ -156,14 +156,14 @@ public class TmcServerCommunicationTaskFactory {
         return wrapWithNotLoggedInException(new Callable<String>(){
             @Override
             public String call() throws Exception {
-                try{
+                try {
                     Callable<String> download = new HttpTasks().
                         getForText(URI.create("localhost:3200/next.json"));
                     String json = download.call();
                     return json;
-                   }
+                    }
                 catch (Exception ex) {
-                    return null;
+                    return "{}";
                 }
             }
     });

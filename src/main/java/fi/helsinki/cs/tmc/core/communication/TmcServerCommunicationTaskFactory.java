@@ -157,22 +157,35 @@ public class TmcServerCommunicationTaskFactory {
         * @throws OAuthProblemException
         * @throws NotLoggedInException 
         */
-    public Callable<Void> downloadAndExtractAdaptiveExercise() 
-        throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
-        return wrapWithNotLoggedInException(new Callable<Void>() {
+    public Callable<String> getJsonString(){
+        return wrapWithNotLoggedInException(new Callable<String>(){
             @Override
-            public Void call() throws Exception {
+            public String call() throws Exception {
+                try {
+                    Callable<String> download = new HttpTasks().
+                        getForText(URI.create("localhost:3200/next.json"));
+                    String json = download.call();
+                    return json;
+                    }
+                catch (Exception ex) {
+                    return "{}";
+                }
+            }
+    });
+        
+        
+    }
+    public Callable<Exercise> getAdaptiveExercise() 
+        throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
+        return wrapWithNotLoggedInException(new Callable<Exercise>() {
+            @Override
+            public Exercise call() throws Exception {
                 try {
                     Callable<String> download = new HttpTasks().
                         getForText(URI.create("localhost:3200/next.json"));
                     String json = download.call();
                     Exercise ex = adaptiveExerciseParser.parseFromJson(json);
-                    byte[] b = getDownloadingExerciseZipTask(ex).call();
-                    Path temp = Files.createTempFile("tmc-exercise-", ".zip"); 
-                    Files.write(temp, b);
-                    Path target = TmcSettingsHolder.get().getTmcProjectDirectory().resolve("target-example");
-                    TmcLangsHolder.get().extractAndRewriteEveryhing(temp, target);
-                    
+                    return ex;
                 }
                 catch (Exception ex) {
                 }

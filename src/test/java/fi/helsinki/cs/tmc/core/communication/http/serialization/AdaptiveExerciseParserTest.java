@@ -7,8 +7,11 @@ package fi.helsinki.cs.tmc.core.communication.http.serialization;
 
 import fi.helsinki.cs.tmc.core.communication.serialization.AdaptiveExerciseParser;
 
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.net.URI;
 
 import static org.junit.Assert.*;
 
@@ -25,8 +28,14 @@ public class AdaptiveExerciseParserTest {
     }
 
     @Test
-    public void parseFromJson() {
-        assertEquals(aep.parseFromJson("ögjdojgdpog"), null);
+    public void adaptiveParserReturnsNullWhenNotAvailable() {
+        assertEquals(aep.parseFromJson("{ available: false }"), null);
+    }
+
+    @Test
+    public void adaptiveParserReturnsExerciseWhenAvailable() {
+        Exercise ex = aep.parseFromJson("{ available: true, zip_url: \"/path/to/zip\" }");
+        assertEquals(URI.create("/path/to/zip"), ex.getZipUrl());
     }
 
 }

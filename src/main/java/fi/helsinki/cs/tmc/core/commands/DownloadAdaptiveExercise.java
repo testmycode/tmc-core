@@ -5,11 +5,9 @@
  */
 package fi.helsinki.cs.tmc.core.commands;
 
-import fi.helsinki.cs.tmc.core.communication.serialization.AdaptiveExerciseParser;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Progress;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,16 +29,15 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
         Progress progress = new Progress(3);
         logger.info("Checking adaptive exercises availability");
         //informObserver
-        String json = tmcServerCommunicationTaskFactory.getJsonString().call();
-        AdaptiveExerciseParser aparser = new AdaptiveExerciseParser();
-        Exercise ex = aparser.parseFromJson(json);
+        Exercise exercise = 
+            tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
         //ex.setName = "jotain"
         //ex.setCourseName = "Jotain
         //Tallennuspolku riippuu edellämainituista nimistä (TMCroot)
-        byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(ex).call();
+        byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
         //checkInterrupt();
-        extractProject(zipb, ex, progress);
-        return ex;
+        extractProject(zipb, exercise, progress);
+        return exercise;
        // byte[] zip =  tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
     }
     

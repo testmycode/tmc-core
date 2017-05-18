@@ -8,8 +8,11 @@ package fi.helsinki.cs.tmc.core.communication.http.serialization;
 import fi.helsinki.cs.tmc.core.communication.serialization.AdaptiveExerciseParser;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.net.URI;
 
 import static org.junit.Assert.*;
 
@@ -35,7 +38,6 @@ public class AdaptiveExerciseParserTest {
         adaptiveParser.parseFromJson(" ");
     }
     
-    @Test
     public void exerciseHasZipUrl() {
         Exercise exercise = adaptiveParser.parseFromJson("{ available: true, zip_url: not-empty }");
         System.out.println(exercise.getZipUrl());

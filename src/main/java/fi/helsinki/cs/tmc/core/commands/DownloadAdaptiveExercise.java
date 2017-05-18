@@ -5,12 +5,16 @@
  */
 package fi.helsinki.cs.tmc.core.commands;
 
+import com.google.common.annotations.VisibleForTesting;
+import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Progress;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  *
@@ -24,6 +28,13 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
         super(observer);
     }
 
+    @VisibleForTesting
+    DownloadAdaptiveExercise(
+        ProgressObserver observer,
+        TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+        super(observer, tmcServerCommunicationTaskFactory);
+    }
+
     @Override
     public Exercise call() throws Exception {
         Progress progress = new Progress(3);
@@ -31,14 +42,13 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
         //informObserver
         Exercise exercise = 
             tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
-        //ex.setName = "jotain"
-        //ex.setCourseName = "Jotain
-        //Tallennuspolku riippuu edellämainituista nimistä (TMCroot)
+
+        //exercise.setName(jotain);     // set temp exercise name
+        //exercise.setCourseName(jotain);   // set temp course name
+        //Tallennuspolku riippuu edellämainituista nimistä, polku: maindirectory/courseName/exerciseName
         //byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
         //checkInterrupt();
         //extractProject(zipb, exercise, progress);
         return exercise;
-       // byte[] zip =  tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
     }
-    
 }

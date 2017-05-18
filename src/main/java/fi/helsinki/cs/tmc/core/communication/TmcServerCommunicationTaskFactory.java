@@ -1,5 +1,7 @@
 package fi.helsinki.cs.tmc.core.communication;
 
+import fi.helsinki.cs.tmc.core.commands.*;
+
 import fi.helsinki.cs.tmc.core.communication.http.HttpTasks;
 import fi.helsinki.cs.tmc.core.communication.http.UriUtils;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
@@ -28,7 +30,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import java.io.BufferedReader;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
@@ -41,6 +42,9 @@ import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -145,7 +149,7 @@ public class TmcServerCommunicationTaskFactory {
         url = UriUtils.withQueryParam(url, "access_token", oauth.getToken());
         return url;
     }
-    
+
     public Callable<Exercise> getAdaptiveExercise() 
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
         return wrapWithNotLoggedInException(new Callable<Exercise>() {
@@ -165,6 +169,7 @@ public class TmcServerCommunicationTaskFactory {
             }
         });
     }
+    
 
     public Callable<List<Course>> getDownloadingCourseListTask() {
         return wrapWithNotLoggedInException(new Callable<List<Course>>() {

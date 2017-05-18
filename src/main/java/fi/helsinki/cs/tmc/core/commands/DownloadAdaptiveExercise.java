@@ -5,12 +5,16 @@
  */
 package fi.helsinki.cs.tmc.core.commands;
 
+import com.google.common.annotations.VisibleForTesting;
+import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Progress;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  *
@@ -22,6 +26,13 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
 
     public DownloadAdaptiveExercise(ProgressObserver observer) {
         super(observer);
+    }
+
+    @VisibleForTesting
+    DownloadAdaptiveExercise(
+        ProgressObserver observer,
+        TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+        super(observer, tmcServerCommunicationTaskFactory);
     }
 
     @Override

@@ -37,14 +37,13 @@ public class AdaptiveExerciseParserTest {
     
     @Test
     public void exerciseHasZipUrl() {
-        Exercise exercise = adaptiveParser.parseFromJson("{ available: true, zip_url: not-empty }");
-        System.out.println(exercise.getZipUrl());
-        assertEquals(exercise.getZipUrl().toString(), "localhost:3200/not-empty");
+        Exercise exercise = adaptiveParser.parseFromJson("{ available: true, zip_url: additionToString }");
+        assertEquals(exercise.getDownloadUrl().toString(), "http://localhost:3200additionToString");
     }
     
     @Test
     public void exerciseNotAvailable() {
-        Exercise exercise = adaptiveParser.parseFromJson("{ available: false, zip_url: not-empty }");
+        Exercise exercise = adaptiveParser.parseFromJson("{ available: false, zip_url: additionToString }");
         assertEquals(exercise, null);
     }
 }

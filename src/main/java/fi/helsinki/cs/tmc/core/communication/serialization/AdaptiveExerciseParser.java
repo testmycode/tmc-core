@@ -5,14 +5,14 @@
  */
 package fi.helsinki.cs.tmc.core.communication.serialization;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonParser;
-import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+
 import java.net.URI;
 import java.util.Date;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +22,6 @@ import org.slf4j.LoggerFactory;
  * @author sakuolin
  */
 public class AdaptiveExerciseParser {
-    
-    // TODO: Parse exercise from address
     
     private static final Logger logger = LoggerFactory.getLogger(AdaptiveExerciseParser.class);
 

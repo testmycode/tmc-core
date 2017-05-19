@@ -8,10 +8,6 @@ package fi.helsinki.cs.tmc.core.communication.serialization;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 
 import java.net.URI;
-import java.util.Date;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -32,28 +28,14 @@ public class AdaptiveExerciseParser {
         if (json.trim().isEmpty()) {
             throw new IllegalArgumentException("Empty input");
         }
-        try {;
+        try {
             JSONObject obj = new JSONObject(json);
-            // Check status
-            if (obj.getBoolean("available")) {
-                String zip_url = obj.getString("zip_url");
-                
-                if (true){
-                    Exercise ex = new Exercise();
-                    ex.setDownloadUrl(URI.create(zip_url));
-                    return ex;
-                }else{
-                    // Käytä GSonia parseemaan kuin Course
-                    Gson gson =
-                            new GsonBuilder()
-                                    .registerTypeAdapter(Date.class, new CustomDateDeserializer())
-                                    .create();
-                    Exercise exercise = gson.fromJson(json, Exercise.class);
-                    // vanha return
-                    // tyhjä kommentti koska branch llälä
-                    // posdjgpofpgdfojofgjpofgjhfgojhgogf
-                    return exercise;
-                }
+            if (obj.getBoolean("available")) {                
+                Exercise exercise = new Exercise();
+                exercise.setDownloadUrl
+                    // localhost, where is Skillifier hosted?
+                    (URI.create("http://localhost:3200" + obj.getString("zip_url")));
+                return exercise;
             }
             return null;
         } catch (RuntimeException ex) {

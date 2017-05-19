@@ -30,7 +30,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
@@ -38,8 +37,10 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URI;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -148,15 +149,17 @@ public class TmcServerCommunicationTaskFactory {
         url = UriUtils.withQueryParam(url, "access_token", oauth.getToken());
         return url;
     }
-    
+
     public Callable<Exercise> getAdaptiveExercise() 
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
         return wrapWithNotLoggedInException(new Callable<Exercise>() {
             @Override
             public Exercise call() throws Exception {
                 try {
+                    //Testit menee lävitse generaattorilla luodulla json tiedostolla.
+                    //Seuraavaksi pitäisi ajaa skillifier lokaalisesti ja tarkistaa että metodi toimii next.jsonilla
                     Callable<String> download = new HttpTasks().
-                        getForText(URI.create("localhost:3200/next.json"));
+                                        getForText(URI.create("http://localhost:3200/next.json"));
                     String json = download.call();
                     return adaptiveExerciseParser.parseFromJson(json);
                 }
@@ -229,7 +232,7 @@ public class TmcServerCommunicationTaskFactory {
         URI zipUrl = exercise.getDownloadUrl();
         return new HttpTasks().getForBinary(zipUrl);
     }
-
+    
     public Callable<byte[]> getDownloadingExerciseSolutionZipTask(Exercise exercise) {
         URI zipUrl = exercise.getSolutionDownloadUrl();
         return new HttpTasks().getForBinary(zipUrl);

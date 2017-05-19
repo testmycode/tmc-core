@@ -6,9 +6,34 @@ package fi.helsinki.cs.tmc.core.commands;
  * and open the template in the editor.
  */
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
+
+import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
+import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
+import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.utils.MockSettings;
 import fi.helsinki.cs.tmc.core.utils.TestUtils;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
+import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
+
 import org.apache.commons.io.FileUtils;
+
+import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -18,39 +43,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.concurrent.Callable;
 
-import static com.google.common.truth.Truth.assertThat;
-
-import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
-import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
-import com.google.common.collect.Lists;
-import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
-import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
-import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.domain.Exercise;
-import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
-import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
-import fi.helsinki.cs.tmc.core.utils.MockSettings;
-import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
-import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
-import java.net.URI;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 /**
- * @author fogh
+ * @author fogh.
  */
 public class DownloadAdaptiveExerciseTest {
 
@@ -91,7 +87,6 @@ public class DownloadAdaptiveExerciseTest {
     @Test
     public void checkExerciseZipUrl() throws Exception {
         setUpMocks();
-        DownloadAdaptiveExercise e = new DownloadAdaptiveExercise(mockObserver);
         Exercise exercise = command.call();
     }
 
@@ -132,14 +127,14 @@ public class DownloadAdaptiveExerciseTest {
         when(settings.getTmcProjectDirectory()).thenReturn(testFolder.getRoot().toPath());
 
         when(factory.getDownloadingExerciseZipTask(mockExerciseOne))
-            .thenReturn(
-                new Callable<byte[]>() {
-                    @Override
-                    public byte[] call() throws Exception {
-                        return Files.readAllBytes(
-                            TestUtils.getZip(this.getClass(), "arith_funcs.zip"));
-                    }
-                });
+                .thenReturn(
+                        new Callable<byte[]>() {
+                            @Override
+                            public byte[] call() throws Exception {
+                                return Files.readAllBytes(
+                                        TestUtils.getZip(this.getClass(), "arith_funcs.zip"));
+                            }
+                        });
     }
 
     @Test

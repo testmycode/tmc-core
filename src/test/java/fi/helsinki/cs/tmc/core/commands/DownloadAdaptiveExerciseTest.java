@@ -108,6 +108,20 @@ public class DownloadAdaptiveExerciseTest {
         // TODO: check for contents?
     }
 
+    @Test
+    public void testDownloadAndExtractFailure() throws Exception {
+        setUpMocks();
+        when(mockGetAdaptiveExercise.call()).thenReturn(null);
+
+        Exercise exercise = command.call();
+
+        verify(factory).getAdaptiveExercise();
+
+        verifyNoMoreInteractions(factory);
+
+        // TODO: check for contents?
+    }
+
     private void setUpMocks() throws Exception {
         verifyZeroInteractions(langs);
 

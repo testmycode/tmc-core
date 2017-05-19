@@ -17,11 +17,10 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
- *
  * @author sakuolin
  */
 public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercise> {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(SendFeedback.class);
 
     public DownloadAdaptiveExercise(ProgressObserver observer) {
@@ -40,8 +39,11 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
         Progress progress = new Progress(3);
         logger.info("Checking adaptive exercises availability");
         //informObserver
-        Exercise exercise = 
+        Exercise exercise =
             tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
+        if (exercise == null) {
+            return null;
+        }
         exercise.setName("ass!");
         exercise.setCourseName("porsk!");
         //Tallennuspolku riippuu edellämainituista nimistä, polku: maindirectory/courseName/exerciseName

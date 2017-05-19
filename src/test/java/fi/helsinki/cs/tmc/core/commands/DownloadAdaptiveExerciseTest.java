@@ -16,6 +16,7 @@ import org.mockito.Spy;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -140,5 +141,23 @@ public class DownloadAdaptiveExerciseTest {
                             TestUtils.getZip(this.getClass(), "arith_funcs.zip"));
                     }
                 });
+    }
+
+    @Test
+    public void testDownloadAndExtractSuccessWithRealZip() throws Exception {
+        verifyZeroInteractions(langs);
+        TmcServerCommunicationTaskFactory realFactory = new TmcServerCommunicationTaskFactory();
+        assertNotNull(TmcSettingsHolder.get());
+        command = new DownloadAdaptiveExercise(mockObserver, realFactory);
+
+        when(settings.getTmcProjectDirectory()).thenReturn(Paths.get(System.getProperty("user.dir")));
+
+        Exercise exercise = command.call();
+
+        verifyNoMoreInteractions(factory);
+
+        assertTrue(Files.exists(Paths.get(System.getProperty("user.dir"))));
+        Files.deleteIfExists(Paths.get(System.getProperty("user.dir")).resolve("porsk!"));
+        // TODO: check for contents?
     }
 }

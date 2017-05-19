@@ -7,6 +7,7 @@ package fi.helsinki.cs.tmc.core.commands;
  */
 
 import fi.helsinki.cs.tmc.core.utils.TestUtils;
+import org.apache.commons.io.FileUtils;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mock;
@@ -106,7 +107,6 @@ public class DownloadAdaptiveExerciseTest {
         verifyNoMoreInteractions(factory);
 
         assertTrue(Files.exists(arithFuncsTempDir));
-        // TODO: check for contents?
     }
 
     @Test
@@ -120,7 +120,6 @@ public class DownloadAdaptiveExerciseTest {
 
         verifyNoMoreInteractions(factory);
 
-        // TODO: check for contents?
     }
 
     private void setUpMocks() throws Exception {
@@ -149,15 +148,19 @@ public class DownloadAdaptiveExerciseTest {
         TmcServerCommunicationTaskFactory realFactory = new TmcServerCommunicationTaskFactory();
         assertNotNull(TmcSettingsHolder.get());
         command = new DownloadAdaptiveExercise(mockObserver, realFactory);
+        Path testPath = Paths.get(System.getProperty("user.dir"));
 
-        when(settings.getTmcProjectDirectory()).thenReturn(Paths.get(System.getProperty("user.dir")));
+        when(settings.getTmcProjectDirectory()).thenReturn(testPath);
 
         Exercise exercise = command.call();
 
-        verifyNoMoreInteractions(factory);
+        if (exercise == null) {
+            assertFalse(Files.exists(testPath.resolve("porsk!")));
+            return;
+        }
 
-        assertTrue(Files.exists(Paths.get(System.getProperty("user.dir"))));
-        Files.deleteIfExists(Paths.get(System.getProperty("user.dir")).resolve("porsk!"));
-        // TODO: check for contents?
+        assertTrue(Files.exists(testPath.resolve("porsk!")));
+        FileUtils.deleteDirectory(testPath.resolve("porsk!").toFile());
+
     }
 }

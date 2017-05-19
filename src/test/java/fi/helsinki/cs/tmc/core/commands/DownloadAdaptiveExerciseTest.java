@@ -6,7 +6,6 @@ package fi.helsinki.cs.tmc.core.commands;
  * and open the template in the editor.
  */
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -148,14 +147,7 @@ public class DownloadAdaptiveExerciseTest {
         when(settings.getTmcProjectDirectory()).thenReturn(testPath);
 
         Exercise exercise = command.call();
-
-        if (exercise == null) {
-            assertFalse(Files.exists(testPath.resolve("porsk!")));
-            return;
-        }
-
-        assertTrue(Files.exists(testPath.resolve("porsk!")));
-        FileUtils.deleteDirectory(testPath.resolve("porsk!").toFile());
-
+        assertTrue(Files.exists(testPath.resolve(exercise.getCourseName())));
+        FileUtils.deleteDirectory(testPath.resolve(exercise.getCourseName()).toFile());
     }
 }

@@ -29,7 +29,7 @@ public class AdaptiveExerciseParser {
             if (obj.getBoolean("available")) {                
                 Exercise exercise = new Exercise();
                 // localhost, where is Skillifier hosted?
-                exercise.setDownloadUrl(URI.create("http://localhost:3200"
+                exercise.setDownloadUrl(URI.create("http://ohtu-skillifier.herokuapp.com"
                            + obj.getString("zip_url")));
                 return exercise;
             }

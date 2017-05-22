@@ -48,9 +48,15 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
         logger.info("Submitting exercise {}", exercise.getName());
         informObserver(0, "Submitting exercise to server");
 
+        //Compress project and upload to server
+        //Get SubmissionResponse from server, contains submissionURL and pasteURL
+        
         TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse =
             submitToSkillifier(exercise, new HashMap<String, String>());
         return null;
+
+        //Download JSON from submissionURL
+        // parse JSON into submissionResult
     }
 
     private TmcServerCommunicationTaskFactory.SubmissionResponse submitToSkillifier(

@@ -1,24 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Author: Ohtu project summer devs 2017
  */
+
 package fi.helsinki.cs.tmc.core.communication.http.serialization;
 
+import static org.junit.Assert.assertEquals;
+
 import fi.helsinki.cs.tmc.core.communication.serialization.AdaptiveExerciseParser;
-import fi.helsinki.cs.tmc.core.domain.Exercise;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import java.net.URI;
 
-import static org.junit.Assert.*;
-
-/**
- * @author sakuolin
- */
 public class AdaptiveExerciseParserTest {
 
     private AdaptiveExerciseParser adaptiveParser;

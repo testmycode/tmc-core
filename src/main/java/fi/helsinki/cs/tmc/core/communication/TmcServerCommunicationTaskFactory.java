@@ -159,7 +159,7 @@ public class TmcServerCommunicationTaskFactory {
                     //Testit menee lävitse generaattorilla luodulla json tiedostolla.
                     //Seuraavaksi pitäisi ajaa skillifier lokaalisesti ja tarkistaa että metodi toimii next.jsonilla
                     Callable<String> download = new HttpTasks().
-                                        getForText(URI.create("http://localhost:3200/next.json"));
+                                        getForText(URI.create("http://ohtu-skillifier.herokuapp.com/next.json"));
                     String json = download.call();
                     return adaptiveExerciseParser.parseFromJson(json);
                 }

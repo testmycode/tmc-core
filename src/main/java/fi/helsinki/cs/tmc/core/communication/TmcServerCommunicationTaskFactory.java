@@ -238,7 +238,7 @@ public class TmcServerCommunicationTaskFactory {
         return new HttpTasks().getForBinary(zipUrl);
     }
 
-    public Callable<SubmissionResponse> getSubittingExerciseToSkillifierTask(
+    public Callable<SubmissionResponse> getSubmittingExerciseToSkillifierTask(
         final Exercise exercise, final byte[] sourceZip, Map<String, String> extraParams) {
 
         final Map<String, String> params = new LinkedHashMap<>();

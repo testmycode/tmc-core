@@ -184,7 +184,7 @@ public class TmcCore {
 
     public Callable<SubmissionResult> submitAdaptiveExerciseToSkillifier(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new submitAdaptiveExerciseToSkillifier command");
-        return new ExceptionTrackingCallable<SubmissionResult>(new SubmitAdaptiveExerciseToSkillifier(observer, exercise));
+        return new ExceptionTrackingCallable<>(new SubmitAdaptiveExerciseToSkillifier(observer, exercise));
     }
     
     /**

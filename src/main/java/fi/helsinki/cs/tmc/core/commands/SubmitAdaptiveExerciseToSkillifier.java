@@ -83,7 +83,7 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
         try {
             TmcServerCommunicationTaskFactory.SubmissionResponse response
                 = tmcServerCommunicationTaskFactory
-                .getSubmittingExerciseTask(exercise, zippedProject, extraParams)
+                .getSubmittingExerciseToSkillifierTask(exercise, zippedProject, extraParams)
                 .call();
 
             informObserver(1, "Submission successfully completed");

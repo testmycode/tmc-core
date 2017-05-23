@@ -1,9 +1,5 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.serialization.SubmissionResultParser;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
@@ -11,21 +7,20 @@ import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
-import fi.helsinki.cs.tmc.core.exceptions.TmcInterruptionException;
-import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
-import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 
-/**
- * Created by markovai on 22.5.2017.
- */
+
 public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionCommand<SubmissionResult> {
     private static final Logger logger = LoggerFactory.getLogger(AbstractSubmissionCommand.class);
     private static final int DEFAULT_POLL_INTERVAL = 1000 * 2;
@@ -39,9 +34,9 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
 
     @VisibleForTesting
     SubmitAdaptiveExerciseToSkillifier(
-        ProgressObserver observer,
-        Exercise exercise,
-        TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+            ProgressObserver observer,
+            Exercise exercise,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
         super(observer, tmcServerCommunicationTaskFactory);
         this.exercise = exercise;
     }
@@ -56,7 +51,7 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
         //Get SubmissionResponse from server, contains submissionURL and pasteURL
         
         TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse =
-            submitToSkillifier(exercise, new HashMap<String, String>());
+                submitToSkillifier(exercise, new HashMap<String, String>());
 
         while (true) {
             checkInterrupt();
@@ -68,8 +63,8 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
             try {
                 logger.debug("Checking if server is done processing submission");
                 Callable<String> submissionResultFetcher =
-                    tmcServerCommunicationTaskFactory.getSubmissionFetchTask(
-                        submissionResponse.submissionUrl);
+                        tmcServerCommunicationTaskFactory.getSubmissionFetchTask(
+                                submissionResponse.submissionUrl);
 
                 String submissionStatus = submissionResultFetcher.call();
                 JsonElement submission = new JsonParser().parse(submissionStatus);
@@ -142,9 +137,9 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
 
         try {
             TmcServerCommunicationTaskFactory.SubmissionResponse response
-                = tmcServerCommunicationTaskFactory
-                .getSubmittingExerciseToSkillifierTask(exercise, byteToSubmit, extraParams)
-                .call();
+                    = tmcServerCommunicationTaskFactory
+                    .getSubmittingExerciseToSkillifierTask(exercise, byteToSubmit, extraParams)
+                    .call();
 
             informObserver(1, "Submission successfully completed");
             logger.info("Submission successfully completed");

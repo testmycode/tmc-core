@@ -1,10 +1,10 @@
 package fi.helsinki.cs.tmc.core;
 
 import fi.helsinki.cs.tmc.core.commands.AuthenticateUser;
+import fi.helsinki.cs.tmc.core.commands.DownloadAdaptiveExercise;
 import fi.helsinki.cs.tmc.core.commands.DownloadCompletedExercises;
 import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
 import fi.helsinki.cs.tmc.core.commands.DownloadOrUpdateExercises;
-import fi.helsinki.cs.tmc.core.commands.DownloadAdaptiveExercise;
 import fi.helsinki.cs.tmc.core.commands.GetCourseDetails;
 import fi.helsinki.cs.tmc.core.commands.GetOrganizations;
 import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
@@ -40,7 +40,6 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.spyware.LoggableEvent;
 
 import com.google.common.annotations.Beta;
-import fi.helsinki.cs.tmc.core.commands.Command;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

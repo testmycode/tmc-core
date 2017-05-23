@@ -151,12 +151,11 @@ public class TmcServerCommunicationTaskFactory {
             @Override
             public Exercise call() throws Exception {
                 try {
-                    Callable<String> download = new HttpTasks().
-                                        getForText(URI.create(SKILLIFIER_URL));
+                    Callable<String> download = new HttpTasks()
+                                        .getForText(URI.create(SKILLIFIER_URL));
                     String json = download.call();
                     return adaptiveExerciseParser.parseFromJson(json);
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     LOG.log(Level.WARNING, "Downloading and parsing adaptive exercise URL failed.");
                     return null;
                 }
@@ -233,7 +232,7 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<SubmissionResponse> getSubmittingExerciseToSkillifierTask(
-        final Exercise exercise, final byte[] sourceZip, Map<String, String> extraParams) {
+            final Exercise exercise, final byte[] sourceZip, Map<String, String> extraParams) {
 
         final Map<String, String> params = new LinkedHashMap<>();
         params.put("client_time", "" + (System.currentTimeMillis() / 1000L));
@@ -248,8 +247,8 @@ public class TmcServerCommunicationTaskFactory {
                     URI submitUrl = URI.create("");
                     //final URI submitUrl = addApiCallQueryParameters(exercise.getReturnUrl());
                     final Callable<String> upload = new HttpTasks()
-                        .uploadFileForTextDownload(submitUrl, params,
-                            "submission[file]", sourceZip);
+                            .uploadFileForTextDownload(submitUrl, params,
+                                "submission[file]", sourceZip);
                     response = upload.call();
                 } catch (FailedHttpResponseException ex) {
                     return checkForObsoleteClient(ex);

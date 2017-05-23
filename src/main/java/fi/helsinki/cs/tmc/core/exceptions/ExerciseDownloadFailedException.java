@@ -2,7 +2,6 @@ package fi.helsinki.cs.tmc.core.exceptions;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 
-import java.io.IOException;
 import java.net.URI;
 
 public class ExerciseDownloadFailedException extends TmcCoreException {

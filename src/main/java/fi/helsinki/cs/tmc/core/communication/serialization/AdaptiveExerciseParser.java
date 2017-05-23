@@ -1,7 +1,3 @@
-/*
- * Author: Ohtu project summer devs 2017
- */
-
 package fi.helsinki.cs.tmc.core.communication.serialization;
 
 import fi.helsinki.cs.tmc.core.domain.Exercise;
@@ -11,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-
 
 public class AdaptiveExerciseParser {
     
@@ -28,7 +23,6 @@ public class AdaptiveExerciseParser {
             JSONObject obj = new JSONObject(json);
             if (obj.getBoolean("available")) {                
                 Exercise exercise = new Exercise();
-                // localhost, where is Skillifier hosted?
                 exercise.setDownloadUrl(URI.create("http://ohtu-skillifier.herokuapp.com"
                            + obj.getString("zip_url")));
                 return exercise;

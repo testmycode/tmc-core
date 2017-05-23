@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utilities.Cooldown;
 import fi.helsinki.cs.tmc.core.utilities.SingletonTask;
@@ -25,7 +24,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Buffers {@link LoggableEvent}s and sends them to the server and/or syncs them to the disk

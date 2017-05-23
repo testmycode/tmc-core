@@ -1,11 +1,5 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -44,9 +38,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
-/**
- * @author fogh.
- */
 public class DownloadAdaptiveExerciseTest {
 
     @Rule

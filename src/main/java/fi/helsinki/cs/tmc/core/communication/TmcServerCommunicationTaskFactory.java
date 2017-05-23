@@ -162,7 +162,6 @@ public class TmcServerCommunicationTaskFactory {
             }
         });
     }
-    
 
     public Callable<List<Course>> getDownloadingCourseListTask() {
         return wrapWithNotLoggedInException(new Callable<List<Course>>() {

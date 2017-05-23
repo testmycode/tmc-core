@@ -232,51 +232,6 @@ public class TmcServerCommunicationTaskFactory {
         return new HttpTasks().getForBinary(zipUrl);
     }
 
-    public Callable<SubmissionResponse> getSubmittingExerciseToSkillifierTask(
-        final Exercise exercise, final byte[] sourceZip, Map<String, String> extraParams) {
-
-        final Map<String, String> params = new LinkedHashMap<>();
-        params.put("client_time", "" + (System.currentTimeMillis() / 1000L));
-        params.put("client_nanotime", "" + System.nanoTime());
-        params.putAll(extraParams);
-
-        return wrapWithNotLoggedInException(new Callable<SubmissionResponse>() {
-            @Override
-            public SubmissionResponse call() throws Exception {
-                String response;
-                try {
-                    URI submitUrl = URI.create("");
-                    //final URI submitUrl = addApiCallQueryParameters(exercise.getReturnUrl());
-                    final Callable<String> upload = new HttpTasks()
-                        .uploadFileForTextDownload(submitUrl, params,
-                            "submission[file]", sourceZip);
-                    response = upload.call();
-                } catch (FailedHttpResponseException ex) {
-                    return checkForObsoleteClient(ex);
-                }
-
-                JsonObject respJson = new JsonParser().parse(response).getAsJsonObject();
-                if (respJson.get("error") != null) {
-                    throw new RuntimeException(
-                        "Server responded with error: " + respJson.get("error"));
-                } else if (respJson.get("submission_url") != null) {
-                    try {
-                        URI submissionUrl = new URI(respJson.get("submission_url").getAsString());
-                        URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
-                        return new SubmissionResponse(submissionUrl, pasteUrl);
-                    } catch (Exception e) {
-                        throw new RuntimeException(
-                            "Server responded with malformed " + "submission url");
-                    }
-                } else {
-                    throw new RuntimeException("Server returned unknown response");
-                }
-            }
-
-            //TODO: Cancellable?
-        });
-    }
-
     public Callable<SubmissionResponse> getSubmittingExerciseTask(
             final Exercise exercise, final byte[] sourceZip, Map<String, String> extraParams) {
 

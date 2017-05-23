@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.communication;
 import fi.helsinki.cs.tmc.core.communication.http.HttpTasks;
 import fi.helsinki.cs.tmc.core.communication.http.UriUtils;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
+import fi.helsinki.cs.tmc.core.communication.serialization.AdaptiveExerciseParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.ByteArrayGsonSerializer;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseInfoParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseListParser;
@@ -55,9 +56,11 @@ public class TmcServerCommunicationTaskFactory {
     private static final Logger LOG = Logger.getLogger(
             TmcServerCommunicationTaskFactory.class.getName());
     public static final int API_VERSION = 8;
+    private static final String SKILLIFIER_URL = "http://ohtu-skillifier.herokuapp.com/next.json";
 
     private TmcSettings settings;
     private Oauth oauth;
+    private AdaptiveExerciseParser adaptiveExerciseParser;
     private CourseListParser courseListParser;
     private CourseInfoParser courseInfoParser;
     private ReviewListParser reviewListParser;
@@ -68,18 +71,20 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public TmcServerCommunicationTaskFactory(TmcSettings settings, Oauth oauth) {
-        this(settings, oauth, new CourseListParser(),
+        this(settings, oauth, new AdaptiveExerciseParser(), new CourseListParser(),
                 new CourseInfoParser(), new ReviewListParser());
     }
 
     public TmcServerCommunicationTaskFactory(
             TmcSettings settings,
             Oauth oauth,
+            AdaptiveExerciseParser adaptiveExerciseParser,
             CourseListParser courseListParser,
             CourseInfoParser courseInfoParser,
             ReviewListParser reviewListParser) {
         this.settings = settings;
         this.oauth = oauth;
+        this.adaptiveExerciseParser = adaptiveExerciseParser;
         this.courseListParser = courseListParser;
         this.courseInfoParser = courseInfoParser;
         this.reviewListParser = reviewListParser;
@@ -123,7 +128,8 @@ public class TmcServerCommunicationTaskFactory {
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
         String serverAddress = settings.getServerAddress();
         String url;
-        String urlLastPart = "api/v" + API_VERSION + "/core/org/" + settings.getOrganization() + "/courses.json";
+        // "/core/org/" => "/core/org"
+        String urlLastPart = "api/v" + API_VERSION + "/core/org" + settings.getOrganization() + "/courses.json";
         if (serverAddress.endsWith("/")) {
             url = serverAddress + urlLastPart;
         } else {
@@ -131,12 +137,30 @@ public class TmcServerCommunicationTaskFactory {
         }
         return addApiCallQueryParameters(URI.create(url));
     }
-
+    
     private URI addApiCallQueryParameters(URI url) throws NotLoggedInException {
         url = UriUtils.withQueryParam(url, "client", settings.clientName());
         url = UriUtils.withQueryParam(url, "client_version", clientVersion);
         url = UriUtils.withQueryParam(url, "access_token", oauth.getToken());
         return url;
+    }
+
+    public Callable<Exercise> getAdaptiveExercise() 
+        throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
+        return wrapWithNotLoggedInException(new Callable<Exercise>() {
+            @Override
+            public Exercise call() throws Exception {
+                try {
+                    Callable<String> download = new HttpTasks()
+                                        .getForText(URI.create(SKILLIFIER_URL));
+                    String json = download.call();
+                    return adaptiveExerciseParser.parseFromJson(json);
+                } catch (Exception ex) {
+                    LOG.log(Level.WARNING, "Downloading and parsing adaptive exercise URL failed.");
+                    return null;
+                }
+            }
+        });
     }
 
     public Callable<List<Course>> getDownloadingCourseListTask() {

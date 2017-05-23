@@ -38,11 +38,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.Callable;
-import static com.google.common.truth.Truth.assertThat;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
 
 public class DownloadOrUpdateExercisesTest {
 

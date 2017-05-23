@@ -5,7 +5,7 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Progress;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.ExerciseDownloadFailedException;
-import fi.helsinki.cs.tmc.core.exceptions.ExtractingExericeFailedException;
+import fi.helsinki.cs.tmc.core.exceptions.ExtractingExerciseFailedException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcInterruptionException;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;

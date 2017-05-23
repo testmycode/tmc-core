@@ -151,19 +151,17 @@ public class TmcServerCommunicationTaskFactory {
             @Override
             public Exercise call() throws Exception {
                 try {
-                    Callable<String> download = new HttpTasks().
-                                        getForText(URI.create(SKILLIFIER_URL));
+                    Callable<String> download = new HttpTasks()
+                                        .getForText(URI.create(SKILLIFIER_URL));
                     String json = download.call();
                     return adaptiveExerciseParser.parseFromJson(json);
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     LOG.log(Level.WARNING, "Downloading and parsing adaptive exercise URL failed.");
                     return null;
                 }
             }
         });
     }
-    
 
     public Callable<List<Course>> getDownloadingCourseListTask() {
         return wrapWithNotLoggedInException(new Callable<List<Course>>() {

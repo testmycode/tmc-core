@@ -19,6 +19,7 @@ import fi.helsinki.cs.tmc.core.commands.SendDiagnostics;
 import fi.helsinki.cs.tmc.core.commands.SendFeedback;
 import fi.helsinki.cs.tmc.core.commands.SendSpywareEvents;
 import fi.helsinki.cs.tmc.core.commands.Submit;
+import fi.helsinki.cs.tmc.core.commands.SubmitAdaptiveExerciseToSkillifier;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
@@ -179,6 +180,11 @@ public class TmcCore {
     public Callable<Exercise> downloadAdaptiveExercise(ProgressObserver observer) {
         logger.info("Creating new DownloadAdaptiveExercise command");
         return new ExceptionTrackingCallable<>(new DownloadAdaptiveExercise(observer));
+    }
+
+    public Callable<SubmissionResult> submitAdaptiveExerciseToSkillifier(ProgressObserver observer, Exercise exercise) {
+        logger.info("Creating new submitAdaptiveExerciseToSkillifier command");
+        return new ExceptionTrackingCallable<>(new SubmitAdaptiveExerciseToSkillifier(observer, exercise));
     }
     
     /**

@@ -108,16 +108,23 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
             Exercise exercise, HashMap<String, String> extraParams) throws TmcCoreException {
 
         Gson gson = new Gson();
-        String json = gson.toJson(exercise);
+        String json = "";
+        try {
+            json = gson.toJson(exercise);
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+
 
         byte[] byteToSubmit = json.getBytes();
 
         informObserver(0, "Zipping project.");
+        /*
         Path tmcRoot = TmcSettingsHolder.get().getTmcProjectDirectory();
         Path projectPath = exercise.getExerciseDirectory(tmcRoot);
+        */
 
-        checkInterrupt();
-        logger.info("Submitting adaptive project to path {}", projectPath);
+        //logger.info("Submitting adaptive project to path {}", projectPath);
 /*
         try {
             byteToSubmit = TmcLangsHolder.get().compressProject(projectPath);

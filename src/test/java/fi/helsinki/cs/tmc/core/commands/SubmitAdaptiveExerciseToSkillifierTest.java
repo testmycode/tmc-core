@@ -68,7 +68,6 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         TmcSettingsHolder.set(settings);
-        //when(settings.getTmcProjectDirectory()).thenReturn(Paths.get(System.getProperty("user.dir")));
 
         langs = spy(new TaskExecutorImpl());
         TmcLangsHolder.set(langs);

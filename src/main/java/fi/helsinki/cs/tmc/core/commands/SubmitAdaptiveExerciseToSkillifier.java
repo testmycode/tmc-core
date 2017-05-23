@@ -1,7 +1,11 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
+import fi.helsinki.cs.tmc.core.communication.serialization.SubmissionResultParser;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
@@ -48,38 +52,81 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
         logger.info("Submitting exercise {}", exercise.getName());
         informObserver(0, "Submitting exercise to server");
 
-        //Compress project and upload to server
+        //Compress project and upload to server, (not yet)
         //Get SubmissionResponse from server, contains submissionURL and pasteURL
         
         TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse =
             submitToSkillifier(exercise, new HashMap<String, String>());
-        return null;
+
+        while (true) {
+            checkInterrupt();
+            try {
+                Thread.sleep(DEFAULT_POLL_INTERVAL);
+            } catch (InterruptedException ex) {
+                logger.debug("Interrupted while sleeping", ex);
+            }
+            try {
+                logger.debug("Checking if server is done processing submission");
+                Callable<String> submissionResultFetcher =
+                    tmcServerCommunicationTaskFactory.getSubmissionFetchTask(
+                        submissionResponse.submissionUrl);
+
+                String submissionStatus = submissionResultFetcher.call();
+                JsonElement submission = new JsonParser().parse(submissionStatus);
+                if (isProcessing(submission)) {
+                    logger.debug("Server not done, sleeping for {}", DEFAULT_POLL_INTERVAL);
+                    informObserver(0.3, "Waiting for response from server");
+                    // TODO: Replace with variable interval polling
+                    Thread.sleep(DEFAULT_POLL_INTERVAL);
+                } else {
+                    logger.debug("Server done, parsing results");
+                    informObserver(0.6, "Reading adaptive submission result");
+
+                    SubmissionResultParser resultParser = new SubmissionResultParser();
+                    SubmissionResult result = resultParser.parseFromJson(submissionStatus);
+
+                    logger.debug("Done parsing server response");
+                    informObserver(1, "Successfully read adaptive submission results");
+
+                    return result;
+                }
+            } catch (Exception ex) {
+                informObserver(1, "Error while waiting for response from server");
+                logger.warn("Error while updating adaptive submission status from server, continuing", ex);
+            }
+        }
 
         //Download JSON from submissionURL
         // parse JSON into submissionResult
     }
 
+    private boolean isProcessing(JsonElement submissionStatus) {
+        return submissionStatus.getAsJsonObject().get("status").getAsString().equals("processing");
+    }
+
     private TmcServerCommunicationTaskFactory.SubmissionResponse submitToSkillifier(
             Exercise exercise, HashMap<String, String> extraParams) throws TmcCoreException {
 
-        byte[] zippedProject;
+        Gson gson = new Gson();
+        String json = gson.toJson(exercise);
+
+        byte[] byteToSubmit = json.getBytes();
 
         informObserver(0, "Zipping project.");
         Path tmcRoot = TmcSettingsHolder.get().getTmcProjectDirectory();
         Path projectPath = exercise.getExerciseDirectory(tmcRoot);
 
-        //tarkista serveri riippuvaisuus
         checkInterrupt();
         logger.info("Submitting adaptive project to path {}", projectPath);
-
+/*
         try {
-            zippedProject = TmcLangsHolder.get().compressProject(projectPath);
+            byteToSubmit = TmcLangsHolder.get().compressProject(projectPath);
         } catch (IOException | NoLanguagePluginFoundException ex) {
             informObserver(1, "Failed to compress adaptive project");
             logger.warn("Failed to compress adaptive project", ex);
             throw new TmcCoreException("Failed to compress adaptive project", ex);
         }
-
+*/
         extraParams.put("error_msg_locale", TmcSettingsHolder.get().getLocale().toString());
 
         checkInterrupt();
@@ -89,7 +136,7 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
         try {
             TmcServerCommunicationTaskFactory.SubmissionResponse response
                 = tmcServerCommunicationTaskFactory
-                .getSubmittingExerciseToSkillifierTask(exercise, zippedProject, extraParams)
+                .getSubmittingExerciseToSkillifierTask(exercise, byteToSubmit, extraParams)
                 .call();
 
             informObserver(1, "Submission successfully completed");

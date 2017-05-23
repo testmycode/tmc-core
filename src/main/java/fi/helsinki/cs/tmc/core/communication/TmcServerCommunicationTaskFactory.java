@@ -128,7 +128,8 @@ public class TmcServerCommunicationTaskFactory {
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
         String serverAddress = settings.getServerAddress();
         String url;
-        String urlLastPart = "api/v" + API_VERSION + "/core/org/" + settings.getOrganization() + "/courses.json";
+        // "/core/org/" => "/core/org"
+        String urlLastPart = "api/v" + API_VERSION + "/core/org" + settings.getOrganization() + "/courses.json";
         if (serverAddress.endsWith("/")) {
             url = serverAddress + urlLastPart;
         } else {

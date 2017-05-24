@@ -4,6 +4,7 @@ import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.serialization.SubmissionResultParser;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.domain.submission.AdaptiveSubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.concurrent.Callable;
 
 
@@ -77,9 +79,13 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
                 } else {
                     logger.debug("Server done, parsing results");
                     informObserver(0.6, "Reading adaptive submission result");
+                    System.out.println(submission);
 
                     SubmissionResultParser resultParser = new SubmissionResultParser();
-                    SubmissionResult result = resultParser.parseFromJson(submissionStatus);
+
+                    Gson gson = new Gson();
+                    AdaptiveSubmissionResult result = gson.fromJson(submission, AdaptiveSubmissionResult.class);
+                    //.parseFromJson(submissionStatus);
 
                     logger.debug("Done parsing server response");
                     informObserver(1, "Successfully read adaptive submission results");
@@ -88,7 +94,7 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
                     SubmissionResult res = new SubmissionResult();
                     res.setCourse(exercise.getCourseName());
                     res.setExerciseName(exercise.getName());
-                    return res;
+                    return result.toSubmissionResult();
                 }
             } catch (Exception ex) {
                 informObserver(1, "Error while waiting for response from server");
@@ -117,7 +123,7 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
 
         byte[] byteToSubmit = json.getBytes();
 
-        informObserver(0, "Zipping project.");
+        //informObserver(0, "Zipping project.");
 
         //Only a json containing information about the exercise is sent to skillifier at this point.
 

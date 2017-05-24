@@ -91,6 +91,12 @@ public class HttpTasks {
         return downloadToText(createExecutor(request));
     }
 
+    public Callable<String> uploadRawDataForTextDownload(
+            URI url, Map<String, String> params, byte[] data) {
+        HttpPost request = makeRawPostRequest(url, data, params);
+        return downloadToText(createExecutor(request));
+    }
+
     private Callable<byte[]> downloadToBinary(final HttpRequestExecutor download) {
         return new Callable<byte[]>() {
             @Override

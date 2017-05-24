@@ -39,6 +39,7 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.spyware.LoggableEvent;
 
 import com.google.common.annotations.Beta;
+import fi.helsinki.cs.tmc.core.commands.SubmitAdaptiveExerciseToSkillifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,10 +143,15 @@ public class TmcCore {
         return new ExceptionTrackingCallable<>(new SendSpywareEvents(observer, currentCourse, events));
 
     }
-
+    
     public Callable<SubmissionResult> submit(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new Submit command");
         return new ExceptionTrackingCallable<>(new Submit(observer, exercise));
+    }
+    
+    public Callable<SubmissionResult> submitAdaptiveExercise(ProgressObserver observer, Exercise exercise) {
+        logger.info("Creating new submit adaptiveExercise command");
+        return new ExceptionTrackingCallable<>(new SubmitAdaptiveExerciseToSkillifier(observer, exercise));
     }
 
     public Callable<GetUpdatableExercises.UpdateResult> getExerciseUpdates(

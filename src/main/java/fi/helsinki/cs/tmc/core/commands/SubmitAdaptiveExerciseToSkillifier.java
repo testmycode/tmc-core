@@ -61,6 +61,7 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
                 logger.debug("Interrupted while sleeping", ex);
             }
             try {
+                //get json from submissionurl
                 logger.debug("Checking if server is done processing submission");
                 Callable<String> submissionResultFetcher =
                         tmcServerCommunicationTaskFactory.getSubmissionFetchTask(
@@ -83,7 +84,11 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
                     logger.debug("Done parsing server response");
                     informObserver(1, "Successfully read adaptive submission results");
 
-                    return result;
+                    //placeholder
+                    SubmissionResult res = new SubmissionResult();
+                    res.setCourse(exercise.getCourseName());
+                    res.setExerciseName(exercise.getName());
+                    return res;
                 }
             } catch (Exception ex) {
                 informObserver(1, "Error while waiting for response from server");
@@ -110,17 +115,19 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
             System.out.println(e.toString());
         }
 
-
         byte[] byteToSubmit = json.getBytes();
 
         informObserver(0, "Zipping project.");
-        /*
+
+        //Only a json containing information about the exercise is sent to skillifier at this point.
+
+/*
         Path tmcRoot = TmcSettingsHolder.get().getTmcProjectDirectory();
         Path projectPath = exercise.getExerciseDirectory(tmcRoot);
-        */
+
 
         //logger.info("Submitting adaptive project to path {}", projectPath);
-/*
+
         try {
             byteToSubmit = TmcLangsHolder.get().compressProject(projectPath);
         } catch (IOException | NoLanguagePluginFoundException ex) {
@@ -129,11 +136,14 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
             throw new TmcCoreException("Failed to compress adaptive project", ex);
         }
 */
+
         extraParams.put("error_msg_locale", TmcSettingsHolder.get().getLocale().toString());
 
         checkInterrupt();
         informObserver(0.5, "Submitting adaptive project");
         logger.info("Submitting adaptive project to skillifier");
+
+        //skillifier returns json which is parsed into SubmissionResponse
 
         try {
             TmcServerCommunicationTaskFactory.SubmissionResponse response

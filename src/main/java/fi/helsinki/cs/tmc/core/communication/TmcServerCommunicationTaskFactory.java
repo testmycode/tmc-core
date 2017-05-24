@@ -28,6 +28,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
@@ -56,8 +57,7 @@ public class TmcServerCommunicationTaskFactory {
     private static final Logger LOG = Logger.getLogger(
             TmcServerCommunicationTaskFactory.class.getName());
     public static final int API_VERSION = 8;
-    private static final String SKILLIFIER_URL = "http://ohtu-skillifier.herokuapp.com/next.json";
-
+    
     private TmcSettings settings;
     private Oauth oauth;
     private AdaptiveExerciseParser adaptiveExerciseParser;
@@ -144,15 +144,20 @@ public class TmcServerCommunicationTaskFactory {
         url = UriUtils.withQueryParam(url, "access_token", oauth.getToken());
         return url;
     }
+    
+    private URI getSkillifierUrl() {
+        // Add courses and themes
+        return URI.create("http://localhost:3200/Example/default/next.json");
+    }
 
-    public Callable<Exercise> getAdaptiveExercise() 
+    public Callable<AdaptiveExercise> getAdaptiveExercise()
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
-        return wrapWithNotLoggedInException(new Callable<Exercise>() {
+        return wrapWithNotLoggedInException(new Callable<AdaptiveExercise>() {
             @Override
-            public Exercise call() throws Exception {
+            public AdaptiveExercise call() throws Exception {
                 try {
                     Callable<String> download = new HttpTasks()
-                                        .getForText(URI.create(SKILLIFIER_URL));
+                                        .getForText(getSkillifierUrl());
                     String json = download.call();
                     return adaptiveExerciseParser.parseFromJson(json);
                 } catch (Exception ex) {

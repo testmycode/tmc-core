@@ -71,7 +71,7 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
         langs = spy(new TaskExecutorImpl());
         TmcLangsHolder.set(langs);
         Exercise ex = new Exercise("Example1", "Example");
-        command = new SubmitAdaptiveExerciseToSkillifier(mockObserver, ex, factory);
+        command = new SubmitAdaptiveExerciseToSkillifier(mockObserver, ex, new TmcServerCommunicationTaskFactory());
 
         arithFuncsTempDir = TestUtils.getProject(this.getClass(), "arith_funcs");
         when(mockExercise.getExerciseDirectory(any(Path.class))).thenReturn(arithFuncsTempDir);

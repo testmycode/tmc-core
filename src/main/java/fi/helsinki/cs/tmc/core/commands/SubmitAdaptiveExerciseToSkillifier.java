@@ -1,7 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
-import fi.helsinki.cs.tmc.core.communication.serialization.SubmissionResultParser;
+import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.AdaptiveSubmissionResult;
@@ -12,15 +12,14 @@ import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.concurrent.Callable;
 
 
 public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionCommand<SubmissionResult> {
@@ -29,9 +28,10 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
 
     private Exercise exercise;
 
-    public SubmitAdaptiveExerciseToSkillifier(ProgressObserver observer, Exercise exercise) {
+    public SubmitAdaptiveExerciseToSkillifier(ProgressObserver observer, String exerciseName) {
         super(observer);
-        this.exercise = exercise;
+        this.exercise = new AdaptiveExercise();
+        exercise.setName(exerciseName);
     }
 
     @VisibleForTesting
@@ -45,13 +45,28 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
 
 
     @Override
-    public SubmissionResult call() throws Exception {
+    public SubmissionResult call() {
         logger.info("Submitting exercise {}", exercise.getName());
         informObserver(0, "Submitting exercise to server");
+        URI submissionUrl = tmcServerCommunicationTaskFactory.getSkillifierUrl(exercise.getName()
+                + "/submit?username=" + TmcSettingsHolder.get().getUsername());
 
-        //Compress project and upload to server, (not yet)
-        //Get SubmissionResponse from server, contains submissionURL and pasteURL
-        
+        String networkResult = "";
+        try {
+            networkResult = tmcServerCommunicationTaskFactory.getSubmissionFetchTask(submissionUrl).call();
+        } catch (Exception e) {
+            informObserver(1, "Error while waiting for response from server");
+            logger.warn("Error while updating adaptive submission status from server, continuing", e);
+        }
+
+        Gson gson = new GsonBuilder().create();
+        SubmissionResult result = gson.fromJson(networkResult, AdaptiveSubmissionResult.class).toSubmissionResult();
+        if (result.getError() != "null") {
+            logger.warn("submission result error: " + result.getError());
+        }
+        return result;
+
+        /*
         TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse =
                 submitToSkillifier(exercise, new HashMap<String, String>());
 
@@ -101,9 +116,7 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
                 logger.warn("Error while updating adaptive submission status from server, continuing", ex);
             }
         }
-
-        //Download JSON from submissionURL
-        // parse JSON into submissionResult
+*/
     }
 
     private boolean isProcessing(JsonElement submissionStatus) {
@@ -113,21 +126,21 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
     private TmcServerCommunicationTaskFactory.SubmissionResponse submitToSkillifier(
             Exercise exercise, HashMap<String, String> extraParams) throws TmcCoreException {
 
-        Gson gson = new Gson();
-        String json = "";
+        //Gson gson = new Gson();
+        String exerciseName = exercise.getName();
+        /*
         try {
             json = gson.toJson(exercise);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
+        */
 
-        byte[] byteToSubmit = json.getBytes();
-
-        //informObserver(0, "Zipping project.");
-
-        //Only a json containing information about the exercise is sent to skillifier at this point.
+        byte[] byteToSubmit = exerciseName.getBytes();
 
 /*
+        informObserver(0, "Zipping project.");
+
         Path tmcRoot = TmcSettingsHolder.get().getTmcProjectDirectory();
         Path projectPath = exercise.getExerciseDirectory(tmcRoot);
 
@@ -149,7 +162,6 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
         informObserver(0.5, "Submitting adaptive project");
         logger.info("Submitting adaptive project to skillifier");
 
-        //skillifier returns json which is parsed into SubmissionResponse
 
         try {
             TmcServerCommunicationTaskFactory.SubmissionResponse response

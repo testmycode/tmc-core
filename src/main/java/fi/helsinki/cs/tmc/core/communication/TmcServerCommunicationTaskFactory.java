@@ -9,6 +9,7 @@ import fi.helsinki.cs.tmc.core.communication.serialization.CourseInfoParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseListParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.ReviewListParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
@@ -143,19 +144,19 @@ public class TmcServerCommunicationTaskFactory {
         url = UriUtils.withQueryParam(url, "access_token", oauth.getToken());
         return url;
     }
-    
-    private URI getSkillifierUrl(String addition) {
+
+    public URI getSkillifierUrl(String addition) {
         if (!addition.isEmpty()) {
-            return URI.create("localhost:3200/Example/Default/" + addition);
+            return URI.create("http://tmc-adapt.testmycode.io/Example/default/" + addition);
         }
-        return URI.create("localhost:3200/Example/Default/");
+        return URI.create("http://tmc-adapt.testmycode.io/Example/default/");
     }
 
-    public Callable<Exercise> getAdaptiveExercise() 
+    public Callable<AdaptiveExercise> getAdaptiveExercise()
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
-        return wrapWithNotLoggedInException(new Callable<Exercise>() {
+        return wrapWithNotLoggedInException(new Callable<AdaptiveExercise>() {
             @Override
-            public Exercise call() throws Exception {
+            public AdaptiveExercise call() throws Exception {
                 try {
                     Callable<String> download = new HttpTasks()
                                         .getForText(getSkillifierUrl("next.json"));
@@ -243,44 +244,6 @@ public class TmcServerCommunicationTaskFactory {
         params.put("client_time", "" + (System.currentTimeMillis() / 1000L));
         params.put("client_nanotime", "" + System.nanoTime());
         params.putAll(extraParams);
-
-        /*
-        return new Callable<SubmissionResponse>() {
-            @Override
-            public SubmissionResponse call() throws Exception {
-                String response;
-                try {
-                    URI submitUrl = URI.create("http://localhost:3200/submit");
-                    //final URI submitUrl = addApiCallQueryParameters(exercise.getReturnUrl());
-                    final Callable<String> upload = new HttpTasks()
-                            .uploadRawDataForTextDownload(submitUrl,params,byteToSend);
-                            //.uploadFileForTextDownload(submitUrl, params,
-                            //"submission[file]", byteToSend);
-                    response = upload.call();
-                } catch (FailedHttpResponseException ex) {
-                    return checkForObsoleteClient(ex);
-                }
-
-                JsonObject respJson = new JsonParser().parse(response).getAsJsonObject();
-                if (respJson.get("error") != null) {
-                    throw new RuntimeException(
-                        "Server responded with error: " + respJson.get("error"));
-                } else if (respJson.get("submission_url") != null) {
-                    try {
-                        URI submissionUrl = new URI(respJson.get("submission_url").getAsString());
-                        URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
-                        return new SubmissionResponse(submissionUrl, pasteUrl);
-                    } catch (Exception e) {
-                        throw new RuntimeException(
-                            "Server responded with malformed " + "submission url");
-                    }
-                } else {
-                    throw new RuntimeException("Server returned unknown response");
-                }
-            }
-        };
-        */
-
 
         return wrapWithNotLoggedInException(new Callable<SubmissionResponse>() {
             @Override

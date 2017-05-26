@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
+import fi.helsinki.cs.tmc.core.communication.http.HttpTasks;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
@@ -69,7 +70,7 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
 
         langs = spy(new TaskExecutorImpl());
         TmcLangsHolder.set(langs);
-        Exercise ex = new Exercise("name", "course");
+        Exercise ex = new Exercise("Example1", "Example");
         command = new SubmitAdaptiveExerciseToSkillifier(mockObserver, ex, factory);
 
         arithFuncsTempDir = TestUtils.getProject(this.getClass(), "arith_funcs");
@@ -79,26 +80,10 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
 
     @Test(timeout = 10000)
     public void testCall() throws Exception {
+
         verifyZeroInteractions(mockObserver);
         doReturn(new byte[0]).when(langs).compressProject(any(Path.class));
-        when(
-                        factory.getSubmittingExerciseToSkillifierTask(
-                                any(Exercise.class), any(byte[].class), any(Map.class)))
-                .thenReturn(
-                        new Callable<TmcServerCommunicationTaskFactory.SubmissionResponse>() {
-                            @Override
-                            public TmcServerCommunicationTaskFactory.SubmissionResponse call() throws Exception {
-                                return STUB_RESPONSE;
-                            }
-                        });
         when(factory.getSubmissionFetchTask(any(URI.class)))
-                .thenReturn(
-                        new Callable<String>() {
-                            @Override
-                            public String call() throws Exception {
-                                return STUB_PROSESSING_RESPONSE;
-                            }
-                        })
                 .thenReturn(
                         new Callable<String>() {
                             @Override
@@ -108,7 +93,8 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
                         });
 
         SubmissionResult result = command.call();
-        assertEquals(result.getStatus(), SubmissionResult.Status.OK);
+
+        assertEquals(SubmissionResult.Status.OK, result.getStatus());
     }
 
 }

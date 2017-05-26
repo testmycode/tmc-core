@@ -57,7 +57,7 @@ public class TmcServerCommunicationTaskFactory {
     private static final Logger LOG = Logger.getLogger(
             TmcServerCommunicationTaskFactory.class.getName());
     public static final int API_VERSION = 8;
-    
+
     private TmcSettings settings;
     private Oauth oauth;
     private AdaptiveExerciseParser adaptiveExerciseParser;
@@ -144,10 +144,12 @@ public class TmcServerCommunicationTaskFactory {
         url = UriUtils.withQueryParam(url, "access_token", oauth.getToken());
         return url;
     }
-    
-    private URI getSkillifierUrl() {
-        // Add courses and themes
-        return URI.create("http://localhost:3200/Example/default/next.json");
+
+    public URI getSkillifierUrl(String addition) {
+        if (!addition.isEmpty()) {
+            return URI.create("localhost:3200/Example/Default/" + addition);
+        }
+        return URI.create("localhost:3200/Example/Default/");
     }
 
     public Callable<AdaptiveExercise> getAdaptiveExercise()
@@ -157,7 +159,7 @@ public class TmcServerCommunicationTaskFactory {
             public AdaptiveExercise call() throws Exception {
                 try {
                     Callable<String> download = new HttpTasks()
-                                        .getForText(getSkillifierUrl());
+                                        .getForText(getSkillifierUrl("next.json"));
                     String json = download.call();
                     return adaptiveExerciseParser.parseFromJson(json);
                 } catch (Exception ex) {
@@ -242,44 +244,6 @@ public class TmcServerCommunicationTaskFactory {
         params.put("client_time", "" + (System.currentTimeMillis() / 1000L));
         params.put("client_nanotime", "" + System.nanoTime());
         params.putAll(extraParams);
-
-        /*
-        return new Callable<SubmissionResponse>() {
-            @Override
-            public SubmissionResponse call() throws Exception {
-                String response;
-                try {
-                    URI submitUrl = URI.create("http://localhost:3200/submit");
-                    //final URI submitUrl = addApiCallQueryParameters(exercise.getReturnUrl());
-                    final Callable<String> upload = new HttpTasks()
-                            .uploadRawDataForTextDownload(submitUrl,params,byteToSend);
-                            //.uploadFileForTextDownload(submitUrl, params,
-                            //"submission[file]", byteToSend);
-                    response = upload.call();
-                } catch (FailedHttpResponseException ex) {
-                    return checkForObsoleteClient(ex);
-                }
-
-                JsonObject respJson = new JsonParser().parse(response).getAsJsonObject();
-                if (respJson.get("error") != null) {
-                    throw new RuntimeException(
-                        "Server responded with error: " + respJson.get("error"));
-                } else if (respJson.get("submission_url") != null) {
-                    try {
-                        URI submissionUrl = new URI(respJson.get("submission_url").getAsString());
-                        URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
-                        return new SubmissionResponse(submissionUrl, pasteUrl);
-                    } catch (Exception e) {
-                        throw new RuntimeException(
-                            "Server responded with malformed " + "submission url");
-                    }
-                } else {
-                    throw new RuntimeException("Server returned unknown response");
-                }
-            }
-        };
-        */
-
 
         return wrapWithNotLoggedInException(new Callable<SubmissionResponse>() {
             @Override

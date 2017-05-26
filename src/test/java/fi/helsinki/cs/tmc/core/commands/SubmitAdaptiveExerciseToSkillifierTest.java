@@ -108,7 +108,7 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
                         });
 
         SubmissionResult result = command.call();
-        assertEquals(result.getStatus(), SubmissionResult.Status.OK);
+        assertEquals(SubmissionResult.Status.OK, result.getStatus());
     }
 
 }

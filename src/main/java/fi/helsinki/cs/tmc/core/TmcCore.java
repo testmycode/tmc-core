@@ -19,6 +19,7 @@ import fi.helsinki.cs.tmc.core.commands.SendDiagnostics;
 import fi.helsinki.cs.tmc.core.commands.SendFeedback;
 import fi.helsinki.cs.tmc.core.commands.SendSpywareEvents;
 import fi.helsinki.cs.tmc.core.commands.Submit;
+import fi.helsinki.cs.tmc.core.commands.SubmitAdaptiveExerciseToSkillifier;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
@@ -39,7 +40,6 @@ import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.spyware.LoggableEvent;
 
 import com.google.common.annotations.Beta;
-import fi.helsinki.cs.tmc.core.commands.SubmitAdaptiveExerciseToSkillifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

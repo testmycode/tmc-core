@@ -9,6 +9,7 @@ import fi.helsinki.cs.tmc.core.communication.serialization.CourseInfoParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseListParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.ReviewListParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
@@ -28,7 +29,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
@@ -147,9 +147,9 @@ public class TmcServerCommunicationTaskFactory {
 
     public URI getSkillifierUrl(String addition) {
         if (!addition.isEmpty()) {
-            return URI.create("localhost:3200/Example/Default/" + addition);
+            return URI.create("http://tmc-adapt.testmycode.io/Example/default/" + addition);
         }
-        return URI.create("localhost:3200/Example/Default/");
+        return URI.create("http://tmc-adapt.testmycode.io/Example/default/");
     }
 
     public Callable<AdaptiveExercise> getAdaptiveExercise()

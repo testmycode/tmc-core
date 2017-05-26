@@ -1,12 +1,9 @@
 package fi.helsinki.cs.tmc.core.domain;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
-import java.net.URI;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.Serializable;
 
 public class AdaptiveExercise extends Exercise implements Serializable {
     

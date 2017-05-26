@@ -1,10 +1,9 @@
 package fi.helsinki.cs.tmc.core.domain;
 
+import static org.junit.Assert.assertTrue;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import java.net.URI;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 

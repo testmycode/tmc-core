@@ -1,11 +1,8 @@
 package fi.helsinki.cs.tmc.core.domain.submission;
 
 import com.google.gson.annotations.SerializedName;
-import fi.helsinki.cs.tmc.langs.domain.TestResult;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by markovai on 24.5.2017.
@@ -27,13 +24,13 @@ public class AdaptiveSubmissionResult {
     @SerializedName("points")
     private int points;
 
-    public SubmissionResult toSubmissionResult(){
-        SubmissionResult s = new SubmissionResult();
-        s.setError(error);
-        s.setStatus(status);
-        ArrayList<String> p = new ArrayList<>();
-        p.add(String.valueOf(points));
-        s.setPoints(p);
-        return s;
+    public SubmissionResult toSubmissionResult() {
+        SubmissionResult submission = new SubmissionResult();
+        submission.setError(error);
+        submission.setStatus(status);
+        ArrayList<String> points = new ArrayList<>();
+        points.add(String.valueOf(this.points));
+        submission.setPoints(points);
+        return submission;
     }
 }

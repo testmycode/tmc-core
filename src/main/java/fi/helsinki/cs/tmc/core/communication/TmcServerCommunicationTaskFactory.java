@@ -56,7 +56,6 @@ public class TmcServerCommunicationTaskFactory {
     private static final Logger LOG = Logger.getLogger(
             TmcServerCommunicationTaskFactory.class.getName());
     public static final int API_VERSION = 8;
-    private static final String SKILLIFIER_URL = "http://ohtu-skillifier.herokuapp.com/next.json";
 
     private TmcSettings settings;
     private Oauth oauth;
@@ -144,6 +143,13 @@ public class TmcServerCommunicationTaskFactory {
         url = UriUtils.withQueryParam(url, "access_token", oauth.getToken());
         return url;
     }
+    
+    private URI getSkillifierUrl(String addition) {
+        if (!addition.isEmpty()) {
+            return URI.create("localhost:3200/Example/Default/" + addition);
+        }
+        return URI.create("localhost:3200/Example/Default/");
+    }
 
     public Callable<Exercise> getAdaptiveExercise() 
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
@@ -152,7 +158,7 @@ public class TmcServerCommunicationTaskFactory {
             public Exercise call() throws Exception {
                 try {
                     Callable<String> download = new HttpTasks()
-                                        .getForText(URI.create(SKILLIFIER_URL));
+                                        .getForText(getSkillifierUrl("next.json"));
                     String json = download.call();
                     return adaptiveExerciseParser.parseFromJson(json);
                 } catch (Exception ex) {

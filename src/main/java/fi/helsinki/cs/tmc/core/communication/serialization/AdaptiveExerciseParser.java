@@ -8,6 +8,8 @@ import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
+
 public class AdaptiveExerciseParser {
     
     private static final Logger logger = LoggerFactory.getLogger(AdaptiveExerciseParser.class);
@@ -23,6 +25,8 @@ public class AdaptiveExerciseParser {
             Gson gson = new GsonBuilder().create();
             AdaptiveExercise adaptive = gson.fromJson(json, AdaptiveExercise.class);
             if (adaptive.getAvailable()) {
+                String parsedUrl = adaptive.getZipUrl().toString();
+                adaptive.setZipUrl(URI.create("http://" + parsedUrl));
                 return adaptive;
             }
             return null;

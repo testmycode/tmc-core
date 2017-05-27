@@ -138,8 +138,8 @@ public class DownloadAdaptiveExerciseTest {
 
         when(settings.getTmcProjectDirectory()).thenReturn(testPath);
 
-        //Exercise exercise = command.call();
-        //assertTrue(Files.exists(testPath.resolve(exercise.getCourseName())));
-        //FileUtils.deleteDirectory(testPath.resolve(exercise.getCourseName()).toFile());
+        Exercise exercise = command.call();
+        assertTrue(Files.exists(testPath.resolve(exercise.getCourseName())));
+        FileUtils.deleteDirectory(testPath.resolve(exercise.getCourseName()).toFile());
     }
 }

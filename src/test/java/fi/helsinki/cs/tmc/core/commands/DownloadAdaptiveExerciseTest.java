@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
+import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -55,6 +56,8 @@ public class DownloadAdaptiveExerciseTest {
     AdaptiveExercise mockExerciseOne;
     @Mock
     Callable<AdaptiveExercise> mockGetAdaptiveExercise;
+    @Mock
+    Oauth oauth;
 
     private Command<Exercise> command;
     TaskExecutor langs;
@@ -116,6 +119,7 @@ public class DownloadAdaptiveExerciseTest {
 
         when(mockExerciseOne.getExtractionTarget(any(Path.class))).thenReturn(arithFuncsTempDir);
         when(settings.getTmcProjectDirectory()).thenReturn(testFolder.getRoot().toPath());
+        when(oauth.getToken()).thenReturn("testToken");
 
         when(factory.getDownloadingExerciseZipTask(mockExerciseOne))
                 .thenReturn(
@@ -131,15 +135,15 @@ public class DownloadAdaptiveExerciseTest {
     @Test
     public void testDownloadAndExtractSuccessWithRealZip() throws Exception {
         verifyZeroInteractions(langs);
-        TmcServerCommunicationTaskFactory realFactory = new TmcServerCommunicationTaskFactory();
+        TmcServerCommunicationTaskFactory realFactory = new TmcServerCommunicationTaskFactory(settings, oauth);
         assertNotNull(TmcSettingsHolder.get());
         command = new DownloadAdaptiveExercise(mockObserver, realFactory);
         Path testPath = Paths.get(System.getProperty("user.dir"));
 
         when(settings.getTmcProjectDirectory()).thenReturn(testPath);
 
-        //Exercise exercise = command.call();
-        //assertTrue(Files.exists(testPath.resolve(exercise.getCourseName())));
-        //FileUtils.deleteDirectory(testPath.resolve(exercise.getCourseName()).toFile());
+        Exercise exercise = command.call();
+        assertTrue(Files.exists(testPath.resolve(exercise.getCourseName())));
+        FileUtils.deleteDirectory(testPath.resolve(exercise.getCourseName()).toFile());
     }
 }

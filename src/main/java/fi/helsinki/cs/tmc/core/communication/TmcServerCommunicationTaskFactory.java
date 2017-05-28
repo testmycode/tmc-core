@@ -159,7 +159,7 @@ public class TmcServerCommunicationTaskFactory {
             public AdaptiveExercise call() throws Exception {
                 try {
                     Callable<String> download = new HttpTasks()
-                                        .getForText(getSkillifierUrl("next.json"));
+                                        .getForText(getSkillifierUrl("next.json?username=" + oauth.getToken()));
                     String json = download.call();
                     return adaptiveExerciseParser.parseFromJson(json);
                 } catch (Exception ex) {

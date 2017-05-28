@@ -16,21 +16,21 @@ public class AdaptiveSubmissionResult {
 
 
     @SerializedName("error")
-    private String error; // e.g. compile error
+    private final String error; // e.g. compile error
 
     @SerializedName("status")
-    private SubmissionResult.Status status;
+    private final SubmissionResult.Status status;
 
     @SerializedName("points")
-    private int points;
+    private final int points;
 
     public SubmissionResult toSubmissionResult() {
-        SubmissionResult submission = new SubmissionResult();
-        submission.setError(error);
-        submission.setStatus(status);
-        ArrayList<String> points = new ArrayList<>();
-        points.add(String.valueOf(this.points));
-        submission.setPoints(points);
-        return submission;
+        SubmissionResult submissionResult = new SubmissionResult();
+        submissionResult.setError(error);
+        submissionResult.setStatus(status);
+        ArrayList<String> submissionPoints = new ArrayList<>();
+        submissionPoints.add(String.valueOf(points));
+        submissionResult.setPoints(submissionPoints);
+        return submissionResult;
     }
 }

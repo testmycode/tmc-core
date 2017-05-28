@@ -49,11 +49,12 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
         logger.info("Submitting exercise {}", exercise.getName());
         informObserver(0, "Submitting exercise to server");
         URI submissionUrl = tmcServerCommunicationTaskFactory.getSkillifierUrl(exercise.getName()
-                + "/submit?username=" + TmcSettingsHolder.get().getUsername());
-
+                + "/submit?username=" + TmcSettingsHolder.get().getToken().get());
+        logger.info("submissionurl: {}", submissionUrl.toString());
         String networkResult = "";
         try {
             networkResult = tmcServerCommunicationTaskFactory.getSubmissionFetchTask(submissionUrl).call();
+            logger.info("network result: {}", networkResult);
         } catch (Exception e) {
             informObserver(1, "Error while waiting for response from server");
             logger.warn("Error while updating adaptive submission status from server, continuing", e);
@@ -61,7 +62,7 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
 
         Gson gson = new GsonBuilder().create();
         SubmissionResult result = gson.fromJson(networkResult, AdaptiveSubmissionResult.class).toSubmissionResult();
-        if (result.getError() != "null") {
+        if (!"null".equals(result.getError())) {
             logger.warn("submission result error: " + result.getError());
         }
         return result;

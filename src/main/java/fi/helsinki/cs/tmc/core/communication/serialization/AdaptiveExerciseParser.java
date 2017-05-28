@@ -8,6 +8,8 @@ import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
+
 public class AdaptiveExerciseParser {
     
     private static final Logger logger = LoggerFactory.getLogger(AdaptiveExerciseParser.class);
@@ -19,12 +21,19 @@ public class AdaptiveExerciseParser {
         if (json.trim().isEmpty()) {
             throw new IllegalArgumentException("Empty input");
         }
+        if (json.contains("\"available\":\"false\"")) {
+            logger.info("The exercise is not available.");
+            return null;
+        }
         try {
             Gson gson = new GsonBuilder().create();
             AdaptiveExercise adaptive = gson.fromJson(json, AdaptiveExercise.class);
             if (adaptive.getAvailable()) {
+                String parsedUrl = adaptive.getZipUrl().toString();
+                adaptive.setZipUrl(URI.create("http://" + parsedUrl));
                 return adaptive;
             }
+            logger.info("The gson parsed adaptive exercise is not available.");
             return null;
         } catch (RuntimeException ex) {
             logger.warn("Failed to parse an adaptive course from URL", ex);

@@ -21,6 +21,10 @@ public class AdaptiveExerciseParser {
         if (json.trim().isEmpty()) {
             throw new IllegalArgumentException("Empty input");
         }
+        if (json.contains("\"available\":\"false\"")) {
+            logger.info("The exercise is not available.");
+            return null;
+        }
         try {
             Gson gson = new GsonBuilder().create();
             AdaptiveExercise adaptive = gson.fromJson(json, AdaptiveExercise.class);
@@ -29,6 +33,7 @@ public class AdaptiveExerciseParser {
                 adaptive.setZipUrl(URI.create("http://" + parsedUrl));
                 return adaptive;
             }
+            logger.info("The gson parsed adaptive exercise is not available.");
             return null;
         } catch (RuntimeException ex) {
             logger.warn("Failed to parse an adaptive course from URL", ex);

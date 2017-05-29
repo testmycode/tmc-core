@@ -38,7 +38,7 @@ public class Theme {
         return unlocked;
     }
 
-    public boolean shouldContain(Exercise exercise){
+    public boolean shouldContain(Exercise exercise) {
         return exercise.getName().contains(this.name);
     }
 

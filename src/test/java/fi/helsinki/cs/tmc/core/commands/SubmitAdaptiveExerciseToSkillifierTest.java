@@ -3,14 +3,11 @@ package fi.helsinki.cs.tmc.core.commands;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
-import fi.helsinki.cs.tmc.core.communication.http.HttpTasks;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
@@ -23,6 +20,8 @@ import fi.helsinki.cs.tmc.core.utils.TestUtils;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
+import com.google.common.base.Optional;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,7 +33,6 @@ import org.mockito.Spy;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 
@@ -83,7 +81,7 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
         settings.setToken(mockToken);
     }
 
-   @Test(timeout = 10000)
+    @Test(timeout = 10000)
     public void testCall() throws Exception {
 
         verifyZeroInteractions(mockObserver);

@@ -3,10 +3,12 @@ package fi.helsinki.cs.tmc.core.commands;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.http.HttpTasks;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
@@ -70,15 +72,18 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
 
         langs = spy(new TaskExecutorImpl());
         TmcLangsHolder.set(langs);
-        Exercise ex = new Exercise("Example1", "Example");
+        TmcSettingsHolder.set(settings);
+        Exercise ex = new Exercise("Osa01_01.WilliamLovelace", "Example");
         command = new SubmitAdaptiveExerciseToSkillifier(mockObserver, ex, new TmcServerCommunicationTaskFactory());
 
         arithFuncsTempDir = TestUtils.getProject(this.getClass(), "arith_funcs");
         when(mockExercise.getExerciseDirectory(any(Path.class))).thenReturn(arithFuncsTempDir);
         when(settings.getLocale()).thenReturn(new Locale("FI"));
+        Optional<String> mockToken = Optional.of("testToken");
+        settings.setToken(mockToken);
     }
 
-   // @Test(timeout = 10000)
+   @Test(timeout = 10000)
     public void testCall() throws Exception {
 
         verifyZeroInteractions(mockObserver);

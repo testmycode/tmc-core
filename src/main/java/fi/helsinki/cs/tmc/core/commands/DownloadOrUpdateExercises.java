@@ -4,24 +4,16 @@ import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Progress;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import fi.helsinki.cs.tmc.core.exceptions.ExerciseDownloadFailedException;
-import fi.helsinki.cs.tmc.core.exceptions.ExtractingExericeFailedException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcInterruptionException;
-import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
-import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import com.google.common.annotations.VisibleForTesting;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A {@link Command} for downloading exercises.
@@ -97,5 +89,4 @@ public class DownloadOrUpdateExercises extends ExerciseDownloadingCommand<List<E
                 successfullyDownloaded.size());
         return successfullyDownloaded;
     }
-
 }

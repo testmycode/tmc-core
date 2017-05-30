@@ -95,17 +95,28 @@ public class Course {
         themes = new ArrayList<>();
         Map<String, Theme> themeMap = new HashMap<>();
         for (Exercise ex : exercises) {
-            String themeName = ex.getName().split("-")[0];
-            Theme theme = themeMap.get(themeName);
-            if (theme == null) {
-                theme = new Theme(themeName);
-                theme.getExercises().add(ex);
-                themeMap.put(themeName, theme);
-                themes.add(theme);
-            } else {
-                theme.getExercises().add(ex);
+            addExerciseToTheme(themeMap, ex);
+        }
+    }
+
+    private void addExerciseToTheme(Map<String, Theme> themeMap, Exercise ex) {
+        String themeName = ex.getName().split("-")[0];
+        Theme theme = themeMap.get(themeName);
+        if (theme == null) {
+            theme = new Theme(themeName);
+            themeMap.put(themeName, theme);
+            themes.add(theme);
+        }
+        theme.addExercise(ex);
+    }
+
+    public List<Exercise> getExercisesByTheme(String themeName) {
+        for (Theme theme : themes) {
+            if (theme.getName().equals(themeName)) {
+                return theme.getExercises();
             }
         }
+        return new ArrayList<>();
     }
 
     public int getId() {

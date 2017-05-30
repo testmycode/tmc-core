@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.core.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,6 +13,7 @@ public class Theme {
 
     public Theme(String name) {
         this.name = name;
+        this.exercises = new ArrayList<>();
     }
 
     public List<Exercise> getExercises() {
@@ -40,6 +42,10 @@ public class Theme {
 
     public boolean shouldContain(Exercise exercise){
         return exercise.getName().contains(this.name);
+    }
+
+    public void addExercise(Exercise exercise) {
+        exercises.add(exercise);
     }
 
 }

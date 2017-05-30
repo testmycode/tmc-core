@@ -3,13 +3,11 @@ package fi.helsinki.cs.tmc.core.utils;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
-import fi.helsinki.cs.tmc.core.domain.Organization;
 
 import com.google.common.base.Optional;
 
 import org.apache.http.impl.conn.SystemDefaultRoutePlanner;
 
-import java.lang.UnsupportedOperationException;
 import java.nio.file.Path;
 import java.util.Locale;
 

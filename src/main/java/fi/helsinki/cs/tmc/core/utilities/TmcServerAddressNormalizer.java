@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.utilities;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
-import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 public class TmcServerAddressNormalizer {

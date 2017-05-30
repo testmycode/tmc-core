@@ -2,14 +2,10 @@ package fi.helsinki.cs.tmc.core.holders;
 
 import static org.junit.Assert.assertEquals;
 
-import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.exceptions.UninitializedHolderException;
 import fi.helsinki.cs.tmc.core.persistance.TmcState;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 public class TmcStateHolderTest {
 

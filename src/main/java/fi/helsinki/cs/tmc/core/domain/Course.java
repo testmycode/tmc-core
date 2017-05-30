@@ -4,9 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Course {
 
@@ -16,8 +14,9 @@ public class Course {
     private String description;
 
     private List<Exercise> exercises;
+    private List<Skill> skills;
 
-    private List<Theme> themes;
+    private int weekCount;
 
     @SerializedName("details_url")
     private URI detailsUrl;
@@ -51,6 +50,7 @@ public class Course {
     public Course(String name) {
         this.name = name;
         this.exercises = new ArrayList<>();
+        this.skills = new ArrayList<>();
         this.unlockables = new ArrayList<>();
         this.spywareUrls = new ArrayList<>();
     }
@@ -71,37 +71,42 @@ public class Course {
         this.exercises = exercises;
     }
 
-    public List<Theme> getThemes() {
-        return themes;
+    public int getWeekCount() {
+        return weekCount;
     }
 
-    public void generateThemes() {
-        themes = new ArrayList<>();
-        Map<String, Theme> themeMap = new HashMap<>();
-        for (Exercise ex : exercises) {
-            addExerciseToTheme(themeMap, ex);
-        }
+    public List<Skill> getSkills() {
+        return skills;
     }
 
-    private void addExerciseToTheme(Map<String, Theme> themeMap, Exercise ex) {
-        String themeName = ex.getName().split("-")[0];
-        Theme theme = themeMap.get(themeName);
-        if (theme == null) {
-            theme = new Theme(themeName);
-            themeMap.put(themeName, theme);
-            themes.add(theme);
-        }
-        theme.addExercise(ex);
+    public void setSkills(List<Skill> skills) {
+        this.skills = skills;
     }
 
-    public List<Exercise> getExercisesByTheme(Theme theme) {
-        ArrayList<Exercise> exercisesByTheme = new ArrayList<>();
-        for (Exercise exercise : theme.getExercises()) {
-            if (this.exercises.contains(exercise)) {
-                exercisesByTheme.add(exercise);
+    public List<Skill> getSkillsByWeek(int week) {
+        List<Skill> returnSkills = new ArrayList<>();
+        for (Skill skill : skills) {
+            if (skill.getWeek() == week) {
+                returnSkills.add(skill);
             }
         }
-        return exercisesByTheme;
+        return returnSkills;
+    }
+
+    public void generateWeeks() {
+        for (Exercise ex : exercises) {
+            ex.generateWeek();
+        }
+    }
+
+    public List<Exercise> getExercisesByWeek(int week) {
+        List<Exercise> exercisesWithWeek = new ArrayList<>();
+        for (Exercise ex : exercises) {
+            if (ex.getWeek() == week) {
+                exercisesWithWeek.add(ex);
+            }
+        }
+        return exercisesWithWeek;
     }
 
     public int getId() {
@@ -204,5 +209,9 @@ public class Course {
            not use toString() to present Course objects
         */
         return name;
+    }
+
+    public void setWeekCount(int weeks) {
+        this.weekCount = weeks;
     }
 }

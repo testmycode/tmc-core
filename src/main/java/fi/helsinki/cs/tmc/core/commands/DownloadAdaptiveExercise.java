@@ -33,6 +33,7 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
             return null;
         }
         exercise.setCourseName("None");
+        exercise.setAdaptive(true);
         byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
         //checkInterrupt();
         Progress progress = new Progress(3);

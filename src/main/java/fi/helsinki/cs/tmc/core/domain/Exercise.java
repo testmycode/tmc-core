@@ -25,6 +25,7 @@ public class Exercise implements Serializable {
     private int id;
     private String name;
     private boolean locked;
+    private boolean isAdaptive = false;
 
     @SerializedName("deadline_description")
     private String deadlineDescription;
@@ -256,6 +257,14 @@ public class Exercise implements Serializable {
 
     public void setExerciseSubmissionsUrl(URI exerciseSubmissionsUrl) {
         this.exerciseSubmissionsUrl = exerciseSubmissionsUrl;
+    }
+
+    public boolean isAdaptive() {
+        return isAdaptive;
+    }
+
+    public void setAdaptive(boolean adaptive) {
+        isAdaptive = adaptive;
     }
 
     private String courseName;

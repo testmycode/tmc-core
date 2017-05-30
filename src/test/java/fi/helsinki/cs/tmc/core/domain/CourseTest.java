@@ -105,27 +105,26 @@ public class CourseTest {
     }
 
     @Test
-    public void courseExercisesAreDividedIntoThemesCorrectly() {
+    public void courseExercisesAreDividedIntoWeeksCorrectly() {
         exercises = new ArrayList<>();
         exercises.add(new Exercise("viikko1-testi"));
         exercises.add(new Exercise("viikko2-testi"));
         exercises.add(new Exercise("viikko3-testi"));
         course.setExercises(exercises);
-        course.generateThemes();
-        assertEquals(3,course.getExercises().size());
+        course.generateWeeks();
+        assertEquals(3, course.getExercises().size());
     }
 
     @Test
-    public void returnExercisesByThemeTest() {
+    public void returnExercisesByWeekTest() {
         exercises = new ArrayList<>();
         exercises.add(new Exercise("viikko1-testi"));
         exercises.add(new Exercise("viikko1-testi"));
         exercises.add(new Exercise("viikko3-testi"));
         course.setExercises(exercises);
-        course.generateThemes();
-        assertEquals(2, course.getExercisesByTheme("viikko1").size());
-        assertEquals(1, course.getExercisesByTheme("viikko3").size());
+        course.generateWeeks();
+
+        assertEquals(2, course.getExercisesByWeek(1).size());
+        assertEquals(1, course.getExercisesByWeek(3).size());
     }
-
-
 }

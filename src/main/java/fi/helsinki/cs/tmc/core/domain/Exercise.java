@@ -12,7 +12,6 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +24,9 @@ public class Exercise implements Serializable {
     private int id;
     private String name;
     private boolean locked;
+    private boolean isAdaptive = false;
+    @SerializedName("weekNumber")
+    private int week;
 
     @SerializedName("deadline_description")
     private String deadlineDescription;
@@ -75,6 +77,8 @@ public class Exercise implements Serializable {
 
     @SerializedName("exercise_submissions_url")
     private URI exerciseSubmissionsUrl;
+
+    private boolean available;
 
     public Exercise() {}
 
@@ -256,6 +260,43 @@ public class Exercise implements Serializable {
 
     public void setExerciseSubmissionsUrl(URI exerciseSubmissionsUrl) {
         this.exerciseSubmissionsUrl = exerciseSubmissionsUrl;
+    }
+
+    public boolean isAdaptive() {
+        return isAdaptive;
+    }
+
+    public void setAdaptive(boolean adaptive) {
+        isAdaptive = adaptive;
+    }
+
+    public int getWeek() {
+        return week;
+    }
+
+    public void setWeek(int week) {
+        this.week = week;
+    }
+
+    public void generateWeek() {
+        String weekWord = "viikko";
+        int firstIndex = name.indexOf(weekWord) + weekWord.length();
+        int lastIndex = firstIndex;
+        int no = 0;
+        while (Character.isDigit(name.charAt(lastIndex))) {
+            no = Integer.parseInt(name.substring(firstIndex, lastIndex + 1));
+            System.out.println("no: " + no);
+            lastIndex++;
+        }
+        this.week = no;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public boolean isAvailable() {
+        return available;
     }
 
     private String courseName;

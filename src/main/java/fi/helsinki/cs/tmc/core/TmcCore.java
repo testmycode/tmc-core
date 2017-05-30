@@ -143,15 +143,15 @@ public class TmcCore {
         return new ExceptionTrackingCallable<>(new SendSpywareEvents(observer, currentCourse, events));
 
     }
-    
+
     public Callable<SubmissionResult> submit(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new Submit command");
         return new ExceptionTrackingCallable<>(new Submit(observer, exercise));
     }
-    
-    public Callable<SubmissionResult> submitAdaptiveExercise(ProgressObserver observer, String exerciseName) {
+
+    public Callable<SubmissionResult> submitAdaptiveExercise(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new submit adaptiveExercise command");
-        return new ExceptionTrackingCallable<>(new SubmitAdaptiveExerciseToSkillifier(observer, exerciseName));
+        return new ExceptionTrackingCallable<>(new SubmitAdaptiveExerciseToSkillifier(observer, exercise));
     }
 
     public Callable<GetUpdatableExercises.UpdateResult> getExerciseUpdates(
@@ -180,12 +180,12 @@ public class TmcCore {
         logger.info("Creating new DownloadModelSolution command");
         return new ExceptionTrackingCallable<>(new DownloadModelSolution(observer, exercise));
     }
-    
-    public Callable<Exercise> downloadAdaptiveExercise(ProgressObserver observer) {
+
+    public Callable<Exercise> downloadAdaptiveExercise(ProgressObserver observer, int week, Course course) {
         logger.info("Creating new DownloadAdaptiveExercise command");
-        return new ExceptionTrackingCallable<>(new DownloadAdaptiveExercise(observer));
+        return new ExceptionTrackingCallable<>(new DownloadAdaptiveExercise(observer, week, course));
     }
-    
+
     /**
      * NOT IMPLEMENTED!
      *

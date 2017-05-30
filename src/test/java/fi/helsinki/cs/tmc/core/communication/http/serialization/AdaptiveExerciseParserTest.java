@@ -8,6 +8,8 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.URI;
+
 public class AdaptiveExerciseParserTest {
 
     private AdaptiveExerciseParser adaptiveParser;
@@ -31,5 +33,11 @@ public class AdaptiveExerciseParserTest {
     public void exerciseNotAvailable() {
         Exercise exercise = adaptiveParser.parseFromJson("{ available: false, zip_url: additionToString }");
         assertEquals(exercise, null);
+    }
+
+    @Test
+    public void exersiceAvailableTest() {
+        Exercise exercise = adaptiveParser.parseFromJson("{available: true, zip_url: additionToString }");
+        assertEquals(URI.create("http://additionToString"), exercise.getZipUrl());
     }
 }

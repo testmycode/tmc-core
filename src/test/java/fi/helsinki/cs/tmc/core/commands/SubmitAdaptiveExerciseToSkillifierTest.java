@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core.commands;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -33,6 +34,7 @@ import org.mockito.Spy;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 
@@ -51,12 +53,7 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
     @Mock
     Exercise mockExercise;
 
-    private static final URI PASTE_URI = URI.create("http://example.com/paste");
-    private static final URI SUBMISSION_URI = URI.create("http://example.com/submission");
-    private static final TmcServerCommunicationTaskFactory.SubmissionResponse STUB_RESPONSE =
-            new TmcServerCommunicationTaskFactory.SubmissionResponse(SUBMISSION_URI, PASTE_URI);
-
-    private static final String STUB_PROSESSING_RESPONSE = "{status: \"processing\"}";
+    private static final String STUB_PROSESSING_ERRORED_RESPONSE = "{status : \"ERROR\", error: \"failed to submit the exercise\"}";
     private static final String STUB_PROSESSING_DONE_RESPONSE = "{status: \"OK\"}";
 
     private Command<SubmissionResult> command;
@@ -71,33 +68,58 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
         langs = spy(new TaskExecutorImpl());
         TmcLangsHolder.set(langs);
         TmcSettingsHolder.set(settings);
-        Exercise ex = new Exercise("Osa01_01.WilliamLovelace", "Example");
-        command = new SubmitAdaptiveExerciseToSkillifier(mockObserver, ex, new TmcServerCommunicationTaskFactory());
+        Exercise ex = new Exercise("Osa02_01.WilliamLovelace", "Example");
+        command = new SubmitAdaptiveExerciseToSkillifier(mockObserver, mockExercise, factory);
 
         arithFuncsTempDir = TestUtils.getProject(this.getClass(), "arith_funcs");
         when(mockExercise.getExerciseDirectory(any(Path.class))).thenReturn(arithFuncsTempDir);
         when(settings.getLocale()).thenReturn(new Locale("FI"));
         Optional<String> mockToken = Optional.of("testToken");
         settings.setToken(mockToken);
+
+        when(factory.getSkillifierUrl(anyString())).thenReturn(URI.create("www.someurl.com"));
     }
 
     @Test(timeout = 10000)
-    public void testCall() throws Exception {
+    public void testSuccessfulSubmit() throws Exception {
 
         verifyZeroInteractions(mockObserver);
         doReturn(new byte[0]).when(langs).compressProject(any(Path.class));
-        when(factory.getSubmissionFetchTask(any(URI.class)))
+        when(
+                factory.getSubmittingExerciseToSkillifierTask(
+                any(Exercise.class), any(byte[].class), any(Map.class)))
                 .thenReturn(
-                        new Callable<String>() {
-                            @Override
-                            public String call() throws Exception {
-                                return STUB_PROSESSING_DONE_RESPONSE;
-                            }
-                        });
+                new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            return STUB_PROSESSING_DONE_RESPONSE;
+                        }
+                    });
 
         SubmissionResult result = command.call();
 
         assertEquals(SubmissionResult.Status.OK, result.getStatus());
     }
 
+    @Test(timeout = 10000)
+    public void testUnsuccessfulSubmit() throws Exception {
+
+        verifyZeroInteractions(mockObserver);
+        doReturn(new byte[0]).when(langs).compressProject(any(Path.class));
+        when(
+                factory.getSubmittingExerciseToSkillifierTask(
+                any(Exercise.class), any(byte[].class), any(Map.class)))
+                .thenReturn(
+                new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            return STUB_PROSESSING_ERRORED_RESPONSE;
+                        }
+                    });
+
+        SubmissionResult result = command.call();
+
+        assertEquals(SubmissionResult.Status.ERROR, result.getStatus());
+        assertEquals("failed to submit the exercise", result.getError());
+    }
 }

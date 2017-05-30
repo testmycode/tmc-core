@@ -1,8 +1,8 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
@@ -13,7 +13,6 @@ import static org.mockito.Mockito.when;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
-import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
@@ -23,8 +22,6 @@ import fi.helsinki.cs.tmc.core.utils.MockSettings;
 import fi.helsinki.cs.tmc.core.utils.TestUtils;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
-import org.apache.commons.io.FileUtils;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,7 +34,6 @@ import org.mockito.Spy;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
 public class DownloadAdaptiveExerciseTest {
@@ -53,11 +49,13 @@ public class DownloadAdaptiveExerciseTest {
     @Mock
     Course mockCourse;
     @Mock
-    AdaptiveExercise mockExerciseOne;
+    Exercise mockExerciseOne;
     @Mock
-    Callable<AdaptiveExercise> mockGetAdaptiveExercise;
+    Callable<Exercise> mockGetAdaptiveExercise;
     @Mock
     Oauth oauth;
+    //@Mock
+    int week;
 
     private Command<Exercise> command;
     TaskExecutor langs;
@@ -65,23 +63,18 @@ public class DownloadAdaptiveExerciseTest {
 
     @Before
     public void setUp() throws IOException {
+        week = 1;
         MockitoAnnotations.initMocks(this);
         langs = spy(new TaskExecutorImpl());
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(langs);
         arithFuncsTempDir = testFolder.getRoot().toPath().resolve("arith_funcs");
-        command = new DownloadAdaptiveExercise(mockObserver, factory);
+        command = new DownloadAdaptiveExercise(mockObserver, factory, week, mockCourse);
 
         doCallRealMethod().when(langs).extractProject(any(Path.class), any(Path.class));
         mockExerciseOne.setName("ex1");
         mockExerciseOne.setCourseName("course1");
-
-    }
-
-    @Test
-    public void checkExerciseZipUrl() throws Exception {
-        setUpMocks();
-        Exercise exercise = command.call();
+        mockExerciseOne.setWeek(week);
     }
 
     @Test
@@ -90,8 +83,8 @@ public class DownloadAdaptiveExerciseTest {
 
         Exercise exercise = command.call();
 
-        verify(factory).getAdaptiveExercise();
-        verify(factory).getDownloadingExerciseZipTask(mockExerciseOne);
+        verify(factory).getAdaptiveExercise(week, mockCourse);
+        verify(factory).getDownloadingAdaptiveExerciseZipTask(mockExerciseOne);
 
         verifyNoMoreInteractions(factory);
 
@@ -105,7 +98,7 @@ public class DownloadAdaptiveExerciseTest {
 
         Exercise exercise = command.call();
 
-        verify(factory).getAdaptiveExercise();
+        verify(factory).getAdaptiveExercise(week, mockCourse);
 
         verifyNoMoreInteractions(factory);
 
@@ -114,14 +107,17 @@ public class DownloadAdaptiveExerciseTest {
     private void setUpMocks() throws Exception {
         verifyZeroInteractions(langs);
 
-        when(factory.getAdaptiveExercise()).thenReturn(mockGetAdaptiveExercise);
+        //when(mockWeek).thenReturn(1);
+        // may be broken since theme been refactored to int week
+
+        when(factory.getAdaptiveExercise(anyInt(), any(Course.class))).thenReturn(mockGetAdaptiveExercise);
         when(mockGetAdaptiveExercise.call()).thenReturn(mockExerciseOne);
 
         when(mockExerciseOne.getExtractionTarget(any(Path.class))).thenReturn(arithFuncsTempDir);
         when(settings.getTmcProjectDirectory()).thenReturn(testFolder.getRoot().toPath());
         when(oauth.getToken()).thenReturn("testToken");
 
-        when(factory.getDownloadingExerciseZipTask(mockExerciseOne))
+        when(factory.getDownloadingAdaptiveExerciseZipTask(mockExerciseOne))
                 .thenReturn(
                         new Callable<byte[]>() {
                             @Override
@@ -132,18 +128,4 @@ public class DownloadAdaptiveExerciseTest {
                         });
     }
 
-    @Test
-    public void testDownloadAndExtractSuccessWithRealZip() throws Exception {
-        verifyZeroInteractions(langs);
-        TmcServerCommunicationTaskFactory realFactory = new TmcServerCommunicationTaskFactory(settings, oauth);
-        assertNotNull(TmcSettingsHolder.get());
-        command = new DownloadAdaptiveExercise(mockObserver, realFactory);
-        Path testPath = Paths.get(System.getProperty("user.dir"));
-
-        when(settings.getTmcProjectDirectory()).thenReturn(testPath);
-
-        Exercise exercise = command.call();
-        assertTrue(Files.exists(testPath.resolve(exercise.getCourseName())));
-        FileUtils.deleteDirectory(testPath.resolve(exercise.getCourseName()).toFile());
-    }
 }

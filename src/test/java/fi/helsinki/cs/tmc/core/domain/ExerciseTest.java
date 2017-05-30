@@ -46,4 +46,11 @@ public class ExerciseTest {
         exercise.setDeadline(dateNow);
         assertEquals(dateNow, exercise.getDeadline());
     }
+
+    @Test
+    public void testGenerateWeek() {
+        exercise.setName("viikko6-testi");
+        exercise.generateWeek();
+        assertEquals(6, exercise.getWeek());
+    }
 }

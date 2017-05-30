@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core;
 
 import fi.helsinki.cs.tmc.core.commands.AuthenticateUser;
+import fi.helsinki.cs.tmc.core.commands.DownloadAdaptiveExercise;
 import fi.helsinki.cs.tmc.core.commands.DownloadCompletedExercises;
 import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
 import fi.helsinki.cs.tmc.core.commands.DownloadOrUpdateExercises;
@@ -172,6 +173,11 @@ public class TmcCore {
     public Callable<Exercise> downloadModelSolution(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new DownloadModelSolution command");
         return new ExceptionTrackingCallable<>(new DownloadModelSolution(observer, exercise));
+    }
+    
+    public Callable<Exercise> downloadAdaptiveExercise(ProgressObserver observer) {
+        logger.info("Creating new DownloadAdaptiveExercise command");
+        return new ExceptionTrackingCallable<>(new DownloadAdaptiveExercise(observer));
     }
 
     /**

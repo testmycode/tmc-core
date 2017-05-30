@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
-import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.AdaptiveSubmissionResult;
@@ -25,7 +24,7 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
 
     public SubmitAdaptiveExerciseToSkillifier(ProgressObserver observer, String exerciseName) {
         super(observer);
-        this.exercise = new AdaptiveExercise();
+        this.exercise = new Exercise();
         exercise.setName(exerciseName);
     }
 

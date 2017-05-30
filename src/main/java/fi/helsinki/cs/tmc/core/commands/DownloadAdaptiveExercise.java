@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
-import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Progress;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
@@ -28,7 +27,7 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
     @Override
     public Exercise call() throws Exception {
         logger.info("Checking adaptive exercises availability");
-        AdaptiveExercise exercise = tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
+        Exercise exercise = tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
         if (exercise == null) {
             return null;
         }

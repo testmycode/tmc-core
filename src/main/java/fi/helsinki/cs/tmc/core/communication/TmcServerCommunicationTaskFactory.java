@@ -9,7 +9,6 @@ import fi.helsinki.cs.tmc.core.communication.serialization.CourseInfoParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseListParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.ReviewListParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
-import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
@@ -152,11 +151,11 @@ public class TmcServerCommunicationTaskFactory {
         return URI.create("http://tmc-adapt.testmycode.io/Example/default/");
     }
 
-    public Callable<AdaptiveExercise> getAdaptiveExercise()
+    public Callable<Exercise> getAdaptiveExercise()
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
-        return wrapWithNotLoggedInException(new Callable<AdaptiveExercise>() {
+        return wrapWithNotLoggedInException(new Callable<Exercise>() {
             @Override
-            public AdaptiveExercise call() throws Exception {
+            public Exercise call() throws Exception {
                 try {
                     Callable<String> download = new HttpTasks()
                                         .getForText(getSkillifierUrl("next.json?username=" + oauth.getToken()));

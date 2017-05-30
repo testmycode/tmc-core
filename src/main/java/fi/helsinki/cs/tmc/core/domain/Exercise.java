@@ -77,6 +77,8 @@ public class Exercise implements Serializable {
     @SerializedName("exercise_submissions_url")
     private URI exerciseSubmissionsUrl;
 
+    private boolean available;
+
     public Exercise() {}
 
     public Exercise(String name) {
@@ -265,6 +267,14 @@ public class Exercise implements Serializable {
 
     public void setAdaptive(boolean adaptive) {
         isAdaptive = adaptive;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public boolean isAvailable() {
+        return available;
     }
 
     private String courseName;

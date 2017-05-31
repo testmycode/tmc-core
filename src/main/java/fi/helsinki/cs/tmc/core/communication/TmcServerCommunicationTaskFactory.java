@@ -9,6 +9,7 @@ import fi.helsinki.cs.tmc.core.communication.serialization.CourseInfoParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseListParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.ReviewListParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
@@ -56,7 +57,6 @@ public class TmcServerCommunicationTaskFactory {
     private static final Logger LOG = Logger.getLogger(
             TmcServerCommunicationTaskFactory.class.getName());
     public static final int API_VERSION = 8;
-    private static final String SKILLIFIER_URL = "http://ohtu-skillifier.herokuapp.com/next.json";
 
     private TmcSettings settings;
     private Oauth oauth;
@@ -144,14 +144,22 @@ public class TmcServerCommunicationTaskFactory {
         return url;
     }
 
-    public Callable<Exercise> getAdaptiveExercise() 
-        throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
-        return wrapWithNotLoggedInException(new Callable<Exercise>() {
+    public URI getSkillifierUrl(String addition) {
+        if (addition.isEmpty()) {
+            return URI.create("https://tmc-adapt.testmycode.io/Example/default/");
+        }
+
+        return URI.create("https://tmc-adapt.testmycode.io/Example/default/" + addition);
+    }
+
+    public Callable<AdaptiveExercise> getAdaptiveExercise()
+            throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
+        return wrapWithNotLoggedInException(new Callable<AdaptiveExercise>() {
             @Override
-            public Exercise call() throws Exception {
+            public AdaptiveExercise call() throws Exception {
                 try {
                     Callable<String> download = new HttpTasks()
-                                        .getForText(URI.create(SKILLIFIER_URL));
+                                        .getForText(getSkillifierUrl("next.json?username=" + oauth.getToken()));
                     String json = download.call();
                     return adaptiveExerciseParser.parseFromJson(json);
                 } catch (Exception ex) {

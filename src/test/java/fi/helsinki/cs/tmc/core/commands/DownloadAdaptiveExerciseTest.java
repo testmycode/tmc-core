@@ -78,12 +78,6 @@ public class DownloadAdaptiveExerciseTest {
     }
 
     @Test
-    public void checkExerciseZipUrl() throws Exception {
-        setUpMocks();
-        Exercise exercise = command.call();
-    }
-
-    @Test
     public void testDownloadAndExtractSuccess() throws Exception {
         setUpMocks();
 

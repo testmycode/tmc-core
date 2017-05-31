@@ -37,6 +37,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URI;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.HashMap;
@@ -190,10 +191,17 @@ public class TmcServerCommunicationTaskFactory {
             @Override
             public Course call() throws Exception {
                 try {
-                    URI url = addApiCallQueryParameters(courseStub.getDetailsUrl());
-                    final Callable<String> download = new HttpTasks().getForText(url);
+                    URI serverUrl = addApiCallQueryParameters(courseStub.getDetailsUrl());
+                    //URI skillfierUrl = URI.create("http://courses/"+courseStub.getName()+"/exercises");
+                    final Callable<String> download = new HttpTasks().getForText(serverUrl);
+                    //final Callable<String> downloadSkillfier = new HttpTasks().getForText(skillfierUrl);
                     String text = download.call();
-                    return courseInfoParser.parseFromJson(text);
+                    //String skillfierText = downloadSkillfier.call();
+                    Course returnedCourseServer = courseInfoParser.parseFromJson(text);
+                    //Course returnFromSkillifier = courseInfoParser.parseFromJson(skillfierText);
+                    //returnedCourseServer.getExercises().addAll(returnFromSkillifier.getExercises());
+
+                    return returnedCourseServer;
                 } catch (FailedHttpResponseException ex) {
                     return checkForObsoleteClient(ex);
                 }

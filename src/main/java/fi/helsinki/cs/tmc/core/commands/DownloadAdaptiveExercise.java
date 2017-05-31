@@ -4,7 +4,7 @@ import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Progress;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-
+import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -28,11 +28,18 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
     public Exercise call() throws Exception {
         logger.info("Checking adaptive exercises availability");
         Exercise exercise = tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
-        if (exercise == null) {
-            return null;
+        if (true) { //skillfier ei toimi
+            if (exercise == null) {
+                return null;
+            }
+            try {
+                exercise.setCourseName(TmcSettingsHolder.get().getCurrentCourse().get().getName());
+            } catch (Exception e) {
+                exercise.setCourseName("None");
+            }
+            exercise.setReturnable(true);
+            exercise.setAdaptive(true);
         }
-        exercise.setCourseName("None");
-        exercise.setAdaptive(true);
         byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
         //checkInterrupt();
         Progress progress = new Progress(3);

@@ -39,11 +39,14 @@ import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -192,14 +195,20 @@ public class TmcServerCommunicationTaskFactory {
             public Course call() throws Exception {
                 try {
                     URI serverUrl = addApiCallQueryParameters(courseStub.getDetailsUrl());
-                    //URI skillfierUrl = URI.create("http://courses/"+courseStub.getName()+"/exercises");
+                    URI skillfierUrl = URI.create("http://localhost:3000/courses/"+courseStub.getName()+"/exercises");
                     final Callable<String> download = new HttpTasks().getForText(serverUrl);
-                    //final Callable<String> downloadSkillfier = new HttpTasks().getForText(skillfierUrl);
+                    final Callable<String> downloadSkillfier = new HttpTasks().getForText(skillfierUrl);
                     String text = download.call();
-                    //String skillfierText = downloadSkillfier.call();
+                    String skillfierText = downloadSkillfier.call();
                     Course returnedCourseServer = courseInfoParser.parseFromJson(text);
-                    //Course returnFromSkillifier = courseInfoParser.parseFromJson(skillfierText);
-                    //returnedCourseServer.getExercises().addAll(returnFromSkillifier.getExercises());
+                    Course returnFromSkillifier = courseInfoParser.parseFromJson(skillfierText);
+                    returnedCourseServer.getExercises().addAll(returnFromSkillifier.getExercises());
+                    /*
+                    Set<Exercise> exercises = new HashSet<>();
+                    exercises.addAll(returnedCourseServer.getExercises());
+                    exercises.addAll(courseStub.getExercises());
+                    returnedCourseServer.setExercises(new ArrayList<>(exercises));
+                    */
 
                     return returnedCourseServer;
                 } catch (FailedHttpResponseException ex) {

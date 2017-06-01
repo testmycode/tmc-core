@@ -1,6 +1,7 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
+import fi.helsinki.cs.tmc.core.communication.http.HttpTasks;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.AdaptiveSubmissionResult;
@@ -11,6 +12,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.apache.http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,6 +50,8 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
         String networkResult = "";
         try {
             networkResult = tmcServerCommunicationTaskFactory.getSubmissionFetchTask(submissionUrl).call();
+            String str = tmcServerCommunicationTaskFactory.getSubmissionFetchTask(URI.create("http://localhost:3000/courses/name/exercises/"+exercise.getName()+"/complete?username=asd).call()")).call();
+            
             logger.info("network result: {}", networkResult);
         } catch (Exception e) {
             informObserver(1, "Error while waiting for response from server");

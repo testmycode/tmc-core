@@ -44,13 +44,14 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
     public SubmissionResult call() {
         logger.info("Submitting exercise {}", exercise.getName());
         informObserver(0, "Submitting exercise to server");
-        URI submissionUrl = tmcServerCommunicationTaskFactory.getSkillifierUrl(exercise.getName()
-                + "/submit?username=" + TmcSettingsHolder.get().getToken().get());
+        URI submissionUrl = tmcServerCommunicationTaskFactory.getSkillifierUrl(
+                "/exercises/" + exercise.getName() + "/submit");
+                //+ "submit/?username=" + TmcSettingsHolder.get().getToken().get());
         logger.info("submissionurl: {}", submissionUrl.toString());
         String networkResult = "";
         try {
             networkResult = tmcServerCommunicationTaskFactory.getSubmissionFetchTask(submissionUrl).call();
-            String str = tmcServerCommunicationTaskFactory.getSubmissionFetchTask(URI.create("http://localhost:3000/courses/name/exercises/"+exercise.getName()+"/complete?username=asd).call()")).call();
+            //String str = tmcServerCommunicationTaskFactory.getSubmissionFetchTask(tmcServerCommunicationTaskFactory.getSkillifierUrl(("/exercises/"+exercise.getName()+"/complete?username=asd).call()"))).call();
             
             logger.info("network result: {}", networkResult);
         } catch (Exception e) {

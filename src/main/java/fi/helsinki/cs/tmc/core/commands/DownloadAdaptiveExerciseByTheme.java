@@ -4,7 +4,7 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Progress;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.Theme;
-import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +18,7 @@ public class DownloadAdaptiveExerciseByTheme extends ExerciseDownloadingCommand<
     private static final Logger logger = LoggerFactory.getLogger(DownloadAdaptiveExercise.class);
 
     private Theme theme;
+
     public DownloadAdaptiveExerciseByTheme(ProgressObserver observer, Theme theme) {
         super(observer);
         this.theme = theme;

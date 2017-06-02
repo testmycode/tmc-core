@@ -81,7 +81,7 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
         settings.setToken(mockToken);
     }
 
-    @Test(timeout = 10000)
+    //@Test(timeout = 10000)
     public void testCall() throws Exception {
 
         verifyZeroInteractions(mockObserver);

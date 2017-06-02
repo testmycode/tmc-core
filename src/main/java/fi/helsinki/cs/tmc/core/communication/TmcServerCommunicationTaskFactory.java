@@ -14,6 +14,7 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
 import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.domain.Review;
+import fi.helsinki.cs.tmc.core.domain.Theme;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
@@ -173,6 +174,24 @@ public class TmcServerCommunicationTaskFactory {
         });
     }
 
+    public Callable<Exercise> getAdaptiveExercisyByTheme(final Theme theme)
+        throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
+            return wrapWithNotLoggedInException(new Callable<Exercise>() {
+                @Override
+                public Exercise call() throws Exception {
+                    try {
+                        Callable<String> download = new HttpTasks()
+                            .getForText(getSkillifierUrl("theme/"+theme.getName()+"/next.json?username=" + oauth.getToken()));
+                        String json = download.call();
+                        return adaptiveExerciseParser.parseFromJson(json);
+                    } catch (Exception ex) {
+                        LOG.log(Level.WARNING, "Downloading and parsing adaptive exercise URL failed.");
+                        return null;
+                    }
+                }
+            });
+    }
+
     public Callable<List<Course>> getDownloadingCourseListTask() {
         return wrapWithNotLoggedInException(new Callable<List<Course>>() {
             @Override
@@ -195,22 +214,12 @@ public class TmcServerCommunicationTaskFactory {
             public Course call() throws Exception {
                 try {
                     URI serverUrl = addApiCallQueryParameters(courseStub.getDetailsUrl());
-                    URI skillfierUrl = URI.create("http://localhost:3000/courses/"+courseStub.getName()+"/exercises");
-                    final Callable<String> download = new HttpTasks().getForText(serverUrl);
-                    final Callable<String> downloadSkillfier = new HttpTasks().getForText(skillfierUrl);
-                    String text = download.call();
-                    String skillfierText = downloadSkillfier.call();
-                    Course returnedCourseServer = courseInfoParser.parseFromJson(text);
-                    Course returnFromSkillifier = courseInfoParser.parseFromJson(skillfierText);
-                    returnedCourseServer.getExercises().addAll(returnFromSkillifier.getExercises());
-                    /*
-                    Set<Exercise> exercises = new HashSet<>();
-                    exercises.addAll(returnedCourseServer.getExercises());
-                    exercises.addAll(courseStub.getExercises());
-                    returnedCourseServer.setExercises(new ArrayList<>(exercises));
-                    */
-
-                    return returnedCourseServer;
+                    //URI skillifierUrl = URI.create("http://localhost:3000/courses/"+courseStub.getName()+"/exercises");
+                    Course returnedFromServer = getCourseInfo(serverUrl);
+                    //Course returnedFromSkillifier = getCourseInfo(skillifierUrl);
+                    //returnedFromServer.getExercises().addAll(returnedFromSkillifier.getExercises());
+                    returnedFromServer.generateThemes();
+                    return returnedFromServer;
                 } catch (FailedHttpResponseException ex) {
                     return checkForObsoleteClient(ex);
                 }
@@ -218,6 +227,12 @@ public class TmcServerCommunicationTaskFactory {
 
             //TODO: Cancellable?
         });
+    }
+
+    private Course getCourseInfo(URI uri) throws Exception {
+        final Callable<String> downloadFromServer = new HttpTasks().getForText(uri);
+        String jsonFromServer = downloadFromServer.call();
+        return courseInfoParser.parseFromJson(jsonFromServer);
     }
 
     public Callable<Void> getUnlockingTask(final Course course) {

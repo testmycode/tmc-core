@@ -125,7 +125,7 @@ public class DownloadAdaptiveExerciseTest {
                         });
     }
 
-    //@Test
+    @Test
     public void testDownloadAndExtractSuccessWithRealZip() throws Exception {
         verifyZeroInteractions(langs);
         TmcServerCommunicationTaskFactory realFactory = new TmcServerCommunicationTaskFactory(settings, oauth);

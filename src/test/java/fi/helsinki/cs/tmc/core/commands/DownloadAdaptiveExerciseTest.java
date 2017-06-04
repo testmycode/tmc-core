@@ -125,18 +125,4 @@ public class DownloadAdaptiveExerciseTest {
                         });
     }
 
-    @Test
-    public void testDownloadAndExtractSuccessWithRealZip() throws Exception {
-        verifyZeroInteractions(langs);
-        TmcServerCommunicationTaskFactory realFactory = new TmcServerCommunicationTaskFactory(settings, oauth);
-        assertNotNull(TmcSettingsHolder.get());
-        command = new DownloadAdaptiveExercise(mockObserver, realFactory);
-        Path testPath = Paths.get(System.getProperty("user.dir"));
-
-        when(settings.getTmcProjectDirectory()).thenReturn(testPath);
-
-        Exercise exercise = command.call();
-        assertTrue(Files.exists(testPath.resolve(exercise.getCourseName())));
-        FileUtils.deleteDirectory(testPath.resolve(exercise.getCourseName()).toFile());
-    }
 }

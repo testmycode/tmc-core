@@ -161,8 +161,8 @@ public class TmcServerCommunicationTaskFactory {
             public Exercise call() throws Exception {
                 try {
                     Callable<String> download = new HttpTasks()
-                            .getForText(getSkillifierUrl("Exercise/next.json"));
-                            //.getForText(getSkillifierUrl("next.json?username=" + oauth.getToken()));
+                            //.getForText(getSkillifierUrl("Exercise/next.json"));
+                            .getForText(getSkillifierUrl("/Example/default/next.json?username=" + oauth.getToken()));
                     String json = download.call();
                     return adaptiveExerciseParser.parseFromJson(json);
                 } catch (Exception ex) {
@@ -215,10 +215,16 @@ public class TmcServerCommunicationTaskFactory {
                     URI serverUrl = addApiCallQueryParameters(courseStub.getDetailsUrl());
                     Course returnedFromServer = getCourseInfo(serverUrl);
 
-                    URI skillifierUrl = getSkillifierUrl("/course/" + courseStub.getName());
-                    Course returnedFromSkillifier = getCourseInfo(skillifierUrl);
-                    returnedFromServer.getExercises().addAll(returnedFromSkillifier.getExercises());
-
+                    try {
+                        URI skillifierUrl = getSkillifierUrl("/course/" + courseStub.getName());
+                        Course returnedFromSkillifier = getCourseInfo(skillifierUrl);
+                        returnedFromServer.getExercises().addAll(returnedFromSkillifier.getExercises());
+                    } catch (Exception e) {
+                        LOG.log(Level.WARNING, "Downloading adaptive exercise info from skillifier failed.");
+                    }
+                    Set<Exercise> set = new HashSet<>(returnedFromServer.getExercises());
+                    set.addAll(courseStub.getExercises());
+                    returnedFromServer.setExercises(new ArrayList<Exercise>(set));
                     returnedFromServer.generateThemes();
                     return returnedFromServer;
                 } catch (FailedHttpResponseException ex) {

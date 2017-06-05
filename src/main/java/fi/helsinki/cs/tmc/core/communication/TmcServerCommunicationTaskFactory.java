@@ -222,6 +222,7 @@ public class TmcServerCommunicationTaskFactory {
                     } catch (Exception e) {
                         LOG.log(Level.WARNING, "Downloading adaptive exercise info from skillifier failed.");
                     }
+
                     Set<Exercise> set = new HashSet<>(returnedFromServer.getExercises());
                     set.addAll(courseStub.getExercises());
                     returnedFromServer.setExercises(new ArrayList<Exercise>(set));

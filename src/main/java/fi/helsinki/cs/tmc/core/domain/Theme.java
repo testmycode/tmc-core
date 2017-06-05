@@ -41,7 +41,7 @@ public class Theme {
     }
 
     public boolean shouldContain(Exercise exercise) {
-        return exercise.getName().contains(this.name);
+        return this.name.equals(exercise.getName().split("-")[0]);
     }
 
     public void addExercise(Exercise exercise) {

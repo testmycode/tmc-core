@@ -223,9 +223,7 @@ public class TmcServerCommunicationTaskFactory {
                         LOG.log(Level.WARNING, "Downloading adaptive exercise info from skillifier failed.");
                     }
 
-                    Set<Exercise> set = new HashSet<>(returnedFromServer.getExercises());
-                    set.addAll(courseStub.getExercises());
-                    returnedFromServer.setExercises(new ArrayList<Exercise>(set));
+                    addAdaptiveExercisesFromStub(returnedFromServer, courseStub);
                     returnedFromServer.generateThemes();
                     return returnedFromServer;
                 } catch (FailedHttpResponseException ex) {
@@ -235,6 +233,12 @@ public class TmcServerCommunicationTaskFactory {
 
             //TODO: Cancellable?
         });
+    }
+
+    private void addAdaptiveExercisesFromStub(Course returnedFromServer, Course courseStub) {
+        Set<Exercise> set = new HashSet<>(returnedFromServer.getExercises());
+        set.addAll(courseStub.getExercises());
+        returnedFromServer.setExercises(new ArrayList<Exercise>(set));
     }
 
     private Course getCourseInfo(URI uri) throws Exception {

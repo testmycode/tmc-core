@@ -1,6 +1,5 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
@@ -11,7 +10,9 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
+import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
@@ -48,9 +49,11 @@ public class DownloadAdaptiveExerciseTest {
     @Mock
     Course mockCourse;
     @Mock
-    Exercise mockExerciseOne;
+    AdaptiveExercise mockExerciseOne;
     @Mock
-    Callable<Exercise> mockGetAdaptiveExercise;
+    Callable<AdaptiveExercise> mockGetAdaptiveExercise;
+    @Mock
+    Oauth oauth;
 
     private Command<Exercise> command;
     TaskExecutor langs;
@@ -69,6 +72,12 @@ public class DownloadAdaptiveExerciseTest {
         mockExerciseOne.setName("ex1");
         mockExerciseOne.setCourseName("course1");
 
+    }
+
+    @Test
+    public void checkExerciseZipUrl() throws Exception {
+        setUpMocks();
+        Exercise exercise = command.call();
     }
 
     @Test
@@ -106,6 +115,7 @@ public class DownloadAdaptiveExerciseTest {
 
         when(mockExerciseOne.getExtractionTarget(any(Path.class))).thenReturn(arithFuncsTempDir);
         when(settings.getTmcProjectDirectory()).thenReturn(testFolder.getRoot().toPath());
+        when(oauth.getToken()).thenReturn("testToken");
 
         when(factory.getDownloadingExerciseZipTask(mockExerciseOne))
                 .thenReturn(
@@ -116,18 +126,5 @@ public class DownloadAdaptiveExerciseTest {
                                         TestUtils.getZip(this.getClass(), "arith_funcs.zip"));
                             }
                         });
-    }
-
-    @Test
-    public void testDownloadAndExtractSuccessWithRealZip() throws Exception {
-        verifyZeroInteractions(langs);
-        TmcServerCommunicationTaskFactory realFactory = new TmcServerCommunicationTaskFactory();
-        assertNotNull(TmcSettingsHolder.get());
-        command = new DownloadAdaptiveExercise(mockObserver, realFactory);
-
-        when(settings.getTmcProjectDirectory()).thenReturn(arithFuncsTempDir);
-
-        Exercise exercise = command.call();
-        assertTrue(Files.exists(arithFuncsTempDir));
     }
 }

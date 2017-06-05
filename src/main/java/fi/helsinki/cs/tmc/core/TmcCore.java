@@ -19,6 +19,7 @@ import fi.helsinki.cs.tmc.core.commands.SendDiagnostics;
 import fi.helsinki.cs.tmc.core.commands.SendFeedback;
 import fi.helsinki.cs.tmc.core.commands.SendSpywareEvents;
 import fi.helsinki.cs.tmc.core.commands.Submit;
+import fi.helsinki.cs.tmc.core.commands.SubmitAdaptiveExerciseToSkillifier;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
@@ -148,6 +149,11 @@ public class TmcCore {
         return new ExceptionTrackingCallable<>(new Submit(observer, exercise));
     }
 
+    public Callable<SubmissionResult> submitAdaptiveExercise(ProgressObserver observer, String exerciseName) {
+        logger.info("Creating new submit adaptiveExercise command");
+        return new ExceptionTrackingCallable<>(new SubmitAdaptiveExerciseToSkillifier(observer, exerciseName));
+    }
+
     public Callable<GetUpdatableExercises.UpdateResult> getExerciseUpdates(
             ProgressObserver observer, Course course) {
         logger.info("Creating new GetUpdatableExercises command");
@@ -174,7 +180,7 @@ public class TmcCore {
         logger.info("Creating new DownloadModelSolution command");
         return new ExceptionTrackingCallable<>(new DownloadModelSolution(observer, exercise));
     }
-    
+
     public Callable<Exercise> downloadAdaptiveExercise(ProgressObserver observer) {
         logger.info("Creating new DownloadAdaptiveExercise command");
         return new ExceptionTrackingCallable<>(new DownloadAdaptiveExercise(observer));

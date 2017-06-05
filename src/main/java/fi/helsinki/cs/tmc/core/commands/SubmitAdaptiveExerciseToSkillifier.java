@@ -24,10 +24,9 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
 
     private Exercise exercise;
 
-    public SubmitAdaptiveExerciseToSkillifier(ProgressObserver observer, String exerciseName) {
+    public SubmitAdaptiveExerciseToSkillifier(ProgressObserver observer, Exercise exercise) {
         super(observer);
-        this.exercise = new Exercise();
-        exercise.setName(exerciseName);
+        this.exercise = exercise;
     }
 
     @VisibleForTesting

@@ -103,4 +103,40 @@ public class CourseTest {
         c2.setId(1);
         assertTrue(courses.contains(c2));
     }
+
+    @Test
+    public void courseExercisesAreDividedIntoThemesCorrectly() {
+        exercises = new ArrayList<>();
+        exercises.add(new Exercise("viikko1-testi"));
+        exercises.add(new Exercise("viikko2-testi"));
+        exercises.add(new Exercise("viikko3-testi"));
+        course.setExercises(exercises);
+        course.generateThemes();
+        assertEquals(3,course.getThemes().size());
+    }
+
+    @Test
+    public void returnExercisesByThemeTest() {
+        exercises = new ArrayList<>();
+
+        Exercise ex1 = new Exercise("viikko1-testi");
+        Exercise ex2 = new Exercise("viikko1-testi");
+        Exercise ex3 = new Exercise("viikko3-testi");
+
+        Theme theme1 = new Theme("viikko1");
+        Theme theme2 = new Theme("viikko3");
+
+        theme1.addExercise(ex1);
+        theme1.addExercise(ex2);
+        theme2.addExercise(ex3);
+
+        exercises.add(ex1);
+        exercises.add(ex2);
+        exercises.add(ex3);
+
+        course.setExercises(exercises);
+
+        assertEquals(2, course.getExercisesByTheme(theme1).size());
+        assertEquals(1, course.getExercisesByTheme(theme2).size());
+    }
 }

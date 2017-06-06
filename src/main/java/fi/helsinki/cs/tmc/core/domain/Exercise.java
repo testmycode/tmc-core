@@ -12,7 +12,6 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,6 +24,7 @@ public class Exercise implements Serializable {
     private int id;
     private String name;
     private boolean locked;
+    private boolean isAdaptive;
 
     @SerializedName("deadline_description")
     private String deadlineDescription;
@@ -76,15 +76,21 @@ public class Exercise implements Serializable {
     @SerializedName("exercise_submissions_url")
     private URI exerciseSubmissionsUrl;
 
-    public Exercise() {}
+    private boolean available;
+
+    public Exercise() {
+        this.isAdaptive = false;
+    }
 
     public Exercise(String name) {
         this(name, "unknown-course");
+        this.isAdaptive = false;
     }
 
     public Exercise(String name, String courseName) {
         this.name = name;
         this.courseName = courseName;
+        this.isAdaptive = false;
     }
 
     public int getId() {
@@ -256,6 +262,22 @@ public class Exercise implements Serializable {
 
     public void setExerciseSubmissionsUrl(URI exerciseSubmissionsUrl) {
         this.exerciseSubmissionsUrl = exerciseSubmissionsUrl;
+    }
+
+    public boolean isAdaptive() {
+        return isAdaptive;
+    }
+
+    public void setAdaptive(boolean adaptive) {
+        isAdaptive = adaptive;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public boolean isAvailable() {
+        return available;
     }
 
     private String courseName;

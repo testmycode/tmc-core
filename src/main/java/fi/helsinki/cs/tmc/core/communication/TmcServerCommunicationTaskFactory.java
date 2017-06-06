@@ -292,8 +292,8 @@ public class TmcServerCommunicationTaskFactory {
         }
     }
 
-    public Callable<String> getSubmissionFetchTask(URI submissionUrl) {
-        return new HttpTasks().getForText(submissionUrl);
+    public Callable<String> getSubmissionFetchTask(URI submissionUrl) throws NotLoggedInException {
+        return new HttpTasks().getForText(addApiCallQueryParameters(submissionUrl));
     }
 
     public Callable<List<Review>> getDownloadingReviewListTask(final Course course) {

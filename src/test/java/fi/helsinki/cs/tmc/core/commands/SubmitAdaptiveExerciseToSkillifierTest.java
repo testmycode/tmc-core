@@ -109,13 +109,14 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
         verifyZeroInteractions(mockObserver);
         doReturn(new byte[0]).when(langs).compressProject(any(Path.class));
         when(factory.getSubmissionFetchTask(any(URI.class)))
-            .thenReturn(
-                new Callable<String>() {
-                    @Override
-                    public String call() throws Exception {
-                        return STUB_PROSESSING_ERRORED_RESPONSE;
+                .thenReturn(
+                    new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            return STUB_PROSESSING_ERRORED_RESPONSE;
+                        }
                     }
-                });
+            );
 
         SubmissionResult result = command.call();
 

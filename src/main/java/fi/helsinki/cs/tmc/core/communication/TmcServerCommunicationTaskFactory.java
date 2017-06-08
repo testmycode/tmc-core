@@ -7,6 +7,7 @@ import fi.helsinki.cs.tmc.core.communication.serialization.AdaptiveExerciseParse
 import fi.helsinki.cs.tmc.core.communication.serialization.ByteArrayGsonSerializer;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseInfoParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseListParser;
+import fi.helsinki.cs.tmc.core.communication.serialization.ExerciseListParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.ReviewListParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -29,7 +30,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import fi.helsinki.cs.tmc.core.communication.serialization.ExerciseListParser;
+
 
 import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
@@ -217,8 +218,8 @@ public class TmcServerCommunicationTaskFactory {
                     Course returnedFromServer = getCourseInfo(serverUrl);
 
                     try {
-                        URI skillifierUrl = getSkillifierUrl("/course/" + courseStub.getName()+"/exercises");
-                        List <Exercise> returnedFromSkillifier = getExerciseList(skillifierUrl);
+                        URI skillifierUrl = getSkillifierUrl("/course/" + courseStub.getName() + "/exercises");
+                        List<Exercise> returnedFromSkillifier = getExerciseList(skillifierUrl);
                         returnedFromServer.getExercises().addAll(returnedFromSkillifier);
                     } catch (Exception e) {
                         LOG.log(Level.WARNING, "Downloading adaptive exercise info from skillifier failed.");
@@ -235,6 +236,12 @@ public class TmcServerCommunicationTaskFactory {
             //TODO: Cancellable?
         });
     }
+    
+    private List<Exercise> getExerciseList(URI uri) throws Exception {
+        final Callable<String> downloadFromServer = new HttpTasks().getForText(uri);
+        String jsonFromServer = downloadFromServer.call();
+        return exerciseListParser.parseFromJson(jsonFromServer);
+    }
 
     private void addAdaptiveExercisesFromStub(Course returnedFromServer, Course courseStub) {
         Set<Exercise> set = new HashSet<>(returnedFromServer.getExercises());
@@ -246,12 +253,6 @@ public class TmcServerCommunicationTaskFactory {
         final Callable<String> downloadFromServer = new HttpTasks().getForText(uri);
         String jsonFromServer = downloadFromServer.call();
         return courseInfoParser.parseFromJson(jsonFromServer);
-    }
-    
-    private List<Exercise> getExerciseList(URI uri) throws Exception {
-        final Callable<String> downloadFromServer = new HttpTasks().getForText(uri);
-        String jsonFromServer = downloadFromServer.call();
-        return exerciseListParser.parseFromJson(jsonFromServer);
     }
 
     public Callable<Void> getUnlockingTask(final Course course) {

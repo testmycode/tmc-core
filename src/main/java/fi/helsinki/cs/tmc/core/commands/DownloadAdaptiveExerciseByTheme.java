@@ -28,21 +28,7 @@ public class DownloadAdaptiveExerciseByTheme extends ExerciseDownloadingCommand<
     public Exercise call() throws Exception {
         logger.info("Checking adaptive exercises availability by theme");
         Exercise exercise = tmcServerCommunicationTaskFactory.getAdaptiveExercisyByTheme(theme).call();
-        /*
-        if (true) { //skillfier ei toimi
-            if (exercise == null) {
-                return null;
-            }
-            try {
-                exercise.setCourseName(TmcSettingsHolder.get().getCurrentCourse().get().getName());
-            } catch (Exception e) {
-                exercise.setCourseName("None");
-            }
-            exercise.setReturnable(true);
-            exercise.setAdaptive(true);
-        }
-        */
-        byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
+        byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingAdaptiveExerciseZipTask(exercise).call();
         //checkInterrupt();
         Progress progress = new Progress(3);
         extractProject(zipb, exercise, progress);

@@ -33,6 +33,9 @@ public class ExerciseListParser {
             Exercise[] exercises = gson.fromJson(json, Exercise[].class);
             List<Exercise> exerciseList = new ArrayList<>();
             exerciseList.addAll(Arrays.asList(exercises));
+            for (Exercise exercise : exerciseList) {
+                exercise.setAdaptive(true);
+            }
             return exerciseList;
         } catch (RuntimeException ex) {
             logger.warn("Failed to parse exercises info", ex);

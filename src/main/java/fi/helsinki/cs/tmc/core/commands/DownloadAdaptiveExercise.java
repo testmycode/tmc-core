@@ -28,17 +28,8 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
     public Exercise call() throws Exception {
         logger.info("Checking adaptive exercises availability");
         Exercise exercise = tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
-        if (true) { //skillfier ei toimi
-            if (exercise == null) {
-                return null;
-            }
-            try {
-                exercise.setCourseName(TmcSettingsHolder.get().getCurrentCourse().get().getName());
-            } catch (Exception e) {
-                exercise.setCourseName("None");
-            }
-            exercise.setReturnable(true);
-            exercise.setAdaptive(true);
+        if (exercise == null) {
+            return null;
         }
         byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
         //checkInterrupt();

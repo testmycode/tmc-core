@@ -1,11 +1,12 @@
 package fi.helsinki.cs.tmc.core.commands;
 
+import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.AdaptiveSubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
-import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.gson.Gson;
@@ -38,17 +39,15 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
 
 
     @Override
-    public SubmissionResult call() {
+    public SubmissionResult call() throws NotLoggedInException {
         logger.info("Submitting exercise {}", exercise.getName());
         informObserver(0, "Submitting exercise to server");
         URI submissionUrl = tmcServerCommunicationTaskFactory.getSkillifierUrl(
-                //"/exercises/" + exercise.getName() + "/submit");
-                "/Example/default/" + exercise.getName() +  "/submit/?username=" + TmcSettingsHolder.get().getToken().get());
+                "/submit?username=" + Oauth.getInstance().getToken());
         logger.info("submissionurl: {}", submissionUrl.toString());
         String networkResult = "";
         try {
             networkResult = tmcServerCommunicationTaskFactory.getSubmissionFetchTask(submissionUrl).call();
-            //String str = tmcServerCommunicationTaskFactory.getSubmissionFetchTask(tmcServerCommunicationTaskFactory.getSkillifierUrl(("/exercises/"+exercise.getName()+"/complete?username=asd).call()"))).call();
             
             logger.info("network result: {}", networkResult);
         } catch (Exception e) {

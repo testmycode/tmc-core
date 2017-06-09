@@ -95,6 +95,7 @@ public class TmcServerCommunicationTaskFactory {
         this.courseInfoParser = courseInfoParser;
         this.reviewListParser = reviewListParser;
         this.clientVersion = getClientVersion();
+        this.exerciseListParser = new ExerciseListParser();
     }
 
     private static String getClientVersion() {
@@ -182,7 +183,8 @@ public class TmcServerCommunicationTaskFactory {
                 public Exercise call() throws Exception {
                     try {
                         Callable<String> download = new HttpTasks()
-                                .getForText(getSkillifierUrl("theme/" + theme.getName() + "/next.json?username=" + oauth.getToken()));
+                                .getForText(getSkillifierUrl("exercise/"
+                                    + oauth.getToken() + "/" + theme.getName() + "/next.json"));
                         String json = download.call();
                         return adaptiveExerciseParser.parseFromJson(json);
                     } catch (Exception ex) {
@@ -218,14 +220,12 @@ public class TmcServerCommunicationTaskFactory {
                     Course returnedFromServer = getCourseInfo(serverUrl);
 
                     try {
-                        URI skillifierUrl = getSkillifierUrl("/course/" + courseStub.getName() + "/exercises");
+                        URI skillifierUrl = getSkillifierUrl("course/" + courseStub.getName() + "/exercises");
                         List<Exercise> returnedFromSkillifier = getExerciseList(skillifierUrl);
                         returnedFromServer.getExercises().addAll(returnedFromSkillifier);
                     } catch (Exception e) {
                         LOG.log(Level.WARNING, "Downloading adaptive exercise info from skillifier failed.");
                     }
-
-                    addAdaptiveExercisesFromStub(returnedFromServer, courseStub);
                     returnedFromServer.generateThemes();
                     return returnedFromServer;
                 } catch (FailedHttpResponseException ex) {
@@ -276,6 +276,12 @@ public class TmcServerCommunicationTaskFactory {
 
     private URI getUnlockUrl(Course course) throws NotLoggedInException {
         return addApiCallQueryParameters(course.getUnlockUrl());
+    }
+
+    public Callable<byte[]> getDownloadingAdaptiveExerciseZipTask(Exercise exercise) throws NotLoggedInException {
+        exercise.setZipUrl(URI.create(exercise.getZipUrl() + "?username=" + oauth.getToken()));
+        exercise.setDownloadUrl(exercise.getZipUrl());
+        return getDownloadingExerciseZipTask(exercise);
     }
 
     public Callable<byte[]> getDownloadingExerciseZipTask(Exercise exercise) {

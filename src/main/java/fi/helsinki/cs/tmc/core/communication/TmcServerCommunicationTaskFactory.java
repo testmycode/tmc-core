@@ -157,26 +157,7 @@ public class TmcServerCommunicationTaskFactory {
         return URI.create("http://tmc-adapt.testmycode.io/");
     }
 
-    public Callable<Exercise> getAdaptiveExercise()
-        throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
-        return wrapWithNotLoggedInException(new Callable<Exercise>() {
-            @Override
-            public Exercise call() throws Exception {
-                try {
-                    Callable<String> download = new HttpTasks()
-                            //.getForText(getSkillifierUrl("Exercise/next.json"));
-                            .getForText(getSkillifierUrl("/Example/default/next.json?username=" + oauth.getToken()));
-                    String json = download.call();
-                    return adaptiveExerciseParser.parseFromJson(json);
-                } catch (Exception ex) {
-                    LOG.log(Level.WARNING, "Downloading and parsing adaptive exercise URL failed.");
-                    return null;
-                }
-            }
-        });
-    }
-
-    public Callable<Exercise> getAdaptiveExercisyByTheme(final Theme theme)
+    public Callable<Exercise> getAdaptiveExerciseByTheme(final Theme theme)
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
         return wrapWithNotLoggedInException(new Callable<Exercise>() {
                 @Override
@@ -241,12 +222,6 @@ public class TmcServerCommunicationTaskFactory {
         final Callable<String> downloadFromServer = new HttpTasks().getForText(uri);
         String jsonFromServer = downloadFromServer.call();
         return exerciseListParser.parseFromJson(jsonFromServer);
-    }
-
-    private void addAdaptiveExercisesFromStub(Course returnedFromServer, Course courseStub) {
-        Set<Exercise> set = new HashSet<>(returnedFromServer.getExercises());
-        set.addAll(courseStub.getExercises());
-        returnedFromServer.setExercises(new ArrayList<Exercise>(set));
     }
 
     private Course getCourseInfo(URI uri) throws Exception {

@@ -16,14 +16,13 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.domain.Theme;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utils.MockSettings;
 import fi.helsinki.cs.tmc.core.utils.TestUtils;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
-
-import org.apache.commons.io.FileUtils;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -36,7 +35,6 @@ import org.mockito.Spy;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.concurrent.Callable;
 
 public class DownloadAdaptiveExerciseTest {
@@ -57,10 +55,13 @@ public class DownloadAdaptiveExerciseTest {
     Callable<Exercise> mockGetAdaptiveExercise;
     @Mock
     Oauth oauth;
+    @Mock
+    Theme mockTheme;
 
     private Command<Exercise> command;
     TaskExecutor langs;
     Path arithFuncsTempDir;
+    Theme theme;
 
     @Before
     public void setUp() throws IOException {
@@ -69,11 +70,12 @@ public class DownloadAdaptiveExerciseTest {
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(langs);
         arithFuncsTempDir = testFolder.getRoot().toPath().resolve("arith_funcs");
-        command = new DownloadAdaptiveExercise(mockObserver, factory);
+        command = new DownloadAdaptiveExerciseByTheme(mockObserver, factory, mockTheme);
 
         doCallRealMethod().when(langs).extractProject(any(Path.class), any(Path.class));
         mockExerciseOne.setName("ex1");
         mockExerciseOne.setCourseName("course1");
+
 
     }
 
@@ -83,8 +85,8 @@ public class DownloadAdaptiveExerciseTest {
 
         Exercise exercise = command.call();
 
-        verify(factory).getAdaptiveExercise();
-        verify(factory).getDownloadingExerciseZipTask(mockExerciseOne);
+        verify(factory).getAdaptiveExerciseByTheme(mockTheme);
+        verify(factory).getDownloadingAdaptiveExerciseZipTask(mockExerciseOne);
 
         verifyNoMoreInteractions(factory);
 
@@ -98,7 +100,7 @@ public class DownloadAdaptiveExerciseTest {
 
         Exercise exercise = command.call();
 
-        verify(factory).getAdaptiveExercise();
+        verify(factory).getAdaptiveExerciseByTheme(mockTheme);
 
         verifyNoMoreInteractions(factory);
 
@@ -107,14 +109,15 @@ public class DownloadAdaptiveExerciseTest {
     private void setUpMocks() throws Exception {
         verifyZeroInteractions(langs);
 
-        when(factory.getAdaptiveExercise()).thenReturn(mockGetAdaptiveExercise);
+        when(mockTheme.getName()).thenReturn("testTheme");
+        when(factory.getAdaptiveExerciseByTheme(any(Theme.class))).thenReturn(mockGetAdaptiveExercise);
         when(mockGetAdaptiveExercise.call()).thenReturn(mockExerciseOne);
 
         when(mockExerciseOne.getExtractionTarget(any(Path.class))).thenReturn(arithFuncsTempDir);
         when(settings.getTmcProjectDirectory()).thenReturn(testFolder.getRoot().toPath());
         when(oauth.getToken()).thenReturn("testToken");
 
-        when(factory.getDownloadingExerciseZipTask(mockExerciseOne))
+        when(factory.getDownloadingAdaptiveExerciseZipTask(mockExerciseOne))
                 .thenReturn(
                         new Callable<byte[]>() {
                             @Override

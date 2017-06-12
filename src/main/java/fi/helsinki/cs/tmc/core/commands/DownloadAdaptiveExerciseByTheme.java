@@ -39,8 +39,7 @@ public class DownloadAdaptiveExerciseByTheme extends ExerciseDownloadingCommand<
     @Override
     public Exercise call() throws Exception {
         logger.info("Checking adaptive exercises availability by theme");
-        Callable<Exercise> test = tmcServerCommunicationTaskFactory.getAdaptiveExerciseByTheme(theme);
-        Exercise exercise = test.call();
+        Exercise exercise = tmcServerCommunicationTaskFactory.getAdaptiveExerciseByTheme(theme).call();
         if (exercise == null) {
             return null;
         }

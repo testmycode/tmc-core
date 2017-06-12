@@ -1,6 +1,5 @@
 package fi.helsinki.cs.tmc.core.commands;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
@@ -61,7 +60,6 @@ public class DownloadAdaptiveExerciseTest {
     private Command<Exercise> command;
     TaskExecutor langs;
     Path arithFuncsTempDir;
-    Theme theme;
 
     @Before
     public void setUp() throws IOException {
@@ -75,8 +73,6 @@ public class DownloadAdaptiveExerciseTest {
         doCallRealMethod().when(langs).extractProject(any(Path.class), any(Path.class));
         mockExerciseOne.setName("ex1");
         mockExerciseOne.setCourseName("course1");
-
-
     }
 
     @Test

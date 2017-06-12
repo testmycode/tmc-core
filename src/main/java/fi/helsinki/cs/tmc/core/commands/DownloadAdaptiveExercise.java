@@ -1,10 +1,10 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
-import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Progress;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -27,11 +27,18 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
     @Override
     public Exercise call() throws Exception {
         logger.info("Checking adaptive exercises availability");
-        AdaptiveExercise exercise = tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
+        Exercise exercise = tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
         if (exercise == null) {
             return null;
         }
-        exercise.setCourseName("None");
+        try {
+            exercise.setCourseName(TmcSettingsHolder.get().getCurrentCourse().get().getName());
+        } catch (Exception e) {
+            logger.warn("Setting course name failed, setting it to 'None'.", e);
+            exercise.setCourseName("None");
+        }
+        exercise.setReturnable(true);
+        exercise.setAdaptive(true);
         byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
         // Progress gets 1 as a parameter, because there is only 1 exercise to extract.
         Progress progress = new Progress(1);

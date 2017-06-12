@@ -4,7 +4,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Course {
 
@@ -14,6 +16,8 @@ public class Course {
     private String description;
 
     private List<Exercise> exercises;
+
+    private List<Theme> themes;
 
     @SerializedName("details_url")
     private URI detailsUrl;
@@ -65,6 +69,39 @@ public class Course {
 
     public void setExercises(List<Exercise> exercises) {
         this.exercises = exercises;
+    }
+
+    public List<Theme> getThemes() {
+        return themes;
+    }
+
+    public void generateThemes() {
+        themes = new ArrayList<>();
+        Map<String, Theme> themeMap = new HashMap<>();
+        for (Exercise ex : exercises) {
+            addExerciseToTheme(themeMap, ex);
+        }
+    }
+
+    private void addExerciseToTheme(Map<String, Theme> themeMap, Exercise ex) {
+        String themeName = ex.getName().split("-")[0];
+        Theme theme = themeMap.get(themeName);
+        if (theme == null) {
+            theme = new Theme(themeName);
+            themeMap.put(themeName, theme);
+            themes.add(theme);
+        }
+        theme.addExercise(ex);
+    }
+
+    public List<Exercise> getExercisesByTheme(Theme theme) {
+        ArrayList<Exercise> exercisesByTheme = new ArrayList<>();
+        for (Exercise exercise : theme.getExercises()) {
+            if (this.exercises.contains(exercise)) {
+                exercisesByTheme.add(exercise);
+            }
+        }
+        return exercisesByTheme;
     }
 
     public int getId() {

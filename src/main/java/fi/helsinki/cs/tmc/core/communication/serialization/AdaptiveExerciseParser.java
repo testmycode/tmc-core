@@ -1,6 +1,6 @@
 package fi.helsinki.cs.tmc.core.communication.serialization;
 
-import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
+import fi.helsinki.cs.tmc.core.domain.Exercise;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,7 +14,7 @@ public class AdaptiveExerciseParser {
 
     private static final Logger logger = LoggerFactory.getLogger(AdaptiveExerciseParser.class);
 
-    public AdaptiveExercise parseFromJson(String json) {
+    public Exercise parseFromJson(String json) {
         if (json == null) {
             throw new NullPointerException("Json string is null");
         }
@@ -23,8 +23,8 @@ public class AdaptiveExerciseParser {
         }
         try {
             Gson gson = new GsonBuilder().create();
-            AdaptiveExercise adaptive = gson.fromJson(json, AdaptiveExercise.class);
-            if (adaptive.getAvailable()) {
+            Exercise adaptive = gson.fromJson(json, Exercise.class);
+            if (adaptive.isAvailable()) {
                 String parsedUrl = adaptive.getZipUrl().toString();
                 adaptive.setZipUrl(URI.create("http://" + parsedUrl));
                 return adaptive;

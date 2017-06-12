@@ -1,7 +1,6 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
-import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.AdaptiveSubmissionResult;
@@ -22,10 +21,9 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
 
     private Exercise exercise;
 
-    public SubmitAdaptiveExerciseToSkillifier(ProgressObserver observer, String exerciseName) {
+    public SubmitAdaptiveExerciseToSkillifier(ProgressObserver observer, Exercise exercise) {
         super(observer);
-        this.exercise = new AdaptiveExercise();
-        exercise.setName(exerciseName);
+        this.exercise = exercise;
     }
 
     @VisibleForTesting
@@ -37,13 +35,12 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
         this.exercise = exercise;
     }
 
-
     @Override
     public SubmissionResult call() {
         logger.info("Submitting exercise {}", exercise.getName());
         informObserver(0, "Submitting exercise to server");
-        URI submissionUrl = tmcServerCommunicationTaskFactory.getSkillifierUrl(exercise.getName()
-                + "/submit?username=" + TmcSettingsHolder.get().getToken().get());
+        URI submissionUrl = tmcServerCommunicationTaskFactory.getSkillifierUrl(
+                "/Example/default/" + exercise.getName() +  "/submit/?username=" + TmcSettingsHolder.get().getToken().get());
         logger.info("submissionurl: {}", submissionUrl.toString());
         String networkResult = "";
         try {

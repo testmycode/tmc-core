@@ -12,7 +12,6 @@ import static org.mockito.Mockito.when;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
-import fi.helsinki.cs.tmc.core.domain.AdaptiveExercise;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
@@ -49,9 +48,9 @@ public class DownloadAdaptiveExerciseTest {
     @Mock
     Course mockCourse;
     @Mock
-    AdaptiveExercise mockExerciseOne;
+    Exercise mockExerciseOne;
     @Mock
-    Callable<AdaptiveExercise> mockGetAdaptiveExercise;
+    Callable<Exercise> mockGetAdaptiveExercise;
     @Mock
     Oauth oauth;
 
@@ -72,12 +71,6 @@ public class DownloadAdaptiveExerciseTest {
         mockExerciseOne.setName("ex1");
         mockExerciseOne.setCourseName("course1");
 
-    }
-
-    @Test
-    public void checkExerciseZipUrl() throws Exception {
-        setUpMocks();
-        Exercise exercise = command.call();
     }
 
     @Test

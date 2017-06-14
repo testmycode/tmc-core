@@ -68,7 +68,7 @@ public class DownloadAdaptiveExerciseTest {
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(langs);
         arithFuncsTempDir = testFolder.getRoot().toPath().resolve("arith_funcs");
-        command = new DownloadAdaptiveExerciseByTheme(mockObserver, factory, mockTheme);
+        command = new DownloadAdaptiveExercise(mockObserver, factory, mockTheme, mockCourse);
 
         doCallRealMethod().when(langs).extractProject(any(Path.class), any(Path.class));
         mockExerciseOne.setName("ex1");
@@ -81,7 +81,7 @@ public class DownloadAdaptiveExerciseTest {
 
         Exercise exercise = command.call();
 
-        verify(factory).getAdaptiveExerciseByTheme(mockTheme);
+        verify(factory).getAdaptiveExercise(mockTheme, mockCourse);
         verify(factory).getDownloadingAdaptiveExerciseZipTask(mockExerciseOne);
 
         verifyNoMoreInteractions(factory);
@@ -96,7 +96,7 @@ public class DownloadAdaptiveExerciseTest {
 
         Exercise exercise = command.call();
 
-        verify(factory).getAdaptiveExerciseByTheme(mockTheme);
+        verify(factory).getAdaptiveExercise(mockTheme, mockCourse);
 
         verifyNoMoreInteractions(factory);
 
@@ -106,7 +106,7 @@ public class DownloadAdaptiveExerciseTest {
         verifyZeroInteractions(langs);
 
         when(mockTheme.getName()).thenReturn("testTheme");
-        when(factory.getAdaptiveExerciseByTheme(any(Theme.class))).thenReturn(mockGetAdaptiveExercise);
+        when(factory.getAdaptiveExercise(any(Theme.class), any(Course.class))).thenReturn(mockGetAdaptiveExercise);
         when(mockGetAdaptiveExercise.call()).thenReturn(mockExerciseOne);
 
         when(mockExerciseOne.getExtractionTarget(any(Path.class))).thenReturn(arithFuncsTempDir);

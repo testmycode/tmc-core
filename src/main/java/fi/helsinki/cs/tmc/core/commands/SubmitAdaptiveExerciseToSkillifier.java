@@ -92,7 +92,7 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
         /*
         try {
             submissionUrl = tmcServerCommunicationTaskFactory.getSkillifierUrl(
-                    "/submit?username=" + Oauth.getInstance().getToken());
+                    "/submit?token=" + Oauth.getInstance().getToken());
         } catch (NotLoggedInException e) {
             logger.warn("Not logged in", e);
         }

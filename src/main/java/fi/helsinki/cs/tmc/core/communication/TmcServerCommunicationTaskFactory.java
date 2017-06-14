@@ -157,7 +157,7 @@ public class TmcServerCommunicationTaskFactory {
         return URI.create("http://tmc-adapt.testmycode.io/");
     }
 
-    public Callable<Exercise> getAdaptiveExerciseByTheme(final Theme theme)
+    public Callable<Exercise> getAdaptiveExercise(final Theme theme, final Course course)
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
         return wrapWithNotLoggedInException(new Callable<Exercise>() {
                 @Override
@@ -165,7 +165,7 @@ public class TmcServerCommunicationTaskFactory {
                     try {
                         Callable<String> download = new HttpTasks()
                                 .getForText(getSkillifierUrl("exercise/"
-                                    + oauth.getToken() + "/" + theme.getName() + "/next.json"));
+                                    + course.getName() + "/" + theme.getName() + "/next.json?token" + oauth.getToken()));
                         String json = download.call();
                         return adaptiveExerciseParser.parseFromJson(json);
                     } catch (Exception ex) {
@@ -254,7 +254,7 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<byte[]> getDownloadingAdaptiveExerciseZipTask(Exercise exercise) throws NotLoggedInException {
-        exercise.setZipUrl(URI.create(exercise.getZipUrl() + "?username=" + oauth.getToken()));
+        exercise.setZipUrl(URI.create(exercise.getZipUrl() + "?token=" + oauth.getToken()));
         exercise.setDownloadUrl(exercise.getZipUrl());
         return getDownloadingExerciseZipTask(exercise);
     }

@@ -1,7 +1,7 @@
 package fi.helsinki.cs.tmc.core;
 
 import fi.helsinki.cs.tmc.core.commands.AuthenticateUser;
-import fi.helsinki.cs.tmc.core.commands.DownloadAdaptiveExerciseByTheme;
+import fi.helsinki.cs.tmc.core.commands.DownloadAdaptiveExercise;
 import fi.helsinki.cs.tmc.core.commands.DownloadCompletedExercises;
 import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
 import fi.helsinki.cs.tmc.core.commands.DownloadOrUpdateExercises;
@@ -182,9 +182,9 @@ public class TmcCore {
         return new ExceptionTrackingCallable<>(new DownloadModelSolution(observer, exercise));
     }
 
-    public Callable<Exercise> downloadAdaptiveExerciseByTheme(ProgressObserver observer, Theme theme) {
-        logger.info("Creating new DownloadAdaptiveExerciseByTheme command");
-        return new ExceptionTrackingCallable<>(new DownloadAdaptiveExerciseByTheme(observer, theme));
+    public Callable<Exercise> downloadAdaptiveExercise(ProgressObserver observer, Theme theme, Course course) {
+        logger.info("Creating new DownloadAdaptiveExercise command");
+        return new ExceptionTrackingCallable<>(new DownloadAdaptiveExercise(observer, theme, course));
     }
     
     /**

@@ -282,8 +282,7 @@ public class TmcServerCommunicationTaskFactory {
             public SubmissionResponse call() throws Exception {
                 String response;
                 try {
-                    URI submitUrl = URI.create("http://localhost:3200/submit");
-                    //final URI submitUrl = addApiCallQueryParameters(exercise.getReturnUrl());
+                    final URI submitUrl = getSkillifierUrl("/submit?usernsame=" + oauth.getToken());
                     final Callable<String> upload = new HttpTasks()
                             .uploadRawDataForTextDownload(submitUrl, params,
                                  byteToSend);
@@ -293,21 +292,7 @@ public class TmcServerCommunicationTaskFactory {
                 }
 
                 JsonObject respJson = new JsonParser().parse(response).getAsJsonObject();
-                if (respJson.get("error") != null) {
-                    throw new RuntimeException(
-                        "Server responded with error: " + respJson.get("error"));
-                } else if (respJson.get("submission_url") != null) {
-                    try {
-                        URI submissionUrl = new URI(respJson.get("submission_url").getAsString());
-                        URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
-                        return new SubmissionResponse(submissionUrl, pasteUrl);
-                    } catch (Exception e) {
-                        throw new RuntimeException(
-                            "Server responded with malformed " + "submission url");
-                    }
-                } else {
-                    throw new RuntimeException("Server returned unknown response");
-                }
+                return getSubmissionResponse(respJson);
             }
 
             //TODO: Cancellable?
@@ -338,25 +323,29 @@ public class TmcServerCommunicationTaskFactory {
                 }
 
                 JsonObject respJson = new JsonParser().parse(response).getAsJsonObject();
-                if (respJson.get("error") != null) {
-                    throw new RuntimeException(
-                            "Server responded with error: " + respJson.get("error"));
-                } else if (respJson.get("submission_url") != null) {
-                    try {
-                        URI submissionUrl = new URI(respJson.get("submission_url").getAsString());
-                        URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
-                        return new SubmissionResponse(submissionUrl, pasteUrl);
-                    } catch (Exception e) {
-                        throw new RuntimeException(
-                                "Server responded with malformed " + "submission url");
-                    }
-                } else {
-                    throw new RuntimeException("Server returned unknown response");
-                }
+                return getSubmissionResponse(respJson);
             }
 
             //TODO: Cancellable?
         });
+    }
+
+    private SubmissionResponse getSubmissionResponse(JsonObject respJson) {
+        if (respJson.get("error") != null) {
+            throw new RuntimeException(
+                    "Server responded with error: " + respJson.get("error"));
+        } else if (respJson.get("submission_url") != null) {
+            try {
+                URI submissionUrl = new URI(respJson.get("submission_url").getAsString());
+                URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
+                return new SubmissionResponse(submissionUrl, pasteUrl);
+            } catch (Exception e) {
+                throw new RuntimeException(
+                        "Server responded with malformed " + "submission url");
+            }
+        } else {
+            throw new RuntimeException("Server returned unknown response");
+        }
     }
 
     public static class SubmissionResponse {

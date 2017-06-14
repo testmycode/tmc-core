@@ -35,6 +35,7 @@ import org.mockito.Spy;
 import java.net.URI;
 import java.nio.file.Path;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 
@@ -58,8 +59,9 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
     private static final TmcServerCommunicationTaskFactory.SubmissionResponse STUB_RESPONSE =
             new TmcServerCommunicationTaskFactory.SubmissionResponse(SUBMISSION_URI, PASTE_URI);
 
-    private static final String STUB_PROSESSING_ERRORED_RESPONSE = "{error: \"failed to submit the exercise\"}";
+    private static final String STUB_PROSESSING_ERRORED_RESPONSE = "{status : \"ERROR\", error: \"failed to submit the exercise\"}";
     private static final String STUB_PROSESSING_DONE_RESPONSE = "{status: \"OK\"}";
+    private static final String STUB_PROSESSING_RESPONSE = "{status: \"processing\"}";
 
     private Command<SubmissionResult> command;
     private Path arithFuncsTempDir;
@@ -74,7 +76,7 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
         TmcLangsHolder.set(langs);
         TmcSettingsHolder.set(settings);
         Exercise ex = new Exercise("Osa02_01.WilliamLovelace", "Example");
-        command = new SubmitAdaptiveExerciseToSkillifier(mockObserver, ex, factory);
+        command = new SubmitAdaptiveExerciseToSkillifier(mockObserver, mockExercise, factory);
 
         arithFuncsTempDir = TestUtils.getProject(this.getClass(), "arith_funcs");
         when(mockExercise.getExerciseDirectory(any(Path.class))).thenReturn(arithFuncsTempDir);
@@ -90,14 +92,31 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
 
         verifyZeroInteractions(mockObserver);
         doReturn(new byte[0]).when(langs).compressProject(any(Path.class));
+        when(
+                factory.getSubmittingExerciseToSkillifierTask(
+                any(Exercise.class), any(byte[].class), any(Map.class)))
+                .thenReturn(
+                new Callable<TmcServerCommunicationTaskFactory.SubmissionResponse>() {
+                        @Override
+                        public TmcServerCommunicationTaskFactory.SubmissionResponse call() throws Exception {
+                            return STUB_RESPONSE;
+                        }
+                    });
         when(factory.getSubmissionFetchTask(any(URI.class)))
                 .thenReturn(
-                        new Callable<String>() {
-                            @Override
-                            public String call() throws Exception {
-                                return STUB_PROSESSING_DONE_RESPONSE;
-                            }
-                        });
+                new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            return STUB_PROSESSING_RESPONSE;
+                        }
+                    })
+                .thenReturn(
+                new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            return STUB_PROSESSING_DONE_RESPONSE;
+                        }
+                    });
 
         SubmissionResult result = command.call();
 
@@ -109,15 +128,31 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
 
         verifyZeroInteractions(mockObserver);
         doReturn(new byte[0]).when(langs).compressProject(any(Path.class));
+        when(
+                factory.getSubmittingExerciseToSkillifierTask(
+                any(Exercise.class), any(byte[].class), any(Map.class)))
+                .thenReturn(
+                new Callable<TmcServerCommunicationTaskFactory.SubmissionResponse>() {
+                        @Override
+                        public TmcServerCommunicationTaskFactory.SubmissionResponse call() throws Exception {
+                            return STUB_RESPONSE;
+                        }
+                    });
         when(factory.getSubmissionFetchTask(any(URI.class)))
                 .thenReturn(
-                    new Callable<String>() {
+                new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            return STUB_PROSESSING_RESPONSE;
+                        }
+                    })
+                .thenReturn(
+                new Callable<String>() {
                         @Override
                         public String call() throws Exception {
                             return STUB_PROSESSING_ERRORED_RESPONSE;
                         }
-                    }
-            );
+                    });
 
         SubmissionResult result = command.call();
 

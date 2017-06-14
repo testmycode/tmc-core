@@ -37,8 +37,6 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
     TmcServerCommunicationTaskFactory.SubmissionResponse submitToServer(
             Exercise exercise, Map<String, String> extraParams) throws TmcCoreException {
 
-        byte[] zippedProject;
-
         informObserver(0, "Zipping project");
 
         Path tmcRoot = TmcSettingsHolder.get().getTmcProjectDirectory();
@@ -47,13 +45,7 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
         checkInterrupt();
         logger.info("Submitting project from path {}", projectPath);
 
-        try {
-            zippedProject = TmcLangsHolder.get().compressProject(projectPath);
-        } catch (IOException | NoLanguagePluginFoundException ex) {
-            informObserver(1, "Failed to compress project");
-            logger.warn("Failed to compress project", ex);
-            throw new TmcCoreException("Failed to compress project", ex);
-        }
+        byte[] zippedProject = compressProject(projectPath);
 
         extraParams.put("error_msg_locale", TmcSettingsHolder.get().getLocale().toString());
 
@@ -78,6 +70,57 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
             informObserver(1, "Failed to submit exercise");
             logger.warn("Failed to submit exercise", ex);
             throw new TmcCoreException("Failed to submit exercise", ex);
+        }
+    }
+
+    private byte[] compressProject(Path projectPath) throws TmcCoreException {
+        byte[] zippedProject;
+        try {
+            zippedProject = TmcLangsHolder.get().compressProject(projectPath);
+        } catch (IOException | NoLanguagePluginFoundException ex) {
+            informObserver(1, "Failed to compress project");
+            logger.warn("Failed to compress project", ex);
+            throw new TmcCoreException("Failed to compress project", ex);
+        }
+        return zippedProject;
+    }
+
+    TmcServerCommunicationTaskFactory.SubmissionResponse submitToSkillifier(
+            Exercise exercise, Map<String, String> extraParams) throws TmcCoreException {
+
+        informObserver(0, "Zipping project");
+
+        Path tmcRoot = TmcSettingsHolder.get().getTmcProjectDirectory();
+        Path projectPath = exercise.getExerciseDirectory(tmcRoot);
+
+        checkInterrupt();
+        logger.info("Submitting project to skillifier from path {}", projectPath);
+
+        byte[] zippedProject = compressProject(projectPath);
+
+        extraParams.put("error_msg_locale", TmcSettingsHolder.get().getLocale().toString());
+
+        checkInterrupt();
+        informObserver(0.5, "Submitting project to skillifier");
+        logger.info("Submitting project to skillifier");
+
+        try {
+            TmcServerCommunicationTaskFactory.SubmissionResponse response
+                    = tmcServerCommunicationTaskFactory
+                    .getSubmittingExerciseToSkillifierTask(exercise, zippedProject, extraParams)
+                    .call();
+
+            informObserver(1, "Submission to skillifier successfully completed");
+            logger.info("Submission to skillifier successfully completed");
+
+            return response;
+        } catch (Exception ex) {
+            if (ex instanceof NotLoggedInException) {
+                throw (NotLoggedInException)ex;
+            }
+            informObserver(1, "Failed to submit exercise to skillifier");
+            logger.warn("Failed to submit exercise to skillifier", ex);
+            throw new TmcCoreException("Failed to submit exercise to skillifier", ex);
         }
     }
 }

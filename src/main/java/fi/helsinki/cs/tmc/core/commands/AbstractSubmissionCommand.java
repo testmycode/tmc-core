@@ -3,6 +3,8 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.domain.submission.AdaptiveSubmissionResult;
+import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
@@ -10,6 +12,8 @@ import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.langs.domain.NoLanguagePluginFoundException;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,7 +89,7 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
         return zippedProject;
     }
 
-    TmcServerCommunicationTaskFactory.SubmissionResponse submitToSkillifier(
+    SubmissionResult submitToSkillifier(
             Exercise exercise, Map<String, String> extraParams) throws TmcCoreException {
 
         informObserver(0, "Zipping project");
@@ -105,7 +109,7 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
         logger.info("Submitting project to skillifier");
 
         try {
-            TmcServerCommunicationTaskFactory.SubmissionResponse response
+            String resultJson
                     = tmcServerCommunicationTaskFactory
                     .getSubmittingExerciseToSkillifierTask(exercise, zippedProject, extraParams)
                     .call();
@@ -113,7 +117,15 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
             informObserver(1, "Submission to skillifier successfully completed");
             logger.info("Submission to skillifier successfully completed");
 
-            return response;
+            try {
+                Gson gson = new GsonBuilder().create();
+                SubmissionResult result = gson.fromJson(resultJson, AdaptiveSubmissionResult.class).toSubmissionResult();
+                return result;
+            } catch (Exception e) {
+                logger.warn("Failed to parse submission result from skillifier", e);
+            }
+            return null;
+
         } catch (Exception ex) {
             if (ex instanceof NotLoggedInException) {
                 throw (NotLoggedInException)ex;

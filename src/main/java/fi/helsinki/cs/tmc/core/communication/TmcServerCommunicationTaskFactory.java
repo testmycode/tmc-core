@@ -31,7 +31,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-
 import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
@@ -41,14 +40,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -152,9 +148,9 @@ public class TmcServerCommunicationTaskFactory {
 
     public URI getSkillifierUrl(String addition) {
         if (!addition.isEmpty()) {
-            return URI.create("http://tmc-adapt.testmycode.io/" + addition);
+            return URI.create("http://localhost:3000/" + addition);
         }
-        return URI.create("http://tmc-adapt.testmycode.io/");
+        return URI.create("http://localhost:3000/");
     }
 
     public Callable<Exercise> getAdaptiveExercise(final Theme theme, final Course course)
@@ -200,7 +196,7 @@ public class TmcServerCommunicationTaskFactory {
                     Course returnedFromServer = getCourseInfo(serverUrl);
 
                     try {
-                        URI skillifierUrl = getSkillifierUrl("course/" + courseStub.getName() + "/exercises");
+                        URI skillifierUrl = getSkillifierUrl("courses/" + courseStub.getName() + "/uexercises?token=" + oauth.getToken());
                         List<Exercise> returnedFromSkillifier = getExerciseList(skillifierUrl);
                         returnedFromServer.getExercises().addAll(returnedFromSkillifier);
                     } catch (Exception e) {
@@ -268,7 +264,7 @@ public class TmcServerCommunicationTaskFactory {
         return new HttpTasks().getForBinary(zipUrl);
     }
 
-    public Callable<SubmissionResponse> getSubmittingExerciseToSkillifierTask(
+    public Callable<String> getSubmittingExerciseToSkillifierTask(
             final Exercise exercise, final byte[] byteToSend, Map<String, String> extraParams) {
 
         final Map<String, String> params = new LinkedHashMap<>();
@@ -276,12 +272,12 @@ public class TmcServerCommunicationTaskFactory {
         params.put("client_nanotime", "" + System.nanoTime());
         params.putAll(extraParams);
 
-        return wrapWithNotLoggedInException(new Callable<SubmissionResponse>() {
+        return wrapWithNotLoggedInException(new Callable<String>() {
             @Override
-            public SubmissionResponse call() throws Exception {
+            public String call() throws Exception {
                 String response;
                 try {
-                    final URI submitUrl = getSkillifierUrl("/submit?usernsame=" + oauth.getToken());
+                    final URI submitUrl = getSkillifierUrl("/submitZip?token=" + oauth.getToken());
                     final Callable<String> upload = new HttpTasks()
                             .uploadRawDataForTextDownload(submitUrl, params,
                                  byteToSend);
@@ -289,9 +285,7 @@ public class TmcServerCommunicationTaskFactory {
                 } catch (FailedHttpResponseException ex) {
                     return checkForObsoleteClient(ex);
                 }
-
-                JsonObject respJson = new JsonParser().parse(response).getAsJsonObject();
-                return getSubmissionResponse(respJson);
+                return response;
             }
 
             //TODO: Cancellable?

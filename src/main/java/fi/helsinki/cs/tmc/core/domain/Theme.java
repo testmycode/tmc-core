@@ -3,21 +3,28 @@ package fi.helsinki.cs.tmc.core.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by markovai on 29.5.2017.
- */
 public class Theme {
     private List<Exercise> exercises;
     private boolean unlocked = false;
     private String name;
+    private List<Skill> skills;
 
     public Theme(String name) {
         this.name = name;
         this.exercises = new ArrayList<>();
+        this.skills = new ArrayList<>();
     }
 
     public List<Exercise> getExercises() {
         return exercises;
+    }
+
+    public List<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<Skill> skills) {
+        this.skills = skills;
     }
 
     public void setExercises(List<Exercise> exercises) {
@@ -47,5 +54,4 @@ public class Theme {
     public void addExercise(Exercise exercise) {
         exercises.add(exercise);
     }
-
 }

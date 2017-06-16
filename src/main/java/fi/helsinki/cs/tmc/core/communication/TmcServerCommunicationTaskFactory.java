@@ -212,7 +212,7 @@ public class TmcServerCommunicationTaskFactory {
             //TODO: Cancellable?
         });
     }
-    
+
     private List<Exercise> getExerciseList(URI uri) throws Exception {
         final Callable<String> downloadFromServer = new HttpTasks().getForText(uri);
         String jsonFromServer = downloadFromServer.call();

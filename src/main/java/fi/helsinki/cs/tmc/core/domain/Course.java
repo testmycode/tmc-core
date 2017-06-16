@@ -220,4 +220,25 @@ public class Course {
         */
         return name;
     }
+
+    public void setThemes(List<Theme> themes) {
+        this.themes = themes;
+    }
+
+    public void addSkillsToThemes(List<Skill> skillsFromSkillifier) {
+        for (Skill skill : skillsFromSkillifier) {
+            String themeName = skill.getThemeName();
+            Theme skillTheme = null;
+            for (Theme theme : themes) {
+                if (theme.getName().equals(themeName)) {
+                    skillTheme = theme;
+                    break;
+                }
+            }
+            if (skillTheme == null) {
+                themes.add(skillTheme = new Theme(themeName));
+            }
+            skillTheme.addSkill(skill);
+        }
+    }
 }

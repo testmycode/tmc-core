@@ -9,12 +9,14 @@ import fi.helsinki.cs.tmc.core.communication.serialization.CourseInfoParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseListParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.ExerciseListParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.ReviewListParser;
+import fi.helsinki.cs.tmc.core.communication.serialization.SkillListParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
 import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.domain.Review;
+import fi.helsinki.cs.tmc.core.domain.Skill;
 import fi.helsinki.cs.tmc.core.domain.Theme;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
@@ -67,6 +69,7 @@ public class TmcServerCommunicationTaskFactory {
     private ExerciseListParser exerciseListParser;
     private ReviewListParser reviewListParser;
     private String clientVersion;
+    private SkillListParser skillListParser;
 
     public TmcServerCommunicationTaskFactory() {
         this(TmcSettingsHolder.get(), Oauth.getInstance());
@@ -92,6 +95,7 @@ public class TmcServerCommunicationTaskFactory {
         this.reviewListParser = reviewListParser;
         this.clientVersion = getClientVersion();
         this.exerciseListParser = new ExerciseListParser();
+        this.skillListParser = new SkillListParser();
     }
 
     private static String getClientVersion() {
@@ -194,15 +198,19 @@ public class TmcServerCommunicationTaskFactory {
                 try {
                     URI serverUrl = addApiCallQueryParameters(courseStub.getDetailsUrl());
                     Course returnedFromServer = getCourseInfo(serverUrl);
-
+                    returnedFromServer.generateThemes();
                     try {
-                        URI skillifierUrl = getSkillifierUrl("courses/" + courseStub.getName() + "/uexercises?token=" + oauth.getToken());
-                        List<Exercise> returnedFromSkillifier = getExerciseList(skillifierUrl);
+                        URI skillifierExercisesUrl = getSkillifierUrl("courses/" + courseStub.getName() + "/uexercises?token=" + oauth.getToken());
+                        List<Exercise> returnedFromSkillifier = getExerciseList(skillifierExercisesUrl);
                         returnedFromServer.getExercises().addAll(returnedFromSkillifier);
+
+                        URI skillifierSkillsUrl = getSkillifierUrl("courses/" + courseStub.getName() + "/skills?token=" + oauth.getToken());
+                        List<Skill> skillsFromSkillifier = getSkillList(skillifierSkillsUrl);
+                        returnedFromServer.addSkillsToThemes(skillsFromSkillifier);
                     } catch (Exception e) {
                         LOG.log(Level.WARNING, "Downloading adaptive exercise info from skillifier failed.");
                     }
-                    returnedFromServer.generateThemes();
+
                     return returnedFromServer;
                 } catch (FailedHttpResponseException ex) {
                     return checkForObsoleteClient(ex);
@@ -211,6 +219,12 @@ public class TmcServerCommunicationTaskFactory {
 
             //TODO: Cancellable?
         });
+    }
+
+    private List<Skill> getSkillList(URI uri) throws Exception {
+        final Callable<String> downloadFromServer = new HttpTasks().getForText(uri);
+        String jsonFromServer = downloadFromServer.call();
+        return skillListParser.parseFromJson(jsonFromServer);
     }
 
     private List<Exercise> getExerciseList(URI uri) throws Exception {

@@ -1,9 +1,10 @@
 package fi.helsinki.cs.tmc.core.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Theme {
+public class Theme implements Serializable{
     private List<Exercise> exercises;
     private boolean unlocked = false;
     private String name;
@@ -53,5 +54,9 @@ public class Theme {
 
     public void addExercise(Exercise exercise) {
         exercises.add(exercise);
+    }
+
+    public void addSkill(Skill skill) {
+        skills.add(skill);
     }
 }

@@ -75,6 +75,15 @@ public class Course {
         return themes;
     }
 
+    public List<Skill> getSkillsByTheme(String themeName) {
+        for (Theme theme : themes) {
+            if (theme.getName().equals(themeName)) {
+                return theme.getSkills();
+            }
+        }
+        return new ArrayList<>();
+    }
+
     /*
     public void setThemes(List<Theme> themes) {
         this.themes = themes;

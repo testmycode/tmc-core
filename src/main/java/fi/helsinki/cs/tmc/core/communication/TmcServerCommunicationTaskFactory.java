@@ -152,9 +152,9 @@ public class TmcServerCommunicationTaskFactory {
 
     public URI getSkillifierUrl(String addition) {
         if (!addition.isEmpty()) {
-            return URI.create("http://localhost:3000/" + addition);
+            return URI.create("https://tmc-adapt.testmycode.io/" + addition);
         }
-        return URI.create("http://localhost:3000/");
+        return URI.create("https://tmc-adapt.testmycode.io/");
     }
 
     public Callable<Exercise> getAdaptiveExercise(final Theme theme, final Course course)

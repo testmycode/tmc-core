@@ -26,6 +26,7 @@ public class Exercise implements Serializable {
     private String name;
     private boolean locked;
     private boolean isAdaptive = false;
+    private int week;
 
     @SerializedName("deadline_description")
     private String deadlineDescription;
@@ -267,6 +268,19 @@ public class Exercise implements Serializable {
 
     public void setAdaptive(boolean adaptive) {
         isAdaptive = adaptive;
+    }
+
+    public int getWeek() {
+        return week;
+    }
+
+    public void setWeek(int week) {
+        this.week = week;
+    }
+
+    public void generateWeek() {
+        int weekIndex = name.indexOf("viikko") + 6;
+        this.week = Character.getNumericValue(name.charAt(weekIndex));
     }
 
     public void setAvailable(boolean available) {

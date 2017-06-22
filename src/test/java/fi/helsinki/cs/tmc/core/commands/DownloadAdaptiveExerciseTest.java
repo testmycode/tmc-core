@@ -15,7 +15,6 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import fi.helsinki.cs.tmc.core.domain.Theme;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utils.MockSettings;
@@ -35,6 +34,40 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 
 public class DownloadAdaptiveExerciseTest {
 
@@ -54,8 +87,8 @@ public class DownloadAdaptiveExerciseTest {
     Callable<Exercise> mockGetAdaptiveExercise;
     @Mock
     Oauth oauth;
-    @Mock
-    Theme mockTheme;
+    //@Mock
+    int week;
 
     private Command<Exercise> command;
     TaskExecutor langs;
@@ -63,16 +96,18 @@ public class DownloadAdaptiveExerciseTest {
 
     @Before
     public void setUp() throws IOException {
+        week = 1;
         MockitoAnnotations.initMocks(this);
         langs = spy(new TaskExecutorImpl());
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(langs);
         arithFuncsTempDir = testFolder.getRoot().toPath().resolve("arith_funcs");
-        command = new DownloadAdaptiveExercise(mockObserver, factory, mockTheme, mockCourse);
+        command = new DownloadAdaptiveExercise(mockObserver, factory, week, mockCourse);
 
         doCallRealMethod().when(langs).extractProject(any(Path.class), any(Path.class));
         mockExerciseOne.setName("ex1");
         mockExerciseOne.setCourseName("course1");
+        mockExerciseOne.setWeek(week);
     }
 
     @Test
@@ -81,7 +116,7 @@ public class DownloadAdaptiveExerciseTest {
 
         Exercise exercise = command.call();
 
-        verify(factory).getAdaptiveExercise(mockTheme, mockCourse);
+        verify(factory).getAdaptiveExercise(week, mockCourse);
         verify(factory).getDownloadingAdaptiveExerciseZipTask(mockExerciseOne);
 
         verifyNoMoreInteractions(factory);
@@ -96,7 +131,7 @@ public class DownloadAdaptiveExerciseTest {
 
         Exercise exercise = command.call();
 
-        verify(factory).getAdaptiveExercise(mockTheme, mockCourse);
+        verify(factory).getAdaptiveExercise(week, mockCourse);
 
         verifyNoMoreInteractions(factory);
 
@@ -105,8 +140,10 @@ public class DownloadAdaptiveExerciseTest {
     private void setUpMocks() throws Exception {
         verifyZeroInteractions(langs);
 
-        when(mockTheme.getName()).thenReturn("testTheme");
-        when(factory.getAdaptiveExercise(any(Theme.class), any(Course.class))).thenReturn(mockGetAdaptiveExercise);
+        //when(mockWeek).thenReturn(1);
+        // may be broken since theme been refactored to int week
+
+        when(factory.getAdaptiveExercise(anyInt(), any(Course.class))).thenReturn(mockGetAdaptiveExercise);
         when(mockGetAdaptiveExercise.call()).thenReturn(mockExerciseOne);
 
         when(mockExerciseOne.getExtractionTarget(any(Path.class))).thenReturn(arithFuncsTempDir);

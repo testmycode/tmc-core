@@ -28,7 +28,6 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.Review;
-import fi.helsinki.cs.tmc.core.domain.Theme;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
@@ -144,12 +143,12 @@ public class TmcCore {
         return new ExceptionTrackingCallable<>(new SendSpywareEvents(observer, currentCourse, events));
 
     }
-    
+
     public Callable<SubmissionResult> submit(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new Submit command");
         return new ExceptionTrackingCallable<>(new Submit(observer, exercise));
     }
-    
+
     public Callable<SubmissionResult> submitAdaptiveExercise(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new submit adaptiveExercise command");
         return new ExceptionTrackingCallable<>(new SubmitAdaptiveExerciseToSkillifier(observer, exercise));
@@ -182,11 +181,11 @@ public class TmcCore {
         return new ExceptionTrackingCallable<>(new DownloadModelSolution(observer, exercise));
     }
 
-    public Callable<Exercise> downloadAdaptiveExercise(ProgressObserver observer, Theme theme, Course course) {
+    public Callable<Exercise> downloadAdaptiveExercise(ProgressObserver observer, int week, Course course) {
         logger.info("Creating new DownloadAdaptiveExercise command");
-        return new ExceptionTrackingCallable<>(new DownloadAdaptiveExercise(observer, theme, course));
+        return new ExceptionTrackingCallable<>(new DownloadAdaptiveExercise(observer, week, course));
     }
-    
+
     /**
      * NOT IMPLEMENTED!
      *

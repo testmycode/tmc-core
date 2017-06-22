@@ -34,8 +34,8 @@ public class SkillListParser {
             Skill[] skills = gson.fromJson(json, Skill[].class);
             return Arrays.asList(skills);
         } catch (RuntimeException ex) {
-            logger.warn("Failed to parse themes info", ex);
-            throw new RuntimeException("Failed to parse adaptive theme list: " + ex.getMessage(), ex);
+            logger.warn("Failed to parse weeks info", ex);
+            throw new RuntimeException("Failed to parse adaptive week list: " + ex.getMessage(), ex);
         }
     }
 }

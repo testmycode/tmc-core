@@ -8,12 +8,13 @@ public class Skill implements Serializable{
     private String name;
     private double percentage;
     public double mastery;
-    private String themeName;
+    private int week;
 
-    public Skill(String name) {
+    public Skill(String name, int week) {
         this.name = name;
         percentage = 0.0;
         mastery = 90.0;
+        this.week = week;
     }
 
     public void setExercises(List<Exercise> exercises) {
@@ -28,15 +29,15 @@ public class Skill implements Serializable{
         return percentage;
     }
 
-    public String getThemeName() {
-        return themeName;
+    public int getWeek() {
+        return week;
     }
 
     public boolean isMastered() {
         return percentage >= mastery;
     }
 
-    public void setThemeName(String themeName) {
-        this.themeName = themeName;
+    public void setWeek(int week) {
+        this.week = week;
     }
 }

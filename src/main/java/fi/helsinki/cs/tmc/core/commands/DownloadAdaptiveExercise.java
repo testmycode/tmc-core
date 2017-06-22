@@ -5,7 +5,6 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Progress;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import fi.helsinki.cs.tmc.core.domain.Theme;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -19,12 +18,12 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
 
     private static final Logger logger = LoggerFactory.getLogger(DownloadAdaptiveExercise.class);
 
-    private Theme theme;
+    private int week;
     private Course course;
 
-    public DownloadAdaptiveExercise(ProgressObserver observer, Theme theme, Course course) {
+    public DownloadAdaptiveExercise(ProgressObserver observer, int week, Course course) {
         super(observer);
-        this.theme = theme;
+        this.week = week;
         this.course = course;
     }
 
@@ -32,16 +31,16 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
     DownloadAdaptiveExercise(
             ProgressObserver observer,
             TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory,
-            Theme theme, Course course) {
+            int week, Course course) {
         super(observer, tmcServerCommunicationTaskFactory);
-        this.theme = theme;
+        this.week = week;
         this.course = course;
     }
 
     @Override
     public Exercise call() throws Exception {
-        logger.info("Checking adaptive exercises availability by theme");
-        Exercise exercise = tmcServerCommunicationTaskFactory.getAdaptiveExercise(theme, course).call();
+        logger.info("Checking adaptive exercises availability by week");
+        Exercise exercise = tmcServerCommunicationTaskFactory.getAdaptiveExercise(week, course).call();
         if (exercise == null) {
             return null;
         }

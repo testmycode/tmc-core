@@ -17,7 +17,6 @@ import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
 import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.Skill;
-import fi.helsinki.cs.tmc.core.domain.Theme;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
@@ -157,14 +156,14 @@ public class TmcServerCommunicationTaskFactory {
         return URI.create("https://tmc-adapt.testmycode.io/");
     }
 
-    public Callable<Exercise> getAdaptiveExercise(final Theme theme, final Course course)
+    public Callable<Exercise> getAdaptiveExercise(final int week, final Course course)
         throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
         return wrapWithNotLoggedInException(new Callable<Exercise>() {
                 @Override
                 public Exercise call() throws Exception {
                     try {
                         Callable<String> download = new HttpTasks()
-                                .getForText(getSkillifierUrl(course.getName() + "/" + theme.getName() + "/next.json?token=" + oauth.getToken()));
+                                .getForText(getSkillifierUrl(course.getName() + "/" + week + "/next.json?token=" + oauth.getToken()));
                         String json = download.call();
                         return adaptiveExerciseParser.parseFromJson(json);
                     } catch (Exception ex) {
@@ -198,7 +197,7 @@ public class TmcServerCommunicationTaskFactory {
                 try {
                     URI serverUrl = addApiCallQueryParameters(courseStub.getDetailsUrl());
                     Course returnedFromServer = getCourseInfo(serverUrl);
-                    returnedFromServer.generateThemes();
+                    returnedFromServer.generateWeeks();
                     try {
                         URI skillifierExercisesUrl = getSkillifierUrl("courses/" + courseStub.getName() + "/uexercises?token=" + oauth.getToken());
                         List<Exercise> returnedFromSkillifier = getExerciseList(skillifierExercisesUrl);
@@ -206,7 +205,7 @@ public class TmcServerCommunicationTaskFactory {
 
                         URI skillifierSkillsUrl = getSkillifierUrl("courses/" + courseStub.getName() + "/skills?token=" + oauth.getToken());
                         List<Skill> skillsFromSkillifier = getSkillList(skillifierSkillsUrl);
-                        returnedFromServer.addSkillsToThemes(skillsFromSkillifier);
+                        //returnedFromServer.addSkillsToWeeks(skillsFromSkillifier); // no need since theme were changed to int week
                     } catch (Exception e) {
                         LOG.log(Level.WARNING, "Downloading adaptive exercise info from skillifier failed.");
                     }

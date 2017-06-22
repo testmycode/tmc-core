@@ -279,8 +279,16 @@ public class Exercise implements Serializable {
     }
 
     public void generateWeek() {
-        int weekIndex = name.indexOf("viikko") + 6;
-        this.week = Character.getNumericValue(name.charAt(weekIndex));
+        String weekWord = "viikko";
+        int firstIndex = name.indexOf(weekWord) + weekWord.length();
+        int lastIndex = firstIndex;
+        int no = 0;
+        while (Character.isDigit(name.charAt(lastIndex))) {
+            no = Integer.parseInt(name.substring(firstIndex, lastIndex + 1));
+            System.out.println("no: " + no);
+            lastIndex++;
+        }
+        this.week = no;
     }
 
     public void setAvailable(boolean available) {

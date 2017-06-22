@@ -48,7 +48,7 @@ public class ExerciseTest {
     }
 
     @Test
-    public void TestGenerateWeek() {
+    public void testGenerateWeek() {
         exercise.setName("viikko6-testi");
         exercise.generateWeek();
         assertEquals(6, exercise.getWeek());

@@ -26,6 +26,7 @@ public class Exercise implements Serializable {
     private String name;
     private boolean locked;
     private boolean isAdaptive = false;
+    @SerializedName("weekNumber")
     private int week;
 
     @SerializedName("deadline_description")

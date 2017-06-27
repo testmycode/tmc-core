@@ -197,19 +197,21 @@ public class TmcServerCommunicationTaskFactory {
                 try {
                     URI serverUrl = addApiCallQueryParameters(courseStub.getDetailsUrl());
                     Course returnedFromServer = getCourseInfo(serverUrl);
+                    LOG.log(Level.INFO, "normal course detaiils downloaded");
                     returnedFromServer.generateWeeks();
                     try {
                         URI skillifierExercisesUrl = getSkillifierUrl("courses/" + courseStub.getName() + "/uexercises?token=" + oauth.getToken());
                         List<Exercise> returnedFromSkillifier = getExerciseList(skillifierExercisesUrl);
+                        LOG.log(Level.INFO, "adaptive exercise info downloaded");
                         returnedFromServer.getExercises().addAll(returnedFromSkillifier);
 
                         URI skillifierSkillsUrl = getSkillifierUrl("courses/" + courseStub.getName() + "/skills?token=" + oauth.getToken());
                         List<Skill> skillsFromSkillifier = getSkillList(skillifierSkillsUrl);
-                        //returnedFromServer.addSkillsToWeeks(skillsFromSkillifier); // no need since theme were changed to int week
+                        LOG.log(Level.INFO, "adaptive skills info downloaded");
+                        returnedFromServer.setSkills(skillsFromSkillifier);
                     } catch (Exception e) {
                         LOG.log(Level.WARNING, "Downloading adaptive exercise info from skillifier failed.");
                     }
-
                     return returnedFromServer;
                 } catch (FailedHttpResponseException ex) {
                     return checkForObsoleteClient(ex);
@@ -290,7 +292,8 @@ public class TmcServerCommunicationTaskFactory {
             public String call() throws Exception {
                 String response;
                 try {
-                    final URI submitUrl = getSkillifierUrl("/submitZip?token=" + oauth.getToken());
+                    //final URI submitUrl = getSkillifierUrl("/submitZip?token=" + oauth.getToken());
+                    final URI submitUrl = URI.create("https://8e1ed627.ngrok.io/submitZip?token=" + oauth.getToken());
                     final Callable<String> upload = new HttpTasks()
                             .uploadRawDataForTextDownload(submitUrl, params,
                                  byteToSend);

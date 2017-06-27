@@ -1,5 +1,7 @@
 package fi.helsinki.cs.tmc.core.domain;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -8,6 +10,7 @@ public class Skill implements Serializable{
     private String name;
     private double percentage;
     public double mastery;
+    @SerializedName("weekNumber")
     private int week;
 
     public Skill(String name, int week) {

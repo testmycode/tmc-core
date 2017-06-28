@@ -12,9 +12,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by markovai on 16.6.2017.
- */
 public class SkillListParser {
     private static final Logger logger = LoggerFactory.getLogger(SkillListParser.class);
 

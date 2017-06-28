@@ -11,9 +11,6 @@ import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by markovai on 2.6.2017.
- */
 public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercise> {
 
     private static final Logger logger = LoggerFactory.getLogger(DownloadAdaptiveExercise.class);

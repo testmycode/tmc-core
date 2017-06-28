@@ -5,9 +5,7 @@ import fi.helsinki.cs.tmc.langs.domain.TestResult;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-
 public class AdaptiveSubmissionResult implements Serializable{
-
 
     public SubmissionResult.Status status;
     public ArrayList<TestResult> testResults = new ArrayList<>();

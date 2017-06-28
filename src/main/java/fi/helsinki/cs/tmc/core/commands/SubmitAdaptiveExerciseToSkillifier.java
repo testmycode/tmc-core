@@ -3,22 +3,16 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import fi.helsinki.cs.tmc.core.domain.submission.AdaptiveSubmissionResult;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
-import java.util.concurrent.Callable;
-
 
 public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionCommand<SubmissionResult> {
     private static final Logger logger = LoggerFactory.getLogger(AbstractSubmissionCommand.class);
@@ -49,7 +43,7 @@ public class SubmitAdaptiveExerciseToSkillifier extends AbstractSubmissionComman
         //Submit zipped project to skillifier
         SubmissionResult submissionResult =
                 submitToSkillifier(exercise, new HashMap<String, String>());
-        
+
         return submissionResult;
 
         //TODO?

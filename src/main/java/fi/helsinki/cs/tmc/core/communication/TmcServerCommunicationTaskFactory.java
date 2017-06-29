@@ -152,10 +152,7 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public URI getSkillifierUrl(String addition) {
-        if (!addition.isEmpty()) {
-            return URI.create("https://tmc-adapt.testmycode.io/" + addition);
-        }
-        return URI.create("https://tmc-adapt.testmycode.io/");
+        return URI.create("https://tmc-adapt.testmycode.io/" + addition);
     }
 
     public Callable<Exercise> getAdaptiveExercise(final int week, final Course course)
@@ -295,8 +292,7 @@ public class TmcServerCommunicationTaskFactory {
             public String call() throws Exception {
                 String response;
                 try {
-                    //final URI submitUrl = getSkillifierUrl("/submitZip?token=" + oauth.getToken());
-                    final URI submitUrl = URI.create("https://8e1ed627.ngrok.io/submitZip?token=" + oauth.getToken());
+                    final URI submitUrl = getSkillifierUrl("/submitZip?token=" + oauth.getToken());
                     final Callable<String> upload = new HttpTasks()
                             .uploadRawDataForTextDownload(submitUrl, params,
                                  byteToSend);
@@ -372,6 +368,10 @@ public class TmcServerCommunicationTaskFactory {
 
     public Callable<String> getSubmissionFetchTask(URI submissionUrl) throws NotLoggedInException {
         return new HttpTasks().getForText(addApiCallQueryParameters(submissionUrl));
+    }
+    
+    public Callable<String> getSubmissionFromSkillifierFetchTask() throws NotLoggedInException {
+        return new HttpTasks().getForText(getSkillifierUrl("result?token=" + Oauth.getInstance().getToken()));
     }
 
     public Callable<List<Review>> getDownloadingReviewListTask(final Course course) {

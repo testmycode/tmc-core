@@ -54,6 +54,7 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
 
     private static final String STUB_PROSESSING_ERRORED_RESPONSE = "{status : \"ERROR\", error: \"failed to submit the exercise\"}";
     private static final String STUB_PROSESSING_DONE_RESPONSE = "{status: \"OK\"}";
+    private static final String STUB_PROSESSING_RESPONSE = "{status: \"PROCESSING\"}";
 
     private Command<SubmissionResult> command;
     private Path arithFuncsTempDir;
@@ -88,12 +89,27 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
                 factory.getSubmittingExerciseToSkillifierTask(
                 any(Exercise.class), any(byte[].class), any(Map.class)))
                 .thenReturn(
+                new Callable<TmcServerCommunicationTaskFactory.SubmissionResponse>() {
+                        @Override
+                        public TmcServerCommunicationTaskFactory.SubmissionResponse call() throws Exception {
+                            return null;
+                        }
+                    });
+        when(factory.getSubmissionFromSkillifierFetchTask())
+                .thenReturn(
+                  new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            return STUB_PROSESSING_RESPONSE;
+                        }
+                    })
+                .thenReturn(
                 new Callable<String>() {
                         @Override
                         public String call() throws Exception {
                             return STUB_PROSESSING_DONE_RESPONSE;
                         }
-                    });
+                        });
 
         SubmissionResult result = command.call();
 
@@ -109,7 +125,23 @@ public class SubmitAdaptiveExerciseToSkillifierTest {
                 factory.getSubmittingExerciseToSkillifierTask(
                 any(Exercise.class), any(byte[].class), any(Map.class)))
                 .thenReturn(
+                new Callable<TmcServerCommunicationTaskFactory.SubmissionResponse>() {
+                        @Override
+                        public TmcServerCommunicationTaskFactory.SubmissionResponse call() throws Exception {
+                            return null;
+                        }
+                    });
+        when(
+                factory.getSubmissionFromSkillifierFetchTask())
+                .thenReturn(
                 new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            return STUB_PROSESSING_RESPONSE;
+                        }
+                    })
+                .thenReturn(
+                    new Callable<String>() {
                         @Override
                         public String call() throws Exception {
                             return STUB_PROSESSING_ERRORED_RESPONSE;

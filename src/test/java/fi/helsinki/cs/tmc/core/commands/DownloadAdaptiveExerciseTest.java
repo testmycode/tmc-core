@@ -107,9 +107,6 @@ public class DownloadAdaptiveExerciseTest {
     private void setUpMocks() throws Exception {
         verifyZeroInteractions(langs);
 
-        //when(mockWeek).thenReturn(1);
-        // may be broken since theme been refactored to int week
-
         when(factory.getAdaptiveExercise(anyInt(), any(Course.class))).thenReturn(mockGetAdaptiveExercise);
         when(mockGetAdaptiveExercise.call()).thenReturn(mockExerciseOne);
 

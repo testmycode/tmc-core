@@ -86,7 +86,7 @@ public class SubmissionResultParser {
         }
     }
 
-    private static class StatusDeserializer implements JsonDeserializer<SubmissionResult.Status> {
+    protected static class StatusDeserializer implements JsonDeserializer<SubmissionResult.Status> {
 
         private static final Logger logger = LoggerFactory.getLogger(StatusDeserializer.class);
 
@@ -104,7 +104,7 @@ public class SubmissionResultParser {
         }
     }
 
-    private static class ValidationErrorInstanceCreator
+    protected static class ValidationErrorInstanceCreator
             implements InstanceCreator<ValidationError> {
         @Override
         public ValidationError createInstance(Type type) {
@@ -112,7 +112,7 @@ public class SubmissionResultParser {
         }
     }
 
-    private static class FileDeserializer implements JsonDeserializer<File> {
+    protected static class FileDeserializer implements JsonDeserializer<File> {
         @Override
         public File deserialize(
                 JsonElement jsonElement, Type type, JsonDeserializationContext context)
@@ -122,7 +122,7 @@ public class SubmissionResultParser {
         }
     }
 
-    private static class ImmutableListJsonDeserializer
+    protected static class ImmutableListJsonDeserializer
             implements JsonDeserializer<ImmutableList<?>> {
         @Override
         public ImmutableList<?> deserialize(

@@ -96,6 +96,9 @@ public class Course {
     public void generateWeeks() {
         for (Exercise ex : exercises) {
             ex.generateWeek();
+            if (ex.getWeek() > weekCount) {
+                weekCount = ex.getWeek();
+            }
         }
     }
 

@@ -289,7 +289,6 @@ public class Exercise implements Serializable {
         int no = 0;
         while (Character.isDigit(name.charAt(lastIndex))) {
             no = Integer.parseInt(name.substring(firstIndex, lastIndex + 1));
-            System.out.println("no: " + no);
             lastIndex++;
         }
         this.week = no;

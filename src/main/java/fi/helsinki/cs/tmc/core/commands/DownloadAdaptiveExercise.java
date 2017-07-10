@@ -1,10 +1,11 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
+
+import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.Progress;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -15,31 +16,34 @@ public class DownloadAdaptiveExercise extends ExerciseDownloadingCommand<Exercis
 
     private static final Logger logger = LoggerFactory.getLogger(DownloadAdaptiveExercise.class);
 
-    public DownloadAdaptiveExercise(ProgressObserver observer) {
+    private int week;
+    private Course course;
+
+    public DownloadAdaptiveExercise(ProgressObserver observer, int week, Course course) {
         super(observer);
+        this.week = week;
+        this.course = course;
     }
 
     @VisibleForTesting
-    DownloadAdaptiveExercise(ProgressObserver observer, TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+    DownloadAdaptiveExercise(
+            ProgressObserver observer,
+            TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory,
+            int week, Course course) {
         super(observer, tmcServerCommunicationTaskFactory);
+        this.week = week;
+        this.course = course;
     }
 
     @Override
     public Exercise call() throws Exception {
-        logger.info("Checking adaptive exercises availability");
-        Exercise exercise = tmcServerCommunicationTaskFactory.getAdaptiveExercise().call();
+        logger.info("Checking adaptive exercises availability by week");
+        Exercise exercise = tmcServerCommunicationTaskFactory.getAdaptiveExercise(week, course).call();
         if (exercise == null) {
             return null;
         }
-        try {
-            exercise.setCourseName(TmcSettingsHolder.get().getCurrentCourse().get().getName());
-        } catch (Exception e) {
-            logger.warn("Setting course name failed, setting it to 'None'.", e);
-            exercise.setCourseName("None");
-        }
-        exercise.setReturnable(true);
-        exercise.setAdaptive(true);
-        byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingExerciseZipTask(exercise).call();
+        byte[] zipb = tmcServerCommunicationTaskFactory.getDownloadingAdaptiveExerciseZipTask(exercise).call();
+        checkInterrupt();
         // Progress gets 1 as a parameter, because there is only 1 exercise to extract.
         Progress progress = new Progress(1);
         extractProject(zipb, exercise, progress);

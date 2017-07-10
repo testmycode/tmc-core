@@ -36,12 +36,6 @@ public class AdaptiveExerciseParserTest {
     }
 
     @Test
-    public void exerciseAvailable() {
-        Exercise exercise = adaptiveParser.parseFromJson("{ available: true, zip_url: example.com }");
-        assertEquals(URI.create("http://example.com"), exercise.getZipUrl());
-    }
-    
-    @Test
     public void exersiceAvailableTest() {
         Exercise exercise = adaptiveParser.parseFromJson("{available: true, zip_url: additionToString }");
         assertEquals(URI.create("http://additionToString"), exercise.getZipUrl());

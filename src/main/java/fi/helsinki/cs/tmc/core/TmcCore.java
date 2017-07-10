@@ -181,9 +181,9 @@ public class TmcCore {
         return new ExceptionTrackingCallable<>(new DownloadModelSolution(observer, exercise));
     }
 
-    public Callable<Exercise> downloadAdaptiveExercise(ProgressObserver observer) {
+    public Callable<Exercise> downloadAdaptiveExercise(ProgressObserver observer, int week, Course course) {
         logger.info("Creating new DownloadAdaptiveExercise command");
-        return new ExceptionTrackingCallable<>(new DownloadAdaptiveExercise(observer));
+        return new ExceptionTrackingCallable<>(new DownloadAdaptiveExercise(observer, week, course));
     }
 
     /**

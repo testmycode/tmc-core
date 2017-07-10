@@ -24,6 +24,7 @@ public class AdaptiveExerciseParser {
         try {
             Gson gson = new GsonBuilder().create();
             Exercise adaptive = gson.fromJson(json, Exercise.class);
+            adaptive.setAdaptive(true);
             if (adaptive.isAvailable()) {
                 String parsedUrl = adaptive.getZipUrl().toString();
                 adaptive.setZipUrl(URI.create("http://" + parsedUrl));

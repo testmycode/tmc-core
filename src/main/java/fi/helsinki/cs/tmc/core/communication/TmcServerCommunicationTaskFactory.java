@@ -7,13 +7,16 @@ import fi.helsinki.cs.tmc.core.communication.serialization.AdaptiveExerciseParse
 import fi.helsinki.cs.tmc.core.communication.serialization.ByteArrayGsonSerializer;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseInfoParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.CourseListParser;
+import fi.helsinki.cs.tmc.core.communication.serialization.ExerciseListParser;
 import fi.helsinki.cs.tmc.core.communication.serialization.ReviewListParser;
+import fi.helsinki.cs.tmc.core.communication.serialization.SkillListParser;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
 import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.domain.Review;
+import fi.helsinki.cs.tmc.core.domain.Skill;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
@@ -65,8 +68,10 @@ public class TmcServerCommunicationTaskFactory {
     private AdaptiveExerciseParser adaptiveExerciseParser;
     private CourseListParser courseListParser;
     private CourseInfoParser courseInfoParser;
+    private ExerciseListParser exerciseListParser;
     private ReviewListParser reviewListParser;
     private String clientVersion;
+    private SkillListParser skillListParser;
 
     public TmcServerCommunicationTaskFactory() {
         this(TmcSettingsHolder.get(), Oauth.getInstance());
@@ -78,12 +83,12 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public TmcServerCommunicationTaskFactory(
-            TmcSettings settings,
-            Oauth oauth,
-            AdaptiveExerciseParser adaptiveExerciseParser,
-            CourseListParser courseListParser,
-            CourseInfoParser courseInfoParser,
-            ReviewListParser reviewListParser) {
+                TmcSettings settings,
+                Oauth oauth,
+                AdaptiveExerciseParser adaptiveExerciseParser,
+                CourseListParser courseListParser,
+                CourseInfoParser courseInfoParser,
+                ReviewListParser reviewListParser) {
         this.settings = settings;
         this.oauth = oauth;
         this.adaptiveExerciseParser = adaptiveExerciseParser;
@@ -91,6 +96,8 @@ public class TmcServerCommunicationTaskFactory {
         this.courseInfoParser = courseInfoParser;
         this.reviewListParser = reviewListParser;
         this.clientVersion = getClientVersion();
+        this.exerciseListParser = new ExerciseListParser();
+        this.skillListParser = new SkillListParser();
     }
 
     private static String getClientVersion() {
@@ -145,30 +152,25 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public URI getSkillifierUrl(String addition) {
-        if (addition.isEmpty()) {
-            return URI.create("https://tmc-adapt.testmycode.io/");
-        }
-
         return URI.create("https://tmc-adapt.testmycode.io/" + addition);
     }
 
-    public Callable<Exercise> getAdaptiveExercise()
-            throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
+    public Callable<Exercise> getAdaptiveExercise(final int week, final Course course)
+        throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
         return wrapWithNotLoggedInException(new Callable<Exercise>() {
-
-            @Override
-            public Exercise call() throws Exception {
-                try {
-                    Callable<String> download = new HttpTasks()
-                            .getForText(getSkillifierUrl("/Example/default/next.json?username=" + oauth.getToken()));
-                    String json = download.call();
-                    return adaptiveExerciseParser.parseFromJson(json);
-                } catch (Exception ex) {
-                    LOG.log(Level.WARNING, "Downloading and parsing adaptive exercise URL failed with exception: " + ex.getMessage(), ex);
-                    return null;
+                @Override
+                public Exercise call() throws Exception {
+                    try {
+                        Callable<String> download = new HttpTasks()
+                                .getForText(getSkillifierUrl(course.getName() + "/" + week + "/next.json?token=" + oauth.getToken()));
+                        String json = download.call();
+                        return adaptiveExerciseParser.parseFromJson(json);
+                    } catch (Exception ex) {
+                        LOG.log(Level.WARNING, "Downloading and parsing adaptive exercise URL failed.");
+                        return null;
+                    }
                 }
-            }
-        });
+            });
     }
 
     public Callable<List<Course>> getDownloadingCourseListTask() {
@@ -194,16 +196,21 @@ public class TmcServerCommunicationTaskFactory {
                 try {
                     URI serverUrl = addApiCallQueryParameters(courseStub.getDetailsUrl());
                     Course returnedFromServer = getCourseInfo(serverUrl);
+                    LOG.log(Level.INFO, "normal course detaiils downloaded");
+                    returnedFromServer.generateWeeks();
                     try {
-                        URI skillifierUrl = getSkillifierUrl("/course/" + courseStub.getName());
-                        Course returnedFromSkillifier = getCourseInfo(skillifierUrl);
-                        returnedFromServer.getExercises().addAll(returnedFromSkillifier.getExercises());
-                    } catch (Exception e) {
-                        LOG.log(Level.WARNING, "Downloading adaptive exercise info from skillifier failed.", e);
-                    }
+                        URI skillifierExercisesUrl = getSkillifierUrl("courses/" + courseStub.getName() + "/uexercises?token=" + oauth.getToken());
+                        List<Exercise> returnedFromSkillifier = getExerciseList(skillifierExercisesUrl);
+                        LOG.log(Level.INFO, "adaptive exercise info downloaded");
+                        returnedFromServer.getExercises().addAll(returnedFromSkillifier);
 
-                    addAdaptiveExercisesFromStub(returnedFromServer, courseStub);
-                    returnedFromServer.generateThemes();
+                        URI skillifierSkillsUrl = getSkillifierUrl("courses/" + courseStub.getName() + "/skills?token=" + oauth.getToken());
+                        List<Skill> skillsFromSkillifier = getSkillList(skillifierSkillsUrl);
+                        LOG.log(Level.INFO, "adaptive skills info downloaded");
+                        returnedFromServer.setSkills(skillsFromSkillifier);
+                    } catch (Exception e) {
+                        LOG.log(Level.WARNING, "Downloading adaptive exercise info from skillifier failed.");
+                    }
                     return returnedFromServer;
                 } catch (FailedHttpResponseException ex) {
                     return checkForObsoleteClient(ex);
@@ -214,10 +221,17 @@ public class TmcServerCommunicationTaskFactory {
         });
     }
 
-    private void addAdaptiveExercisesFromStub(Course returnedFromServer, Course courseStub) {
-        Set<Exercise> exercises = new HashSet<>(returnedFromServer.getExercises());
-        exercises.addAll(courseStub.getExercises());
-        returnedFromServer.setExercises(new ArrayList<>(exercises));
+    private List<Skill> getSkillList(URI uri) throws Exception {
+        final Callable<String> downloadFromServer = new HttpTasks().getForText(uri);
+        String jsonFromServer = downloadFromServer.call();
+        return skillListParser.parseFromJson(jsonFromServer);
+    }
+
+    private List<Exercise> getExerciseList(URI uri) throws Exception {
+        final Callable<String> downloadFromServer = new HttpTasks().getForText(uri);
+        String jsonFromServer = downloadFromServer.call();
+        return exerciseListParser.parseFromJson(jsonFromServer);
+
     }
 
     private Course getCourseInfo(URI uri) throws Exception {
@@ -249,6 +263,12 @@ public class TmcServerCommunicationTaskFactory {
         return addApiCallQueryParameters(course.getUnlockUrl());
     }
 
+    public Callable<byte[]> getDownloadingAdaptiveExerciseZipTask(Exercise exercise) throws NotLoggedInException {
+        exercise.setZipUrl(URI.create(exercise.getZipUrl() + "?token=" + oauth.getToken()));
+        exercise.setDownloadUrl(exercise.getZipUrl());
+        return getDownloadingExerciseZipTask(exercise);
+    }
+
     public Callable<byte[]> getDownloadingExerciseZipTask(Exercise exercise) {
         URI zipUrl = exercise.getDownloadUrl();
         return new HttpTasks().getForBinary(zipUrl);
@@ -257,6 +277,34 @@ public class TmcServerCommunicationTaskFactory {
     public Callable<byte[]> getDownloadingExerciseSolutionZipTask(Exercise exercise) {
         URI zipUrl = exercise.getSolutionDownloadUrl();
         return new HttpTasks().getForBinary(zipUrl);
+    }
+
+    public Callable<String> getSubmittingExerciseToSkillifierTask(
+            final Exercise exercise, final byte[] byteToSend, Map<String, String> extraParams) {
+
+        final Map<String, String> params = new LinkedHashMap<>();
+        params.put("client_time", "" + (System.currentTimeMillis() / 1000L));
+        params.put("client_nanotime", "" + System.nanoTime());
+        params.putAll(extraParams);
+
+        return wrapWithNotLoggedInException(new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                String response;
+                try {
+                    final URI submitUrl = getSkillifierUrl("/submitZip?token=" + oauth.getToken());
+                    final Callable<String> upload = new HttpTasks()
+                            .uploadRawDataForTextDownload(submitUrl, params,
+                                 byteToSend);
+                    response = upload.call();
+                } catch (FailedHttpResponseException ex) {
+                    return checkForObsoleteClient(ex);
+                }
+                return response;
+            }
+
+            //TODO: Cancellable?
+            });
     }
 
     public Callable<SubmissionResponse> getSubmittingExerciseTask(
@@ -282,25 +330,29 @@ public class TmcServerCommunicationTaskFactory {
                 }
 
                 JsonObject respJson = new JsonParser().parse(response).getAsJsonObject();
-                if (respJson.get("error") != null) {
-                    throw new RuntimeException(
-                            "Server responded with error: " + respJson.get("error"));
-                } else if (respJson.get("submission_url") != null) {
-                    try {
-                        URI submissionUrl = new URI(respJson.get("submission_url").getAsString());
-                        URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
-                        return new SubmissionResponse(submissionUrl, pasteUrl);
-                    } catch (Exception e) {
-                        throw new RuntimeException(
-                                "Server responded with malformed " + "submission url");
-                    }
-                } else {
-                    throw new RuntimeException("Server returned unknown response");
-                }
+                return getSubmissionResponse(respJson);
             }
 
             //TODO: Cancellable?
         });
+    }
+
+    private SubmissionResponse getSubmissionResponse(JsonObject respJson) {
+        if (respJson.get("error") != null) {
+            throw new RuntimeException(
+                    "Server responded with error: " + respJson.get("error"));
+        } else if (respJson.get("submission_url") != null) {
+            try {
+                URI submissionUrl = new URI(respJson.get("submission_url").getAsString());
+                URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
+                return new SubmissionResponse(submissionUrl, pasteUrl);
+            } catch (Exception e) {
+                throw new RuntimeException(
+                        "Server responded with malformed " + "submission url");
+            }
+        } else {
+            throw new RuntimeException("Server returned unknown response");
+        }
     }
 
     public static class SubmissionResponse {
@@ -316,6 +368,10 @@ public class TmcServerCommunicationTaskFactory {
 
     public Callable<String> getSubmissionFetchTask(URI submissionUrl) throws NotLoggedInException {
         return new HttpTasks().getForText(addApiCallQueryParameters(submissionUrl));
+    }
+    
+    public Callable<String> getSubmissionFromSkillifierFetchTask() throws NotLoggedInException {
+        return new HttpTasks().getForText(getSkillifierUrl("result?token=" + Oauth.getInstance().getToken()));
     }
 
     public Callable<List<Review>> getDownloadingReviewListTask(final Course course) {

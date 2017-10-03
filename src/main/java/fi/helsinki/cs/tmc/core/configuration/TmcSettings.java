@@ -54,7 +54,7 @@ public interface TmcSettings {
     @Beta
     void setCourse(Course theCourse);
 
-    @Beta
+    @Deprecated
     void setConfigRoot(Path configRoot);
 
     Path getConfigRoot();

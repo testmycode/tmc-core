@@ -81,13 +81,20 @@ public class Oauth {
             oauthTokenUrl = settings.getServerAddress() + "/oauth/token";
         }
 
-        OauthCredentials credentials = settings.getOauthCredentials();
+        Optional<OauthCredentials> cred = settings.getOauthCredentials();
+        if (!cred.isPresent()) {
+            throw new OAuthSystemException("No oauth token");
+        }
+        if (!settings.getUsername().isPresent()) {
+            throw new OAuthSystemException("No username defined");
+        }
+        OauthCredentials credentials = cred.get();
         OAuthClientRequest request = OAuthClientRequest
                 .tokenLocation(oauthTokenUrl)
                 .setGrantType(GrantType.PASSWORD)
                 .setClientId(credentials.getOauthApplicationId())
                 .setClientSecret(credentials.getOauthSecret())
-                .setUsername(settings.getUsername())
+                .setUsername(settings.getUsername().get())
                 .setPassword(password)
                 .setRedirectURI("urn:ietf:wg:oauth:2.0:oob")
                 .buildQueryMessage();

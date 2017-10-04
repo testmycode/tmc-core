@@ -1,5 +1,6 @@
 package fi.helsinki.cs.tmc.core.communication;
 
+import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.core.communication.http.HttpTasks;
 import fi.helsinki.cs.tmc.core.communication.http.UriUtils;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
@@ -335,8 +336,9 @@ public class TmcServerCommunicationTaskFactory {
     public Callable<Object> getSendEventLogJob(final URI spywareServerUrl,
             List<LoggableEvent> events) throws NotLoggedInException {
         final Map<String, String> extraHeaders = new LinkedHashMap<>();
+        String username = settings.getUsername().isPresent() ? settings.getUsername().get() : "Username missing";
         extraHeaders.put("X-Tmc-Version", "1");
-        extraHeaders.put("X-Tmc-Username", settings.getUsername());
+        extraHeaders.put("X-Tmc-Username", username);
         extraHeaders.put("X-Tmc-SESSION-ID", oauth.getToken());
 
         final byte[] data;
@@ -374,7 +376,7 @@ public class TmcServerCommunicationTaskFactory {
         OauthCredentials credentials =
                 new Gson().fromJson(
                         IOUtils.toString(credentialsUrl.toURL()), OauthCredentials.class);
-        settings.setOauthCredentials(credentials);
+        settings.setOauthCredentials(Optional.fromNullable(credentials));
         return null;
     }
 

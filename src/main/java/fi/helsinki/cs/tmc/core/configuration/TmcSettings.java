@@ -24,7 +24,7 @@ public interface TmcSettings {
 
     void setPassword(Optional<String> password);
 
-    String getUsername();
+    Optional<String> getUsername();
 
     /**
      * Checks that username and password are not null.
@@ -65,9 +65,9 @@ public interface TmcSettings {
 
     boolean getSendDiagnostics();
 
-    OauthCredentials getOauthCredentials();
+    Optional<OauthCredentials> getOauthCredentials();
 
-    void setOauthCredentials(OauthCredentials credentials);
+    void setOauthCredentials(Optional<OauthCredentials> credentials);
 
     void setToken(Optional<String> token);
 

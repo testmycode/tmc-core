@@ -42,8 +42,8 @@ public class MockSettings implements TmcSettings {
     }
 
     @Override
-    public String getUsername() {
-        return "testUsername";
+    public Optional<String> getUsername() {
+        return Optional.of("testUsername");
     }
 
     @Override
@@ -117,15 +117,15 @@ public class MockSettings implements TmcSettings {
     }
 
     @Override
-    public OauthCredentials getOauthCredentials() {
+    public Optional<OauthCredentials> getOauthCredentials() {
         OauthCredentials credentials = new OauthCredentials();
         credentials.setOauthApplicationId("testOauthApplicationId");
         credentials.setOauthSecret("testOauthSecret");
-        return credentials;
+        return Optional.of(credentials);
     }
 
     @Override
-    public void setOauthCredentials(OauthCredentials credentials) {
+    public void setOauthCredentials(Optional<OauthCredentials> credentials) {
 
     }
 
@@ -140,11 +140,11 @@ public class MockSettings implements TmcSettings {
     }
 
     @Override
-    public String getOrganization() {
-        return "testOrganization";
+    public Optional<Organization> getOrganization() {
+        return Optional.of(new Organization("testOrganization", "testOrganization", "testOrganization", "testOrganization", false));
     }
 
     @Override
-    public void setOrganization(String organization) {
+    public void setOrganization(Organization organization) {
     }
 }

@@ -74,7 +74,7 @@ public interface TmcSettings {
 
     Optional<String> getToken();
 
-    Organization getOrganization();
+    Optional<Organization> getOrganization();
 
     void setOrganization(Organization organization);
 }

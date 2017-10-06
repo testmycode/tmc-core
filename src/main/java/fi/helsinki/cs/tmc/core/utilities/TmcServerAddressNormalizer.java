@@ -1,8 +1,13 @@
 package fi.helsinki.cs.tmc.core.utilities;
 
+import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+
+import com.google.common.base.Optional;
+
+import java.io.IOException;
 
 public class TmcServerAddressNormalizer {
 
@@ -10,10 +15,14 @@ public class TmcServerAddressNormalizer {
         TmcSettings tmcSettings = TmcSettingsHolder.get();
         String address = tmcSettings.getServerAddress();
 
+        TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory = new TmcServerCommunicationTaskFactory();
         if (!address.contains("/org/") && address.contains("/hy")) {
             int last = address.lastIndexOf("/");
             tmcSettings.setServerAddress(address.substring(0, last));
-            tmcSettings.setOrganization(address.substring(last + 1, address.length()));
+            try {
+                tmcSettings.setOrganization(tmcServerCommunicationTaskFactory.getOrganizationBySlug(address.substring(last + 1, address.length())));
+            } catch (IOException e) {
+            }
         } else if (!address.contains("/org/")) {
             return;
         } else {
@@ -22,10 +31,15 @@ public class TmcServerAddressNormalizer {
             tmcSettings.setServerAddress(split[0]);
 
             String organization = split[1];
+            Optional<Organization> org = Optional.<Organization>absent();
             if (organization.charAt(organization.length() - 1) == '/') {
                 organization = organization.substring(0, organization.length());
+                try {
+                    org = Optional.of(tmcServerCommunicationTaskFactory.getOrganizationBySlug(organization.substring(0, organization.length())));
+                } catch (IOException e) {
+                }
             }
-            tmcSettings.setOrganization(organization);
+            tmcSettings.setOrganization(org.get());
         }
     }
 }

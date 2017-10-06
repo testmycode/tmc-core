@@ -1,6 +1,5 @@
 package fi.helsinki.cs.tmc.core.communication;
 
-import com.google.common.base.Optional;
 import fi.helsinki.cs.tmc.core.communication.http.HttpTasks;
 import fi.helsinki.cs.tmc.core.communication.http.UriUtils;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
@@ -18,11 +17,13 @@ import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.ObsoleteClientException;
+import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utilities.JsonMaker;
 import fi.helsinki.cs.tmc.core.utilities.JsonMakerGsonSerializer;
 import fi.helsinki.cs.tmc.spyware.LoggableEvent;
 
+import com.google.common.base.Optional;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -121,10 +122,14 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     private URI getCourseListUrl()
-        throws OAuthSystemException, OAuthProblemException, NotLoggedInException {
+            throws OAuthSystemException, OAuthProblemException, TmcCoreException {
         String serverAddress = settings.getServerAddress();
         String url;
-        String urlLastPart = "api/v" + API_VERSION + "/core/org/" + settings.getOrganization() + "/courses.json";
+        Optional<Organization> organization = settings.getOrganization();
+        if (!organization.isPresent()) {
+            throw new TmcCoreException("Organization not selected");
+        }
+        String urlLastPart = "api/v" + API_VERSION + "/core/org/" + organization.get().getSlug() + "/courses.json";
         if (serverAddress.endsWith("/")) {
             url = serverAddress + urlLastPart;
         } else {
@@ -392,6 +397,25 @@ public class TmcServerCommunicationTaskFactory {
         URI organizationUrl = URI.create(url);
         List<Organization> organizations = new Gson().fromJson(IOUtils.toString(organizationUrl.toURL()), new TypeToken<List<Organization>>(){}.getType());
         return organizations;
+    }
+
+    public Organization getOrganizationBySlug(String slug) throws IOException {
+        String url;
+        String serverAddress = settings.getServerAddress();
+        String urlLastPart = "api/v" + API_VERSION;
+        if (serverAddress.endsWith("/")) {
+            url = settings.getServerAddress() + urlLastPart;
+        } else {
+            url = serverAddress + "/" + urlLastPart;
+        }
+        if (slug.startsWith("/")) {
+            url = url + slug + ".json";
+        } else {
+            url = url + "/" + slug + ".json";
+        }
+        URI organizationUrl = URI.create(url);
+        Organization organization = new Gson().fromJson(IOUtils.toString(organizationUrl.toURL()), new TypeToken<Organization>(){}.getType());
+        return organization;
     }
 
     private byte[] eventListToPostBody(List<LoggableEvent> events) throws IOException {

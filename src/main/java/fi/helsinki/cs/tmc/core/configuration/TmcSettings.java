@@ -76,5 +76,5 @@ public interface TmcSettings {
 
     Optional<Organization> getOrganization();
 
-    void setOrganization(Organization organization);
+    void setOrganization(Optional<Organization> organization);
 }

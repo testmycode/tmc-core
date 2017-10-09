@@ -20,7 +20,7 @@ public class TmcServerAddressNormalizer {
             int last = address.lastIndexOf("/");
             tmcSettings.setServerAddress(address.substring(0, last));
             try {
-                tmcSettings.setOrganization(tmcServerCommunicationTaskFactory.getOrganizationBySlug(address.substring(last + 1, address.length())));
+                tmcSettings.setOrganization(Optional.fromNullable(tmcServerCommunicationTaskFactory.getOrganizationBySlug(address.substring(last + 1, address.length()))));
             } catch (IOException e) {
             }
         } else if (!address.contains("/org/")) {
@@ -39,7 +39,7 @@ public class TmcServerAddressNormalizer {
                 } catch (IOException e) {
                 }
             }
-            tmcSettings.setOrganization(org.get());
+            tmcSettings.setOrganization(org);
         }
     }
 }

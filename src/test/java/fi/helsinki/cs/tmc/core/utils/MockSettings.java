@@ -145,6 +145,8 @@ public class MockSettings implements TmcSettings {
     }
 
     @Override
-    public void setOrganization(Organization organization) {
+    public void setOrganization(Optional<Organization> organization) {
+
     }
+
 }

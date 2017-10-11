@@ -240,8 +240,8 @@ public class TmcServerCommunicationTaskFactory {
                             "Server responded with error: " + respJson.get("error"));
                 } else if (respJson.get("submission_url") != null) {
                     try {
-                        URI submissionUrl = new URI(respJson.get("submission_url").getAsString());
-                        URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
+                        URI submissionUrl = addApiCallQueryParameters(new URI(respJson.get("submission_url").getAsString()));
+                        URI pasteUrl = addApiCallQueryParameters(new URI(respJson.get("paste_url").getAsString()));
                         return new SubmissionResponse(submissionUrl, pasteUrl);
                     } catch (Exception e) {
                         throw new RuntimeException(

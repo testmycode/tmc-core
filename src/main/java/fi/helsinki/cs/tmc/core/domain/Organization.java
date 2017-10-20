@@ -2,7 +2,9 @@ package fi.helsinki.cs.tmc.core.domain;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Organization {
+import java.io.Serializable;
+
+public class Organization implements Serializable {
 
     @SerializedName("name")
     private String name;
@@ -18,6 +20,10 @@ public class Organization {
 
     @SerializedName("pinned")
     private boolean pinned;
+
+    public Organization() {
+
+    }
 
     public Organization(String name, String information, String slug, String logoPath, boolean pinned) {
         this.name = name;

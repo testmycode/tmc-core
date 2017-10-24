@@ -38,9 +38,6 @@ public interface TmcSettings {
 
     String clientVersion();
 
-    // TODO: what is this even?
-    String getFormattedUserData();
-
     /**
      * Return the directory where course directories will be located. Projects
      * will be placed as follows: maindirectory/courseName/exerciseName
@@ -54,9 +51,6 @@ public interface TmcSettings {
     // For testing at least
     @Beta
     void setCourse(Course theCourse);
-
-    @Deprecated
-    void setConfigRoot(Path configRoot);
 
     Path getConfigRoot();
 

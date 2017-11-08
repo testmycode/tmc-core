@@ -33,20 +33,40 @@ public class Organization implements Serializable {
         this.pinned = pinned;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
     }
 
     public String getInformation() {
         return information;
     }
 
+    public void setSlug(String slug) {
+        this.slug = slug;
+    }
+
     public String getSlug() {
         return slug;
     }
 
+    public void setLogoPath(String logoPath) {
+        this.logoPath = logoPath;
+    }
+
     public String getLogoPath() {
         return logoPath;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
     }
 
     public boolean isPinned() {

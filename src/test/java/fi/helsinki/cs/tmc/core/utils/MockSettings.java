@@ -66,7 +66,6 @@ public class MockSettings implements TmcSettings {
         return "testVersion";
     }
 
-    @Override
     public String getFormattedUserData() {
         throw new UnsupportedOperationException();
     }
@@ -91,7 +90,6 @@ public class MockSettings implements TmcSettings {
 
     }
 
-    @Override
     public void setConfigRoot(Path configRoot) {
 
     }
@@ -141,7 +139,13 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public Optional<Organization> getOrganization() {
-        return Optional.of(new Organization("testOrganization", "testOrganization", "testOrganization", "testOrganization", false));
+        Organization organization = new Organization();
+        organization.setName("testOrganization");
+        organization.setInformation("testOrganization");
+        organization.setSlug("testOrganization");
+        organization.setLogoPath("testOrganization");
+        organization.setPinned(false);
+        return Optional.of(organization);
     }
 
     @Override

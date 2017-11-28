@@ -77,7 +77,9 @@ public class TmcCore {
     public TmcCore(TmcSettings settings, TaskExecutor tmcLangs) {
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(tmcLangs);
-        TmcServerAddressNormalizer.normalize();
+        TmcServerAddressNormalizer normalizer = new TmcServerAddressNormalizer();
+        normalizer.normalize();
+        normalizer.selectOrganizationAndCourse();
     }
 
     public Callable<List<Organization>> getOrganizations(ProgressObserver observer) {

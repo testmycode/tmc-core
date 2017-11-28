@@ -86,7 +86,7 @@ public class MockSettings implements TmcSettings {
     }
 
     @Override
-    public void setCourse(Course theCourse) {
+    public void setCourse(Optional<Course> course) {
 
     }
 

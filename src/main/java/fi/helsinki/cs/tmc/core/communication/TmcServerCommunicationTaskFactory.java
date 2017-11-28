@@ -161,6 +161,28 @@ public class TmcServerCommunicationTaskFactory {
         });
     }
 
+    public Callable<Optional<Course>> getCourseByIdTask(final int id) {
+        return wrapWithNotLoggedInException(new Callable<Optional<Course>>() {
+            @Override
+            public Optional<Course> call() throws Exception {
+                try {
+                    Callable<String> download = new HttpTasks().getForText(getCourseListUrl());
+                    String text = download.call();
+                    List<Course> courses = courseListParser.parseFromJson(text);
+                    for (Course course : courses) {
+                        if (course.getId() == id) {
+                            return Optional.of(course);
+
+                        }
+                    }
+                    return Optional.absent();
+                } catch (FailedHttpResponseException ex) {
+                    return checkForObsoleteClient(ex);
+                }
+            }
+        });
+    }
+
     public Callable<Course> getFullCourseInfoTask(final Course courseStub) {
         return wrapWithNotLoggedInException(new Callable<Course>() {
             @Override
@@ -409,9 +431,9 @@ public class TmcServerCommunicationTaskFactory {
             url = serverAddress + "/" + urlLastPart;
         }
         if (slug.startsWith("/")) {
-            url = url + slug + ".json";
+            url = url + "/org" + slug + ".json";
         } else {
-            url = url + "/" + slug + ".json";
+            url = url + "/org/" + slug + ".json";
         }
         URI organizationUrl = URI.create(url);
         Organization organization = new Gson().fromJson(IOUtils.toString(organizationUrl.toURL()), new TypeToken<Organization>(){}.getType());

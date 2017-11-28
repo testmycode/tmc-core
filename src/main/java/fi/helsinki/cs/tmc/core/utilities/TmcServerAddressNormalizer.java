@@ -2,6 +2,7 @@ package fi.helsinki.cs.tmc.core.utilities;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
+import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
@@ -11,36 +12,67 @@ import java.io.IOException;
 
 public class TmcServerAddressNormalizer {
 
-    public static void normalize() {
-        TmcSettings tmcSettings = TmcSettingsHolder.get();
-        String address = tmcSettings.getServerAddress();
+    private TmcSettings tmcSettings;
+    private String address;
+    private TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory;
+    private String organizationSlug;
+    private int courseId;
 
-        TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory = new TmcServerCommunicationTaskFactory();
-        if (!address.contains("/org/") && address.contains("/hy")) {
-            int last = address.lastIndexOf("/");
-            tmcSettings.setServerAddress(address.substring(0, last));
-            try {
-                tmcSettings.setOrganization(Optional.fromNullable(tmcServerCommunicationTaskFactory
-                        .getOrganizationBySlug(address.substring(last + 1, address.length()))));
-            } catch (IOException e) {
-            }
-        } else if (!address.contains("/org/")) {
-            return;
-        } else {
-            String[] split = address.split("/org/");
+    public TmcServerAddressNormalizer() {
+        this.tmcSettings = TmcSettingsHolder.get();
+        this.address = this.tmcSettings.getServerAddress();
+        this.tmcServerCommunicationTaskFactory = new TmcServerCommunicationTaskFactory();
+        this.organizationSlug = "";
+        this.courseId = -1;
+    }
 
-            tmcSettings.setServerAddress(split[0]);
+    public void normalize() {
+        parseCourseAndOrganizationFromAddress();
+    }
 
-            String organization = split[1];
-            Optional<Organization> org = Optional.<Organization>absent();
-            if (organization.charAt(organization.length() - 1) == '/') {
-                organization = organization.substring(0, organization.length());
-                try {
-                    org = Optional.of(tmcServerCommunicationTaskFactory.getOrganizationBySlug(organization.substring(0, organization.length())));
-                } catch (IOException e) {
-                }
-            }
-            tmcSettings.setOrganization(org);
+    public void selectOrganizationAndCourse() {
+        Optional<Organization> org = Optional.<Organization>absent();
+        try {
+            org = Optional.of(this.tmcServerCommunicationTaskFactory.getOrganizationBySlug(this.organizationSlug));
+        } catch (IOException e) {
         }
+        this.tmcSettings.setOrganization(org);
+
+        Optional<Course> selected = Optional.<Course>absent();
+        try {
+            selected = this.tmcServerCommunicationTaskFactory.getCourseByIdTask(this.courseId).call();
+        } catch (Exception e) {
+        }
+        this.tmcSettings.setCourse(selected);
+    }
+
+    private void parseCourseAndOrganizationFromAddress() {
+        if (this.address.contains("/courses/")) {
+            String[] split = this.address.split("/courses/");
+
+            parseOrganizationFromAddress(split[0]);
+
+            if (split[1].endsWith("/")) {
+                split[1] = split[1].substring(0, split[1].length() - 1);
+            }
+
+            this.courseId = Integer.parseInt(split[1]);
+        } else {
+            parseOrganizationFromAddress(this.address);
+        }
+    }
+
+    private void parseOrganizationFromAddress(String address) {
+        String baseAddress = address;
+        if (address.contains("/org/")) {
+            String[] split = address.split("/org/");
+            baseAddress = split[0];
+            this.organizationSlug = split[1];
+        } else if (!address.contains("/org/") && address.contains("/hy")) {
+            int last = address.lastIndexOf("/");
+            baseAddress = address.substring(0, last);
+            this.organizationSlug = address.substring(last + 1, address.length());
+        }
+        this.tmcSettings.setServerAddress(baseAddress);
     }
 }

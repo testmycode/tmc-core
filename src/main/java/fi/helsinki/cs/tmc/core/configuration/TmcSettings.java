@@ -48,9 +48,7 @@ public interface TmcSettings {
 
     SystemDefaultRoutePlanner proxy();
 
-    // For testing at least
-    @Beta
-    void setCourse(Course theCourse);
+    void setCourse(Optional<Course> course);
 
     Path getConfigRoot();
 

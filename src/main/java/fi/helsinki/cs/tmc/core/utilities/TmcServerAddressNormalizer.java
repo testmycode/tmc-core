@@ -31,19 +31,25 @@ public class TmcServerAddressNormalizer {
     }
 
     public void selectOrganizationAndCourse() {
-        Optional<Organization> org = Optional.<Organization>absent();
-        try {
-            org = Optional.of(this.tmcServerCommunicationTaskFactory.getOrganizationBySlug(this.organizationSlug));
-        } catch (IOException e) {
+        if (!this.organizationSlug.isEmpty()) {
+            try {
+                Optional<Organization> org = Optional.of(this.tmcServerCommunicationTaskFactory.getOrganizationBySlug(this.organizationSlug));
+                if (org.isPresent()) {
+                    this.tmcSettings.setOrganization(org);
+                }
+            } catch (IOException e) {
+            }
         }
-        this.tmcSettings.setOrganization(org);
 
-        Optional<Course> selected = Optional.<Course>absent();
-        try {
-            selected = this.tmcServerCommunicationTaskFactory.getCourseByIdTask(this.courseId).call();
-        } catch (Exception e) {
+        if (this.courseId != -1) {
+            try {
+                Optional<Course> selected = this.tmcServerCommunicationTaskFactory.getCourseByIdTask(this.courseId).call();
+                if (selected.isPresent()) {
+                    this.tmcSettings.setCourse(selected);
+                }
+            } catch (Exception e) {
+            }
         }
-        this.tmcSettings.setCourse(selected);
     }
 
     private void parseCourseAndOrganizationFromAddress() {

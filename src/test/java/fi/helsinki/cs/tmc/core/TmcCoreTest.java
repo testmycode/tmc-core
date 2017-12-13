@@ -13,6 +13,7 @@ import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
+import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
@@ -22,6 +23,8 @@ import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utils.MockSettings;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.spyware.LoggableEvent;
+
+import com.google.common.base.Optional;
 
 import org.junit.After;
 import org.junit.Before;
@@ -63,6 +66,7 @@ public class TmcCoreTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        this.settings.setOrganization(Optional.of(new Organization("testOrganization", "testOrganization", "testOrganization", "testOrganization", false)));
         TmcSettingsHolder.set(settings);
         TmcLangsHolder.set(tmcLangs);
         Locale locale = new Locale("a", "b", "c");

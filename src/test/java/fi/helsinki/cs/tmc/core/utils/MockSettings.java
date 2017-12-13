@@ -16,19 +16,25 @@ import java.util.Locale;
 public class MockSettings implements TmcSettings {
 
     private Optional<String> token;
+    private String serverAddress;
+    private Optional<Course> selected;
+    private Optional<Organization> org;
 
     public MockSettings() {
-        token = Optional.absent();
+        this.token = Optional.absent();
+        this.serverAddress = "testAddress";
+        this.selected = Optional.<Course>absent();
+        this.org = Optional.<Organization>absent();
     }
 
     @Override
     public String getServerAddress() {
-        return "testAddress";
+        return this.serverAddress;
     }
 
     @Override
     public void setServerAddress(String address) {
-
+        this.serverAddress = address;
     }
 
     @Override
@@ -53,7 +59,7 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public Optional<Course> getCurrentCourse() {
-        return null;
+        return selected;
     }
 
     @Override
@@ -87,7 +93,7 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public void setCourse(Optional<Course> course) {
-
+        this.selected = course;
     }
 
     public void setConfigRoot(Path configRoot) {
@@ -139,18 +145,12 @@ public class MockSettings implements TmcSettings {
 
     @Override
     public Optional<Organization> getOrganization() {
-        Organization organization = new Organization();
-        organization.setName("testOrganization");
-        organization.setInformation("testOrganization");
-        organization.setSlug("testOrganization");
-        organization.setLogoPath("testOrganization");
-        organization.setPinned(false);
-        return Optional.of(organization);
+        return this.org;
     }
 
     @Override
     public void setOrganization(Optional<Organization> organization) {
-
+        this.org = organization;
     }
 
 }

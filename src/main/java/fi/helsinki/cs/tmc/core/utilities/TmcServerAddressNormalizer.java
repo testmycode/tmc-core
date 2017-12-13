@@ -6,6 +6,7 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 
 import java.io.IOException;
@@ -13,15 +14,21 @@ import java.io.IOException;
 public class TmcServerAddressNormalizer {
 
     private TmcSettings tmcSettings;
-    private String address;
     private TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory;
     private String organizationSlug;
     private int courseId;
 
     public TmcServerAddressNormalizer() {
         this.tmcSettings = TmcSettingsHolder.get();
-        this.address = this.tmcSettings.getServerAddress();
         this.tmcServerCommunicationTaskFactory = new TmcServerCommunicationTaskFactory();
+        this.organizationSlug = "";
+        this.courseId = -1;
+    }
+
+    @VisibleForTesting
+    TmcServerAddressNormalizer(TmcSettings settings, TmcServerCommunicationTaskFactory tmcServerCommunicationTaskFactory) {
+        this.tmcSettings = settings;
+        this.tmcServerCommunicationTaskFactory = tmcServerCommunicationTaskFactory;
         this.organizationSlug = "";
         this.courseId = -1;
     }
@@ -53,8 +60,13 @@ public class TmcServerAddressNormalizer {
     }
 
     private void parseCourseAndOrganizationFromAddress() {
-        if (this.address.contains("/courses/")) {
-            String[] split = this.address.split("/courses/");
+        if (this.tmcSettings.getServerAddress().contains("https://tmc.mooc.fi/mooc")) {
+            return;
+        }
+
+        String serverAddress = this.tmcSettings.getServerAddress();
+        if (serverAddress.contains("/courses/")) {
+            String[] split = serverAddress.split("/courses/");
 
             parseOrganizationFromAddress(split[0]);
 
@@ -64,7 +76,7 @@ public class TmcServerAddressNormalizer {
 
             this.courseId = Integer.parseInt(split[1]);
         } else {
-            parseOrganizationFromAddress(this.address);
+            parseOrganizationFromAddress(serverAddress);
         }
     }
 

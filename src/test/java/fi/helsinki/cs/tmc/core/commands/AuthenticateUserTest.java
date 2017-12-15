@@ -60,7 +60,6 @@ public class AuthenticateUserTest {
                 throw new OAuthSystemException();
             }
         }).when(oauth).fetchNewToken("wrongPassword");
-        when(tmcServerCommunicationTaskFactory.getOauthCredentialsTask()).thenReturn(null);
     }
 
     @Test

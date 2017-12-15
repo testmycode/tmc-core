@@ -34,7 +34,6 @@ public class AuthenticateUser extends Command<Void> {
 
     @Override
     public Void call() throws AuthenticationFailedException, IOException {
-        TmcSettings tmcSettings = TmcSettingsHolder.get();
         try {
             tmcServerCommunicationTaskFactory.getOauthCredentialsTask();
             oauth.fetchNewToken(password);

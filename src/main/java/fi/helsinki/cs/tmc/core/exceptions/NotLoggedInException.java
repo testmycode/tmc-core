@@ -5,4 +5,8 @@ public class NotLoggedInException extends TmcCoreException {
     public NotLoggedInException() {
         super("Not logged in!");
     }
+
+    public NotLoggedInException(String message) {
+        super(message);
+    }
 }

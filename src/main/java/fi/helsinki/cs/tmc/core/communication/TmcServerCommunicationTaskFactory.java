@@ -389,7 +389,7 @@ public class TmcServerCommunicationTaskFactory {
         });
     }
 
-    public Callable<Void> getOauthCredentialsTask() throws IOException {
+    public void getOauthCredentialsTask() throws IOException {
         URI credentialsUrl;
         if (settings.getServerAddress().endsWith("/")) {
             credentialsUrl = URI.create(
@@ -404,7 +404,6 @@ public class TmcServerCommunicationTaskFactory {
                 new Gson().fromJson(
                         IOUtils.toString(credentialsUrl.toURL()), OauthCredentials.class);
         settings.setOauthCredentials(Optional.fromNullable(credentials));
-        return null;
     }
 
     public List<Organization> getOrganizationListTask() throws IOException {

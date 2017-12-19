@@ -160,7 +160,7 @@ import java.util.concurrent.Callable;
                             + " with body \""
                             + entity
                             + "\"");
-            throw new FailedHttpResponseException(responseCode, entity);
+            throw FailedHttpResponseException.fromResponse(responseCode, entity);
         }
     }
 

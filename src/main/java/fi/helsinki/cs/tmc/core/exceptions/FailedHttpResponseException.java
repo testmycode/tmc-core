@@ -9,10 +9,18 @@ public class FailedHttpResponseException extends Exception {
     private final int statusCode;
     private final HttpEntity entity;
 
-    public FailedHttpResponseException(int statusCode, HttpEntity entity) {
-        super("Response code: " + statusCode);
+    private FailedHttpResponseException(int statusCode, HttpEntity entity, String message) {
+        super(message);
         this.statusCode = statusCode;
         this.entity = entity;
+    }
+
+    public static FailedHttpResponseException fromResponse(int statusCode, HttpEntity entity) {
+        if (statusCode / 100 == 5) {
+            return new FailedHttpResponseException(statusCode, entity,
+                    "There was an internal error on the server, please try again later. Response code: " + statusCode);
+        }
+        return new FailedHttpResponseException(statusCode, entity, "Response code: " + statusCode);
     }
 
     public int getStatusCode() {

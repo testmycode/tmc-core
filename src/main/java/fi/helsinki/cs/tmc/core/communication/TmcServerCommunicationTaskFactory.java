@@ -224,14 +224,14 @@ public class TmcServerCommunicationTaskFactory {
         return addApiCallQueryParameters(course.getUnlockUrl());
     }
 
-    public Callable<byte[]> getDownloadingExerciseZipTask(Exercise exercise) {
+    public Callable<byte[]> getDownloadingExerciseZipTask(Exercise exercise) throws NotLoggedInException {
         URI zipUrl = exercise.getDownloadUrl();
-        return new HttpTasks().getForBinary(zipUrl);
+        return new HttpTasks().getForBinary(addApiCallQueryParameters(zipUrl));
     }
 
-    public Callable<byte[]> getDownloadingExerciseSolutionZipTask(Exercise exercise) {
+    public Callable<byte[]> getDownloadingExerciseSolutionZipTask(Exercise exercise) throws NotLoggedInException {
         URI zipUrl = exercise.getSolutionDownloadUrl();
-        return new HttpTasks().getForBinary(zipUrl);
+        return new HttpTasks().getForBinary(addApiCallQueryParameters(zipUrl));
     }
 
     public Callable<SubmissionResponse> getSubmittingExerciseTask(

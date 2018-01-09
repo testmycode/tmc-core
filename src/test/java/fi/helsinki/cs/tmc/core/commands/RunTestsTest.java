@@ -12,6 +12,7 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.utils.MockSettings;
 import fi.helsinki.cs.tmc.core.utils.TestUtils;
 import fi.helsinki.cs.tmc.langs.domain.RunResult.Status;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
@@ -25,6 +26,7 @@ import org.junit.rules.TemporaryFolder;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import java.nio.file.Path;
 
@@ -34,7 +36,7 @@ public class RunTestsTest {
     Path project;
 
     @Mock ProgressObserver mockObserver;
-    @Mock TmcSettings settings;
+    @Spy TmcSettings settings = new MockSettings();
     @Mock Course mockCourse;
     @Mock Exercise mockExercise;
 

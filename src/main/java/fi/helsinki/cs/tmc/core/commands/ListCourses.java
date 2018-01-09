@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.utilities.ServerErrorHelper;
 
@@ -43,6 +44,9 @@ public class ListCourses extends Command<List<Course>> {
             logger.debug("Successfully fetched course list");
             return result;
         } catch (Exception ex) {
+            if (ex instanceof NotLoggedInException) {
+                throw (NotLoggedInException)ex;
+            }
             logger.info("Failed to fetch courses from the server", ex);
             informObserver(1, "Failed to fetch courses from the server");
             throw new TmcCoreException("Failed to fetch courses from the server. \n"

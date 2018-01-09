@@ -1,6 +1,8 @@
 package fi.helsinki.cs.tmc.core.configuration;
 
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
+import fi.helsinki.cs.tmc.core.domain.Organization;
 
 import com.google.common.annotations.Beta;
 import com.google.common.base.Optional;
@@ -14,9 +16,16 @@ public interface TmcSettings {
 
     String getServerAddress();
 
-    String getPassword();
+    void setServerAddress(String address);
 
-    String getUsername();
+    /**
+     * Used for old login credentials, new ones use oauth.
+     */
+    Optional<String> getPassword();
+
+    void setPassword(Optional<String> password);
+
+    Optional<String> getUsername();
 
     /**
      * Checks that username and password are not null.
@@ -25,14 +34,9 @@ public interface TmcSettings {
 
     Optional<Course> getCurrentCourse();
 
-    String apiVersion();
-
     String clientName();
 
     String clientVersion();
-
-    // TODO: what is this even?
-    String getFormattedUserData();
 
     /**
      * Return the directory where course directories will be located. Projects
@@ -44,12 +48,7 @@ public interface TmcSettings {
 
     SystemDefaultRoutePlanner proxy();
 
-    // For testing at least
-    @Beta
-    void setCourse(Course theCourse);
-
-    @Beta
-    void setConfigRoot(Path configRoot);
+    void setCourse(Optional<Course> course);
 
     Path getConfigRoot();
 
@@ -58,4 +57,16 @@ public interface TmcSettings {
     String hostProgramVersion();
 
     boolean getSendDiagnostics();
+
+    Optional<OauthCredentials> getOauthCredentials();
+
+    void setOauthCredentials(Optional<OauthCredentials> credentials);
+
+    void setToken(Optional<String> token);
+
+    Optional<String> getToken();
+
+    Optional<Organization> getOrganization();
+
+    void setOrganization(Optional<Organization> organization);
 }

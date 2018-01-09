@@ -9,13 +9,16 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.utils.MockSettings;
 
 import com.google.common.collect.ImmutableList;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -23,7 +26,7 @@ import java.util.concurrent.Callable;
 public class ListCoursesTest {
 
     @Mock ProgressObserver mockObserver;
-    @Mock TmcSettings settings;
+    @Spy TmcSettings settings = new MockSettings();
     @Mock TmcServerCommunicationTaskFactory factory;
     @Mock Course courseOne;
     @Mock Course courseTwo;

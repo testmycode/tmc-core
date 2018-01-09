@@ -48,7 +48,6 @@ import java.util.concurrent.Callable;
 
     private int timeout = DEFAULT_TIMEOUT;
     private HttpUriRequest request;
-    private UsernamePasswordCredentials credentials; // May be null
 
     /*package*/ HttpRequestExecutor(URI url) {
         this(new HttpGet(url));
@@ -56,18 +55,6 @@ import java.util.concurrent.Callable;
 
     /*package*/ HttpRequestExecutor(HttpUriRequest request) {
         this.request = request;
-        if (request.getURI().getUserInfo() != null) {
-            credentials = new UsernamePasswordCredentials(request.getURI().getUserInfo());
-        }
-    }
-
-    public HttpRequestExecutor setCredentials(String username, String password) {
-        return setCredentials(new UsernamePasswordCredentials(username, password));
-    }
-
-    public HttpRequestExecutor setCredentials(UsernamePasswordCredentials credentials) {
-        this.credentials = credentials;
-        return this;
     }
 
     public HttpRequestExecutor setTimeout(int timeoutMs) {
@@ -91,16 +78,10 @@ import java.util.concurrent.Callable;
     }
 
     private CloseableHttpClient makeHttpClient() {
-        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        if (credentials != null) {
-            credentialsProvider.setCredentials(AuthScope.ANY, credentials);
-        }
-
         HttpClientBuilder httpClientBuilder =
                 HttpClients.custom()
                         .useSystemProperties()
                         .setConnectionReuseStrategy(new NoConnectionReuseStrategy())
-                        .setDefaultCredentialsProvider(credentialsProvider)
                         .setRedirectStrategy(new DefaultRedirectStrategy());
         maybeSetProxy(httpClientBuilder);
 
@@ -121,11 +102,6 @@ import java.util.concurrent.Callable;
         HttpContext context = new BasicHttpContext();
 
         try {
-            if (this.credentials != null) {
-                request.addHeader(
-                        new BasicScheme(Charset.forName("UTF-8"))
-                                .authenticate(this.credentials, request, context));
-            }
             response = httpClient.execute(request);
         } catch (IOException ex) {
             logger.info("Executing http request failed: {0}", ex.toString());
@@ -134,9 +110,6 @@ import java.util.concurrent.Callable;
             } else {
                 throw new IOException("Download failed: " + ex.getMessage(), ex);
             }
-        } catch (AuthenticationException ex) {
-            logger.info("Auth failed {0}", ex);
-            throw new InterruptedException();
         }
 
         return handleResponse(response);
@@ -160,7 +133,7 @@ import java.util.concurrent.Callable;
                             + " with body \""
                             + entity
                             + "\"");
-            throw new FailedHttpResponseException(responseCode, entity);
+            throw FailedHttpResponseException.fromResponse(responseCode, entity);
         }
     }
 

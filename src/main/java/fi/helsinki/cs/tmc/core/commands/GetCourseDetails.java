@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -46,6 +47,9 @@ public class GetCourseDetails extends Command<Course> {
             informObserver(1, "Course refresh completed successfully");
             return result;
         } catch (Exception ex) {
+            if (ex instanceof NotLoggedInException) {
+                throw (NotLoggedInException)ex;
+            }
             logger.warn("Failed to get course details for course " + course.getName(), ex);
             informObserver(1, "Failed to refresh course");
             throw new TmcCoreException("Failed to get course details", ex);

@@ -8,19 +8,17 @@ import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.bandicoot.Crash;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.utils.MockSettings;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Locale;
 import java.util.concurrent.Callable;
 
 public class ExceptionTrackingCallableTest {
 
-    @Mock
     TmcSettings settings;
     @Mock
     TmcBandicootCommunicationTaskFactory factory;
@@ -28,14 +26,8 @@ public class ExceptionTrackingCallableTest {
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        this.settings = new MockSettings();
         TmcSettingsHolder.set(settings);
-        when(settings.getServerAddress()).thenReturn("testAddress");
-        when(settings.clientName()).thenReturn("testClient");
-        when(settings.clientVersion()).thenReturn("testVersion");
-        when(settings.hostProgramName()).thenReturn("testHostProgram");
-        when(settings.hostProgramVersion()).thenReturn("testHostProgramVersion");
-        when(settings.getLocale()).thenReturn(new Locale("en"));
-        when(settings.getSendDiagnostics()).thenReturn(true);
         when(factory.sendCrash(any(Crash.class))).thenReturn(new Callable<Void>() {
             @Override public Void call() throws Exception {
                 return null;

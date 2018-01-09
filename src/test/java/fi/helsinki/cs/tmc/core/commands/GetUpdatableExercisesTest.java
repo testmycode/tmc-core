@@ -15,6 +15,7 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.utils.MockSettings;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutorImpl;
 
@@ -27,6 +28,7 @@ import org.junit.rules.TemporaryFolder;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import java.nio.file.Path;
 import java.util.concurrent.Callable;
@@ -36,7 +38,7 @@ public class GetUpdatableExercisesTest {
     @Rule public TemporaryFolder testFolder = new TemporaryFolder();
 
     @Mock ProgressObserver mockObserver;
-    @Mock TmcSettings settings;
+    @Spy TmcSettings settings = new MockSettings();
     @Mock TmcServerCommunicationTaskFactory factory;
     @Mock Course mockCurrentCourse;
     @Mock Course mockRefreshedCourse;

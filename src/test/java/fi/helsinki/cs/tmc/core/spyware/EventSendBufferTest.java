@@ -13,7 +13,9 @@ import static org.mockito.Mockito.when;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.utils.MockSettings;
 import fi.helsinki.cs.tmc.spyware.EventSendBuffer;
 import fi.helsinki.cs.tmc.spyware.EventStore;
 import fi.helsinki.cs.tmc.spyware.LoggableEvent;
@@ -29,6 +31,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import java.io.IOException;
 import java.net.URI;
@@ -45,7 +48,7 @@ public class EventSendBufferTest {
 
     private Course mockCourse;
 
-    @Mock TmcSettings tmcSettings;
+    @Spy TmcSettings tmcSettings = new MockSettings();
     @Mock TmcServerCommunicationTaskFactory factory;
     @Mock private SpywareSettings settings;
 
@@ -65,7 +68,7 @@ public class EventSendBufferTest {
     private EventSendBuffer sender;
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws IOException, NotLoggedInException {
         MockitoAnnotations.initMocks(this);
 
         TmcSettingsHolder.set(tmcSettings);

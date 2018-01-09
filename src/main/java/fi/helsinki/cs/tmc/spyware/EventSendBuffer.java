@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Course;
+import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utilities.Cooldown;
 import fi.helsinki.cs.tmc.core.utilities.SingletonTask;
@@ -220,9 +221,9 @@ public class EventSendBuffer implements EventReceiver {
                             "Sending {0} events to {1}",
                             new Object[] {eventsToSend.size(), url});
 
-                    if (!tryToSend(eventsToSend, url)) {
-                        shouldSendMore = false;
-                    }
+                        if (!tryToSend(eventsToSend, url)) {
+                            shouldSendMore = false;
+                        }
                 } while (shouldSendMore);
             }
 
@@ -258,11 +259,10 @@ public class EventSendBuffer implements EventReceiver {
             }
 
             private boolean tryToSend(final ArrayList<LoggableEvent> eventsToSend, final URI url) {
-                Callable<Object> task = serverAccess.getSendEventLogJob(url, eventsToSend);
-
                 // TODO: Should we still wrap this into bg task (future)
 
                 try {
+                    Callable<Object> task = serverAccess.getSendEventLogJob(url, eventsToSend);
                     task.call();
                 } catch (Exception ex) {
                     log.log(Level.INFO, "Sending failed", ex);

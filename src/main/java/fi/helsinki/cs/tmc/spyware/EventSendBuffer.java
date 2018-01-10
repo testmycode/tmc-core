@@ -4,7 +4,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Course;
-import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utilities.Cooldown;
 import fi.helsinki.cs.tmc.core.utilities.SingletonTask;
@@ -23,15 +22,15 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeoutException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Buffers {@link LoggableEvent}s and sends them to the server and/or syncs them to the disk
  * periodically.
  */
 public class EventSendBuffer implements EventReceiver {
-    private static final Logger log = Logger.getLogger(EventSendBuffer.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(EventSendBuffer.class.getName());
 
     public static final long DEFAULT_SEND_INTERVAL = 3 * 60 * 1000;
     public static final long DEFAULT_SAVE_INTERVAL = 1 * 60 * 1000;
@@ -71,7 +70,7 @@ public class EventSendBuffer implements EventReceiver {
             initialEvents = initialEvents.subList(0, Math.min(maxEvents, initialEvents.size()));
             this.sendQueue.addAll(initialEvents);
         } catch (IOException | RuntimeException ex) {
-            log.log(Level.WARNING, "Failed to read events from event store", ex);
+            log.warn("Failed to read events from event store", ex);
         }
 
         this.sendingTask.setInterval(DEFAULT_SEND_INTERVAL);
@@ -186,9 +185,9 @@ public class EventSendBuffer implements EventReceiver {
             sendingTask.waitUntilFinished(delayPerWait);
 
         } catch (TimeoutException ex) {
-            log.log(Level.WARNING, "Time out when closing EventSendBuffer", ex);
+            log.warn("Time out when closing EventSendBuffer", ex);
         } catch (InterruptedException ex) {
-            log.log(Level.WARNING, "Closing EventSendBuffer interrupted", ex);
+            log.warn("Closing EventSendBuffer interrupted", ex);
         }
     }
 
@@ -216,8 +215,7 @@ public class EventSendBuffer implements EventReceiver {
                         return;
                     }
 
-                    log.log(
-                            Level.INFO,
+                    log.warn(
                             "Sending {0} events to {1}",
                             new Object[] {eventsToSend.size(), url});
 
@@ -245,13 +243,13 @@ public class EventSendBuffer implements EventReceiver {
             private URI pickDestinationUrl() {
                 Optional<Course> course = TmcSettingsHolder.get().getCurrentCourse();
                 if (!course.isPresent()) {
-                    log.log(Level.FINE, "Not sending events because no course selected");
+                    log.debug("Not sending events because no course selected");
                     return null;
                 }
 
                 List<URI> urls = course.get().getSpywareUrls();
                 if (urls == null || urls.isEmpty()) {
-                    log.log(Level.INFO, "Not sending events because no URL provided by server");
+                    log.info("Not sending events because no URL provided by server");
                     return null;
                 }
 
@@ -265,12 +263,11 @@ public class EventSendBuffer implements EventReceiver {
                     Callable<Object> task = serverAccess.getSendEventLogJob(url, eventsToSend);
                     task.call();
                 } catch (Exception ex) {
-                    log.log(Level.INFO, "Sending failed", ex);
+                    log.info("Sending failed", ex);
                     return false;
                 }
 
-                log.log(
-                        Level.INFO,
+                log.info(
                         "Sent {0} events successfully to {1}",
                         new Object[] {eventsToSend.size(), url});
 
@@ -306,7 +303,7 @@ public class EventSendBuffer implements EventReceiver {
                         }
                         eventStore.save(eventsToSave);
                     } catch (IOException ex) {
-                        log.log(Level.WARNING, "Failed to save events", ex);
+                        log.warn("Failed to save events", ex);
                     }
                 }
             };

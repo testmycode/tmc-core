@@ -10,8 +10,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Generates host information used by spyware to identify requests coming from
@@ -20,7 +20,7 @@ import java.util.logging.Logger;
 public class HostInformationGenerator {
 
     // TODO: use proper logging
-    private static final Logger log = Logger.getLogger(HostInformationGenerator.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(HostInformationGenerator.class.getName());
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
     public String updateHostInformation(EventReceiver receiver) {
@@ -53,7 +53,7 @@ public class HostInformationGenerator {
             builder.add("hostAddress", localMachine.getHostAddress());
             builder.add("hostName", localMachine.getHostName());
         } catch (Exception ex) {
-            log.log(Level.WARNING, "Exception while getting host name information: {0}", ex);
+            log.warn("Exception while getting host name information: {0}", ex);
         }
 
         try {
@@ -72,7 +72,7 @@ public class HostInformationGenerator {
             builder.add("mac_addresses", macs);
 
         } catch (Exception ex) {
-            log.log(Level.WARNING, "Exception while getting host mac information: {0}", ex);
+            log.warn("Exception while getting host mac information: {0}", ex);
         }
 
         try {
@@ -81,7 +81,7 @@ public class HostInformationGenerator {
             builder.add("os.name", System.getProperty("os.name"));
             builder.add("os.version", System.getProperty("os.version"));
         } catch (Exception e) {
-            log.log(Level.WARNING, "Exception while getting basic host information: {0}", e);
+            log.warn("Exception while getting basic host information: {0}", e);
         }
 
         return builder;
@@ -110,10 +110,10 @@ public class HostInformationGenerator {
             byte[] bytes = MessageDigest.getInstance("SHA-256").digest(mac);
             return byteToHex(bytes);
         } catch (NoSuchAlgorithmException ex) {
-            log.log(Level.WARNING, "Missing sha256 hash: {0}", ex);
+            log.warn("Missing sha256 hash: {0}", ex);
             return byteToHex(mac);
         } catch (Exception e) {
-            log.log(Level.WARNING, "Exception while hashing: {0}", e);
+            log.warn("Exception while hashing: {0}", e);
             try {
                 return byteToHex(mac);
             } catch (Exception ex) {

@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TmcEventBus {
-    private static final Logger log = Logger.getLogger(TmcEventBus.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(TmcEventBus.class.getName());
     private static final TmcEventBus instance = new TmcEventBus();
 
     public static TmcEventBus getDefault() {
@@ -142,7 +142,7 @@ public class TmcEventBus {
                     try {
                         listener.receive(event);
                     } catch (Throwable ex) {
-                        log.log(Level.WARNING, ex.getMessage(), ex);
+                        log.warn(ex.getMessage(), ex);
                     }
                 }
             }

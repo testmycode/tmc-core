@@ -7,11 +7,8 @@ import fi.helsinki.cs.tmc.core.events.TmcEvent;
 import fi.helsinki.cs.tmc.core.utilities.JsonMaker;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class LoggableEvent implements TmcEvent {
-
-    private static final Logger log = Logger.getLogger(LoggableEvent.class.getName());
 
     private String courseName;
     private String exerciseName;

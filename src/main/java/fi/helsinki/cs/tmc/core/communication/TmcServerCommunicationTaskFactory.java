@@ -45,8 +45,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -54,7 +54,7 @@ import java.util.zip.GZIPOutputStream;
  */
 public class TmcServerCommunicationTaskFactory {
 
-    private static final Logger LOG = Logger.getLogger(
+    private static final Logger LOG = LoggerFactory.getLogger(
             TmcServerCommunicationTaskFactory.class.getName());
     public static final int API_VERSION = 8;
 
@@ -113,8 +113,7 @@ public class TmcServerCommunicationTaskFactory {
                 try {
                     return callable.call();
                 } catch (FailedHttpResponseException e) {
-                    LOG.log(Level.WARNING,
-                            "Communication with the server failed!");
+                    LOG.warn("Communication with the server failed!");
                     throw new NotLoggedInException();
                 }
             }

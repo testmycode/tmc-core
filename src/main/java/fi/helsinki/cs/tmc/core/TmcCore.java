@@ -159,10 +159,6 @@ public class TmcCore {
         return new ExceptionTrackingCallable<>(new DownloadModelSolution(observer, exercise));
     }
 
-    public Callable<Organization> getCourseOrganization(ProgressObserver observer, Course course) {
-        return new ExceptionTrackingCallable<Organization>(new GetCourseOrganization(observer, course));
-    }
-
     /**
      * NOT IMPLEMENTED!
      *

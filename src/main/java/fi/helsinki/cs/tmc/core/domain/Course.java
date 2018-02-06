@@ -12,6 +12,7 @@ public class Course {
     private String name;
     private String title;
     private String description;
+    @SerializedName("organization_slug")
     private String organizationSlug;
 
     private List<Exercise> exercises;

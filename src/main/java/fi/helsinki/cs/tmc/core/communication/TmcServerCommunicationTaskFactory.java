@@ -444,6 +444,21 @@ public class TmcServerCommunicationTaskFactory {
         return organizations;
     }
 
+    public List<Exercise> getExercisesForCourse(int id) throws Exception {
+        String url;
+        String serverAddress = settings.getServerAddress();
+        String urlLastPart = "api/v" + API_VERSION + "/courses/" + id + "/exercises";
+        if (serverAddress.endsWith("/")) {
+            url = settings.getServerAddress() + urlLastPart;
+        } else {
+            url = serverAddress + "/" + urlLastPart;
+        }
+        URI organizationUrl = this.addApiCallQueryParameters(URI.create(url));
+        String response = HttpTasks.getForText(organizationUrl).call();
+        List<Exercise> exercises= new Gson().fromJson(response, new TypeToken<List<Exercise>>(){}.getType());
+        return exercises;
+    }
+
     public Organization getOrganizationBySlug(String slug) throws Exception {
         String url;
         String serverAddress = settings.getServerAddress();

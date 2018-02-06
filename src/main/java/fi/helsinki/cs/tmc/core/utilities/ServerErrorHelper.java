@@ -20,7 +20,7 @@ public class ServerErrorHelper {
                     || ((FailedHttpResponseException)throwable).getStatusCode() == 401) {
                 TmcSettings tmcSettings = TmcSettingsHolder.get();
                 String errorMessage
-                        = "Check your username, password and server address in TMC -> Settings.";
+                        = "";
                 if (tmcSettings.getUsername().isPresent() && tmcSettings.getUsername().get().contains("@")) {
                     return errorMessage
                         + "\nNote that you must log in with your username, not your email address.";

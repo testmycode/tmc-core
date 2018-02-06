@@ -199,7 +199,7 @@ public class TmcServerCommunicationTaskFactory {
             url = serverAddress + "/" + apiVersion;
         }
         url = url + "/courses/" + id;
-        URI courseUrl = URI.create(url);
+        URI courseUrl = this.addApiCallQueryParameters(URI.create(url));
         String response = HttpTasks.getForText(courseUrl).call();
         Course course = new Gson().fromJson(response, new TypeToken<Course>(){}.getType());
         return Optional.fromNullable(course);

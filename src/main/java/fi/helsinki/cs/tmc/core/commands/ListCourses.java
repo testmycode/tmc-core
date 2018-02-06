@@ -54,7 +54,7 @@ public class ListCourses extends Command<List<Course>> {
             }
             logger.info("Failed to fetch courses from the server", ex);
             informObserver(1, "Failed to fetch courses from the server");
-            throw new ConnectionFailedException("Failed to fetch courses from the server.\nPlease check your internet connection.\nThe error was:\n"
+            throw new ConnectionFailedException("Failed to fetch courses from the server.\nPlease check your internet connection.\n\nThe error was:\n"
                 + ServerErrorHelper.getServerExceptionMsg(ex));
         }
     }

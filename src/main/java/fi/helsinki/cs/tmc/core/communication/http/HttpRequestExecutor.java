@@ -1,20 +1,16 @@
 package fi.helsinki.cs.tmc.core.communication.http;
 
+import fi.helsinki.cs.tmc.core.exceptions.ConnectionFailedException;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.AuthenticationException;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.NoConnectionReuseStrategy;
-import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -41,7 +37,7 @@ import java.util.concurrent.Callable;
  */
 /*package*/ class HttpRequestExecutor implements Callable<BufferedHttpEntity> {
 
-    private static final int DEFAULT_TIMEOUT = 30 * 1000;
+    private static final int DEFAULT_TIMEOUT = 10 * 1000;
     private static final Logger logger = LoggerFactory.getLogger(HttpRequestExecutor.class);
 
     private final Object shutdownLock = new Object();
@@ -64,7 +60,7 @@ import java.util.concurrent.Callable;
 
     @Override
     public BufferedHttpEntity call()
-        throws IOException, InterruptedException, FailedHttpResponseException {
+            throws IOException, InterruptedException, FailedHttpResponseException, ConnectionFailedException {
         CloseableHttpClient httpClient = makeHttpClient();
 
         try {
@@ -78,11 +74,13 @@ import java.util.concurrent.Callable;
     }
 
     private CloseableHttpClient makeHttpClient() {
+        RequestConfig config = RequestConfig.custom().setConnectTimeout(timeout).setSocketTimeout(timeout).build();
         HttpClientBuilder httpClientBuilder =
                 HttpClients.custom()
                         .useSystemProperties()
                         .setConnectionReuseStrategy(new NoConnectionReuseStrategy())
-                        .setRedirectStrategy(new DefaultRedirectStrategy());
+                        .setRedirectStrategy(new DefaultRedirectStrategy())
+                        .setDefaultRequestConfig(config);
         maybeSetProxy(httpClientBuilder);
 
         return httpClientBuilder.build();
@@ -97,7 +95,7 @@ import java.util.concurrent.Callable;
     }
 
     private BufferedHttpEntity executeRequest(HttpClient httpClient)
-            throws IOException, InterruptedException, FailedHttpResponseException {
+            throws IOException, InterruptedException, FailedHttpResponseException, ConnectionFailedException {
         HttpResponse response;
         HttpContext context = new BasicHttpContext();
 
@@ -107,6 +105,9 @@ import java.util.concurrent.Callable;
             logger.info("Executing http request failed: {0}", ex.toString());
             if (request.isAborted()) {
                 throw new InterruptedException();
+            } else if (ex.getMessage().contains("connect timed out")) {
+                throw new ConnectionFailedException("Communication with server failed! Please check your internet connection and try again.\n"
+                        + "Try opening a browser and see if you can load any pages.");
             } else {
                 throw new IOException("Download failed: " + ex.getMessage(), ex);
             }

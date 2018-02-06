@@ -5,6 +5,7 @@ import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import com.google.gson.Gson;
 
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
@@ -35,18 +36,18 @@ public class HttpTasks {
             ContentType.create("text/plain", "utf-8");
     private static final Gson gson = new Gson();
 
-    private HttpRequestExecutor createExecutor(URI url) {
+    private static HttpRequestExecutor createExecutor(URI url) {
         return new HttpRequestExecutor(url);
     }
 
-    private HttpRequestExecutor createExecutor(HttpPost request) {
+    private static HttpRequestExecutor createExecutor(HttpPost request) {
         return new HttpRequestExecutor(request);
     }
 
     /**
      * Posts json to a url without authentication.
      */
-    public Callable<String> postJson(final URI uri, final Serializable json) {
+    public static Callable<String> postJson(final URI uri, final Serializable json) {
         return new Callable<String>() {
             @Override
             public String call() throws Exception {
@@ -61,37 +62,37 @@ public class HttpTasks {
         };
     }
 
-    public Callable<byte[]> getForBinary(URI url) {
+    public static Callable<byte[]> getForBinary(URI url) {
         return downloadToBinary(createExecutor(url));
     }
 
-    public Callable<String> getForText(URI url) {
+    public static Callable<String> getForText(URI url) {
         return downloadToText(createExecutor(url));
     }
 
-    public Callable<byte[]> postForBinary(URI url, Map<String, String> params) {
+    public static Callable<byte[]> postForBinary(URI url, Map<String, String> params) {
         return downloadToBinary(createExecutor(makePostRequest(url, params)));
     }
 
-    public Callable<String> postForText(URI url, Map<String, String> params) {
+    public static Callable<String> postForText(URI url, Map<String, String> params) {
         return downloadToText(createExecutor(makePostRequest(url, params)));
     }
 
-    public Callable<String> rawPostForText(URI url, byte[] data) {
+    public static Callable<String> rawPostForText(URI url, byte[] data) {
         return downloadToText(createExecutor(makeRawPostRequest(url, data)));
     }
 
-    public Callable<String> rawPostForText(URI url, byte[] data, Map<String, String> extraHeaders) {
+    public static Callable<String> rawPostForText(URI url, byte[] data, Map<String, String> extraHeaders) {
         return downloadToText(createExecutor(makeRawPostRequest(url, data, extraHeaders)));
     }
 
-    public Callable<String> uploadFileForTextDownload(
+    public static Callable<String> uploadFileForTextDownload(
             URI url, Map<String, String> params, String fileField, byte[] data) {
         HttpPost request = makeFileUploadRequest(url, params, fileField, data);
         return downloadToText(createExecutor(request));
     }
 
-    private Callable<byte[]> downloadToBinary(final HttpRequestExecutor download) {
+    private static Callable<byte[]> downloadToBinary(final HttpRequestExecutor download) {
         return new Callable<byte[]>() {
             @Override
             public byte[] call() throws Exception {
@@ -102,7 +103,7 @@ public class HttpTasks {
         };
     }
 
-    private Callable<String> downloadToText(final HttpRequestExecutor download) {
+    private static Callable<String> downloadToText(final HttpRequestExecutor download) {
         return new Callable<String>() {
             @Override
             public String call() throws Exception {
@@ -113,7 +114,7 @@ public class HttpTasks {
         };
     }
 
-    private HttpPost makePostRequest(URI url, Map<String, String> params) {
+    private static HttpPost makePostRequest(URI url, Map<String, String> params) {
         HttpPost request = new HttpPost(url);
 
         ArrayList<NameValuePair> pairs = new ArrayList<>(params.size());
@@ -130,12 +131,12 @@ public class HttpTasks {
         }
     }
 
-    private HttpPost makeRawPostRequest(URI url, byte[] data) {
+    private static HttpPost makeRawPostRequest(URI url, byte[] data) {
         Map<String, String> empty = Collections.emptyMap();
         return makeRawPostRequest(url, data, empty);
     }
 
-    private HttpPost makeRawPostRequest(URI url, byte[] data, Map<String, String> extraHeaders) {
+    private static HttpPost makeRawPostRequest(URI url, byte[] data, Map<String, String> extraHeaders) {
         HttpPost request = new HttpPost(url);
         for (Map.Entry<String, String> header : extraHeaders.entrySet()) {
             request.addHeader(header.getKey(), header.getValue());
@@ -146,7 +147,7 @@ public class HttpTasks {
         return request;
     }
 
-    private HttpPost makeFileUploadRequest(
+    private static HttpPost makeFileUploadRequest(
             URI url, Map<String, String> params, String fileField, byte[] data) {
         MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
 

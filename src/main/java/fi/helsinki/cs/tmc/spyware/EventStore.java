@@ -6,9 +6,10 @@ import fi.helsinki.cs.tmc.core.utilities.ByteArrayGsonSerializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class EventStore {
     private static final Logger log = LoggerFactory.getLogger(EventStore.class.getName());

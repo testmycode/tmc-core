@@ -8,6 +8,9 @@ import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.Callable;
 
 public class ExceptionTrackingCallable<T> implements Callable<T> {
@@ -15,6 +18,7 @@ public class ExceptionTrackingCallable<T> implements Callable<T> {
     private final Callable<T> command;
     private final TmcBandicootCommunicationTaskFactory tmcBandicootCommunicationTaskFactory;
     private final TmcSettings settings;
+    private final Logger logger = LoggerFactory.getLogger(ExceptionTrackingCallable.class);
 
     public ExceptionTrackingCallable(final Callable<T> command) {
         this.command = command;
@@ -35,7 +39,11 @@ public class ExceptionTrackingCallable<T> implements Callable<T> {
             return command.call();
         } catch (Exception ex) {
             if (settings.getSendDiagnostics() && !(ex instanceof NotLoggedInException)) {
-                tmcBandicootCommunicationTaskFactory.sendCrash(new Crash(ex)).call();
+                try {
+                    tmcBandicootCommunicationTaskFactory.sendCrash(new Crash(ex)).call();
+                } catch (Exception exception) {
+                    logger.warn("Couldn't send crash to the server.");
+                }
             }
             throw ex;
         }

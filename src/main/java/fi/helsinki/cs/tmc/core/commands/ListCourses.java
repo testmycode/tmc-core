@@ -3,7 +3,9 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.exceptions.ConnectionFailedException;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
+import fi.helsinki.cs.tmc.core.exceptions.ShowToUserException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.utilities.ServerErrorHelper;
 
@@ -33,7 +35,7 @@ public class ListCourses extends Command<List<Course>> {
     }
 
     @Override
-    public List<Course> call() throws TmcCoreException {
+    public List<Course> call() throws TmcCoreException, ShowToUserException {
         logger.info("Retrieving course list");
         informObserver(0, "Retrieving course list");
         try {
@@ -47,10 +49,13 @@ public class ListCourses extends Command<List<Course>> {
             if (ex instanceof NotLoggedInException) {
                 throw (NotLoggedInException)ex;
             }
+            if (ex instanceof ShowToUserException) {
+                throw (ShowToUserException)ex;
+            }
             logger.info("Failed to fetch courses from the server", ex);
             informObserver(1, "Failed to fetch courses from the server");
-            throw new TmcCoreException("Failed to fetch courses from the server. \n"
-                + ServerErrorHelper.getServerExceptionMsg(ex), ex);
+            throw new ConnectionFailedException("Failed to fetch courses from the server.\nPlease check your internet connection.\nThe error was:\n"
+                + ServerErrorHelper.getServerExceptionMsg(ex));
         }
     }
 }

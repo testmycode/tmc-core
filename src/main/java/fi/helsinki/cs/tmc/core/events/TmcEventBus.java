@@ -1,13 +1,14 @@
 package fi.helsinki.cs.tmc.core.events;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TmcEventBus {
     private static final Logger log = LoggerFactory.getLogger(TmcEventBus.class.getName());

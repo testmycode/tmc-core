@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
@@ -83,6 +82,6 @@ public class AuthenticateUserTest {
         command = new AuthenticateUser(mockObserver, "password",
                                         oauth, tmcServerCommunicationTaskFactory);
         command.call();
-        verify(tmcServerCommunicationTaskFactory, times(1)).getOauthCredentialsTask();
+        verify(tmcServerCommunicationTaskFactory, times(1)).fetchOauthCredentialsTask();
     }
 }

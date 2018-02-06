@@ -45,6 +45,7 @@ public class TmcServerAddressNormalizer {
                     this.tmcSettings.setOrganization(org);
                 }
             } catch (IOException e) {
+            } catch (Exception e) {
             }
         }
 

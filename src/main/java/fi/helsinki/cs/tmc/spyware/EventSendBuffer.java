@@ -12,6 +12,9 @@ import fi.helsinki.cs.tmc.core.utilities.TmcRequestProcessor;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayDeque;
@@ -22,8 +25,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeoutException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Buffers {@link LoggableEvent}s and sends them to the server and/or syncs them to the disk

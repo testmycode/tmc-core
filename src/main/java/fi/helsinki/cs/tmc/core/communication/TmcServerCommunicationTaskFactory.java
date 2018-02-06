@@ -14,9 +14,11 @@ import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
 import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.domain.Review;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
+import fi.helsinki.cs.tmc.core.exceptions.ConnectionFailedException;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.ObsoleteClientException;
+import fi.helsinki.cs.tmc.core.exceptions.ShowToUserException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utilities.JsonMaker;
@@ -30,13 +32,16 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.ConnectException;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -45,8 +50,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -113,8 +116,13 @@ public class TmcServerCommunicationTaskFactory {
                 try {
                     return callable.call();
                 } catch (FailedHttpResponseException e) {
-                    LOG.warn("Communication with the server failed!");
+                    LOG.error("Communication with the server failed!");
                     throw new NotLoggedInException();
+                } catch (IOException e) {
+                    if (e.getMessage().contains("Connection timed out")) {
+                        throw new ConnectionFailedException("Connection failed! Please check your internet connection via browser.");
+                    }
+                    throw e;
                 }
             }
         };
@@ -149,7 +157,7 @@ public class TmcServerCommunicationTaskFactory {
             @Override
             public List<Course> call() throws Exception {
                 try {
-                    Callable<String> download = new HttpTasks().getForText(getCourseListUrl());
+                    Callable<String> download = HttpTasks.getForText(getCourseListUrl());
                     String text = download.call();
                     return courseListParser.parseFromJson(text);
                 } catch (FailedHttpResponseException ex) {
@@ -165,7 +173,7 @@ public class TmcServerCommunicationTaskFactory {
             @Override
             public Optional<Course> call() throws Exception {
                 try {
-                    Callable<String> download = new HttpTasks().getForText(getCourseListUrl());
+                    Callable<String> download = HttpTasks.getForText(getCourseListUrl());
                     String text = download.call();
                     List<Course> courses = courseListParser.parseFromJson(text);
                     for (Course course : courses) {
@@ -188,7 +196,7 @@ public class TmcServerCommunicationTaskFactory {
             public Course call() throws Exception {
                 try {
                     URI url = addApiCallQueryParameters(courseStub.getDetailsUrl());
-                    final Callable<String> download = new HttpTasks().getForText(url);
+                    final Callable<String> download = HttpTasks.getForText(url);
                     String text = download.call();
                     return courseInfoParser.parseFromJson(text);
                 } catch (FailedHttpResponseException ex) {
@@ -206,7 +214,7 @@ public class TmcServerCommunicationTaskFactory {
             @Override
             public Void call() throws Exception {
                 try {
-                    final Callable<String> download = new HttpTasks()
+                    final Callable<String> download = HttpTasks
                             .postForText(getUnlockUrl(course), params);
                     download.call();
                     return null;
@@ -225,12 +233,12 @@ public class TmcServerCommunicationTaskFactory {
 
     public Callable<byte[]> getDownloadingExerciseZipTask(Exercise exercise) throws NotLoggedInException {
         URI zipUrl = exercise.getDownloadUrl();
-        return new HttpTasks().getForBinary(addApiCallQueryParameters(zipUrl));
+        return HttpTasks.getForBinary(addApiCallQueryParameters(zipUrl));
     }
 
     public Callable<byte[]> getDownloadingExerciseSolutionZipTask(Exercise exercise) throws NotLoggedInException {
         URI zipUrl = exercise.getSolutionDownloadUrl();
-        return new HttpTasks().getForBinary(addApiCallQueryParameters(zipUrl));
+        return HttpTasks.getForBinary(addApiCallQueryParameters(zipUrl));
     }
 
     public Callable<SubmissionResponse> getSubmittingExerciseTask(
@@ -247,7 +255,7 @@ public class TmcServerCommunicationTaskFactory {
                 String response;
                 try {
                     final URI submitUrl = addApiCallQueryParameters(exercise.getReturnUrl());
-                    final Callable<String> upload = new HttpTasks()
+                    final Callable<String> upload = HttpTasks
                             .uploadFileForTextDownload(submitUrl, params,
                                     "submission[file]", sourceZip);
                     response = upload.call();
@@ -289,7 +297,7 @@ public class TmcServerCommunicationTaskFactory {
     }
 
     public Callable<String> getSubmissionFetchTask(URI submissionUrl) {
-        return new HttpTasks().getForText(submissionUrl);
+        return HttpTasks.getForText(submissionUrl);
     }
 
     public Callable<List<Review>> getDownloadingReviewListTask(final Course course) {
@@ -298,7 +306,7 @@ public class TmcServerCommunicationTaskFactory {
             public List<Review> call() throws Exception {
                 try {
                     URI url = addApiCallQueryParameters(course.getReviewsUrl());
-                    final Callable<String> download = new HttpTasks().getForText(url);
+                    final Callable<String> download = HttpTasks.getForText(url);
                     String text = download.call();
                     return reviewListParser.parseFromJson(text);
                 } catch (FailedHttpResponseException ex) {
@@ -323,7 +331,7 @@ public class TmcServerCommunicationTaskFactory {
             @Override
             public Void call() throws Exception {
                 URI url = addApiCallQueryParameters(URI.create(review.getUpdateUrl() + ".json"));
-                final Callable<String> task = new HttpTasks().postForText(url, params);
+                final Callable<String> task = HttpTasks.postForText(url, params);
                 task.call();
                 return null;
             }
@@ -347,7 +355,7 @@ public class TmcServerCommunicationTaskFactory {
             public String call() throws Exception {
                 try {
                     final URI submitUrl = addApiCallQueryParameters(answerUrl);
-                    final Callable<String> upload = new HttpTasks()
+                    final Callable<String> upload = HttpTasks
                             .postForText(submitUrl, params);
                     return upload.call();
                 } catch (FailedHttpResponseException ex) {
@@ -378,7 +386,7 @@ public class TmcServerCommunicationTaskFactory {
             @Override
             public Object call() throws Exception {
                 URI url = addApiCallQueryParameters(spywareServerUrl);
-                final Callable<String> upload = new HttpTasks()
+                final Callable<String> upload = HttpTasks
                         .rawPostForText(url, data, extraHeaders);
                 upload.call();
                 return null;
@@ -388,7 +396,7 @@ public class TmcServerCommunicationTaskFactory {
         });
     }
 
-    public void getOauthCredentialsTask() throws IOException {
+    public void fetchOauthCredentialsTask() throws Exception {
         URI credentialsUrl;
         if (settings.getServerAddress().endsWith("/")) {
             credentialsUrl = URI.create(
@@ -399,13 +407,14 @@ public class TmcServerCommunicationTaskFactory {
                 settings.getServerAddress() + "/api/v" + API_VERSION
                     + "/application/" + settings.clientName() + "/credentials");
         }
+        String response = HttpTasks.getForText(credentialsUrl).call();
         OauthCredentials credentials =
                 new Gson().fromJson(
-                        IOUtils.toString(credentialsUrl.toURL()), OauthCredentials.class);
+                        response, OauthCredentials.class);
         settings.setOauthCredentials(Optional.fromNullable(credentials));
     }
 
-    public List<Organization> getOrganizationListTask() throws IOException {
+    public List<Organization> getOrganizationListTask() throws Exception {
         String url;
         String serverAddress = settings.getServerAddress();
         String urlLastPart = "api/v" + API_VERSION + "/org";
@@ -415,11 +424,12 @@ public class TmcServerCommunicationTaskFactory {
             url = serverAddress + "/" + urlLastPart;
         }
         URI organizationUrl = URI.create(url);
-        List<Organization> organizations = new Gson().fromJson(IOUtils.toString(organizationUrl.toURL()), new TypeToken<List<Organization>>(){}.getType());
+        String response = HttpTasks.getForText(organizationUrl).call();
+        List<Organization> organizations = new Gson().fromJson(response, new TypeToken<List<Organization>>(){}.getType());
         return organizations;
     }
 
-    public Organization getOrganizationBySlug(String slug) throws IOException {
+    public Organization getOrganizationBySlug(String slug) throws Exception {
         String url;
         String serverAddress = settings.getServerAddress();
         String urlLastPart = "api/v" + API_VERSION;
@@ -434,7 +444,8 @@ public class TmcServerCommunicationTaskFactory {
             url = url + "/org/" + slug + ".json";
         }
         URI organizationUrl = URI.create(url);
-        Organization organization = new Gson().fromJson(IOUtils.toString(organizationUrl.toURL()), new TypeToken<Organization>(){}.getType());
+        String response = HttpTasks.getForText(organizationUrl).call();
+        Organization organization = new Gson().fromJson(response, new TypeToken<Organization>(){}.getType());
         return organization;
     }
 

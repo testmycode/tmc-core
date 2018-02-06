@@ -37,8 +37,11 @@ public class TmcServerAddressNormalizerTest {
         this.settings = new MockSettings();
         this.normalizer = new TmcServerAddressNormalizer(this.settings, this.tmcServerCommunicationTaskFactory);
         this.baseAddress = "https://tmc.mooc.fi";
-        doReturn(new Organization("Helsingin Yliopisto", "Helsingin Yliopisto", "hy", "/logo.png", false))
-                .when(this.tmcServerCommunicationTaskFactory).getOrganizationBySlug("hy");
+        try {
+            doReturn(new Organization("Helsingin Yliopisto", "Helsingin Yliopisto", "hy", "/logo.png", false))
+                    .when(this.tmcServerCommunicationTaskFactory).getOrganizationBySlug("hy");
+        } catch (Exception e) {
+        }
         doAnswer(new Answer() {
             @Override
             public Object answer(InvocationOnMock invocationOnMock) throws Throwable {

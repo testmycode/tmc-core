@@ -37,7 +37,10 @@ public class GetOrganizationsTest {
         TmcSettingsHolder.set(settings);
         List<Organization> organizations = new ArrayList<Organization>();
         organizations.add(new Organization("test", "test", "test", "test", false));
-        when(tmcServerCommunicationTaskFactory.getOrganizationListTask()).thenReturn(organizations);
+        try {
+            when(tmcServerCommunicationTaskFactory.getOrganizationListTask()).thenReturn(organizations);
+        } catch (Exception e) {
+        }
     }
 
     @Test

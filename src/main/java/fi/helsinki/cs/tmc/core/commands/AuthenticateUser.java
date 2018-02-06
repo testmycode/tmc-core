@@ -2,10 +2,9 @@ package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
-import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.exceptions.AuthenticationFailedException;
-import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
+import fi.helsinki.cs.tmc.core.exceptions.ShowToUserException;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -33,12 +32,20 @@ public class AuthenticateUser extends Command<Void> {
     }
 
     @Override
-    public Void call() throws AuthenticationFailedException, IOException {
+    public Void call() throws AuthenticationFailedException, IOException, ShowToUserException {
         try {
-            tmcServerCommunicationTaskFactory.getOauthCredentialsTask();
+            tmcServerCommunicationTaskFactory.fetchOauthCredentialsTask();
             oauth.fetchNewToken(password);
-        } catch (OAuthSystemException | OAuthProblemException e) {
-            throw new AuthenticationFailedException(e);
+        } catch (Exception e) {
+            if (e instanceof OAuthSystemException || e instanceof OAuthProblemException) {
+                throw new AuthenticationFailedException(e);
+            } else if (e instanceof IOException) {
+                throw (IOException) e;
+            } else if (e instanceof ShowToUserException) {
+                throw (ShowToUserException)e;
+            } else {
+                throw new IOException("Something went wrong while authenticating!", e);
+            }
         }
         return null;
     }

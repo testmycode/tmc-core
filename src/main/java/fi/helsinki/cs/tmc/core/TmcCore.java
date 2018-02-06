@@ -1,23 +1,6 @@
 package fi.helsinki.cs.tmc.core;
 
-import fi.helsinki.cs.tmc.core.commands.AuthenticateUser;
-import fi.helsinki.cs.tmc.core.commands.DownloadCompletedExercises;
-import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
-import fi.helsinki.cs.tmc.core.commands.DownloadOrUpdateExercises;
-import fi.helsinki.cs.tmc.core.commands.GetCourseDetails;
-import fi.helsinki.cs.tmc.core.commands.GetOrganizations;
-import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
-import fi.helsinki.cs.tmc.core.commands.GetUpdatableExercises;
-import fi.helsinki.cs.tmc.core.commands.ListCourses;
-import fi.helsinki.cs.tmc.core.commands.MarkReviewAsRead;
-import fi.helsinki.cs.tmc.core.commands.PasteWithComment;
-import fi.helsinki.cs.tmc.core.commands.RequestCodeReview;
-import fi.helsinki.cs.tmc.core.commands.RunCheckStyle;
-import fi.helsinki.cs.tmc.core.commands.RunTests;
-import fi.helsinki.cs.tmc.core.commands.SendDiagnostics;
-import fi.helsinki.cs.tmc.core.commands.SendFeedback;
-import fi.helsinki.cs.tmc.core.commands.SendSpywareEvents;
-import fi.helsinki.cs.tmc.core.commands.Submit;
+import fi.helsinki.cs.tmc.core.commands.*;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
@@ -174,6 +157,10 @@ public class TmcCore {
     public Callable<Exercise> downloadModelSolution(ProgressObserver observer, Exercise exercise) {
         logger.info("Creating new DownloadModelSolution command");
         return new ExceptionTrackingCallable<>(new DownloadModelSolution(observer, exercise));
+    }
+
+    public Callable<Organization> getCourseOrganization(ProgressObserver observer, Course course) {
+        return new ExceptionTrackingCallable<Organization>(new GetCourseOrganization(observer, course));
     }
 
     /**

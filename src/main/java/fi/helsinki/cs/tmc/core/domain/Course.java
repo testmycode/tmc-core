@@ -12,6 +12,7 @@ public class Course {
     private String name;
     private String title;
     private String description;
+    private String organizationSlug;
 
     private List<Exercise> exercises;
 
@@ -49,6 +50,14 @@ public class Course {
         this.exercises = new ArrayList<>();
         this.unlockables = new ArrayList<>();
         this.spywareUrls = new ArrayList<>();
+    }
+
+    public Course(String name, String organizationSlug) {
+        this.name = name;
+        this.exercises = new ArrayList<>();
+        this.unlockables = new ArrayList<>();
+        this.spywareUrls = new ArrayList<>();
+        this.organizationSlug = organizationSlug;
     }
 
     public List<URI> getSpywareUrls() {
@@ -139,6 +148,14 @@ public class Course {
 
     public void setUnlockables(List<String> unlockables) {
         this.unlockables = unlockables;
+    }
+
+    public String getOrganizationSlug() {
+        return organizationSlug;
+    }
+
+    public void setOrganizationSlug(String organizationSlug) {
+        this.organizationSlug = organizationSlug;
     }
 
     @Override

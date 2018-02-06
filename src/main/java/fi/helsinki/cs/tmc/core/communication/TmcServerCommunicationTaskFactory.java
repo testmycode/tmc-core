@@ -179,7 +179,6 @@ public class TmcServerCommunicationTaskFactory {
                     for (Course course : courses) {
                         if (course.getId() == id) {
                             return Optional.of(course);
-
                         }
                     }
                     return Optional.absent();
@@ -188,6 +187,22 @@ public class TmcServerCommunicationTaskFactory {
                 }
             }
         });
+    }
+
+    public Optional<Course> getCourseFromAllCoursesByIdTask(final int id) throws Exception {
+        String url;
+        String serverAddress = settings.getServerAddress();
+        String apiVersion = "api/v" + API_VERSION;
+        if (serverAddress.endsWith("/")) {
+            url = settings.getServerAddress() + apiVersion;
+        } else {
+            url = serverAddress + "/" + apiVersion;
+        }
+        url = url + "/courses/" + id;
+        URI courseUrl = URI.create(url);
+        String response = HttpTasks.getForText(courseUrl).call();
+        Course course = new Gson().fromJson(response, new TypeToken<Course>(){}.getType());
+        return Optional.fromNullable(course);
     }
 
     public Callable<Course> getFullCourseInfoTask(final Course courseStub) {

@@ -3,6 +3,7 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.exceptions.ConnectionFailedException;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
@@ -74,6 +75,9 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
         } catch (Exception ex) {
             if (ex instanceof NotLoggedInException) {
                 throw (NotLoggedInException)ex;
+            }
+            if (ex instanceof IOException) {
+                throw new ConnectionFailedException("Connection failed! Please check your internet connection via browser.");
             }
             informObserver(1, "Failed to submit exercise");
             logger.warn("Failed to submit exercise", ex);

@@ -49,14 +49,6 @@ public class TmcBandicootCommunicationTaskFactory {
     }
 
     private URI getUrl(Diagnostics diagnostics) {
-        URI uri = diagnosticsUrl;
-        String[] versionParts = diagnostics.getJavaVersion().split("_");
-        if (versionParts.length == 2) {
-            String version = versionParts[0];
-            if (version.startsWith("1.7") || version.startsWith("1.6") || (version.startsWith("1.8") && NumberUtils.toInt(versionParts[1], 100) < 66)) {
-                uri = URI.create("https://tmc-bandicoot.now.sh/");
-            }
-        }
-        return uri;
+        return diagnosticsUrl;
     }
 }

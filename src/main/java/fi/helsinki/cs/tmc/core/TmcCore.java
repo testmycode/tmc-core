@@ -5,7 +5,6 @@ import fi.helsinki.cs.tmc.core.commands.DownloadCompletedExercises;
 import fi.helsinki.cs.tmc.core.commands.DownloadModelSolution;
 import fi.helsinki.cs.tmc.core.commands.DownloadOrUpdateExercises;
 import fi.helsinki.cs.tmc.core.commands.GetCourseDetails;
-import fi.helsinki.cs.tmc.core.commands.GetCourseOrganization;
 import fi.helsinki.cs.tmc.core.commands.GetOrganizations;
 import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
 import fi.helsinki.cs.tmc.core.commands.GetUpdatableExercises;
@@ -17,7 +16,7 @@ import fi.helsinki.cs.tmc.core.commands.RunCheckStyle;
 import fi.helsinki.cs.tmc.core.commands.RunTests;
 import fi.helsinki.cs.tmc.core.commands.SendDiagnostics;
 import fi.helsinki.cs.tmc.core.commands.SendFeedback;
-import fi.helsinki.cs.tmc.core.commands.SendSpywareEvents;
+import fi.helsinki.cs.tmc.core.commands.SendSnapshotEvents;
 import fi.helsinki.cs.tmc.core.commands.Submit;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
@@ -36,7 +35,7 @@ import fi.helsinki.cs.tmc.core.utilities.TmcServerAddressNormalizer;
 import fi.helsinki.cs.tmc.langs.abstraction.ValidationResult;
 import fi.helsinki.cs.tmc.langs.domain.RunResult;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
-import fi.helsinki.cs.tmc.spyware.LoggableEvent;
+import fi.helsinki.cs.tmc.snapshots.LoggableEvent;
 
 import com.google.common.annotations.Beta;
 
@@ -138,10 +137,10 @@ public class TmcCore {
         return new ExceptionTrackingCallable<>(new SendFeedback(observer, answers, feedbackUri));
     }
 
-    public Callable<Void> sendSpywareEvents(
+    public Callable<Void> sendSnapshotEvents(
             final ProgressObserver observer, final Course currentCourse, final List<LoggableEvent> events) {
-        logger.info("Creating new SenSpywareEvents command");
-        return new ExceptionTrackingCallable<>(new SendSpywareEvents(observer, currentCourse, events));
+        logger.info("Creating new SendSnapshotEvents command");
+        return new ExceptionTrackingCallable<>(new SendSnapshotEvents(observer, currentCourse, events));
 
     }
 

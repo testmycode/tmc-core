@@ -1,4 +1,4 @@
-package fi.helsinki.cs.tmc.spyware;
+package fi.helsinki.cs.tmc.snapshots;
 
 
 import fi.helsinki.cs.tmc.core.domain.Course;

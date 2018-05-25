@@ -1,8 +1,8 @@
-package fi.helsinki.cs.tmc.core.spyware;
+package fi.helsinki.cs.tmc.core.snapshots;
 
-import fi.helsinki.cs.tmc.spyware.EventDeduplicater;
-import fi.helsinki.cs.tmc.spyware.EventReceiver;
-import fi.helsinki.cs.tmc.spyware.LoggableEvent;
+import fi.helsinki.cs.tmc.snapshots.EventDeduplicater;
+import fi.helsinki.cs.tmc.snapshots.EventReceiver;
+import fi.helsinki.cs.tmc.snapshots.LoggableEvent;
 
 import org.junit.Before;
 import org.junit.Test;

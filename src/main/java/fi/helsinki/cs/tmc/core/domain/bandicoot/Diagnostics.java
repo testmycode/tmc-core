@@ -2,7 +2,7 @@ package fi.helsinki.cs.tmc.core.domain.bandicoot;
 
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
-import fi.helsinki.cs.tmc.spyware.HostInformationGenerator;
+import fi.helsinki.cs.tmc.snapshots.HostInformationGenerator;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -48,7 +48,7 @@ public class Diagnostics implements Serializable {
         this.osVersion = System.getProperty("os.version");
         this.locale = settings.getLocale();
         this.serverAddress = settings.getServerAddress();
-        this.hostId = HostInformationGenerator.getHostId();
+        this.hostId = HostInformationGenerator.getHostId().substring(0, 1);
     }
 
     public String getJavaVersion() {

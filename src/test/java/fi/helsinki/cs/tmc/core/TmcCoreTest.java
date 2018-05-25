@@ -7,7 +7,7 @@ import fi.helsinki.cs.tmc.core.commands.GetUnreadReviews;
 import fi.helsinki.cs.tmc.core.commands.ListCourses;
 import fi.helsinki.cs.tmc.core.commands.MarkReviewAsRead;
 import fi.helsinki.cs.tmc.core.commands.SendFeedback;
-import fi.helsinki.cs.tmc.core.commands.SendSpywareEvents;
+import fi.helsinki.cs.tmc.core.commands.SendSnapshotEvents;
 import fi.helsinki.cs.tmc.core.commands.Submit;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
@@ -22,7 +22,7 @@ import fi.helsinki.cs.tmc.core.holders.TmcLangsHolder;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utils.MockSettings;
 import fi.helsinki.cs.tmc.langs.util.TaskExecutor;
-import fi.helsinki.cs.tmc.spyware.LoggableEvent;
+import fi.helsinki.cs.tmc.snapshots.LoggableEvent;
 
 import com.google.common.base.Optional;
 
@@ -116,7 +116,7 @@ public class TmcCoreTest {
         List<URI> spywareUrls = new ArrayList<>();
         spywareUrls.add(URI.create("test"));
         course.setSpywareUrls(spywareUrls);
-        new SendSpywareEvents(observer, course, new ArrayList<LoggableEvent>()).call();
+        new SendSnapshotEvents(observer, course, new ArrayList<LoggableEvent>()).call();
     }
 
     @Test (expected = NotLoggedInException.class)

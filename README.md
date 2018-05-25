@@ -22,7 +22,7 @@ may be used with even languages other than those supported by tmc-langs, provide
  - get unread code reviews
  - get new exercises and updated exercises
  - send feedback on an exercise
- - send snapshots to spyware server
+ - send snapshots to server
  - paste code to the tmc pastebin
 
 # Usage

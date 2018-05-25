@@ -1,4 +1,4 @@
-package fi.helsinki.cs.tmc.spyware;
+package fi.helsinki.cs.tmc.snapshots;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -41,7 +41,6 @@ public class EventSendBuffer implements EventReceiver {
     public static final int DEFAULT_MAX_EVENTS_PER_SEND = 500;
 
     private Random random = new Random();
-    private SpywareSettings settings;
     private TmcServerCommunicationTaskFactory serverAccess;
     private EventStore eventStore;
 
@@ -53,15 +52,13 @@ public class EventSendBuffer implements EventReceiver {
     private int maxEventsPerSend = DEFAULT_MAX_EVENTS_PER_SEND; // Servers have POST size limits
     private Cooldown autosendCooldown;
 
-    public EventSendBuffer(SpywareSettings settings, EventStore eventStore) {
-        this(settings, new TmcServerCommunicationTaskFactory(), eventStore);
+    public EventSendBuffer(EventStore eventStore) {
+        this(new TmcServerCommunicationTaskFactory(), eventStore);
     }
 
     public EventSendBuffer(
-            SpywareSettings settings,
             TmcServerCommunicationTaskFactory serverAccess,
             EventStore eventStore) {
-        this.settings = settings;
         this.serverAccess = serverAccess;
         this.eventStore = eventStore;
         this.autosendCooldown = new Cooldown(DEFAULT_AUTOSEND_COOLDOWN);
@@ -145,10 +142,6 @@ public class EventSendBuffer implements EventReceiver {
 
     @Override
     public void receiveEvent(LoggableEvent event) {
-        if (!settings.isSpywareEnabled()) {
-            return;
-        }
-
         synchronized (sendQueue) {
             if (sendQueue.size() >= maxEvents) {
                 sendQueue.pop();

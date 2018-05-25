@@ -1,4 +1,4 @@
-package fi.helsinki.cs.tmc.spyware;
+package fi.helsinki.cs.tmc.snapshots;
 
 import fi.helsinki.cs.tmc.core.utilities.JsonMaker;
 
@@ -15,7 +15,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 /**
- * Generates host information used by spyware to identify requests coming from
+ * Generates host information used by snapshots to identify requests coming from
  * single host.
  */
 public class HostInformationGenerator {

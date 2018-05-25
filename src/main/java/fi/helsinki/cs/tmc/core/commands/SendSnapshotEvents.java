@@ -3,8 +3,8 @@ package fi.helsinki.cs.tmc.core.commands;
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
-import fi.helsinki.cs.tmc.spyware.LoggableEvent;
-import fi.helsinki.cs.tmc.spyware.NoSpywareServerException;
+import fi.helsinki.cs.tmc.snapshots.LoggableEvent;
+import fi.helsinki.cs.tmc.snapshots.NoSnapshotServerException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,16 +14,16 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * A {@link Command} for sending spyware data to the server.
+ * A {@link Command} for sending snapshots data to the server.
  */
-public class SendSpywareEvents extends Command<Void> {
+public class SendSnapshotEvents extends Command<Void> {
 
-    private static final Logger logger = LoggerFactory.getLogger(SendSpywareEvents.class);
+    private static final Logger logger = LoggerFactory.getLogger(SendSnapshotEvents.class);
 
     private Course currentCourse;
     private List<LoggableEvent> events;
 
-    public SendSpywareEvents(
+    public SendSnapshotEvents(
             ProgressObserver observer, Course currentCourse, List<LoggableEvent> events) {
         super(observer);
         this.currentCourse = currentCourse;
@@ -36,8 +36,8 @@ public class SendSpywareEvents extends Command<Void> {
         logger.info("Sending usage data");
         informObserver(0, "Sending usage data");
         if (currentCourse.getSpywareUrls() == null || currentCourse.getSpywareUrls().isEmpty()) {
-            logger.info("Failed to send events: " + "Current course has no spyware servers set");
-            throw new NoSpywareServerException("Current course has no spyware servers set");
+            logger.info("Failed to send events: " + "Current course has no snapshots servers set");
+            throw new NoSnapshotServerException("Current course has no snapshots servers set");
         }
 
         int serverId = new Random().nextInt(currentCourse.getSpywareUrls().size());

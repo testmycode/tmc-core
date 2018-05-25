@@ -1,4 +1,4 @@
-package fi.helsinki.cs.tmc.core.spyware;
+package fi.helsinki.cs.tmc.core.snapshots;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -16,10 +16,9 @@ import fi.helsinki.cs.tmc.core.domain.Course;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utils.MockSettings;
-import fi.helsinki.cs.tmc.spyware.EventSendBuffer;
-import fi.helsinki.cs.tmc.spyware.EventStore;
-import fi.helsinki.cs.tmc.spyware.LoggableEvent;
-import fi.helsinki.cs.tmc.spyware.SpywareSettings;
+import fi.helsinki.cs.tmc.snapshots.EventSendBuffer;
+import fi.helsinki.cs.tmc.snapshots.EventStore;
+import fi.helsinki.cs.tmc.snapshots.LoggableEvent;
 
 import com.google.common.base.Optional;
 
@@ -50,7 +49,6 @@ public class EventSendBufferTest {
 
     @Spy TmcSettings tmcSettings = new MockSettings();
     @Mock TmcServerCommunicationTaskFactory factory;
-    @Mock private SpywareSettings settings;
 
     @Mock private EventStore eventStore;
 
@@ -76,9 +74,6 @@ public class EventSendBufferTest {
         mockCourse.setSpywareUrls(Arrays.asList(URI.create("http://example.com/")));
         when(tmcSettings.getCurrentCourse()).thenReturn(Optional.of(mockCourse));
 
-        when(settings.isSpywareEnabled()).thenReturn(true);
-        when(settings.isDetailedSpywareEnabled()).thenReturn(true);
-
         sendDuration = 0;
         sendStartSemaphore = new Semaphore(0);
         sendException = null;
@@ -103,7 +98,7 @@ public class EventSendBufferTest {
         when(eventStore.load()).thenReturn(new LoggableEvent[0]);
         doNothing().when(eventStore).save(savedEvents.capture());
 
-        sender = new EventSendBuffer(settings, factory, eventStore);
+        sender = new EventSendBuffer(factory, eventStore);
     }
 
     @After

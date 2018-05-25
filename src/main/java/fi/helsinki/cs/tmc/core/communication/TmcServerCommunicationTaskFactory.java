@@ -18,12 +18,11 @@ import fi.helsinki.cs.tmc.core.exceptions.ConnectionFailedException;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
 import fi.helsinki.cs.tmc.core.exceptions.NotLoggedInException;
 import fi.helsinki.cs.tmc.core.exceptions.ObsoleteClientException;
-import fi.helsinki.cs.tmc.core.exceptions.ShowToUserException;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utilities.JsonMaker;
 import fi.helsinki.cs.tmc.core.utilities.JsonMakerGsonSerializer;
-import fi.helsinki.cs.tmc.spyware.LoggableEvent;
+import fi.helsinki.cs.tmc.snapshots.LoggableEvent;
 
 import com.google.common.base.Optional;
 import com.google.gson.Gson;
@@ -41,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.ConnectException;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -455,7 +453,7 @@ public class TmcServerCommunicationTaskFactory {
         }
         URI organizationUrl = this.addApiCallQueryParameters(URI.create(url));
         String response = HttpTasks.getForText(organizationUrl).call();
-        List<Exercise> exercises= new Gson().fromJson(response, new TypeToken<List<Exercise>>(){}.getType());
+        List<Exercise> exercises = new Gson().fromJson(response, new TypeToken<List<Exercise>>(){}.getType());
         return exercises;
     }
 

@@ -49,7 +49,7 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
         logger.info("Submitting exercise {}", exercise.getName());
         informObserver(0, "Submitting exercise to server");
 
-        // TODO: Force send spyware
+        // TODO: Force send snapshots
 
         TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse =
                 submitToServer(exercise, new HashMap<String, String>());

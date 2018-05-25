@@ -1,9 +1,9 @@
-package fi.helsinki.cs.tmc.core.spyware;
+package fi.helsinki.cs.tmc.core.snapshots;
 
 import static org.junit.Assert.assertArrayEquals;
 
-import fi.helsinki.cs.tmc.spyware.EventReceiver;
-import fi.helsinki.cs.tmc.spyware.LoggableEvent;
+import fi.helsinki.cs.tmc.snapshots.EventReceiver;
+import fi.helsinki.cs.tmc.snapshots.LoggableEvent;
 
 import org.junit.Before;
 

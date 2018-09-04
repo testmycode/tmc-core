@@ -48,8 +48,33 @@ public class MockSettings implements TmcSettings {
     }
 
     @Override
+    public Optional<Integer> getId() {
+        return Optional.absent();
+    }
+
+    @Override
+    public void setId(int id) {
+
+    }
+
+    @Override
     public Optional<String> getUsername() {
         return Optional.of("testUsername");
+    }
+
+    @Override
+    public void setUsername(String username) {
+
+    }
+
+    @Override
+    public Optional<String> getEmail() {
+        return Optional.absent();
+    }
+
+    @Override
+    public void setEmail(String email) {
+
     }
 
     @Override

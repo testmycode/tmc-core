@@ -10,13 +10,13 @@ import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
+import fi.helsinki.cs.tmc.core.domain.UserInfo;
 import fi.helsinki.cs.tmc.core.exceptions.AuthenticationFailedException;
 import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 import fi.helsinki.cs.tmc.core.utils.MockSettings;
 
 import com.google.common.base.Optional;
 
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 import org.junit.Before;
@@ -42,7 +42,7 @@ public class AuthenticateUserTest {
     private Command<Void> command;
 
     @Before
-    public void setUp() throws OAuthProblemException, OAuthSystemException, IOException {
+    public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         settings = new MockSettings();
         TmcSettingsHolder.set(settings);
@@ -59,6 +59,12 @@ public class AuthenticateUserTest {
                 throw new OAuthSystemException();
             }
         }).when(oauth).fetchNewToken("wrongPassword");
+        final UserInfo userInfo = new UserInfo();
+        userInfo.setId(1);
+        userInfo.setUsername("testuser");
+        userInfo.setEmail("test@test.test");
+        userInfo.setAdministrator(false);
+        doAnswer(invocation -> userInfo).when(tmcServerCommunicationTaskFactory).getUserInfo();
     }
 
     @Test

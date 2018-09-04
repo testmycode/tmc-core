@@ -25,7 +25,17 @@ public interface TmcSettings {
 
     void setPassword(Optional<String> password);
 
+    Optional<Integer> getId();
+
+    void setId(int id);
+
     Optional<String> getUsername();
+
+    void setUsername(String username);
+
+    Optional<String> getEmail();
+
+    void setEmail(String email);
 
     /**
      * Checks that username and password are not null.

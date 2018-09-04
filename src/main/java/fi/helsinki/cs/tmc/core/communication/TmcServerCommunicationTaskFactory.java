@@ -13,6 +13,7 @@ import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.OauthCredentials;
 import fi.helsinki.cs.tmc.core.domain.Organization;
 import fi.helsinki.cs.tmc.core.domain.Review;
+import fi.helsinki.cs.tmc.core.domain.UserInfo;
 import fi.helsinki.cs.tmc.core.domain.submission.FeedbackAnswer;
 import fi.helsinki.cs.tmc.core.exceptions.ConnectionFailedException;
 import fi.helsinki.cs.tmc.core.exceptions.FailedHttpResponseException;
@@ -380,7 +381,7 @@ public class TmcServerCommunicationTaskFactory {
         });
     }
 
-    public Callable<Object> getSendEventLogJob(final URI spywareServerUrl,
+    public Callable<Object> getSendEventLogJob(final URI snapshotServerUrl,
             List<LoggableEvent> events) throws NotLoggedInException {
         final Map<String, String> extraHeaders = new LinkedHashMap<>();
         String username = settings.getUsername().isPresent() ? settings.getUsername().get() : "Username missing";
@@ -398,7 +399,7 @@ public class TmcServerCommunicationTaskFactory {
         return wrapWithNotLoggedInException(new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                URI url = addApiCallQueryParameters(spywareServerUrl);
+                URI url = addApiCallQueryParameters(snapshotServerUrl);
                 final Callable<String> upload = HttpTasks
                         .rawPostForText(url, data, extraHeaders);
                 upload.call();
@@ -475,6 +476,22 @@ public class TmcServerCommunicationTaskFactory {
         String response = HttpTasks.getForText(organizationUrl).call();
         Organization organization = new Gson().fromJson(response, new TypeToken<Organization>(){}.getType());
         return organization;
+    }
+
+    public UserInfo getUserInfo() throws Exception {
+        String url;
+        String serverAddress = settings.getServerAddress();
+        String urlLastPart = "api/v8/users/current";
+        if (serverAddress.endsWith("/")) {
+            url = serverAddress + urlLastPart;
+        } else {
+            url = serverAddress + "/" + urlLastPart;
+        }
+
+        URI userInfoUrl = this.addApiCallQueryParameters(URI.create(url));
+        String response = HttpTasks.getForText(userInfoUrl).call();
+        UserInfo userInfo = new Gson().fromJson(response, new TypeToken<UserInfo>(){}.getType());
+        return userInfo;
     }
 
     private byte[] eventListToPostBody(List<LoggableEvent> events) throws IOException {

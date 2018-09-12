@@ -32,6 +32,13 @@ public class Exercise implements Serializable {
     // todo make this Date?
     private String deadline;
 
+    @SerializedName("soft_deadline_description")
+    private String softDeadlineDescription;
+
+    // todo make this Date?
+    @SerializedName("soft_deadline")
+    private String softDeadline;
+
     private String checksum;
 
     @SerializedName("zip_url")
@@ -134,16 +141,7 @@ public class Exercise implements Serializable {
     }
 
     public Date getDeadlineDate() {
-        if (Strings.isNullOrEmpty(this.getDeadline())) {
-            return null;
-        }
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
-        try {
-            return dateFormatter.parse(this.getDeadline());
-        } catch (ParseException ex) {
-            logger.warn("Failed to parse date {}", this.getDeadline(), ex);
-            return null;
-        }
+        return parseDateFromString(this.getDeadline());
     }
 
     public String getChecksum() {
@@ -273,6 +271,26 @@ public class Exercise implements Serializable {
         return Files.exists(getExerciseDirectory(tmcRoot));
     }
 
+    public String getSoftDeadline() {
+        return softDeadline;
+    }
+
+    public void setSoftDeadline(String softDeadline) {
+        this.softDeadline = softDeadline;
+    }
+
+    public Date getSoftDeadlineDate() {
+        return parseDateFromString(this.getSoftDeadline());
+    }
+
+    public String getSoftDeadlineDescription() {
+        return softDeadlineDescription;
+    }
+
+    public void setSoftDeadlineDescription(String softDeadlineDescription) {
+        this.softDeadlineDescription = softDeadlineDescription;
+    }
+
     public enum ValgrindStrategy {
         @SerializedName("")
         NONE,
@@ -289,6 +307,18 @@ public class Exercise implements Serializable {
             throw new IllegalArgumentException("Received null date as parameter");
         }
         Date deadlineDate = getDeadlineDate();
+        return deadlineDate != null && deadlineDate.getTime() < time.getTime();
+    }
+
+    public boolean hasSoftDeadlinePassed() {
+        return hasSoftDeadlinePassedAt(new Date());
+    }
+
+    public boolean hasSoftDeadlinePassedAt(Date time) {
+        if (time == null) {
+            throw new IllegalArgumentException("Received null date as parameter");
+        }
+        Date deadlineDate = getSoftDeadlineDate();
         return deadlineDate != null && deadlineDate.getTime() < time.getTime();
     }
 
@@ -373,5 +403,18 @@ public class Exercise implements Serializable {
         int result = name.hashCode();
         result = 31 * result + courseName.hashCode();
         return result;
+    }
+
+    private Date parseDateFromString(String date) {
+        if (Strings.isNullOrEmpty(date)) {
+            return null;
+        }
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(DATE_FORMAT);
+        try {
+            return dateFormatter.parse(date);
+        } catch (ParseException ex) {
+            logger.warn("Failed to parse date {}", date, ex);
+            return null;
+        }
     }
 }

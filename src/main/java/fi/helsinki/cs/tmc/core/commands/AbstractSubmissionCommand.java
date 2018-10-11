@@ -40,7 +40,7 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
 
         byte[] zippedProject;
 
-        informObserver(0, "Zipping project");
+        informObserver(0.1, "Packaging submission.");
 
         Path tmcRoot = TmcSettingsHolder.get().getTmcProjectDirectory();
         Path projectPath = exercise.getExerciseDirectory(tmcRoot);
@@ -51,7 +51,7 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
         try {
             zippedProject = TmcLangsHolder.get().compressProject(projectPath);
         } catch (IOException | NoLanguagePluginFoundException ex) {
-            informObserver(1, "Failed to compress project");
+            informObserver(1, "Failed to package submission.");
             logger.warn("Failed to compress project", ex);
             throw new TmcCoreException("Failed to compress project", ex);
         }
@@ -59,7 +59,7 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
         extraParams.put("error_msg_locale", TmcSettingsHolder.get().getLocale().toString());
 
         checkInterrupt();
-        informObserver(0.5, "Submitting project");
+        informObserver(0.2, "Submitting exercise.");
         logger.info("Submitting project to server");
 
         try {
@@ -68,7 +68,7 @@ abstract class AbstractSubmissionCommand<T> extends Command<T> {
                             .getSubmittingExerciseTask(exercise, zippedProject, extraParams)
                             .call();
 
-            informObserver(1, "Submission successfully completed");
+            informObserver(0.25, "Submission sent.");
             logger.info("Submission successfully completed");
 
             return response;

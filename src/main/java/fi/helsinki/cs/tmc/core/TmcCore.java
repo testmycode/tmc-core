@@ -18,7 +18,7 @@ import fi.helsinki.cs.tmc.core.commands.SendDiagnostics;
 import fi.helsinki.cs.tmc.core.commands.SendFeedback;
 import fi.helsinki.cs.tmc.core.commands.SendSnapshotEvents;
 import fi.helsinki.cs.tmc.core.commands.Submit;
-import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
+import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory.SubmissionResponse;
 import fi.helsinki.cs.tmc.core.communication.oauth2.Oauth;
 import fi.helsinki.cs.tmc.core.configuration.TmcSettings;
 import fi.helsinki.cs.tmc.core.domain.Course;
@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 
 public class TmcCore {
 
@@ -149,6 +150,11 @@ public class TmcCore {
         return new ExceptionTrackingCallable<>(new Submit(observer, exercise));
     }
 
+    public Callable<SubmissionResult> submit(ProgressObserver observer, Exercise exercise, Consumer<SubmissionResponse> initialSubmissionResult) {
+        logger.info("Creating new Submit command");
+        return new ExceptionTrackingCallable<>(new Submit(observer, exercise, initialSubmissionResult));
+    }
+
     public Callable<GetUpdatableExercises.UpdateResult> getExerciseUpdates(
             ProgressObserver observer, Course course) {
         logger.info("Creating new GetUpdatableExercises command");
@@ -165,7 +171,7 @@ public class TmcCore {
         return new ExceptionTrackingCallable<>(new GetUnreadReviews(observer, course));
     }
 
-    public Callable<TmcServerCommunicationTaskFactory.SubmissionResponse> requestCodeReview(
+    public Callable<SubmissionResponse> requestCodeReview(
             ProgressObserver observer, Exercise exercise, String messageForReviewer) {
         logger.info("Creating new RequestCodeReview command");
         return new ExceptionTrackingCallable<>(new RequestCodeReview(observer, exercise, messageForReviewer));

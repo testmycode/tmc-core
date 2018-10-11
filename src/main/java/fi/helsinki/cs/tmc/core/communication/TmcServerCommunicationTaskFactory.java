@@ -285,7 +285,8 @@ public class TmcServerCommunicationTaskFactory {
                     try {
                         URI submissionUrl = addApiCallQueryParameters(new URI(respJson.get("submission_url").getAsString()));
                         URI pasteUrl = new URI(respJson.get("paste_url").getAsString());
-                        return new SubmissionResponse(submissionUrl, pasteUrl);
+                        URI showSubmissionUrl = new URI(respJson.get("show_submission_url").getAsString());
+                        return new SubmissionResponse(submissionUrl, pasteUrl, showSubmissionUrl);
                     } catch (Exception e) {
                         throw new RuntimeException(
                                 "Server responded with malformed " + "submission url");
@@ -303,10 +304,12 @@ public class TmcServerCommunicationTaskFactory {
 
         public final URI submissionUrl;
         public final URI pasteUrl;
+        public final URI showSubmissionUrl;
 
-        public SubmissionResponse(URI submissionUrl, URI pasteUrl) {
+        public SubmissionResponse(URI submissionUrl, URI pasteUrl, URI showSubmissionUrl) {
             this.submissionUrl = submissionUrl;
             this.pasteUrl = pasteUrl;
+            this.showSubmissionUrl = showSubmissionUrl;
         }
     }
 

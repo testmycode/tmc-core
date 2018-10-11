@@ -46,8 +46,9 @@ public class PasteWithCommentTest {
 
     private static final URI PASTE_URI = URI.create("http://example.com/paste");
     private static final URI SUBMISSION_URI = URI.create("http://example.com/submission");
+    private static final URI SHOW_SUBMISSION_URI = URI.create("http://example.com/show_submission");
     private static final TmcServerCommunicationTaskFactory.SubmissionResponse STUB_RESPONSE =
-            new TmcServerCommunicationTaskFactory.SubmissionResponse(SUBMISSION_URI, PASTE_URI);
+            new TmcServerCommunicationTaskFactory.SubmissionResponse(SUBMISSION_URI, PASTE_URI, SHOW_SUBMISSION_URI);
 
     private Command<URI> command;
     private Path arithFuncsTempDir;

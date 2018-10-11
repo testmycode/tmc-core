@@ -17,10 +17,23 @@ public class SubmissionResult {
     }
 
     public enum Status {
+        @SerializedName("ok")
         OK,
+        @SerializedName("fail")
         FAIL,
+        @SerializedName("error")
         ERROR,
+        @SerializedName("processing")
         PROCESSING
+    }
+
+    public enum SandboxStatus {
+        @SerializedName("created")
+        CREATED,
+        @SerializedName("sending_to_sandbox")
+        SENDING_TO_SANDBOX,
+        @SerializedName("processing_on_sandbox")
+        PROCESSING_ON_SANDBOX
     }
 
     public SubmissionResult() {
@@ -51,6 +64,12 @@ public class SubmissionResult {
 
     @SerializedName("status")
     private Status status;
+
+    @SerializedName("sandbox_status")
+    private SandboxStatus sandboxStatus;
+
+    @SerializedName("submission_url")
+    private String submissionUrl;
 
     private List<String> points;
 
@@ -237,6 +256,22 @@ public class SubmissionResult {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public SandboxStatus getSandboxStatus() {
+        return sandboxStatus;
+    }
+
+    public void setSandboxStatus(SandboxStatus sandboxStatus) {
+        this.sandboxStatus = sandboxStatus;
+    }
+
+    public String getSubmissionUrl() {
+        return submissionUrl;
+    }
+
+    public void setSubmissionUrl(String submissionUrl) {
+        this.submissionUrl = submissionUrl;
     }
 
     public List<String> getPoints() {

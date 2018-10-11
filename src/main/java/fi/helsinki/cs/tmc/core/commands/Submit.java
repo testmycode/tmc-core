@@ -1,21 +1,22 @@
 package fi.helsinki.cs.tmc.core.commands;
 
 import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory;
+import fi.helsinki.cs.tmc.core.communication.TmcServerCommunicationTaskFactory.SubmissionResponse;
 import fi.helsinki.cs.tmc.core.communication.serialization.SubmissionResultParser;
 import fi.helsinki.cs.tmc.core.domain.Exercise;
 import fi.helsinki.cs.tmc.core.domain.ProgressObserver;
 import fi.helsinki.cs.tmc.core.domain.submission.SubmissionResult;
 import fi.helsinki.cs.tmc.core.exceptions.TmcCoreException;
+import fi.helsinki.cs.tmc.core.holders.TmcSettingsHolder;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.concurrent.Callable;
+import java.util.function.Consumer;
 
 /**
  * A {@link Command} for submitting an exercise to the server.
@@ -26,10 +27,17 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
     private static final int DEFAULT_POLL_INTERVAL = 1000 * 2;
 
     private Exercise exercise;
+    private Consumer<SubmissionResponse> initialSubmissionResult;
 
     public Submit(ProgressObserver observer, Exercise exercise) {
         super(observer);
         this.exercise = exercise;
+    }
+
+    public Submit(ProgressObserver observer, Exercise exercise, Consumer<SubmissionResponse> initialSubmissionResult) {
+        super(observer);
+        this.exercise = exercise;
+        this.initialSubmissionResult = initialSubmissionResult;
     }
 
     @VisibleForTesting
@@ -47,19 +55,32 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
     @Override
     public SubmissionResult call() throws TmcCoreException {
         logger.info("Submitting exercise {}", exercise.getName());
-        informObserver(0, "Submitting exercise to server");
 
         // TODO: Force send snapshots
 
-        TmcServerCommunicationTaskFactory.SubmissionResponse submissionResponse =
+        SubmissionResponse submissionResponse =
                 submitToServer(exercise, new HashMap<String, String>());
 
+        int pollInterval = DEFAULT_POLL_INTERVAL;
+        int runtime = 0;
+
+        try {
+            Thread.sleep(pollInterval);
+        } catch (InterruptedException ex) {
+            logger.debug("Interrupted while sleeping", ex);
+        }
+
+        boolean initialSubmissionResultSent = false;
         while (true) {
             checkInterrupt();
-            try {
-                Thread.sleep(DEFAULT_POLL_INTERVAL);
-            } catch (InterruptedException ex) {
-                logger.debug("Interrupted while sleeping", ex);
+            if (runtime > 10000) {
+                pollInterval = 1000 * 5;
+            }
+            if (runtime > 30000) {
+                pollInterval = 1000 * 10;
+            }
+            if (runtime > 300000) {
+                pollInterval = 1000 * 60;
             }
             try {
                 logger.debug("Checking if server is done processing submission");
@@ -68,21 +89,47 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
                                 submissionResponse.submissionUrl);
 
                 String submissionStatus = submissionResultFetcher.call();
-                JsonElement submission = new JsonParser().parse(submissionStatus);
-                if (isProcessing(submission)) {
-                    logger.debug("Server not done, sleeping for {}", DEFAULT_POLL_INTERVAL);
-                    informObserver(0.3, "Waiting for response from server");
-                    // TODO: Replace with variable interval polling
-                    Thread.sleep(DEFAULT_POLL_INTERVAL);
+                SubmissionResult submission = new SubmissionResultParser().parseFromJson(submissionStatus);
+
+                if (initialSubmissionResult != null && !initialSubmissionResultSent) {
+                    initialSubmissionResult.accept(submissionResponse);
+                    initialSubmissionResultSent = true;
+                }
+                if (submission.getStatus() == SubmissionResult.Status.PROCESSING) {
+                    logger.debug("Server not done, sleeping for {}", pollInterval);
+
+                    SubmissionResult.SandboxStatus sandboxStatus = submission.getSandboxStatus();
+
+                    double percentDone = 0.0;
+                    if (runtime > 120000) {
+                        informObserver(percentDone,
+                                "This seems to be taking a long time — "
+                                        + "consider continuing to the next exercise while this is running. "
+                                        + "Your submission will still be graded. "
+                                        + "Check the results later at " + TmcSettingsHolder.get().getServerAddress());
+                    } else if (sandboxStatus == SubmissionResult.SandboxStatus.CREATED) {
+                        logger.debug("Submission received. Waiting for it to be processed.");
+                        percentDone = 0.3;
+                        informObserver(percentDone, "Submission received. Waiting for it to be processed.");
+                    } else if (sandboxStatus == SubmissionResult.SandboxStatus.SENDING_TO_SANDBOX) {
+                        logger.debug("Submission queued for processing.");
+                        percentDone = 0.45;
+                        informObserver(percentDone, "Submission queued for processing.");
+                    } else if (sandboxStatus == SubmissionResult.SandboxStatus.PROCESSING_ON_SANDBOX) {
+                        logger.debug("Testing submission.");
+                        percentDone = 0.75;
+                        informObserver(percentDone, "Testing submission.");
+                    }
+
+                    Thread.sleep(pollInterval);
                 } else {
                     logger.debug("Server done, parsing results");
-                    informObserver(0.6, "Reading submission result");
+                    informObserver(1, "Processing complete.");
 
                     SubmissionResultParser resultParser = new SubmissionResultParser();
                     SubmissionResult result = resultParser.parseFromJson(submissionStatus);
 
                     logger.debug("Done parsing server response");
-                    informObserver(1, "Successfully read submission results");
 
                     return result;
                 }
@@ -90,10 +137,7 @@ public class Submit extends AbstractSubmissionCommand<SubmissionResult> {
                 informObserver(1, "Error while waiting for response from server");
                 logger.warn("Error while updating submission status from server, continuing", ex);
             }
+            runtime += pollInterval;
         }
-    }
-
-    private boolean isProcessing(JsonElement submissionStatus) {
-        return submissionStatus.getAsJsonObject().get("status").getAsString().equals("processing");
     }
 }

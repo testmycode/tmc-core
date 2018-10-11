@@ -48,11 +48,12 @@ public class SubmitTest {
 
     private static final URI PASTE_URI = URI.create("http://example.com/paste");
     private static final URI SUBMISSION_URI = URI.create("http://example.com/submission");
+    private static final URI SHOW_SUBMISSION_URI = URI.create("http://example.com/show_submission");
     private static final TmcServerCommunicationTaskFactory.SubmissionResponse STUB_RESPONSE =
-            new TmcServerCommunicationTaskFactory.SubmissionResponse(SUBMISSION_URI, PASTE_URI);
+            new TmcServerCommunicationTaskFactory.SubmissionResponse(SUBMISSION_URI, PASTE_URI, SHOW_SUBMISSION_URI);
 
-    private static final String STUB_PROSESSING_RESPONSE = "{status: \"processing\"}";
-    private static final String STUB_PROSESSING_DONE_RESPONSE = "{status: \"OK\"}";
+    private static final String STUB_PROSESSING_RESPONSE = "{\"status\": \"processing\"}";
+    private static final String STUB_PROSESSING_DONE_RESPONSE = "{\"status\": \"ok\"}";
 
     private Command<SubmissionResult> command;
     private Path arithFuncsTempDir;
@@ -81,29 +82,14 @@ public class SubmitTest {
                         factory.getSubmittingExerciseTask(
                                 any(Exercise.class), any(byte[].class), any(Map.class)))
                 .thenReturn(
-                        new Callable<TmcServerCommunicationTaskFactory.SubmissionResponse>() {
-                            @Override
-                            public SubmissionResponse call() throws Exception {
-                                return STUB_RESPONSE;
-                            }
-                        });
+                    (Callable<SubmissionResponse>) () -> STUB_RESPONSE);
         when(factory.getSubmissionFetchTask(any(URI.class)))
                 .thenReturn(
-                        new Callable<String>() {
-                            @Override
-                            public String call() throws Exception {
-                                return STUB_PROSESSING_RESPONSE;
-                            }
-                        })
+                    () -> STUB_PROSESSING_RESPONSE)
                 .thenReturn(
-                        new Callable<String>() {
-                            @Override
-                            public String call() throws Exception {
-                                return STUB_PROSESSING_DONE_RESPONSE;
-                            }
-                        });
+                    () -> STUB_PROSESSING_DONE_RESPONSE);
 
         SubmissionResult result = command.call();
-        assertEquals(result.getStatus(), SubmissionResult.Status.OK);
+        assertEquals(SubmissionResult.Status.OK, result.getStatus());
     }
 }

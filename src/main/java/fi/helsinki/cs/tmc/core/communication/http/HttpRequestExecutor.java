@@ -78,7 +78,6 @@ import java.util.concurrent.Callable;
         HttpClientBuilder httpClientBuilder =
                 HttpClients.custom()
                         .useSystemProperties()
-                        .setConnectionReuseStrategy(new NoConnectionReuseStrategy())
                         .setRedirectStrategy(new DefaultRedirectStrategy())
                         .setDefaultRequestConfig(config);
         maybeSetProxy(httpClientBuilder);

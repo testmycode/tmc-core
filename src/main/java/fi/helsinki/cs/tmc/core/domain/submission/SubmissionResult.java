@@ -24,7 +24,9 @@ public class SubmissionResult {
         @SerializedName("error")
         ERROR,
         @SerializedName("processing")
-        PROCESSING
+        PROCESSING,
+        @SerializedName("hidden")
+        HIDDEN
     }
 
     public enum SandboxStatus {

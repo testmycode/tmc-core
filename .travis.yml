@@ -11,7 +11,7 @@ after_success:
 
 
 jdk:
-  - oraclejdk8
+  - openjdk8
 
 matrix:
   allow_failures:
